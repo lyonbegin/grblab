@@ -1,0 +1,146 @@
+{
+  "template_id": "accident_response_hq_v1",
+  "title": "사고대책본부 인력구성 및 역할",
+  "version": 1,
+  "source": { "file_type": "hwp", "filename": "사고대책본부_인력구성_및_역할.hwp" },
+  "meta": { "paper": "A4", "unit": "mm", "page": { "width": 210, "height": 297, "margin": { "top": 20, "right": 15, "bottom": 20, "left": 15 } } },
+  "fields": [
+    { "id": "company_name",      "label": "사업장명",          "type": "text" },
+    { "id": "setup_year",        "label": "수립일 연도",       "type": "text", "placeholder": "2024" },
+    { "id": "setup_month",       "label": "수립일 월",         "type": "text", "placeholder": "01" },
+    { "id": "setup_day",         "label": "수립일 일",         "type": "text", "placeholder": "01" },
+    { "id": "chief_title",       "label": "본부장 직책",       "type": "text", "placeholder": "대표이사/공장장" },
+    { "id": "chief_name",        "label": "본부장 성명",       "type": "text" },
+    { "id": "chief_contact",     "label": "본부장 연락처",     "type": "text" },
+    { "id": "chief_role",        "label": "본부장 역할",       "type": "text", "placeholder": "총괄 지휘 및 의사결정, 관계기관 보고" },
+    { "id": "safety_title",      "label": "안전팀장 직책",     "type": "text", "placeholder": "안전관리자" },
+    { "id": "safety_name",       "label": "안전팀장 성명",     "type": "text" },
+    { "id": "safety_contact",    "label": "안전팀장 연락처",   "type": "text" },
+    { "id": "safety_role",       "label": "안전팀장 역할",     "type": "text", "placeholder": "현장 안전조치, 원인조사 총괄" },
+    { "id": "rescue_title",      "label": "구조팀장 직책",     "type": "text", "placeholder": "구조대장" },
+    { "id": "rescue_name",       "label": "구조팀장 성명",     "type": "text" },
+    { "id": "rescue_contact",    "label": "구조팀장 연락처",   "type": "text" },
+    { "id": "rescue_role",       "label": "구조팀장 역할",     "type": "text", "placeholder": "부상자 구조 및 응급조치" },
+    { "id": "comm_title",        "label": "통보팀장 직책",     "type": "text", "placeholder": "총무팀장" },
+    { "id": "comm_name",         "label": "통보팀장 성명",     "type": "text" },
+    { "id": "comm_contact",      "label": "통보팀장 연락처",   "type": "text" },
+    { "id": "comm_role",         "label": "통보팀장 역할",     "type": "text", "placeholder": "119·경찰 신고, 가족 통보, 언론 대응" },
+    { "id": "support_title",     "label": "지원팀장 직책",     "type": "text", "placeholder": "관리팀장" },
+    { "id": "support_name",      "label": "지원팀장 성명",     "type": "text" },
+    { "id": "support_contact",   "label": "지원팀장 연락처",   "type": "text" },
+    { "id": "support_role",      "label": "지원팀장 역할",     "type": "text", "placeholder": "물자·장비 지원, 사고 현장 보존" },
+    { "id": "activation_criteria","label": "본부 가동 기준",   "type": "text", "placeholder": "사망, 중상, 화재·폭발, 대형 누출 등" },
+    { "id": "deactivation_criteria","label": "해제 기준",      "type": "text", "placeholder": "현장 안전 확보 후 본부장 판단" }
+  ],
+  "layout": {
+    "type": "page",
+    "children": [
+      {
+        "type": "block",
+        "style": { "padding": [8,4,8,4] },
+        "children": [
+          { "type": "text", "value": "사고대책본부 인력구성 및 역할", "style": { "fontSize": 16, "fontWeight": 900, "textAlign": "center" } }
+        ]
+      },
+      {
+        "type": "section",
+        "title": { "text": "기본 정보" },
+        "children": [
+          {
+            "type": "table",
+            "cols": [{ "w": "20%" }, { "w": "30%" }, { "w": "20%" }, { "w": "30%" }],
+            "style": { "borderColor": "#c0c0c0" },
+            "rows": [
+              { "cells": [
+                { "type": "label", "text": "사 업 장 명", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "company_name" },
+                { "type": "label", "text": "수  립  일",  "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "composite", "children": [
+                  { "type": "field", "fieldId": "setup_year" }, { "type": "text", "value": "년 " },
+                  { "type": "field", "fieldId": "setup_month" }, { "type": "text", "value": "월 " },
+                  { "type": "field", "fieldId": "setup_day" }, { "type": "text", "value": "일" }
+                ]}
+              ]}
+            ]
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "title": { "text": "인력 구성 및 역할" },
+        "children": [
+          {
+            "type": "table",
+            "cols": [{ "w": "15%" }, { "w": "15%" }, { "w": "15%" }, { "w": "20%" }, { "w": "35%" }],
+            "style": { "borderColor": "#c0c0c0" },
+            "rows": [
+              { "cells": [
+                { "type": "label", "text": "구  분",    "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "label", "text": "직  책",    "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "label", "text": "성  명",    "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "label", "text": "연 락 처",  "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "label", "text": "주요 역할", "style": { "bg": "#eef0f3", "fontWeight": 700 } }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "본 부 장", "style": { "bg": "#f9f9f9" } },
+                { "type": "field", "fieldId": "chief_title" },
+                { "type": "field", "fieldId": "chief_name" },
+                { "type": "field", "fieldId": "chief_contact" },
+                { "type": "field", "fieldId": "chief_role" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "안전팀장", "style": { "bg": "#f9f9f9" } },
+                { "type": "field", "fieldId": "safety_title" },
+                { "type": "field", "fieldId": "safety_name" },
+                { "type": "field", "fieldId": "safety_contact" },
+                { "type": "field", "fieldId": "safety_role" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "구조팀장", "style": { "bg": "#f9f9f9" } },
+                { "type": "field", "fieldId": "rescue_title" },
+                { "type": "field", "fieldId": "rescue_name" },
+                { "type": "field", "fieldId": "rescue_contact" },
+                { "type": "field", "fieldId": "rescue_role" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "통보팀장", "style": { "bg": "#f9f9f9" } },
+                { "type": "field", "fieldId": "comm_title" },
+                { "type": "field", "fieldId": "comm_name" },
+                { "type": "field", "fieldId": "comm_contact" },
+                { "type": "field", "fieldId": "comm_role" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "지원팀장", "style": { "bg": "#f9f9f9" } },
+                { "type": "field", "fieldId": "support_title" },
+                { "type": "field", "fieldId": "support_name" },
+                { "type": "field", "fieldId": "support_contact" },
+                { "type": "field", "fieldId": "support_role" }
+              ]}
+            ]
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "title": { "text": "본부 가동 기준" },
+        "children": [
+          {
+            "type": "table",
+            "cols": [{ "w": "25%" }, { "w": "75%" }],
+            "style": { "borderColor": "#c0c0c0" },
+            "rows": [
+              { "cells": [
+                { "type": "label", "text": "가 동 기 준", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "activation_criteria" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "해 제 기 준", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "deactivation_criteria" }
+              ]}
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

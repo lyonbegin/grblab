@@ -1,0 +1,247 @@
+{
+  "template_id": "fire_safety_manager_record_v1",
+  "title": "소방안전관리자 업무 수행 기록표",
+  "version": 1,
+  "source": {
+    "file_type": "hwp",
+    "filename": "bid_00282_소방안전관리자_업무_수행_기록표_법정_서식.hwp",
+    "issuer": "소방청",
+    "legal_basis": "화재의 예방 및 안전관리에 관한 법률 시행규칙 [별지 제12서식]"
+  },
+  "meta": {
+    "paper": "A4",
+    "unit": "mm",
+    "page": { "width": 210, "height": 297, "margin": { "top": 20, "right": 15, "bottom": 20, "left": 15 } },
+    "fonts": { "base": "Noto Sans KR" }
+  },
+  "fields": [
+    { "id": "perform_date",       "label": "수행일자",             "type": "text", "placeholder": "YYYY.MM.DD" },
+    { "id": "performer_sign",     "label": "수행자 서명",          "type": "text" },
+    { "id": "facility_name",      "label": "소방안전관리대상물 상호","type": "text" },
+    { "id": "facility_grade_s",   "label": "등급 - 특급",          "type": "checkbox" },
+    { "id": "facility_grade_1",   "label": "등급 - 1급",           "type": "checkbox" },
+    { "id": "facility_grade_2",   "label": "등급 - 2급",           "type": "checkbox" },
+    { "id": "facility_grade_3",   "label": "등급 - 3급",           "type": "checkbox" },
+    { "id": "facility_address",   "label": "소재지",               "type": "text" },
+    { "id": "basement_floors",    "label": "지하층",               "type": "text" },
+    { "id": "ground_floors",      "label": "지상층",               "type": "text" },
+    { "id": "total_area",         "label": "연면적(㎡)",           "type": "text" },
+    { "id": "floor_area",         "label": "바닥면적(㎡)",         "type": "text" },
+    { "id": "building_count",     "label": "동수",                 "type": "text" },
+
+    { "id": "fire_facility_detail",    "label": "소방시설 확인내용",    "type": "textarea" },
+    { "id": "fire_facility_ok",        "label": "소방시설 - 양호",      "type": "checkbox" },
+    { "id": "fire_facility_bad",       "label": "소방시설 - 불량",      "type": "checkbox" },
+    { "id": "fire_facility_action",    "label": "소방시설 조치사항",    "type": "textarea" },
+
+    { "id": "evacuation_detail",       "label": "피난방화시설 확인내용","type": "textarea" },
+    { "id": "evacuation_ok",           "label": "피난방화시설 - 양호",  "type": "checkbox" },
+    { "id": "evacuation_bad",          "label": "피난방화시설 - 불량",  "type": "checkbox" },
+    { "id": "evacuation_action",       "label": "피난방화시설 조치사항","type": "textarea" },
+
+    { "id": "fire_control_detail",     "label": "화기취급감독 확인내용","type": "textarea" },
+    { "id": "fire_control_ok",         "label": "화기취급감독 - 양호",  "type": "checkbox" },
+    { "id": "fire_control_bad",        "label": "화기취급감독 - 불량",  "type": "checkbox" },
+    { "id": "fire_control_action",     "label": "화기취급감독 조치사항","type": "textarea" },
+
+    { "id": "other_detail",            "label": "기타사항 확인내용",    "type": "textarea" },
+    { "id": "other_ok",                "label": "기타사항 - 양호",      "type": "checkbox" },
+    { "id": "other_bad",               "label": "기타사항 - 불량",      "type": "checkbox" },
+    { "id": "other_action",            "label": "기타사항 조치사항",    "type": "textarea" },
+
+    { "id": "report_datetime",         "label": "불량사항 보고일시",    "type": "text" },
+    { "id": "report_method_face",      "label": "보고방법 - 대면",      "type": "checkbox" },
+    { "id": "report_method_written",   "label": "보고방법 - 서면",      "type": "checkbox" },
+    { "id": "report_method_digital",   "label": "보고방법 - 정보통신",  "type": "checkbox" },
+    { "id": "report_recipient",        "label": "보고받은 사람",        "type": "text" },
+    { "id": "action_move",             "label": "조치방법 - 이전",      "type": "checkbox" },
+    { "id": "action_remove",           "label": "조치방법 - 제거",      "type": "checkbox" },
+    { "id": "action_repair",           "label": "조치방법 - 수리·교체", "type": "checkbox" },
+    { "id": "action_other",            "label": "조치방법 - 기타",      "type": "checkbox" },
+    { "id": "action_other_detail",     "label": "조치방법 기타 내용",   "type": "text" }
+  ],
+  "layout": {
+    "type": "page",
+    "children": [
+      {
+        "type": "block",
+        "style": { "marginBottom": 6 },
+        "children": [
+          { "type": "text", "value": "■ 화재의 예방 및 안전관리에 관한 법률 시행규칙 [별지 제12서식]", "style": { "fontSize": 9 } }
+        ]
+      },
+      {
+        "type": "block",
+        "style": { "padding": [8, 6, 8, 6] },
+        "children": [
+          { "type": "text", "value": "소방안전관리자 업무 수행 기록표", "style": { "fontSize": 16, "fontWeight": 900, "textAlign": "center" } },
+          { "type": "text", "value": "※ [  ]에는 해당되는 곳에 √표를 합니다.", "style": { "fontSize": 9, "textAlign": "right" } }
+        ]
+      },
+      {
+        "type": "section",
+        "id": "section_basic",
+        "children": [
+          {
+            "type": "table",
+            "cols": [{ "w": "15%" }, { "w": "35%" }, { "w": "15%" }, { "w": "35%" }],
+            "rows": [
+              { "cells": [
+                { "type": "label", "text": "수행일자", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "perform_date" },
+                { "type": "label", "text": "수행자", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "composite", "children": [
+                  { "type": "field", "fieldId": "performer_sign" },
+                  { "type": "text", "value": " (서명)" }
+                ]}
+              ]}
+            ]
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "id": "section_facility",
+        "children": [
+          {
+            "type": "table",
+            "cols": [{ "w": "15%" }, { "w": "20%" }, { "w": "15%" }, { "w": "50%" }],
+            "rows": [
+              { "cells": [
+                { "type": "label", "text": "소방안전관리대상물", "style": { "bg": "#eef0f3", "fontWeight": 700 }, "rowspan": 3 },
+                { "type": "label", "text": "상호", "style": { "bg": "#eef0f3" } },
+                { "type": "field", "fieldId": "facility_name", "colspan": 2 }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "등급", "style": { "bg": "#eef0f3" } },
+                { "type": "composite", "colspan": 2, "children": [
+                  { "type": "field", "fieldId": "facility_grade_s" }, { "type": "text", "value": "특급  " },
+                  { "type": "field", "fieldId": "facility_grade_1" }, { "type": "text", "value": "1급  " },
+                  { "type": "field", "fieldId": "facility_grade_2" }, { "type": "text", "value": "2급  " },
+                  { "type": "field", "fieldId": "facility_grade_3" }, { "type": "text", "value": "3급" }
+                ]}
+              ]},
+              { "cells": [
+                { "type": "label", "text": "소재지", "style": { "bg": "#eef0f3" } },
+                { "type": "field", "fieldId": "facility_address", "colspan": 2 }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "지하층", "style": { "bg": "#eef0f3" } },
+                { "type": "field", "fieldId": "basement_floors" },
+                { "type": "label", "text": "지상층", "style": { "bg": "#eef0f3" } },
+                { "type": "field", "fieldId": "ground_floors" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "연면적(㎡)", "style": { "bg": "#eef0f3" } },
+                { "type": "field", "fieldId": "total_area" },
+                { "type": "label", "text": "바닥면적(㎡)", "style": { "bg": "#eef0f3" } },
+                { "type": "field", "fieldId": "floor_area" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "동수", "style": { "bg": "#eef0f3" } },
+                { "type": "field", "fieldId": "building_count", "colspan": 3 }
+              ]}
+            ]
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "id": "section_check",
+        "children": [
+          {
+            "type": "table",
+            "cols": [{ "w": "15%" }, { "w": "42%" }, { "w": "15%" }, { "w": "28%" }],
+            "rows": [
+              { "cells": [
+                { "type": "label", "text": "항 목",     "style": { "bg": "#eef0f3", "fontWeight": 700, "align": "center" } },
+                { "type": "label", "text": "확인내용",   "style": { "bg": "#eef0f3", "fontWeight": 700, "align": "center" } },
+                { "type": "label", "text": "확인결과",   "style": { "bg": "#eef0f3", "fontWeight": 700, "align": "center" } },
+                { "type": "label", "text": "조치사항",   "style": { "bg": "#eef0f3", "fontWeight": 700, "align": "center" } }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "소방시설" },
+                { "type": "field", "fieldId": "fire_facility_detail" },
+                { "type": "composite", "children": [
+                  { "type": "field", "fieldId": "fire_facility_ok" }, { "type": "text", "value": " 양호\n" },
+                  { "type": "field", "fieldId": "fire_facility_bad" }, { "type": "text", "value": " 불량" }
+                ]},
+                { "type": "field", "fieldId": "fire_facility_action" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "피난방화시설" },
+                { "type": "field", "fieldId": "evacuation_detail" },
+                { "type": "composite", "children": [
+                  { "type": "field", "fieldId": "evacuation_ok" }, { "type": "text", "value": " 양호\n" },
+                  { "type": "field", "fieldId": "evacuation_bad" }, { "type": "text", "value": " 불량" }
+                ]},
+                { "type": "field", "fieldId": "evacuation_action" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "화기취급감독" },
+                { "type": "field", "fieldId": "fire_control_detail" },
+                { "type": "composite", "children": [
+                  { "type": "field", "fieldId": "fire_control_ok" }, { "type": "text", "value": " 양호\n" },
+                  { "type": "field", "fieldId": "fire_control_bad" }, { "type": "text", "value": " 불량" }
+                ]},
+                { "type": "field", "fieldId": "fire_control_action" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "기타사항" },
+                { "type": "field", "fieldId": "other_detail" },
+                { "type": "composite", "children": [
+                  { "type": "field", "fieldId": "other_ok" }, { "type": "text", "value": " 양호\n" },
+                  { "type": "field", "fieldId": "other_bad" }, { "type": "text", "value": " 불량" }
+                ]},
+                { "type": "field", "fieldId": "other_action" }
+              ]}
+            ]
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "id": "section_report",
+        "children": [
+          {
+            "type": "table",
+            "cols": [{ "w": "18%" }, { "w": "15%" }, { "w": "17%" }, { "w": "15%" }, { "w": "35%" }],
+            "rows": [
+              { "cells": [
+                { "type": "label", "text": "불량사항 개선보고", "style": { "bg": "#eef0f3", "fontWeight": 700 }, "rowspan": 2 },
+                { "type": "label", "text": "보고일시", "style": { "bg": "#eef0f3" } },
+                { "type": "field", "fieldId": "report_datetime" },
+                { "type": "label", "text": "보고방법", "style": { "bg": "#eef0f3" } },
+                { "type": "composite", "children": [
+                  { "type": "field", "fieldId": "report_method_face" }, { "type": "text", "value": " 대면  " },
+                  { "type": "field", "fieldId": "report_method_written" }, { "type": "text", "value": " 서면  " },
+                  { "type": "field", "fieldId": "report_method_digital" }, { "type": "text", "value": " 정보통신" }
+                ]}
+              ]},
+              { "cells": [
+                { "type": "label", "text": "보고받은 사람", "style": { "bg": "#eef0f3" } },
+                { "type": "field", "fieldId": "report_recipient" },
+                { "type": "label", "text": "조치방법", "style": { "bg": "#eef0f3" } },
+                { "type": "composite", "children": [
+                  { "type": "field", "fieldId": "action_move" }, { "type": "text", "value": " 이전  " },
+                  { "type": "field", "fieldId": "action_remove" }, { "type": "text", "value": " 제거  " },
+                  { "type": "field", "fieldId": "action_repair" }, { "type": "text", "value": " 수리·교체  " },
+                  { "type": "field", "fieldId": "action_other" }, { "type": "text", "value": " 기타: " },
+                  { "type": "field", "fieldId": "action_other_detail", "style": { "inputWidth": "6em" } }
+                ]}
+              ]}
+            ]
+          }
+        ]
+      },
+      {
+        "type": "block",
+        "style": { "marginTop": 8, "fontSize": 9, "color": "#555" },
+        "children": [
+          { "type": "text", "value": "※ 작성요령\n1. 소방안전관리대상물의 소방안전관리자는 소방안전관리업무를 수행한 날을 포함하여 월 1회 이상 작성\n2. 당해연도 소방계획서 및 소방시설등 점검표에 따른 점검항목을 참고하여 작성\n3. 소방안전관리대상물의 특성에 따라 기타사항에 추가항목을 작성\n4. 경보설비의 수신기, 소화설비의 제어반 및 가압송수장치(펌프 등)를 중점적으로 확인하여 작성", "style": { "fontSize": 9 } },
+          { "type": "text", "value": "210mm×297mm[백상지(80g/㎡) 또는 중질지(80g/㎡)]", "style": { "fontSize": 8, "textAlign": "right", "marginTop": 4 } }
+        ]
+      }
+    ]
+  }
+}

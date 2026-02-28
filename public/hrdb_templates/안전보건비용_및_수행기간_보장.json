@@ -1,0 +1,113 @@
+{
+  "template_id": "safety_cost_duration_guarantee_v1",
+  "title": "안전보건비용 및 수행기간 보장",
+  "version": 1,
+  "source": { "file_type": "hwp", "filename": "안전보건비용_및_수행기간_보장.hwp" },
+  "meta": { "paper": "A4", "unit": "mm", "page": { "width": 210, "height": 297, "margin": { "top": 20, "right": 15, "bottom": 20, "left": 15 } } },
+  "fields": [
+    { "id": "company_name",    "label": "사업장명",          "type": "text" },
+    { "id": "plan_year",       "label": "계획 연도",         "type": "text", "placeholder": "2024" },
+    { "id": "create_year",     "label": "작성일 연도",       "type": "text", "placeholder": "2024" },
+    { "id": "create_month",    "label": "작성일 월",         "type": "text", "placeholder": "01" },
+    { "id": "create_day",      "label": "작성일 일",         "type": "text", "placeholder": "01" },
+    { "id": "ceo_name",        "label": "대표자 성명",       "type": "text" },
+    { "id": "total_budget",    "label": "총 안전보건비용",   "type": "text", "placeholder": "0" },
+    { "id": "budget_basis",    "label": "산정 근거",         "type": "text" },
+    { "id": "c1_item",   "label": "비용1 항목",   "type": "text" }, { "id": "c1_plan",   "label": "비용1 계획액", "type": "text", "placeholder": "0" }, { "id": "c1_exec",   "label": "비용1 집행액", "type": "text", "placeholder": "0" }, { "id": "c1_period", "label": "비용1 기간",   "type": "text" }, { "id": "c1_remark", "label": "비용1 비고",   "type": "text" },
+    { "id": "c2_item",   "label": "비용2 항목",   "type": "text" }, { "id": "c2_plan",   "label": "비용2 계획액", "type": "text", "placeholder": "0" }, { "id": "c2_exec",   "label": "비용2 집행액", "type": "text", "placeholder": "0" }, { "id": "c2_period", "label": "비용2 기간",   "type": "text" }, { "id": "c2_remark", "label": "비용2 비고",   "type": "text" },
+    { "id": "c3_item",   "label": "비용3 항목",   "type": "text" }, { "id": "c3_plan",   "label": "비용3 계획액", "type": "text", "placeholder": "0" }, { "id": "c3_exec",   "label": "비용3 집행액", "type": "text", "placeholder": "0" }, { "id": "c3_period", "label": "비용3 기간",   "type": "text" }, { "id": "c3_remark", "label": "비용3 비고",   "type": "text" },
+    { "id": "c4_item",   "label": "비용4 항목",   "type": "text" }, { "id": "c4_plan",   "label": "비용4 계획액", "type": "text", "placeholder": "0" }, { "id": "c4_exec",   "label": "비용4 집행액", "type": "text", "placeholder": "0" }, { "id": "c4_period", "label": "비용4 기간",   "type": "text" }, { "id": "c4_remark", "label": "비용4 비고",   "type": "text" },
+    { "id": "c5_item",   "label": "비용5 항목",   "type": "text" }, { "id": "c5_plan",   "label": "비용5 계획액", "type": "text", "placeholder": "0" }, { "id": "c5_exec",   "label": "비용5 집행액", "type": "text", "placeholder": "0" }, { "id": "c5_period", "label": "비용5 기간",   "type": "text" }, { "id": "c5_remark", "label": "비용5 비고",   "type": "text" },
+    { "id": "guarantee_statement", "label": "보장 선언",     "type": "text", "placeholder": "위 안전보건비용 및 수행기간은 산업안전보건법 및 중대재해처벌법에 따라 반드시 보장됩니다." },
+    { "id": "overall_notes",       "label": "특이 사항",     "type": "text" }
+  ],
+  "layout": {
+    "type": "page",
+    "children": [
+      {
+        "type": "block",
+        "style": { "padding": [8,4,8,4] },
+        "children": [
+          { "type": "text", "value": "안전보건비용 및 수행기간 보장", "style": { "fontSize": 16, "fontWeight": 900, "textAlign": "center" } },
+          { "type": "text", "value": "중대재해처벌법 시행령 제4조 제4호 | 산업안전보건법 제15조", "style": { "fontSize": 10, "textAlign": "center", "color": "#555" } }
+        ]
+      },
+      {
+        "type": "section",
+        "title": { "text": "기본 정보" },
+        "children": [
+          {
+            "type": "table",
+            "cols": [{ "w": "20%" }, { "w": "30%" }, { "w": "20%" }, { "w": "30%" }],
+            "style": { "borderColor": "#c0c0c0" },
+            "rows": [
+              { "cells": [
+                { "type": "label", "text": "사 업 장 명", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "company_name" },
+                { "type": "label", "text": "계 획 연 도", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "composite", "children": [
+                  { "type": "field", "fieldId": "plan_year" }, { "type": "text", "value": "년" }
+                ]}
+              ]},
+              { "cells": [
+                { "type": "label", "text": "대  표  자",  "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "ceo_name" },
+                { "type": "label", "text": "작  성  일",  "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "composite", "children": [
+                  { "type": "field", "fieldId": "create_year" }, { "type": "text", "value": "년 " },
+                  { "type": "field", "fieldId": "create_month" }, { "type": "text", "value": "월 " },
+                  { "type": "field", "fieldId": "create_day" }, { "type": "text", "value": "일" }
+                ]}
+              ]},
+              { "cells": [
+                { "type": "label", "text": "총 안전보건비용", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "composite", "children": [
+                  { "type": "field", "fieldId": "total_budget" }, { "type": "text", "value": " 원" }
+                ]},
+                { "type": "label", "text": "산 정 근 거",     "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "budget_basis" }
+              ]}
+            ]
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "title": { "text": "비용 및 수행기간 세부 내역" },
+        "children": [
+          {
+            "type": "table",
+            "cols": [{ "w": "28%" }, { "w": "15%" }, { "w": "15%" }, { "w": "22%" }, { "w": "20%" }],
+            "style": { "borderColor": "#c0c0c0" },
+            "rows": [
+              { "cells": [
+                { "type": "label", "text": "안전보건 항목",  "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "label", "text": "계획액 (원)",    "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "label", "text": "집행액 (원)",    "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "label", "text": "수행 기간",      "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "label", "text": "비  고",         "style": { "bg": "#eef0f3", "fontWeight": 700 } }
+              ]},
+              { "cells": [{ "type": "field", "fieldId": "c1_item" }, { "type": "field", "fieldId": "c1_plan" }, { "type": "field", "fieldId": "c1_exec" }, { "type": "field", "fieldId": "c1_period" }, { "type": "field", "fieldId": "c1_remark" }] },
+              { "cells": [{ "type": "field", "fieldId": "c2_item" }, { "type": "field", "fieldId": "c2_plan" }, { "type": "field", "fieldId": "c2_exec" }, { "type": "field", "fieldId": "c2_period" }, { "type": "field", "fieldId": "c2_remark" }] },
+              { "cells": [{ "type": "field", "fieldId": "c3_item" }, { "type": "field", "fieldId": "c3_plan" }, { "type": "field", "fieldId": "c3_exec" }, { "type": "field", "fieldId": "c3_period" }, { "type": "field", "fieldId": "c3_remark" }] },
+              { "cells": [{ "type": "field", "fieldId": "c4_item" }, { "type": "field", "fieldId": "c4_plan" }, { "type": "field", "fieldId": "c4_exec" }, { "type": "field", "fieldId": "c4_period" }, { "type": "field", "fieldId": "c4_remark" }] },
+              { "cells": [{ "type": "field", "fieldId": "c5_item" }, { "type": "field", "fieldId": "c5_plan" }, { "type": "field", "fieldId": "c5_exec" }, { "type": "field", "fieldId": "c5_period" }, { "type": "field", "fieldId": "c5_remark" }] },
+              { "cells": [
+                { "type": "label", "text": "특 이 사 항",   "colspan": 4, "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "overall_notes" }
+              ]}
+            ]
+          }
+        ]
+      },
+      {
+        "type": "block",
+        "style": { "padding": [12,4,4,4] },
+        "children": [
+          { "type": "text", "value": "보장 선언", "style": { "fontWeight": 700 } },
+          { "type": "field", "fieldId": "guarantee_statement" }
+        ]
+      }
+    ]
+  }
+}

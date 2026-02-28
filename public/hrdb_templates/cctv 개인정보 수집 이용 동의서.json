@@ -1,0 +1,304 @@
+{
+  "template_id": "cctv_personal_info_consent_v1",
+  "title": "CCTV를 통한 개인정보 수집·이용 동의서",
+  "version": 1,
+  "source": {
+    "file_type": "hwp",
+    "filename": "bid_00220_CCTV_관련_개인정보_수집_이용_동의서_샘플_노무법인_한수.hwp",
+    "issuer": "노무법인 한수",
+    "legal_basis": "개인정보 보호법 제15조 제1항 제1호, 제17조 제1항 제1호, 제23조 제1호, 제24조 제1항 제1호"
+  },
+  "meta": {
+    "paper": "A4",
+    "unit": "mm",
+    "page": {
+      "width": 210,
+      "height": 297,
+      "margin": { "top": 20, "right": 20, "bottom": 20, "left": 20 }
+    },
+    "fonts": { "base": "Noto Sans KR", "mono": "monospace" }
+  },
+  "schema": {
+    "record": { "record_id": "string", "created_at": "string", "values": "object" }
+  },
+  "fields": [
+    { "id": "subject_name",       "label": "성명 (대상 근로자)",   "type": "text", "placeholder": "홍길동" },
+    { "id": "subject_dept",       "label": "부서 (대상 근로자)",   "type": "text", "placeholder": "인사팀" },
+    { "id": "subject_position",   "label": "직위 (대상 근로자)",   "type": "text", "placeholder": "사원" },
+
+    { "id": "purpose_security",        "label": "수집·이용목적 - 시설 보안",                                    "type": "checkbox", "defaultChecked": true },
+    { "id": "purpose_fire",            "label": "수집·이용목적 - 화재 예방",                                    "type": "checkbox", "defaultChecked": true },
+    { "id": "purpose_disaster",        "label": "수집·이용목적 - 천재지변 발상에 대한 대응 필요성",            "type": "checkbox", "defaultChecked": true },
+    { "id": "purpose_crime",           "label": "수집·이용목적 - 범죄 예방 및 수사상의 필요성",               "type": "checkbox", "defaultChecked": true },
+    { "id": "purpose_harassment",      "label": "수집·이용목적 - 직장 내 괴롭힘·감사 제보 등 신고 시 증거 확보의 필요성", "type": "checkbox", "defaultChecked": true },
+    { "id": "purpose_hr_management",   "label": "수집·이용목적 - 인사관리 및 근태관리",                        "type": "checkbox", "defaultChecked": true },
+
+    { "id": "consent_agree",     "label": "개인정보 수집·이용 동의여부 - 동의함",         "type": "checkbox" },
+    { "id": "consent_disagree",  "label": "개인정보 수집·이용 동의여부 - 동의하지 않음",  "type": "checkbox" },
+
+    { "id": "sign_year",   "label": "서명일 연도", "type": "text", "placeholder": "2024" },
+    { "id": "sign_month",  "label": "서명일 월",   "type": "text", "placeholder": "01" },
+    { "id": "sign_day",    "label": "서명일 일",   "type": "text", "placeholder": "01" },
+    { "id": "signer_name", "label": "서명자 성명", "type": "text", "placeholder": "홍길동" },
+    { "id": "signer_sign", "label": "서명 또는 인", "type": "text", "placeholder": "(인)" }
+  ],
+  "layout": {
+    "type": "page",
+    "children": [
+      {
+        "type": "block",
+        "id": "header",
+        "style": { "padding": [10, 6, 10, 6] },
+        "children": [
+          {
+            "type": "text",
+            "value": "CCTV를 통한 개인정보 수집·이용 동의서",
+            "style": { "fontSize": 18, "fontWeight": 900, "textAlign": "center", "color": "#1a1a2e" }
+          }
+        ]
+      },
+      {
+        "type": "block",
+        "id": "section_subject_title",
+        "style": { "marginTop": 12, "marginBottom": 6 },
+        "children": [
+          { "type": "text", "value": "▼ 대상 근로자", "style": { "fontSize": 12, "fontWeight": 700 } }
+        ]
+      },
+      {
+        "type": "section",
+        "id": "section_subject",
+        "children": [
+          {
+            "type": "table",
+            "id": "subject_table",
+            "cols": [
+              { "w": "33%" }, { "w": "33%" }, { "w": "34%" }
+            ],
+            "rows": [
+              {
+                "cells": [
+                  { "type": "label", "text": "성명",  "style": { "bg": "#eef0f3", "fontWeight": 700, "align": "center" } },
+                  { "type": "label", "text": "부서",  "style": { "bg": "#eef0f3", "fontWeight": 700, "align": "center" } },
+                  { "type": "label", "text": "직위",  "style": { "bg": "#eef0f3", "fontWeight": 700, "align": "center" } }
+                ]
+              },
+              {
+                "cells": [
+                  { "type": "field", "fieldId": "subject_name" },
+                  { "type": "field", "fieldId": "subject_dept" },
+                  { "type": "field", "fieldId": "subject_position" }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "block",
+        "id": "intro_text",
+        "style": { "marginTop": 12, "marginBottom": 10 },
+        "children": [
+          {
+            "type": "text",
+            "value": "귀사가 CCTV설치를 통해 본인의 개인정보를 수집·이용하거나 제3자에게 제공하고자 하는 경우에는 「개인정보 보호법」 제15조 제1항 제1호, 제17조 제1항 제1호, 제23조 제1호, 제24조 제1항 제1호에 따라 본인의 동의를 얻어야 합니다. 이에 본인은 귀사가 아래의 내용과 같이 본인의 개인정보를 수집·이용 또는 제공하는 것에 동의합니다.",
+            "style": { "fontSize": 10, "lineHeight": 1.6 }
+          }
+        ]
+      },
+      {
+        "type": "block",
+        "id": "section_purpose_title",
+        "style": { "marginTop": 10, "marginBottom": 4 },
+        "children": [
+          { "type": "text", "value": "▼ 수집·이용목적", "style": { "fontSize": 12, "fontWeight": 700 } }
+        ]
+      },
+      {
+        "type": "section",
+        "id": "section_purpose",
+        "children": [
+          {
+            "type": "table",
+            "id": "purpose_table",
+            "cols": [ { "w": "8%" }, { "w": "92%" } ],
+            "rows": [
+              {
+                "cells": [
+                  { "type": "field", "fieldId": "purpose_security" },
+                  { "type": "label", "text": "시설 보안" }
+                ]
+              },
+              {
+                "cells": [
+                  { "type": "field", "fieldId": "purpose_fire" },
+                  { "type": "label", "text": "화재 예방" }
+                ]
+              },
+              {
+                "cells": [
+                  { "type": "field", "fieldId": "purpose_disaster" },
+                  { "type": "label", "text": "천재지변 발생에 대한 대응 필요성" }
+                ]
+              },
+              {
+                "cells": [
+                  { "type": "field", "fieldId": "purpose_crime" },
+                  { "type": "label", "text": "범죄 예방 및 수사상의 필요성" }
+                ]
+              },
+              {
+                "cells": [
+                  { "type": "field", "fieldId": "purpose_harassment" },
+                  { "type": "label", "text": "직장 내 괴롭힘, 감사 제보 등 신고 시 증거 확보의 필요성" }
+                ]
+              },
+              {
+                "cells": [
+                  { "type": "field", "fieldId": "purpose_hr_management" },
+                  { "type": "label", "text": "인사관리 및 근태관리" }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "block",
+        "id": "section_items_title",
+        "style": { "marginTop": 10, "marginBottom": 4 },
+        "children": [
+          { "type": "text", "value": "▼ 수집·이용할 항목", "style": { "fontSize": 12, "fontWeight": 700 } }
+        ]
+      },
+      {
+        "type": "block",
+        "id": "section_items_content",
+        "style": { "marginBottom": 10 },
+        "children": [
+          { "type": "text", "value": "CCTV에서 활용되는 개인 영상", "style": { "fontSize": 10 } }
+        ]
+      },
+      {
+        "type": "block",
+        "id": "section_retention_title",
+        "style": { "marginTop": 10, "marginBottom": 4 },
+        "children": [
+          { "type": "text", "value": "▼ 보유·이용기간", "style": { "fontSize": 12, "fontWeight": 700 } }
+        ]
+      },
+      {
+        "type": "block",
+        "id": "section_retention_content",
+        "style": { "marginBottom": 10 },
+        "children": [
+          {
+            "type": "text",
+            "value": "위 개인정보는 수집·이용에 관한 동의일로부터 당해 근로관계 종료시까지 위 이용목적을 위하여 보유·이용됩니다. 단, 수집∙이용에 관한 목적 달성 이후에는 직원명부 작성, 임금대장 작성, 부서배치, 사회보험 취득신고, 민원처리, 분쟁해결 및 법령상 의무이행만을 위해 보유·이용됩니다. 그러나 본인이 개인정보 처리정지를 요구할 경우 10일 이내에 개인정보 처리의 전부 또는 일부가 정지되지만 법률에 특별한 규정이 있거나 법령상 의무준수를 위해 불가피한 경우 및 타인의 생명∙신체∙재산∙기타 이익을 침해할 우려가 있는 경우에는 처리정지요구가 거부될 수 있습니다.",
+            "style": { "fontSize": 10, "lineHeight": 1.6 }
+          }
+        ]
+      },
+      {
+        "type": "block",
+        "id": "section_refusal_title",
+        "style": { "marginTop": 10, "marginBottom": 4 },
+        "children": [
+          { "type": "text", "value": "▼ 동의를 거부할 권리 및 동의를 거부할 경우의 불이익", "style": { "fontSize": 12, "fontWeight": 700 } }
+        ]
+      },
+      {
+        "type": "block",
+        "id": "section_refusal_content",
+        "style": { "marginBottom": 10 },
+        "children": [
+          {
+            "type": "text",
+            "value": "위 개인정보 중 선택적 정보의 수집·이용에 관한 동의는 거부할 수 있으며, 동의 거부 시 어떤 불이익도 없습니다.",
+            "style": { "fontSize": 10, "lineHeight": 1.6 }
+          }
+        ]
+      },
+      {
+        "type": "block",
+        "id": "section_consent_title",
+        "style": { "marginTop": 10, "marginBottom": 4 },
+        "children": [
+          { "type": "text", "value": "▼ 개인정보 수집·이용 동의여부", "style": { "fontSize": 12, "fontWeight": 700 } }
+        ]
+      },
+      {
+        "type": "section",
+        "id": "section_consent",
+        "children": [
+          {
+            "type": "table",
+            "id": "consent_table",
+            "cols": [ { "w": "50%" }, { "w": "50%" } ],
+            "rows": [
+              {
+                "cells": [
+                  {
+                    "type": "composite",
+                    "children": [
+                      { "type": "field", "fieldId": "consent_agree" },
+                      { "type": "text", "value": " 귀사가 위와 같이 본인의 개인정보를 수집·이용하는 것에 동의합니다. 동의함" }
+                    ]
+                  },
+                  {
+                    "type": "composite",
+                    "children": [
+                      { "type": "field", "fieldId": "consent_disagree" },
+                      { "type": "text", "value": " 동의하지 않음" }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "block",
+        "id": "footer_sign",
+        "style": { "marginTop": 24, "padding": [8, 8, 8, 8] },
+        "children": [
+          {
+            "type": "composite",
+            "style": { "align": "center" },
+            "children": [
+              { "type": "field", "fieldId": "sign_year",  "style": { "inputWidth": "4em" } },
+              { "type": "text",  "value": " 년   " },
+              { "type": "field", "fieldId": "sign_month", "style": { "inputWidth": "2.5em" } },
+              { "type": "text",  "value": " 월   " },
+              { "type": "field", "fieldId": "sign_day",   "style": { "inputWidth": "2.5em" } },
+              { "type": "text",  "value": " 일" }
+            ]
+          },
+          {
+            "type": "composite",
+            "style": { "align": "center", "marginTop": 10 },
+            "children": [
+              { "type": "text",  "value": "성명: " },
+              { "type": "field", "fieldId": "signer_name", "style": { "inputWidth": "8em" } },
+              { "type": "text",  "value": "          서명 또는 " },
+              { "type": "field", "fieldId": "signer_sign", "style": { "inputWidth": "4em" } }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "block",
+        "id": "footer_notice",
+        "style": { "marginTop": 16, "borderTop": "1px solid #ccc", "paddingTop": 8 },
+        "children": [
+          {
+            "type": "text",
+            "value": "본인은 본 동의서의 내용을 이해하였으며, 개인정보 제공·이용에 관한 공지문을 통하여 고지된 사항에 동의합니다.",
+            "style": { "fontSize": 9, "color": "#555555", "lineHeight": 1.5 }
+          }
+        ]
+      }
+    ]
+  }
+}

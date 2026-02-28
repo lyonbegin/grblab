@@ -1,0 +1,221 @@
+{
+  "template_id": "executive_contract_v1",
+  "title": "임원계약서",
+  "version": 1,
+  "source": {
+    "file_type": "hwp",
+    "filename": "bid_00293_임원계약서_양식례.hwp",
+    "issuer": "",
+    "legal_basis": ""
+  },
+  "meta": {
+    "paper": "A4",
+    "unit": "mm",
+    "page": { "width": 210, "height": 297, "margin": { "top": 20, "right": 20, "bottom": 20, "left": 20 } },
+    "fonts": { "base": "Noto Sans KR" }
+  },
+  "fields": [
+    { "id": "company_name",       "label": "갑 - 상호",           "type": "text", "placeholder": "㈜OOOO" },
+    { "id": "company_biz_no",     "label": "갑 - 사업자등록번호", "type": "text" },
+    { "id": "company_address",    "label": "갑 - 주소",           "type": "text" },
+    { "id": "exec_name",          "label": "을 - 성명",           "type": "text" },
+    { "id": "exec_rrn",           "label": "을 - 주민등록번호",   "type": "text" },
+    { "id": "exec_address",       "label": "을 - 주소",           "type": "text" },
+
+    { "id": "dept",               "label": "부서",                "type": "text" },
+    { "id": "position",           "label": "직위",                "type": "text" },
+    { "id": "registered",         "label": "등재여부",            "type": "text", "placeholder": "등기임원 / 미등기임원" },
+    { "id": "other",              "label": "기타",                "type": "text" },
+
+    { "id": "annual_salary_text", "label": "연봉 한글",           "type": "text" },
+    { "id": "annual_salary_num",  "label": "연봉 숫자",           "type": "text" },
+    { "id": "incentive_text",     "label": "인센티브 한글",       "type": "text" },
+    { "id": "incentive_num",      "label": "인센티브 숫자",       "type": "text" },
+
+    { "id": "contract_start",     "label": "계약기간 시작",       "type": "text", "placeholder": "YYYY.MM.DD" },
+    { "id": "contract_end",       "label": "계약기간 종료",       "type": "text", "placeholder": "YYYY.MM.DD" },
+
+    { "id": "sign_year",          "label": "계약일 연도",         "type": "text", "placeholder": "2024" },
+    { "id": "sign_month",         "label": "계약일 월",           "type": "text", "placeholder": "01" },
+    { "id": "sign_day",           "label": "계약일 일",           "type": "text", "placeholder": "01" },
+
+    { "id": "company_rep_name",   "label": "갑 대표자 성명",      "type": "text" },
+    { "id": "company_rep_sign",   "label": "갑 서명",             "type": "text" },
+    { "id": "exec_sign",          "label": "을 서명",             "type": "text" }
+  ],
+  "layout": {
+    "type": "page",
+    "children": [
+      {
+        "type": "block",
+        "style": { "padding": [10, 6, 16, 6] },
+        "children": [
+          { "type": "text", "value": "임원계약서", "style": { "fontSize": 20, "fontWeight": 900, "textAlign": "center" } }
+        ]
+      },
+      {
+        "type": "section", "id": "section_parties",
+        "children": [{
+          "type": "table",
+          "cols": [{ "w": "15%" }, { "w": "20%" }, { "w": "65%" }],
+          "rows": [
+            { "cells": [
+              { "type": "label", "text": "갑", "style": { "bg": "#eef0f3", "fontWeight": 700, "align": "center" }, "rowspan": 3 },
+              { "type": "label", "text": "상호", "style": { "bg": "#f7f7f7" } },
+              { "type": "field", "fieldId": "company_name" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "사업자등록번호", "style": { "bg": "#f7f7f7" } },
+              { "type": "field", "fieldId": "company_biz_no" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "주소", "style": { "bg": "#f7f7f7" } },
+              { "type": "field", "fieldId": "company_address" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "을", "style": { "bg": "#eef0f3", "fontWeight": 700, "align": "center" }, "rowspan": 3 },
+              { "type": "label", "text": "성명", "style": { "bg": "#f7f7f7" } },
+              { "type": "field", "fieldId": "exec_name" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "주민등록번호", "style": { "bg": "#f7f7f7" } },
+              { "type": "field", "fieldId": "exec_rrn" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "주소", "style": { "bg": "#f7f7f7" } },
+              { "type": "field", "fieldId": "exec_address" }
+            ]}
+          ]
+        }]
+      },
+      {
+        "type": "block", "style": { "marginTop": 14, "marginBottom": 10 },
+        "children": [{
+          "type": "composite", "children": [
+            { "type": "field", "fieldId": "exec_name" },
+            { "type": "text", "value": "(이하 \"을\"이라 함)은 상호 자유의사에 따라 ㈜" },
+            { "type": "field", "fieldId": "company_name" },
+            { "type": "text", "value": "(이하 \"갑\"이라 함)와 다음과 같이 임원계약을 체결하며, 신의성실의 원칙에 따라 성실히 이행할 것을 서약한다." }
+          ]
+        }]
+      },
+      {
+        "type": "block", "style": { "marginTop": 10 },
+        "children": [
+          { "type": "text", "value": "제1조 (목적)\n본 계약은 \"갑\"의 경영관리, 영업 마케팅, 재무관리 및 기타 \"갑\"의 기업운영 및 활동 등에 대한 업무를 \"을\"에게 일임, 총괄 수행하기로 합의함에 있어 상호간의 권리 및 의무, 기타 제반사항을 명백히 규정함을 목적으로 한다.", "style": { "fontSize": 10, "lineHeight": 1.7 } },
+          { "type": "text", "value": "\n제2조 (업무범위)\n① \"을\"은 별도의 약정이 존재하고 합의되지 않는 한, 다음 각호의 업무를 성실히 수행해야 한다.\n  가) \"갑\"의 대내외적 법률적 대표자로서의 업무\n  나) \"갑\"의 경영, 관리 총괄 업무\n  다) \"갑\"의 영업, 마케팅 업무\n  라) 기타 \"갑\"의 통상적인 기업 운영 및 경영 활동에 부수되는 업무\n② 제1호 이외에 \"갑\"이 관계사, 자회사, 기타 투자사 등을 선정하여 법인의 관리 및 담당업무를 상호 협의하여 부여할 수 있으며, 동 업무의 수행에 수반되는 각종 권리 및 의무는 본 계약의 규정을 준용하도록 한다.", "style": { "fontSize": 10, "lineHeight": 1.7 } },
+          { "type": "text", "value": "\n제3조 (직위와 보수)", "style": { "fontSize": 10, "fontWeight": 700 } }
+        ]
+      },
+      {
+        "type": "section", "id": "section_position",
+        "children": [{
+          "type": "table",
+          "cols": [{ "w": "20%" }, { "w": "30%" }, { "w": "20%" }, { "w": "30%" }],
+          "rows": [
+            { "cells": [
+              { "type": "label", "text": "부서", "style": { "bg": "#f7f7f7" } }, { "type": "field", "fieldId": "dept" },
+              { "type": "label", "text": "직위", "style": { "bg": "#f7f7f7" } }, { "type": "field", "fieldId": "position" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "등재여부", "style": { "bg": "#f7f7f7" } }, { "type": "field", "fieldId": "registered" },
+              { "type": "label", "text": "기타", "style": { "bg": "#f7f7f7" } }, { "type": "field", "fieldId": "other" }
+            ]}
+          ]
+        }]
+      },
+      {
+        "type": "section", "id": "section_salary",
+        "style": { "marginTop": 10 },
+        "children": [{
+          "type": "table",
+          "cols": [{ "w": "15%" }, { "w": "85%" }],
+          "rows": [
+            { "cells": [
+              { "type": "label", "text": "연봉", "style": { "bg": "#f7f7f7" } },
+              { "type": "composite", "children": [
+                { "type": "text", "value": "일금 " },
+                { "type": "field", "fieldId": "annual_salary_text", "style": { "inputWidth": "10em" } },
+                { "type": "text", "value": " 원 (\\ " },
+                { "type": "field", "fieldId": "annual_salary_num", "style": { "inputWidth": "8em" } },
+                { "type": "text", "value": " / 제세공과 별도)" }
+              ]}
+            ]},
+            { "cells": [
+              { "type": "label", "text": "인센티브", "style": { "bg": "#f7f7f7" } },
+              { "type": "composite", "children": [
+                { "type": "text", "value": "일금 " },
+                { "type": "field", "fieldId": "incentive_text", "style": { "inputWidth": "10em" } },
+                { "type": "text", "value": " 원 (\\ " },
+                { "type": "field", "fieldId": "incentive_num", "style": { "inputWidth": "8em" } },
+                { "type": "text", "value": " / 제세공과 별도)" }
+              ]}
+            ]}
+          ]
+        }]
+      },
+      {
+        "type": "block", "style": { "marginTop": 10 },
+        "children": [{
+          "type": "text", "value": "제4조 (계약기간)", "style": { "fontSize": 10, "fontWeight": 700 }
+        }]
+      },
+      {
+        "type": "block", "style": { "marginTop": 4 },
+        "children": [{
+          "type": "composite", "children": [
+            { "type": "text", "value": "계약기간: " },
+            { "type": "field", "fieldId": "contract_start" },
+            { "type": "text", "value": " ~ " },
+            { "type": "field", "fieldId": "contract_end" }
+          ]
+        }]
+      },
+      {
+        "type": "block", "style": { "marginTop": 30 },
+        "children": [
+          {
+            "type": "composite",
+            "children": [
+              { "type": "field", "fieldId": "sign_year" }, { "type": "text", "value": " 년  " },
+              { "type": "field", "fieldId": "sign_month" }, { "type": "text", "value": " 월  " },
+              { "type": "field", "fieldId": "sign_day" }, { "type": "text", "value": " 일" }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "section", "id": "section_signatures",
+        "style": { "marginTop": 16 },
+        "children": [{
+          "type": "table",
+          "cols": [{ "w": "10%" }, { "w": "20%" }, { "w": "70%" }],
+          "rows": [
+            { "cells": [
+              { "type": "label", "text": "갑", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "label", "text": "상호/대표" },
+              { "type": "composite", "children": [
+                { "type": "field", "fieldId": "company_name" },
+                { "type": "text", "value": "  대표이사 " },
+                { "type": "field", "fieldId": "company_rep_name" },
+                { "type": "text", "value": "  " },
+                { "type": "field", "fieldId": "company_rep_sign" },
+                { "type": "text", "value": " (인)" }
+              ]}
+            ]},
+            { "cells": [
+              { "type": "label", "text": "을", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "label", "text": "성명" },
+              { "type": "composite", "children": [
+                { "type": "field", "fieldId": "exec_name" },
+                { "type": "text", "value": "  " },
+                { "type": "field", "fieldId": "exec_sign" },
+                { "type": "text", "value": " (인)" }
+              ]}
+            ]}
+          ]
+        }]
+      }
+    ]
+  }
+}

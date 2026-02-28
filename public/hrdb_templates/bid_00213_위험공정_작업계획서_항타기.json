@@ -1,0 +1,251 @@
+{
+  "template_id": "pile_driver_work_plan_v1",
+  "title": "위험공정 작업계획서 (항타기)",
+  "version": 1,
+  "source": {
+    "file_type": "hwp",
+    "filename": "bid_00213_위험공정_작업계획서_항타기.hwp",
+    "issuer": "",
+    "legal_basis": "산업안전보건법 제38조, 동법 시행규칙 제186조"
+  },
+  "meta": {
+    "paper": "A4",
+    "unit": "mm",
+    "page": { "width": 210, "height": 297, "margin": { "top": 20, "right": 15, "bottom": 20, "left": 15 } },
+    "fonts": { "base": "Noto Sans KR", "mono": "monospace" }
+  },
+  "fields": [
+    { "id": "site_name",         "label": "현장명",              "type": "text" },
+    { "id": "work_year",         "label": "작업 연도",           "type": "text", "placeholder": "2024" },
+    { "id": "work_month",        "label": "작업 월",             "type": "text", "placeholder": "01" },
+    { "id": "work_day",          "label": "작업 일",             "type": "text", "placeholder": "01" },
+    { "id": "work_location",     "label": "작업 위치",           "type": "text" },
+    { "id": "supervisor",        "label": "작업 지휘자",         "type": "text" },
+    { "id": "worker_count",      "label": "작업 인원",           "type": "text", "placeholder": "0" },
+    { "id": "equipment_type",    "label": "항타기 종류",         "type": "text", "placeholder": "디젤/유압/진동 해머" },
+    { "id": "equipment_model",   "label": "장비 모델명",         "type": "text" },
+    { "id": "pile_type",         "label": "파일 종류",           "type": "text", "placeholder": "PHC파일/H형강 등" },
+    { "id": "pile_length",       "label": "파일 길이 (m)",       "type": "text", "placeholder": "0.0" },
+    { "id": "pile_dia",          "label": "파일 직경 (mm)",      "type": "text", "placeholder": "0" },
+    { "id": "pile_qty",          "label": "파일 수량 (본)",      "type": "text", "placeholder": "0" },
+    { "id": "hazard1_content",   "label": "위험1 내용",          "type": "text", "placeholder": "장비 전도" },
+    { "id": "hazard1_measure",   "label": "위험1 안전조치",      "type": "text" },
+    { "id": "hazard2_content",   "label": "위험2 내용",          "type": "text", "placeholder": "소음·진동" },
+    { "id": "hazard2_measure",   "label": "위험2 안전조치",      "type": "text" },
+    { "id": "hazard3_content",   "label": "위험3 내용",          "type": "text", "placeholder": "지하매설물 손상" },
+    { "id": "hazard3_measure",   "label": "위험3 안전조치",      "type": "text" },
+    { "id": "hazard4_content",   "label": "위험4 내용",          "type": "text", "placeholder": "인접 구조물 영향" },
+    { "id": "hazard4_measure",   "label": "위험4 안전조치",      "type": "text" },
+    { "id": "proc_step1",        "label": "작업순서 1",          "type": "text" },
+    { "id": "proc_step2",        "label": "작업순서 2",          "type": "text" },
+    { "id": "proc_step3",        "label": "작업순서 3",          "type": "text" },
+    { "id": "proc_step4",        "label": "작업순서 4",          "type": "text" },
+    { "id": "proc_step5",        "label": "작업순서 5",          "type": "text" },
+    { "id": "required_ppe",      "label": "필요 보호구",         "type": "text" },
+    { "id": "emergency_contact", "label": "비상연락망",          "type": "text" },
+    { "id": "special_notes",     "label": "특기 사항",           "type": "text" },
+    { "id": "preparer_name",     "label": "작성자 성명",         "type": "text" },
+    { "id": "approver_name",     "label": "승인자 성명",         "type": "text" }
+  ],
+  "layout": {
+    "type": "page",
+    "children": [
+      {
+        "type": "block",
+        "style": { "padding": [8,4,8,4] },
+        "children": [
+          { "type": "text", "value": "위험공정 작업계획서", "style": { "fontSize": 18, "fontWeight": 900, "textAlign": "center" } },
+          { "type": "text", "value": "항타기 작업 | 산업안전보건법 제38조, 시행규칙 제186조", "style": { "fontSize": 10, "textAlign": "center", "color": "#555" } }
+        ]
+      },
+      {
+        "type": "section",
+        "title": { "text": "기본 정보" },
+        "children": [
+          {
+            "type": "table",
+            "cols": [{ "w": "20%" }, { "w": "30%" }, { "w": "20%" }, { "w": "30%" }],
+            "style": { "borderColor": "#c0c0c0" },
+            "rows": [
+              { "cells": [
+                { "type": "label", "text": "현  장  명", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "site_name" },
+                { "type": "label", "text": "작 업 일 자", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "composite", "children": [
+                  { "type": "field", "fieldId": "work_year" }, { "type": "text", "value": "년 " },
+                  { "type": "field", "fieldId": "work_month" }, { "type": "text", "value": "월 " },
+                  { "type": "field", "fieldId": "work_day" }, { "type": "text", "value": "일" }
+                ]}
+              ]},
+              { "cells": [
+                { "type": "label", "text": "작 업 위 치", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "work_location" },
+                { "type": "label", "text": "작 업 지 휘 자", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "supervisor" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "작 업 인 원", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "composite", "children": [
+                  { "type": "field", "fieldId": "worker_count" }, { "type": "text", "value": " 명" }
+                ]},
+                { "type": "label", "text": "", "colspan": 2 }
+              ]}
+            ]
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "title": { "text": "사용 장비 및 파일 정보" },
+        "children": [
+          {
+            "type": "table",
+            "cols": [{ "w": "20%" }, { "w": "30%" }, { "w": "20%" }, { "w": "30%" }],
+            "style": { "borderColor": "#c0c0c0" },
+            "rows": [
+              { "cells": [
+                { "type": "label", "text": "항타기 종류",  "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "equipment_type" },
+                { "type": "label", "text": "장비 모델명",  "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "equipment_model" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "파일 종류",    "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "pile_type" },
+                { "type": "label", "text": "파일 길이",    "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "composite", "children": [
+                  { "type": "field", "fieldId": "pile_length" }, { "type": "text", "value": " m" }
+                ]}
+              ]},
+              { "cells": [
+                { "type": "label", "text": "파일 직경",    "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "composite", "children": [
+                  { "type": "field", "fieldId": "pile_dia" }, { "type": "text", "value": " mm" }
+                ]},
+                { "type": "label", "text": "파일 수량",    "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "composite", "children": [
+                  { "type": "field", "fieldId": "pile_qty" }, { "type": "text", "value": " 본" }
+                ]}
+              ]}
+            ]
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "title": { "text": "위험 요인 및 안전 조치" },
+        "children": [
+          {
+            "type": "table",
+            "cols": [{ "w": "8%" }, { "w": "46%" }, { "w": "46%" }],
+            "style": { "borderColor": "#c0c0c0" },
+            "rows": [
+              { "cells": [
+                { "type": "label", "text": "번호", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "label", "text": "위험 요인 내용", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "label", "text": "안전 조치",       "style": { "bg": "#eef0f3", "fontWeight": 700 } }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "①" },
+                { "type": "field", "fieldId": "hazard1_content" },
+                { "type": "field", "fieldId": "hazard1_measure" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "②" },
+                { "type": "field", "fieldId": "hazard2_content" },
+                { "type": "field", "fieldId": "hazard2_measure" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "③" },
+                { "type": "field", "fieldId": "hazard3_content" },
+                { "type": "field", "fieldId": "hazard3_measure" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "④" },
+                { "type": "field", "fieldId": "hazard4_content" },
+                { "type": "field", "fieldId": "hazard4_measure" }
+              ]}
+            ]
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "title": { "text": "작업 순서" },
+        "children": [
+          {
+            "type": "table",
+            "cols": [{ "w": "8%" }, { "w": "92%" }],
+            "style": { "borderColor": "#c0c0c0" },
+            "rows": [
+              { "cells": [
+                { "type": "label", "text": "①", "style": { "bg": "#eef0f3" } },
+                { "type": "field", "fieldId": "proc_step1" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "②", "style": { "bg": "#eef0f3" } },
+                { "type": "field", "fieldId": "proc_step2" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "③", "style": { "bg": "#eef0f3" } },
+                { "type": "field", "fieldId": "proc_step3" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "④", "style": { "bg": "#eef0f3" } },
+                { "type": "field", "fieldId": "proc_step4" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "⑤", "style": { "bg": "#eef0f3" } },
+                { "type": "field", "fieldId": "proc_step5" }
+              ]}
+            ]
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "title": { "text": "보호구 및 비상연락망" },
+        "children": [
+          {
+            "type": "table",
+            "cols": [{ "w": "25%" }, { "w": "75%" }],
+            "style": { "borderColor": "#c0c0c0" },
+            "rows": [
+              { "cells": [
+                { "type": "label", "text": "필요 보호구",  "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "required_ppe" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "비 상 연 락 망","style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "emergency_contact" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "특  기  사  항","style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "special_notes" }
+              ]}
+            ]
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "title": { "text": "작성 / 승인" },
+        "children": [
+          {
+            "type": "table",
+            "cols": [{ "w": "25%" }, { "w": "25%" }, { "w": "25%" }, { "w": "25%" }],
+            "style": { "borderColor": "#c0c0c0" },
+            "rows": [
+              { "cells": [
+                { "type": "label", "text": "작 성 자", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "preparer_name" },
+                { "type": "label", "text": "승 인 자", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "approver_name" }
+              ]}
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,154 @@
+{
+  "template_id": "heat_illness_prevention_check_v1",
+  "title": "온열질환 예방 자율점검표",
+  "version": 1,
+  "source": {
+    "file_type": "hwp",
+    "filename": "bid_00205_온열질환_예방_자율점검표.hwp",
+    "issuer": "고용노동부",
+    "legal_basis": "산업안전보건법 제39조"
+  },
+  "meta": {
+    "paper": "A4",
+    "unit": "mm",
+    "page": { "width": 210, "height": 297, "margin": { "top": 20, "right": 15, "bottom": 20, "left": 15 } },
+    "fonts": { "base": "Noto Sans KR", "mono": "monospace" }
+  },
+  "fields": [
+    { "id": "company_name",   "label": "사업장명",    "type": "text" },
+    { "id": "check_year",     "label": "점검 연도",   "type": "text", "placeholder": "2024" },
+    { "id": "check_month",    "label": "점검 월",     "type": "text", "placeholder": "01" },
+    { "id": "check_day",      "label": "점검 일",     "type": "text", "placeholder": "01" },
+    { "id": "checker_name",   "label": "점검자",      "type": "text" },
+    { "id": "item1_result",   "label": "항목1",       "type": "text", "placeholder": "이행/미이행/해당없음" },
+    { "id": "item2_result",   "label": "항목2",       "type": "text", "placeholder": "이행/미이행/해당없음" },
+    { "id": "item3_result",   "label": "항목3",       "type": "text", "placeholder": "이행/미이행/해당없음" },
+    { "id": "item4_result",   "label": "항목4",       "type": "text", "placeholder": "이행/미이행/해당없음" },
+    { "id": "item5_result",   "label": "항목5",       "type": "text", "placeholder": "이행/미이행/해당없음" },
+    { "id": "item6_result",   "label": "항목6",       "type": "text", "placeholder": "이행/미이행/해당없음" },
+    { "id": "item7_result",   "label": "항목7",       "type": "text", "placeholder": "이행/미이행/해당없음" },
+    { "id": "item8_result",   "label": "항목8",       "type": "text", "placeholder": "이행/미이행/해당없음" },
+    { "id": "item9_result",   "label": "항목9",       "type": "text", "placeholder": "이행/미이행/해당없음" },
+    { "id": "item10_result",  "label": "항목10",      "type": "text", "placeholder": "이행/미이행/해당없음" },
+    { "id": "item11_result",  "label": "항목11",      "type": "text", "placeholder": "이행/미이행/해당없음" },
+    { "id": "overall_notes",  "label": "종합 의견",   "type": "text" }
+  ],
+  "layout": {
+    "type": "page",
+    "children": [
+      {
+        "type": "block",
+        "style": { "padding": [8,4,8,4] },
+        "children": [
+          { "type": "text", "value": "온열질환 예방 자율점검표", "style": { "fontSize": 18, "fontWeight": 900, "textAlign": "center" } },
+          { "type": "text", "value": "고용노동부 | 산업안전보건법 제39조", "style": { "fontSize": 10, "textAlign": "center", "color": "#555" } }
+        ]
+      },
+      {
+        "type": "section",
+        "title": { "text": "기본 정보" },
+        "children": [
+          {
+            "type": "table",
+            "cols": [{ "w": "20%" }, { "w": "30%" }, { "w": "20%" }, { "w": "30%" }],
+            "style": { "borderColor": "#c0c0c0" },
+            "rows": [
+              { "cells": [
+                { "type": "label", "text": "사 업 장 명", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "company_name" },
+                { "type": "label", "text": "점 검 일 자", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "composite", "children": [
+                  { "type": "field", "fieldId": "check_year" }, { "type": "text", "value": ". " },
+                  { "type": "field", "fieldId": "check_month" }, { "type": "text", "value": ". " },
+                  { "type": "field", "fieldId": "check_day" }
+                ]}
+              ]},
+              { "cells": [
+                { "type": "label", "text": "점  검  자", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "checker_name" },
+                { "type": "label", "text": "", "colspan": 2 }
+              ]}
+            ]
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "title": { "text": "점검 항목" },
+        "children": [
+          {
+            "type": "table",
+            "cols": [{ "w": "8%" }, { "w": "67%" }, { "w": "25%" }],
+            "style": { "borderColor": "#c0c0c0" },
+            "rows": [
+              { "cells": [
+                { "type": "label", "text": "번호", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "label", "text": "점검 항목",  "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "label", "text": "이행 여부",  "style": { "bg": "#eef0f3", "fontWeight": 700 } }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "①" },
+                { "type": "label", "text": "작업 장소의 온도·습도를 주기적으로 모니터링하고 있는가?" },
+                { "type": "field", "fieldId": "item1_result" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "②" },
+                { "type": "label", "text": "WBGT 측정기(습구흑구온도지수) 또는 습구온도계를 비치하고 있는가?" },
+                { "type": "field", "fieldId": "item2_result" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "③" },
+                { "type": "label", "text": "근로자 1인당 1시간에 1L 이상 마실 수 있는 시원한 물을 제공하고 있는가?" },
+                { "type": "field", "fieldId": "item3_result" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "④" },
+                { "type": "label", "text": "직사광선을 차단할 수 있는 그늘막·쉼터 등을 설치하였는가?" },
+                { "type": "field", "fieldId": "item4_result" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "⑤" },
+                { "type": "label", "text": "1시간 작업 후 10~15분 이상 규칙적인 휴식 시간을 부여하고 있는가?" },
+                { "type": "field", "fieldId": "item5_result" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "⑥" },
+                { "type": "label", "text": "폭염특보 발령 시 옥외작업 중지 등 적절한 조치를 취하고 있는가?" },
+                { "type": "field", "fieldId": "item6_result" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "⑦" },
+                { "type": "label", "text": "고령자·임산부·심뇌혈관질환자 등 취약 근로자를 별도로 보호하고 있는가?" },
+                { "type": "field", "fieldId": "item7_result" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "⑧" },
+                { "type": "label", "text": "온열질환 예방에 관한 안전보건교육을 실시하였는가?" },
+                { "type": "field", "fieldId": "item8_result" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "⑨" },
+                { "type": "label", "text": "온열질환 증상 식별 방법 및 응급처치 절차를 숙지하고 있는가?" },
+                { "type": "field", "fieldId": "item9_result" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "⑩" },
+                { "type": "label", "text": "통기성이 좋은 밝은 색 작업복 및 적절한 보호구를 착용하고 있는가?" },
+                { "type": "field", "fieldId": "item10_result" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "⑪" },
+                { "type": "label", "text": "응급처치 키트 및 비상연락망이 작업 장소에 비치되어 있는가?" },
+                { "type": "field", "fieldId": "item11_result" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "종합 의견", "colspan": 2, "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "overall_notes" }
+              ]}
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

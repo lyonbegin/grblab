@@ -1,0 +1,67 @@
+{
+  "template_id": "hazardous_substance_list_v1",
+  "title": "유해위험물질 목록",
+  "version": 1,
+  "source": { "file_type": "hwp", "filename": "유해위험물질_목록.hwp" },
+  "meta": { "paper": "A4", "unit": "mm", "page": { "width": 210, "height": 297, "margin": { "top": 20, "right": 15, "bottom": 20, "left": 15 } } },
+  "fields": [
+    { "id": "company_name",   "label": "사업장명",     "type": "text" },
+    { "id": "update_year",    "label": "작성 연도",    "type": "text", "placeholder": "2024" },
+    { "id": "update_month",   "label": "작성 월",      "type": "text", "placeholder": "01" },
+    { "id": "update_day",     "label": "작성 일",      "type": "text", "placeholder": "01" },
+    { "id": "s1_no",    "label": "No.1",          "type": "text", "placeholder": "1" }, { "id": "s1_name",   "label": "물질1 명칭",    "type": "text" }, { "id": "s1_cas",    "label": "물질1 CAS번호", "type": "text" }, { "id": "s1_usage",  "label": "물질1 용도",    "type": "text" }, { "id": "s1_type",   "label": "물질1 유형",    "type": "text", "placeholder": "인화성/독성/발암성/부식성 등" }, { "id": "s1_qty",    "label": "물질1 보관량",  "type": "text" }, { "id": "s1_loc",    "label": "물질1 보관위치","type": "text" }, { "id": "s1_msds",   "label": "물질1 MSDS비치","type": "text", "placeholder": "유/무" }, { "id": "s1_note",   "label": "물질1 비고",    "type": "text" },
+    { "id": "s2_no",    "label": "No.2",          "type": "text", "placeholder": "2" }, { "id": "s2_name",   "label": "물질2 명칭",    "type": "text" }, { "id": "s2_cas",    "label": "물질2 CAS번호", "type": "text" }, { "id": "s2_usage",  "label": "물질2 용도",    "type": "text" }, { "id": "s2_type",   "label": "물질2 유형",    "type": "text", "placeholder": "인화성/독성/발암성/부식성 등" }, { "id": "s2_qty",    "label": "물질2 보관량",  "type": "text" }, { "id": "s2_loc",    "label": "물질2 보관위치","type": "text" }, { "id": "s2_msds",   "label": "물질2 MSDS비치","type": "text", "placeholder": "유/무" }, { "id": "s2_note",   "label": "물질2 비고",    "type": "text" },
+    { "id": "s3_no",    "label": "No.3",          "type": "text", "placeholder": "3" }, { "id": "s3_name",   "label": "물질3 명칭",    "type": "text" }, { "id": "s3_cas",    "label": "물질3 CAS번호", "type": "text" }, { "id": "s3_usage",  "label": "물질3 용도",    "type": "text" }, { "id": "s3_type",   "label": "물질3 유형",    "type": "text", "placeholder": "인화성/독성/발암성/부식성 등" }, { "id": "s3_qty",    "label": "물질3 보관량",  "type": "text" }, { "id": "s3_loc",    "label": "물질3 보관위치","type": "text" }, { "id": "s3_msds",   "label": "물질3 MSDS비치","type": "text", "placeholder": "유/무" }, { "id": "s3_note",   "label": "물질3 비고",    "type": "text" },
+    { "id": "s4_no",    "label": "No.4",          "type": "text", "placeholder": "4" }, { "id": "s4_name",   "label": "물질4 명칭",    "type": "text" }, { "id": "s4_cas",    "label": "물질4 CAS번호", "type": "text" }, { "id": "s4_usage",  "label": "물질4 용도",    "type": "text" }, { "id": "s4_type",   "label": "물질4 유형",    "type": "text", "placeholder": "인화성/독성/발암성/부식성 등" }, { "id": "s4_qty",    "label": "물질4 보관량",  "type": "text" }, { "id": "s4_loc",    "label": "물질4 보관위치","type": "text" }, { "id": "s4_msds",   "label": "물질4 MSDS비치","type": "text", "placeholder": "유/무" }, { "id": "s4_note",   "label": "물질4 비고",    "type": "text" },
+    { "id": "s5_no",    "label": "No.5",          "type": "text", "placeholder": "5" }, { "id": "s5_name",   "label": "물질5 명칭",    "type": "text" }, { "id": "s5_cas",    "label": "물질5 CAS번호", "type": "text" }, { "id": "s5_usage",  "label": "물질5 용도",    "type": "text" }, { "id": "s5_type",   "label": "물질5 유형",    "type": "text", "placeholder": "인화성/독성/발암성/부식성 등" }, { "id": "s5_qty",    "label": "물질5 보관량",  "type": "text" }, { "id": "s5_loc",    "label": "물질5 보관위치","type": "text" }, { "id": "s5_msds",   "label": "물질5 MSDS비치","type": "text", "placeholder": "유/무" }, { "id": "s5_note",   "label": "물질5 비고",    "type": "text" },
+    { "id": "s6_no",    "label": "No.6",          "type": "text", "placeholder": "6" }, { "id": "s6_name",   "label": "물질6 명칭",    "type": "text" }, { "id": "s6_cas",    "label": "물질6 CAS번호", "type": "text" }, { "id": "s6_usage",  "label": "물질6 용도",    "type": "text" }, { "id": "s6_type",   "label": "물질6 유형",    "type": "text", "placeholder": "인화성/독성/발암성/부식성 등" }, { "id": "s6_qty",    "label": "물질6 보관량",  "type": "text" }, { "id": "s6_loc",    "label": "물질6 보관위치","type": "text" }, { "id": "s6_msds",   "label": "물질6 MSDS비치","type": "text", "placeholder": "유/무" }, { "id": "s6_note",   "label": "물질6 비고",    "type": "text" }
+  ],
+  "layout": {
+    "type": "page",
+    "children": [
+      { "type": "block", "style": { "padding": [8,4,8,4] }, "children": [
+        { "type": "text", "value": "유해위험물질 목록", "style": { "fontSize": 18, "fontWeight": 900, "textAlign": "center" } },
+        { "type": "text", "value": "산업안전보건법 제114조 | 화학물질관리법", "style": { "fontSize": 9, "textAlign": "center", "color": "#555" } }
+      ]},
+      { "type": "section", "title": { "text": "기본 정보" }, "children": [
+        { "type": "table", "cols": [{"w":"20%"},{"w":"30%"},{"w":"20%"},{"w":"30%"}], "style": { "borderColor": "#c0c0c0" },
+          "rows": [
+            { "cells": [
+              { "type": "label", "text": "사 업 장 명", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "company_name" },
+              { "type": "label", "text": "작  성  일",  "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "composite", "children": [
+                { "type": "field", "fieldId": "update_year" }, { "type": "text", "value": "년 " },
+                { "type": "field", "fieldId": "update_month" }, { "type": "text", "value": "월 " },
+                { "type": "field", "fieldId": "update_day" }, { "type": "text", "value": "일" }
+              ]}
+            ]}
+          ]
+        }
+      ]},
+      { "type": "section", "title": { "text": "유해위험물질 현황" }, "children": [
+        { "type": "table", "cols": [{"w":"5%"},{"w":"15%"},{"w":"10%"},{"w":"10%"},{"w":"15%"},{"w":"9%"},{"w":"12%"},{"w":"8%"},{"w":"16%"}], "style": { "borderColor": "#c0c0c0" },
+          "rows": [
+            { "cells": [
+              { "type": "label", "text": "No",          "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "label", "text": "물 질 명",    "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "label", "text": "CAS번호",     "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "label", "text": "용  도",      "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "label", "text": "유해위험유형", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "label", "text": "보관량",      "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "label", "text": "보관 위치",   "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "label", "text": "MSDS",        "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "label", "text": "비  고",      "style": { "bg": "#eef0f3", "fontWeight": 700 } }
+            ]},
+            { "cells": [{"type":"field","fieldId":"s1_no"},{"type":"field","fieldId":"s1_name"},{"type":"field","fieldId":"s1_cas"},{"type":"field","fieldId":"s1_usage"},{"type":"field","fieldId":"s1_type"},{"type":"field","fieldId":"s1_qty"},{"type":"field","fieldId":"s1_loc"},{"type":"field","fieldId":"s1_msds"},{"type":"field","fieldId":"s1_note"}] },
+            { "cells": [{"type":"field","fieldId":"s2_no"},{"type":"field","fieldId":"s2_name"},{"type":"field","fieldId":"s2_cas"},{"type":"field","fieldId":"s2_usage"},{"type":"field","fieldId":"s2_type"},{"type":"field","fieldId":"s2_qty"},{"type":"field","fieldId":"s2_loc"},{"type":"field","fieldId":"s2_msds"},{"type":"field","fieldId":"s2_note"}] },
+            { "cells": [{"type":"field","fieldId":"s3_no"},{"type":"field","fieldId":"s3_name"},{"type":"field","fieldId":"s3_cas"},{"type":"field","fieldId":"s3_usage"},{"type":"field","fieldId":"s3_type"},{"type":"field","fieldId":"s3_qty"},{"type":"field","fieldId":"s3_loc"},{"type":"field","fieldId":"s3_msds"},{"type":"field","fieldId":"s3_note"}] },
+            { "cells": [{"type":"field","fieldId":"s4_no"},{"type":"field","fieldId":"s4_name"},{"type":"field","fieldId":"s4_cas"},{"type":"field","fieldId":"s4_usage"},{"type":"field","fieldId":"s4_type"},{"type":"field","fieldId":"s4_qty"},{"type":"field","fieldId":"s4_loc"},{"type":"field","fieldId":"s4_msds"},{"type":"field","fieldId":"s4_note"}] },
+            { "cells": [{"type":"field","fieldId":"s5_no"},{"type":"field","fieldId":"s5_name"},{"type":"field","fieldId":"s5_cas"},{"type":"field","fieldId":"s5_usage"},{"type":"field","fieldId":"s5_type"},{"type":"field","fieldId":"s5_qty"},{"type":"field","fieldId":"s5_loc"},{"type":"field","fieldId":"s5_msds"},{"type":"field","fieldId":"s5_note"}] },
+            { "cells": [{"type":"field","fieldId":"s6_no"},{"type":"field","fieldId":"s6_name"},{"type":"field","fieldId":"s6_cas"},{"type":"field","fieldId":"s6_usage"},{"type":"field","fieldId":"s6_type"},{"type":"field","fieldId":"s6_qty"},{"type":"field","fieldId":"s6_loc"},{"type":"field","fieldId":"s6_msds"},{"type":"field","fieldId":"s6_note"}] }
+          ]
+        }
+      ]}
+    ]
+  }
+}

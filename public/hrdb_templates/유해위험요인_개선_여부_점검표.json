@@ -1,0 +1,86 @@
+{
+  "template_id": "hazard_improvement_checklist_v1",
+  "title": "유해위험요인 개선 여부 점검표",
+  "version": 1,
+  "source": { "file_type": "hwp", "filename": "유해위험요인_개선_여부_점검표.hwp" },
+  "meta": { "paper": "A4", "unit": "mm", "page": { "width": 210, "height": 297, "margin": { "top": 20, "right": 15, "bottom": 20, "left": 15 } } },
+  "fields": [
+    { "id": "company_name",   "label": "사업장명",       "type": "text" },
+    { "id": "check_year",     "label": "점검 연도",      "type": "text", "placeholder": "2024" },
+    { "id": "check_month",    "label": "점검 월",        "type": "text", "placeholder": "01" },
+    { "id": "check_day",      "label": "점검 일",        "type": "text", "placeholder": "01" },
+    { "id": "checker_name",   "label": "점검자 성명",    "type": "text" },
+    { "id": "checker_title",  "label": "점검자 직책",    "type": "text" },
+    { "id": "dept",           "label": "해당 부서",      "type": "text" },
+    { "id": "r1_hazard",  "label": "요인1 유해위험요인",  "type": "text" }, { "id": "r1_action",  "label": "요인1 개선대책",   "type": "text" }, { "id": "r1_deadline","label": "요인1 완료기한",   "type": "text" }, { "id": "r1_person",  "label": "요인1 담당자",     "type": "text" }, { "id": "r1_status",  "label": "요인1 이행여부",   "type": "text", "placeholder": "완료/진행중/미이행" }, { "id": "r1_verify",  "label": "요인1 확인일",     "type": "text" }, { "id": "r1_note",    "label": "요인1 비고",       "type": "text" },
+    { "id": "r2_hazard",  "label": "요인2 유해위험요인",  "type": "text" }, { "id": "r2_action",  "label": "요인2 개선대책",   "type": "text" }, { "id": "r2_deadline","label": "요인2 완료기한",   "type": "text" }, { "id": "r2_person",  "label": "요인2 담당자",     "type": "text" }, { "id": "r2_status",  "label": "요인2 이행여부",   "type": "text", "placeholder": "완료/진행중/미이행" }, { "id": "r2_verify",  "label": "요인2 확인일",     "type": "text" }, { "id": "r2_note",    "label": "요인2 비고",       "type": "text" },
+    { "id": "r3_hazard",  "label": "요인3 유해위험요인",  "type": "text" }, { "id": "r3_action",  "label": "요인3 개선대책",   "type": "text" }, { "id": "r3_deadline","label": "요인3 완료기한",   "type": "text" }, { "id": "r3_person",  "label": "요인3 담당자",     "type": "text" }, { "id": "r3_status",  "label": "요인3 이행여부",   "type": "text", "placeholder": "완료/진행중/미이행" }, { "id": "r3_verify",  "label": "요인3 확인일",     "type": "text" }, { "id": "r3_note",    "label": "요인3 비고",       "type": "text" },
+    { "id": "r4_hazard",  "label": "요인4 유해위험요인",  "type": "text" }, { "id": "r4_action",  "label": "요인4 개선대책",   "type": "text" }, { "id": "r4_deadline","label": "요인4 완료기한",   "type": "text" }, { "id": "r4_person",  "label": "요인4 담당자",     "type": "text" }, { "id": "r4_status",  "label": "요인4 이행여부",   "type": "text", "placeholder": "완료/진행중/미이행" }, { "id": "r4_verify",  "label": "요인4 확인일",     "type": "text" }, { "id": "r4_note",    "label": "요인4 비고",       "type": "text" },
+    { "id": "r5_hazard",  "label": "요인5 유해위험요인",  "type": "text" }, { "id": "r5_action",  "label": "요인5 개선대책",   "type": "text" }, { "id": "r5_deadline","label": "요인5 완료기한",   "type": "text" }, { "id": "r5_person",  "label": "요인5 담당자",     "type": "text" }, { "id": "r5_status",  "label": "요인5 이행여부",   "type": "text", "placeholder": "완료/진행중/미이행" }, { "id": "r5_verify",  "label": "요인5 확인일",     "type": "text" }, { "id": "r5_note",    "label": "요인5 비고",       "type": "text" },
+    { "id": "r6_hazard",  "label": "요인6 유해위험요인",  "type": "text" }, { "id": "r6_action",  "label": "요인6 개선대책",   "type": "text" }, { "id": "r6_deadline","label": "요인6 완료기한",   "type": "text" }, { "id": "r6_person",  "label": "요인6 담당자",     "type": "text" }, { "id": "r6_status",  "label": "요인6 이행여부",   "type": "text", "placeholder": "완료/진행중/미이행" }, { "id": "r6_verify",  "label": "요인6 확인일",     "type": "text" }, { "id": "r6_note",    "label": "요인6 비고",       "type": "text" },
+    { "id": "overall_notes", "label": "종합 의견",        "type": "text" },
+    { "id": "approver_name", "label": "승인자 성명",      "type": "text" }
+  ],
+  "layout": {
+    "type": "page",
+    "children": [
+      { "type": "block", "style": { "padding": [8,4,8,4] }, "children": [
+        { "type": "text", "value": "유해위험요인 개선 여부 점검표", "style": { "fontSize": 16, "fontWeight": 900, "textAlign": "center" } },
+        { "type": "text", "value": "위험성평가 결과 개선조치 이행 확인", "style": { "fontSize": 9, "textAlign": "center", "color": "#555" } }
+      ]},
+      { "type": "section", "title": { "text": "기본 정보" }, "children": [
+        { "type": "table", "cols": [{"w":"15%"},{"w":"25%"},{"w":"15%"},{"w":"20%"},{"w":"10%"},{"w":"15%"}], "style": { "borderColor": "#c0c0c0" },
+          "rows": [
+            { "cells": [
+              { "type": "label", "text": "사 업 장 명", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "company_name" },
+              { "type": "label", "text": "점 검 일 자", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "composite", "children": [
+                { "type": "field", "fieldId": "check_year" }, { "type": "text", "value": "년 " },
+                { "type": "field", "fieldId": "check_month" }, { "type": "text", "value": "월 " },
+                { "type": "field", "fieldId": "check_day" }, { "type": "text", "value": "일" }
+              ]},
+              { "type": "label", "text": "부  서",      "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "dept" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "점  검  자",  "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "composite", "children": [
+                { "type": "field", "fieldId": "checker_title" }, { "type": "text", "value": "  " },
+                { "type": "field", "fieldId": "checker_name" }
+              ]},
+              { "type": "label", "text": "승  인  자",  "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "approver_name" },
+              { "type": "label", "text": "", "colspan": 2 }
+            ]}
+          ]
+        }
+      ]},
+      { "type": "section", "title": { "text": "개선 여부 점검" }, "children": [
+        { "type": "table", "cols": [{"w":"18%"},{"w":"20%"},{"w":"10%"},{"w":"10%"},{"w":"12%"},{"w":"10%"},{"w":"20%"}], "style": { "borderColor": "#c0c0c0" },
+          "rows": [
+            { "cells": [
+              { "type": "label", "text": "유해위험요인",  "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "label", "text": "개선 대책",     "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "label", "text": "완료 기한",     "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "label", "text": "담 당 자",      "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "label", "text": "이 행 여 부",   "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "label", "text": "확 인 일",      "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "label", "text": "비  고",        "style": { "bg": "#eef0f3", "fontWeight": 700 } }
+            ]},
+            { "cells": [{"type":"field","fieldId":"r1_hazard"},{"type":"field","fieldId":"r1_action"},{"type":"field","fieldId":"r1_deadline"},{"type":"field","fieldId":"r1_person"},{"type":"field","fieldId":"r1_status"},{"type":"field","fieldId":"r1_verify"},{"type":"field","fieldId":"r1_note"}] },
+            { "cells": [{"type":"field","fieldId":"r2_hazard"},{"type":"field","fieldId":"r2_action"},{"type":"field","fieldId":"r2_deadline"},{"type":"field","fieldId":"r2_person"},{"type":"field","fieldId":"r2_status"},{"type":"field","fieldId":"r2_verify"},{"type":"field","fieldId":"r2_note"}] },
+            { "cells": [{"type":"field","fieldId":"r3_hazard"},{"type":"field","fieldId":"r3_action"},{"type":"field","fieldId":"r3_deadline"},{"type":"field","fieldId":"r3_person"},{"type":"field","fieldId":"r3_status"},{"type":"field","fieldId":"r3_verify"},{"type":"field","fieldId":"r3_note"}] },
+            { "cells": [{"type":"field","fieldId":"r4_hazard"},{"type":"field","fieldId":"r4_action"},{"type":"field","fieldId":"r4_deadline"},{"type":"field","fieldId":"r4_person"},{"type":"field","fieldId":"r4_status"},{"type":"field","fieldId":"r4_verify"},{"type":"field","fieldId":"r4_note"}] },
+            { "cells": [{"type":"field","fieldId":"r5_hazard"},{"type":"field","fieldId":"r5_action"},{"type":"field","fieldId":"r5_deadline"},{"type":"field","fieldId":"r5_person"},{"type":"field","fieldId":"r5_status"},{"type":"field","fieldId":"r5_verify"},{"type":"field","fieldId":"r5_note"}] },
+            { "cells": [{"type":"field","fieldId":"r6_hazard"},{"type":"field","fieldId":"r6_action"},{"type":"field","fieldId":"r6_deadline"},{"type":"field","fieldId":"r6_person"},{"type":"field","fieldId":"r6_status"},{"type":"field","fieldId":"r6_verify"},{"type":"field","fieldId":"r6_note"}] },
+            { "cells": [
+              { "type": "label", "text": "종 합 의 견", "colspan": 6, "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "overall_notes" }
+            ]}
+          ]
+        }
+      ]}
+    ]
+  }
+}

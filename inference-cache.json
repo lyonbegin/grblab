@@ -1,0 +1,371 @@
+{
+  "people-detection-thermal/5::https://source.roboflow.com/zD7y6XOoQnh7WC160Ae7/3LnSjbkKaGhe6qjOLBIn/original.jpg": [
+    {
+      "x": 478.5,
+      "y": 287,
+      "width": 67,
+      "height": 178,
+      "confidence": 0.8819806575775146,
+      "class": "person",
+      "class_id": 0,
+      "detection_id": "762a1ccf-18df-45b4-b94e-eb7fe19ca20f"
+    },
+    {
+      "x": 435.5,
+      "y": 269,
+      "width": 41,
+      "height": 138,
+      "confidence": 0.8308413624763489,
+      "class": "person",
+      "class_id": 0,
+      "detection_id": "79bca622-fbf8-4010-a020-9ab5d3998573"
+    }
+  ],
+  "fireandsmokedataset1/1::https://source.roboflow.com/EIrrALTpIMcQju5RnC3P/M870mGFYnZ8ROEhlCSYk/original.jpg": [
+    {
+      "x": 184.5,
+      "y": 227,
+      "width": 109,
+      "height": 44,
+      "confidence": 0.721205472946167,
+      "class": "fire",
+      "class_id": 0,
+      "detection_id": "fd116151-0ff7-43f1-95b3-16c738076a72"
+    }
+  ],
+  "fall-7lbue/1::https://source.roboflow.com/gBs2kTP34RSFwmpism3R5cEBQ6z1/U3ZDmmRbGZkLaMKFyaUF/original.jpg": [
+    {
+      "x": 119.5,
+      "y": 158,
+      "width": 127,
+      "height": 42,
+      "confidence": 0.8973709940910339,
+      "class": "fall",
+      "class_id": 0,
+      "detection_id": "828f4e36-4839-40ab-a9b6-14be9dc6011c"
+    }
+  ],
+  "fireandsmokedataset1/1::https://source.roboflow.com/EIrrALTpIMcQju5RnC3P/2pEBvRNRdta4MdaevjUo/original.jpg": [
+    {
+      "x": 1140.5,
+      "y": 301,
+      "width": 109,
+      "height": 46,
+      "confidence": 0.8232473134994507,
+      "class": "other",
+      "class_id": 1,
+      "detection_id": "f36341f9-51e4-4ce8-bb37-d5448cb39484"
+    },
+    {
+      "x": 478.5,
+      "y": 197.5,
+      "width": 455,
+      "height": 395,
+      "confidence": 0.7320857644081116,
+      "class": "smoke",
+      "class_id": 2,
+      "detection_id": "a2249ae5-a670-47e1-8145-611e4106aa9d"
+    },
+    {
+      "x": 714.5,
+      "y": 215,
+      "width": 81,
+      "height": 54,
+      "confidence": 0.6925392150878906,
+      "class": "other",
+      "class_id": 1,
+      "detection_id": "7711940c-f54a-449c-ac0e-03ba0e745339"
+    }
+  ],
+  "fireandsmokedataset1/1::https://source.roboflow.com/EIrrALTpIMcQju5RnC3P/z2S52kbm7AvCLDIUrl23/original.jpg": [
+    {
+      "x": 865,
+      "y": 137,
+      "width": 830,
+      "height": 272,
+      "confidence": 0.8700382113456726,
+      "class": "smoke",
+      "class_id": 2,
+      "detection_id": "3241de3a-22c1-4334-bb6e-17fff8835d8d"
+    },
+    {
+      "x": 612.5,
+      "y": 474,
+      "width": 41,
+      "height": 40,
+      "confidence": 0.6945884227752686,
+      "class": "fire",
+      "class_id": 0,
+      "detection_id": "09cc2009-d245-43b9-81e1-e2d60fb5a99d"
+    },
+    {
+      "x": 1130,
+      "y": 370.5,
+      "width": 192,
+      "height": 129,
+      "confidence": 0.6564316153526306,
+      "class": "fire",
+      "class_id": 0,
+      "detection_id": "6653a3c7-ff6a-445c-b5af-d608376d42b4"
+    },
+    {
+      "x": 533.5,
+      "y": 365.5,
+      "width": 65,
+      "height": 67,
+      "confidence": 0.6499024629592896,
+      "class": "fire",
+      "class_id": 0,
+      "detection_id": "2ac6d19b-3843-47a2-9d6f-47c7cdf0bcc3"
+    },
+    {
+      "x": 1069,
+      "y": 384,
+      "width": 318,
+      "height": 190,
+      "confidence": 0.5875070691108704,
+      "class": "fire",
+      "class_id": 0,
+      "detection_id": "f16a632d-e276-4007-af68-213fffe40989"
+    },
+    {
+      "x": 603.5,
+      "y": 372.5,
+      "width": 39,
+      "height": 47,
+      "confidence": 0.5389410257339478,
+      "class": "fire",
+      "class_id": 0,
+      "detection_id": "8ea9f557-150b-47a6-afcd-80cd3a839fbe"
+    }
+  ],
+  "fireandsmokedataset1/1::https://source.roboflow.com/EIrrALTpIMcQju5RnC3P/KZpdFn1aJgo97uG7JEH1/original.jpg": [
+    {
+      "x": 792,
+      "y": 287.5,
+      "width": 190,
+      "height": 275,
+      "confidence": 0.6690078973770142,
+      "class": "fire",
+      "class_id": 0,
+      "detection_id": "4d506cfa-5377-46f4-8a00-9f610cc9dbd9"
+    },
+    {
+      "x": 853.5,
+      "y": 63,
+      "width": 123,
+      "height": 126,
+      "confidence": 0.6632409691810608,
+      "class": "fire",
+      "class_id": 0,
+      "detection_id": "193bc623-768f-4b4f-b4a9-b0960b2d3d9d"
+    }
+  ],
+  "parking-space-ipm1b/4::https://source.roboflow.com/RxXho6hI5zW7g9LrlTQmdOWXAQK2/NEJZgf7f4bFU4uIaaSsb/original.jpg": [
+    {
+      "x": 561.5,
+      "y": 974.5,
+      "width": 235,
+      "height": 393,
+      "confidence": 0.8707382678985596,
+      "class": "occupied",
+      "class_id": 1,
+      "detection_id": "08e7f92a-7c74-4168-8f0c-b4336eef215f"
+    },
+    {
+      "x": 367.5,
+      "y": 936.5,
+      "width": 229,
+      "height": 361,
+      "confidence": 0.8694149851799011,
+      "class": "occupied",
+      "class_id": 1,
+      "detection_id": "775007e0-ca72-45b8-a3b9-24362a9b1d00"
+    },
+    {
+      "x": 176.5,
+      "y": 908,
+      "width": 221,
+      "height": 368,
+      "confidence": 0.8618817329406738,
+      "class": "occupied",
+      "class_id": 1,
+      "detection_id": "ade0e80b-176d-4eb7-98b0-098c904574cd"
+    },
+    {
+      "x": 757.5,
+      "y": 991,
+      "width": 209,
+      "height": 386,
+      "confidence": 0.8617440462112427,
+      "class": "occupied",
+      "class_id": 1,
+      "detection_id": "bdce391f-d8af-491e-86c9-714d3f1ae6a9"
+    },
+    {
+      "x": 834,
+      "y": 299,
+      "width": 182,
+      "height": 328,
+      "confidence": 0.8591905236244202,
+      "class": "occupied",
+      "class_id": 1,
+      "detection_id": "2d014a15-f056-4fe7-b897-d3e4e4ff1695"
+    },
+    {
+      "x": 656.5,
+      "y": 264,
+      "width": 185,
+      "height": 358,
+      "confidence": 0.8577072024345398,
+      "class": "occupied",
+      "class_id": 1,
+      "detection_id": "d42edf68-c1ff-4b46-a03c-fb4543833677"
+    },
+    {
+      "x": 471,
+      "y": 244,
+      "width": 188,
+      "height": 346,
+      "confidence": 0.8573312163352966,
+      "class": "occupied",
+      "class_id": 1,
+      "detection_id": "eef14025-1be2-4a61-8789-d854b79c6e7c"
+    },
+    {
+      "x": 1019.5,
+      "y": 319.5,
+      "width": 179,
+      "height": 337,
+      "confidence": 0.8520261645317078,
+      "class": "occupied",
+      "class_id": 1,
+      "detection_id": "ad8ad7a1-d546-4d56-bc68-13c73819a4e3"
+    },
+    {
+      "x": 1172.5,
+      "y": 1051,
+      "width": 213,
+      "height": 450,
+      "confidence": 0.847079336643219,
+      "class": "occupied",
+      "class_id": 1,
+      "detection_id": "f20671a2-fc05-46a2-b810-8938bfbd96ea"
+    },
+    {
+      "x": 968,
+      "y": 1022,
+      "width": 224,
+      "height": 382,
+      "confidence": 0.8277652859687805,
+      "class": "occupied",
+      "class_id": 1,
+      "detection_id": "d08aa6bf-1bcb-43c3-98c6-f8f1559dc30e"
+    },
+    {
+      "x": 1192.5,
+      "y": 316,
+      "width": 173,
+      "height": 380,
+      "confidence": 0.8201414942741394,
+      "class": "occupied",
+      "class_id": 1,
+      "detection_id": "02e61bb9-45ce-43fa-8764-d3cc7c4272c4"
+    },
+    {
+      "x": 112,
+      "y": 194.5,
+      "width": 204,
+      "height": 333,
+      "confidence": 0.8118269443511963,
+      "class": "occupied",
+      "class_id": 1,
+      "detection_id": "d485d1c4-d920-4d40-93a2-9d06ae5b2dea"
+    },
+    {
+      "x": 296,
+      "y": 219.5,
+      "width": 186,
+      "height": 335,
+      "confidence": 0.8062407970428467,
+      "class": "occupied",
+      "class_id": 1,
+      "detection_id": "b7bde29c-a45d-42c3-9793-a70b0f177af3"
+    },
+    {
+      "x": 46,
+      "y": 867,
+      "width": 92,
+      "height": 372,
+      "confidence": 0.6921787858009338,
+      "class": "occupied",
+      "class_id": 1,
+      "detection_id": "88f7ce38-7ba2-4279-943c-b13809359f1f"
+    }
+  ],
+  "fall-7lbue/1::https://source.roboflow.com/gBs2kTP34RSFwmpism3R5cEBQ6z1/a7izrY45NbpOeFKpp7a0/original.jpg": [],
+  "fall-7lbue/1::https://source.roboflow.com/gBs2kTP34RSFwmpism3R5cEBQ6z1/Zl0HHiPFhQFc4wiOM7JL/original.jpg": [
+    {
+      "x": 160.5,
+      "y": 266,
+      "width": 285,
+      "height": 276,
+      "confidence": 0.9999985694885254,
+      "class": "fall",
+      "class_id": 0,
+      "detection_id": "b5c967b8-f1a6-428c-8f7a-738da78a26a0"
+    }
+  ],
+  "parking-space-ipm1b/4::https://source.roboflow.com/RxXho6hI5zW7g9LrlTQmdOWXAQK2/SIda3gtqI7J9Za9JEDvZ/original.jpg": [
+    {
+      "x": 252,
+      "y": 170,
+      "width": 98,
+      "height": 114,
+      "confidence": 0.9035874009132385,
+      "class": "occupied",
+      "class_id": 1,
+      "detection_id": "2569b3b8-be45-4609-b575-02c978e2175e"
+    },
+    {
+      "x": 164.5,
+      "y": 208.5,
+      "width": 105,
+      "height": 103,
+      "confidence": 0.8856850266456604,
+      "class": "empty",
+      "class_id": 0,
+      "detection_id": "f0794089-f378-40f3-b1fe-a5ced7789cb2"
+    },
+    {
+      "x": 346.5,
+      "y": 139.5,
+      "width": 109,
+      "height": 113,
+      "confidence": 0.8757107257843018,
+      "class": "occupied",
+      "class_id": 1,
+      "detection_id": "2a139238-a5d6-4658-9058-2663f6791104"
+    },
+    {
+      "x": 68,
+      "y": 231,
+      "width": 114,
+      "height": 114,
+      "confidence": 0.8675751686096191,
+      "class": "empty",
+      "class_id": 0,
+      "detection_id": "c64f3050-eeac-4814-a7da-9b23ddbe0c55"
+    },
+    {
+      "x": 13,
+      "y": 257,
+      "width": 26,
+      "height": 106,
+      "confidence": 0.5347914099693298,
+      "class": "empty",
+      "class_id": 0,
+      "detection_id": "6667af90-0378-4f2f-83ec-b8a7d214bd29"
+    }
+  ]
+}

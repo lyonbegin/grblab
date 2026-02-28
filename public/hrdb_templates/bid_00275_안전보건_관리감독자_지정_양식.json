@@ -1,0 +1,113 @@
+{
+  "template_id": "safety_supervisor_designation_v1",
+  "title": "안전보건 관리감독자 지정서",
+  "version": 1,
+  "source": {
+    "file_type": "hwp",
+    "filename": "bid_00275_안전보건_관리감독자_지정_양식.hwp",
+    "issuer": "",
+    "legal_basis": "산업안전보건법 제16조"
+  },
+  "meta": {
+    "paper": "A4",
+    "unit": "mm",
+    "page": { "width": 210, "height": 297, "margin": { "top": 20, "right": 20, "bottom": 20, "left": 20 } },
+    "fonts": { "base": "Noto Sans KR" }
+  },
+  "fields": [
+    { "id": "dept",        "label": "소속",     "type": "text", "placeholder": "소속 부서명" },
+    { "id": "name",        "label": "성명",     "type": "text", "placeholder": "홍길동" },
+    { "id": "birth_date",  "label": "생년월일", "type": "text", "placeholder": "YYYY.MM.DD" },
+    { "id": "duties",      "label": "관리감독자의 직무 (추가사항)", "type": "textarea", "placeholder": "" },
+    { "id": "sign_year",   "label": "지정일 연도", "type": "text", "placeholder": "2024" },
+    { "id": "sign_month",  "label": "지정일 월",   "type": "text", "placeholder": "01" },
+    { "id": "sign_day",    "label": "지정일 일",   "type": "text", "placeholder": "01" },
+    { "id": "company_name","label": "회사명",   "type": "text", "placeholder": "㈜OOOO" },
+    { "id": "ceo_sign",    "label": "대표이사 서명", "type": "text" }
+  ],
+  "layout": {
+    "type": "page",
+    "children": [
+      {
+        "type": "block",
+        "style": { "padding": [10, 6, 10, 6] },
+        "children": [
+          { "type": "text", "value": "안전보건 관리감독자 지정서", "style": { "fontSize": 18, "fontWeight": 900, "textAlign": "center" } }
+        ]
+      },
+      {
+        "type": "section",
+        "id": "section_person",
+        "children": [
+          {
+            "type": "table",
+            "cols": [{ "w": "25%" }, { "w": "75%" }],
+            "rows": [
+              { "cells": [
+                { "type": "label", "text": "소    속", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "dept" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "성    명", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "name" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "생년월일", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "birth_date" }
+              ]}
+            ]
+          }
+        ]
+      },
+      {
+        "type": "block",
+        "style": { "marginTop": 16, "marginBottom": 12 },
+        "children": [
+          { "type": "text", "value": "위 사람을 산업안전보건법 제16조에 의거 관리감독자의 직무를 수행하기 위하여 관리감독자로 지정합니다.", "style": { "fontSize": 10, "lineHeight": 1.8 } }
+        ]
+      },
+      {
+        "type": "section",
+        "id": "section_duties",
+        "children": [
+          {
+            "type": "table",
+            "cols": [{ "w": "100%" }],
+            "rows": [
+              { "cells": [
+                { "type": "label", "text": "관리감독자의 직무", "style": { "bg": "#eef0f3", "fontWeight": 700, "align": "center" } }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "1. 기계·기구 또는 설비의 안전·보건 점검 및 이상 유무의 확인\n2. 근로자의 작업복·보호구 및 방호장치의 점검과 그 착용·사용에 관한 교육·지도\n3. 해당작업에서 발생한 산업재해에 관한 보고 및 이에 대한 응급조치\n4. 해당작업의 작업장 정리·정돈 및 통로 확보에 대한 확인·감독\n5. 사업장의 안전관리자, 보건관리자, 안전보건관리담당자, 산업보건의의 지도·조언에 대한 협조\n6. 산업재해의 원인 조사 및 재발 방지대책 수립에 관한 사항\n7. 위험성평가에 관한 다음 각 목의 업무\n8. 그 밖에 해당작업의 안전 및 보건에 관한 사항으로서 고용노동부령으로 정하는 사항" }
+              ]}
+            ]
+          }
+        ]
+      },
+      {
+        "type": "block",
+        "style": { "marginTop": 24, "textAlign": "right" },
+        "children": [
+          {
+            "type": "composite",
+            "children": [
+              { "type": "field", "fieldId": "sign_year" }, { "type": "text", "value": " 년   " },
+              { "type": "field", "fieldId": "sign_month" }, { "type": "text", "value": " 월   " },
+              { "type": "field", "fieldId": "sign_day" }, { "type": "text", "value": " 일" }
+            ]
+          },
+          {
+            "type": "composite",
+            "style": { "marginTop": 10 },
+            "children": [
+              { "type": "field", "fieldId": "company_name" },
+              { "type": "text", "value": "  대표이사  " },
+              { "type": "field", "fieldId": "ceo_sign", "style": { "inputWidth": "6em" } },
+              { "type": "text", "value": "(서명)" }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

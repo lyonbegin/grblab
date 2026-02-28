@@ -1,0 +1,199 @@
+{
+  "template_id": "hazardous_machinery_inspection_checklist_v2",
+  "title": "주요 위험기계·기구 점검표",
+  "subtitle": "작업장 일반 안전점검 체크리스트 포함",
+  "version": 2,
+  "source": { "file_type": "hwp", "filename": "주요_위험기계기구_점검표.hwp" },
+  "meta": { "paper": "A4", "unit": "mm", "page": { "width": 210, "height": 297, "margin": { "top": 20, "right": 15, "bottom": 20, "left": 15 } } },
+  "fields": [
+    { "id": "company_name",   "label": "사업장명",       "type": "text", "placeholder": "㈜0000" },
+    { "id": "check_year",     "label": "점검일 연도",    "type": "text", "placeholder": "202 " },
+    { "id": "check_month",    "label": "점검일 월",      "type": "text", "placeholder": "  " },
+    { "id": "check_day",      "label": "점검일 일",      "type": "text", "placeholder": "  " },
+    { "id": "checker_name",   "label": "점검자 성명",    "type": "text" },
+    { "id": "checker_title",  "label": "점검자 직책",    "type": "text" },
+    { "id": "dept",           "label": "부  서",         "type": "text" },
+    { "id": "approver_name",  "label": "승인자 성명",    "type": "text" },
+    { "id": "r_floor_clean",  "label": "통로·바닥 정리정돈",   "type": "text", "placeholder": "양호/불량/해당없음" },
+    { "id": "r_floor_flat",   "label": "통로·바닥 평탄",       "type": "text", "placeholder": "양호/불량/해당없음" },
+    { "id": "r_floor_sep",    "label": "통로·작업장소 구분",   "type": "text", "placeholder": "양호/불량/해당없음" },
+    { "id": "r_floor_width",  "label": "통로 폭 확보",         "type": "text", "placeholder": "양호/불량/해당없음" },
+    { "id": "r_floor_note",   "label": "통로·바닥 비고",       "type": "text" },
+    { "id": "r_elec_panel",   "label": "전기 분전함 상태",     "type": "text", "placeholder": "양호/불량/해당없음" },
+    { "id": "r_elec_wire",    "label": "전선·코드 상태",       "type": "text", "placeholder": "양호/불량/해당없음" },
+    { "id": "r_elec_cover",   "label": "전기 충전부 덮개",     "type": "text", "placeholder": "양호/불량/해당없음" },
+    { "id": "r_elec_ground",  "label": "접지 상태",            "type": "text", "placeholder": "양호/불량/해당없음" },
+    { "id": "r_elec_note",    "label": "전기 비고",            "type": "text" },
+    { "id": "r_fire_ext",     "label": "소화기 비치·점검",     "type": "text", "placeholder": "양호/불량/해당없음" },
+    { "id": "r_fire_exit",    "label": "비상구 확보",          "type": "text", "placeholder": "양호/불량/해당없음" },
+    { "id": "r_fire_sign",    "label": "안전표지 부착",        "type": "text", "placeholder": "양호/불량/해당없음" },
+    { "id": "r_fire_note",    "label": "화재·대피 비고",       "type": "text" },
+    { "id": "m1_name",   "label": "기계1 명칭",   "type": "text" },
+    { "id": "m1_guard",  "label": "기계1 방호장치", "type": "text", "placeholder": "양호/불량/해당없음" },
+    { "id": "m1_estop",  "label": "기계1 비상정지", "type": "text", "placeholder": "양호/불량/해당없음" },
+    { "id": "m1_noise",  "label": "기계1 소음·진동","type": "text", "placeholder": "양호/불량/해당없음" },
+    { "id": "m1_lubricate","label": "기계1 주유·점검","type": "text", "placeholder": "양호/불량/해당없음" },
+    { "id": "m1_note",   "label": "기계1 비고",   "type": "text" },
+    { "id": "m2_name",   "label": "기계2 명칭",   "type": "text" },
+    { "id": "m2_guard",  "label": "기계2 방호장치", "type": "text", "placeholder": "양호/불량/해당없음" },
+    { "id": "m2_estop",  "label": "기계2 비상정지", "type": "text", "placeholder": "양호/불량/해당없음" },
+    { "id": "m2_noise",  "label": "기계2 소음·진동","type": "text", "placeholder": "양호/불량/해당없음" },
+    { "id": "m2_lubricate","label": "기계2 주유·점검","type": "text", "placeholder": "양호/불량/해당없음" },
+    { "id": "m2_note",   "label": "기계2 비고",   "type": "text" },
+    { "id": "m3_name",   "label": "기계3 명칭",   "type": "text" },
+    { "id": "m3_guard",  "label": "기계3 방호장치", "type": "text", "placeholder": "양호/불량/해당없음" },
+    { "id": "m3_estop",  "label": "기계3 비상정지", "type": "text", "placeholder": "양호/불량/해당없음" },
+    { "id": "m3_noise",  "label": "기계3 소음·진동","type": "text", "placeholder": "양호/불량/해당없음" },
+    { "id": "m3_lubricate","label": "기계3 주유·점검","type": "text", "placeholder": "양호/불량/해당없음" },
+    { "id": "m3_note",   "label": "기계3 비고",   "type": "text" },
+    { "id": "overall_notes", "label": "종합 의견 및 개선사항", "type": "text" }
+  ],
+  "layout": {
+    "type": "page",
+    "children": [
+      {
+        "type": "block", "style": { "padding": [8,4,8,4] },
+        "children": [
+          { "type": "text", "value": "주요 위험기계·기구 점검표", "style": { "fontSize": 17, "fontWeight": 900, "textAlign": "center" } },
+          { "type": "text", "value": "KISA Safety is first! KISA is best!", "style": { "fontSize": 9, "textAlign": "center", "color": "#555" } }
+        ]
+      },
+      {
+        "type": "section", "title": { "text": "기본 정보" },
+        "children": [{
+          "type": "table", "cols": [{"w":"15%"},{"w":"20%"},{"w":"15%"},{"w":"20%"},{"w":"15%"},{"w":"15%"}],
+          "style": { "borderColor": "#c0c0c0" },
+          "rows": [
+            { "cells": [
+              { "type": "label", "text": "사 업 장 명", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "company_name" },
+              { "type": "label", "text": "점 검 일 자", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "composite", "children": [
+                { "type": "field", "fieldId": "check_year" }, { "type": "text", "value": "년 " },
+                { "type": "field", "fieldId": "check_month" }, { "type": "text", "value": "월 " },
+                { "type": "field", "fieldId": "check_day" }, { "type": "text", "value": "일" }
+              ]},
+              { "type": "label", "text": "부  서", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "dept" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "점 검 자", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "composite", "children": [
+                { "type": "field", "fieldId": "checker_title" }, { "type": "text", "value": " " },
+                { "type": "field", "fieldId": "checker_name" }
+              ]},
+              { "type": "label", "text": "승 인 자", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "approver_name" },
+              { "type": "label", "text": "", "colspan": 2 }
+            ]}
+          ]
+        }]
+      },
+      {
+        "type": "section", "title": { "text": "1. 작업장 일반 안전점검 체크리스트" },
+        "children": [{
+          "type": "table", "cols": [{"w":"10%"},{"w":"45%"},{"w":"30%"},{"w":"15%"}],
+          "style": { "borderColor": "#c0c0c0" },
+          "rows": [
+            { "cells": [
+              { "type": "label", "text": "구  분",    "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "label", "text": "점 검 항 목", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "label", "text": "점 검 결 과 (양호/불량/해당없음)", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "label", "text": "비  고",    "style": { "bg": "#eef0f3", "fontWeight": 700 } }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "통로·바닥", "rowspan": 4, "style": { "bg": "#f5f5f5", "fontWeight": 600 } },
+              { "type": "label", "text": "통로와 바닥상태(정리정돈·청소상태)는 정리되어 있는가?" },
+              { "type": "field", "fieldId": "r_floor_clean" },
+              { "type": "field", "fieldId": "r_floor_note" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "통로와 바닥은 평탄하고 요철은 없는가?" },
+              { "type": "field", "fieldId": "r_floor_flat" },
+              { "type": "label", "text": "" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "통로와 작업장소가 명확히 구분되어 있는가?" },
+              { "type": "field", "fieldId": "r_floor_sep" },
+              { "type": "label", "text": "" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "통로의 폭은 충분히 확보되어 있는가?" },
+              { "type": "field", "fieldId": "r_floor_width" },
+              { "type": "label", "text": "" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "전기", "rowspan": 4, "style": { "bg": "#f5f5f5", "fontWeight": 600 } },
+              { "type": "label", "text": "분전함·배전반의 문은 닫혀 있는가?" },
+              { "type": "field", "fieldId": "r_elec_panel" },
+              { "type": "field", "fieldId": "r_elec_note" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "전선·코드의 피복 손상은 없는가?" },
+              { "type": "field", "fieldId": "r_elec_wire" },
+              { "type": "label", "text": "" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "충전부에 덮개·절연 조치가 되어 있는가?" },
+              { "type": "field", "fieldId": "r_elec_cover" },
+              { "type": "label", "text": "" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "전기기계·기구의 접지 상태는 양호한가?" },
+              { "type": "field", "fieldId": "r_elec_ground" },
+              { "type": "label", "text": "" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "화재·대피", "rowspan": 3, "style": { "bg": "#f5f5f5", "fontWeight": 600 } },
+              { "type": "label", "text": "소화기는 지정장소에 비치·점검되어 있는가?" },
+              { "type": "field", "fieldId": "r_fire_ext" },
+              { "type": "field", "fieldId": "r_fire_note" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "비상구·대피통로는 확보되어 있는가?" },
+              { "type": "field", "fieldId": "r_fire_exit" },
+              { "type": "label", "text": "" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "안전보건 표지는 적정하게 부착되어 있는가?" },
+              { "type": "field", "fieldId": "r_fire_sign" },
+              { "type": "label", "text": "" }
+            ]}
+          ]
+        }]
+      },
+      {
+        "type": "section", "title": { "text": "2. 주요 위험기계·기구 점검" },
+        "children": [{
+          "type": "table", "cols": [{"w":"12%"},{"w":"18%"},{"w":"18%"},{"w":"18%"},{"w":"18%"},{"w":"16%"}],
+          "style": { "borderColor": "#c0c0c0" },
+          "rows": [
+            { "cells": [
+              { "type": "label", "text": "기계·기구명", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "label", "text": "방호장치 상태", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "label", "text": "비상정지장치", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "label", "text": "소음·진동",   "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "label", "text": "주유·점검",   "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "label", "text": "비  고",      "style": { "bg": "#eef0f3", "fontWeight": 700 } }
+            ]},
+            { "cells": [{"type":"field","fieldId":"m1_name"},{"type":"field","fieldId":"m1_guard"},{"type":"field","fieldId":"m1_estop"},{"type":"field","fieldId":"m1_noise"},{"type":"field","fieldId":"m1_lubricate"},{"type":"field","fieldId":"m1_note"}] },
+            { "cells": [{"type":"field","fieldId":"m2_name"},{"type":"field","fieldId":"m2_guard"},{"type":"field","fieldId":"m2_estop"},{"type":"field","fieldId":"m2_noise"},{"type":"field","fieldId":"m2_lubricate"},{"type":"field","fieldId":"m2_note"}] },
+            { "cells": [{"type":"field","fieldId":"m3_name"},{"type":"field","fieldId":"m3_guard"},{"type":"field","fieldId":"m3_estop"},{"type":"field","fieldId":"m3_noise"},{"type":"field","fieldId":"m3_lubricate"},{"type":"field","fieldId":"m3_note"}] }
+          ]
+        }]
+      },
+      {
+        "type": "section", "title": { "text": "3. 종합 의견 및 개선사항" },
+        "children": [{
+          "type": "table", "cols": [{"w":"20%"},{"w":"80%"}], "style": { "borderColor": "#c0c0c0" },
+          "rows": [
+            { "cells": [
+              { "type": "label", "text": "종합 의견 및 개선사항", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "overall_notes", "style": { "minH": 50 } }
+            ]}
+          ]
+        }]
+      }
+    ]
+  }
+}

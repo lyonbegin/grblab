@@ -1,0 +1,164 @@
+{
+  "template_id": "safety_performance_evaluation_report_v1",
+  "title": "안전보건활동 성과평가 절차 및 개선조치 결과 요구 보고서",
+  "version": 1,
+  "source": { "file_type": "hwp", "filename": "안전보건활동_성과평가_절차_및_개선조치_결과_요구_보고서.hwp" },
+  "meta": { "paper": "A4", "unit": "mm", "page": { "width": 210, "height": 297, "margin": { "top": 20, "right": 15, "bottom": 20, "left": 15 } } },
+  "fields": [
+    { "id": "company_name",    "label": "사업장명",          "type": "text" },
+    { "id": "eval_year",       "label": "평가 연도",         "type": "text", "placeholder": "2024" },
+    { "id": "eval_half",       "label": "평가 반기",         "type": "text", "placeholder": "상반기/하반기" },
+    { "id": "create_year",     "label": "보고일 연도",       "type": "text", "placeholder": "2024" },
+    { "id": "create_month",    "label": "보고일 월",         "type": "text", "placeholder": "01" },
+    { "id": "create_day",      "label": "보고일 일",         "type": "text", "placeholder": "01" },
+    { "id": "reporter_name",   "label": "보고자 성명",       "type": "text" },
+    { "id": "reporter_title",  "label": "보고자 직책",       "type": "text" },
+    { "id": "approver_name",   "label": "승인자 성명",       "type": "text" },
+    { "id": "p1_item",  "label": "성과지표1 항목",   "type": "text", "placeholder": "재해율" },               { "id": "p1_plan",  "label": "성과지표1 목표치", "type": "text" }, { "id": "p1_result","label": "성과지표1 실적",   "type": "text" }, { "id": "p1_grade", "label": "성과지표1 평가",   "type": "text", "placeholder": "달성/미달성" }, { "id": "p1_note",  "label": "성과지표1 비고",   "type": "text" },
+    { "id": "p2_item",  "label": "성과지표2 항목",   "type": "text", "placeholder": "위험성평가 실시율" },    { "id": "p2_plan",  "label": "성과지표2 목표치", "type": "text" }, { "id": "p2_result","label": "성과지표2 실적",   "type": "text" }, { "id": "p2_grade", "label": "성과지표2 평가",   "type": "text", "placeholder": "달성/미달성" }, { "id": "p2_note",  "label": "성과지표2 비고",   "type": "text" },
+    { "id": "p3_item",  "label": "성과지표3 항목",   "type": "text", "placeholder": "안전보건교육 이수율" }, { "id": "p3_plan",  "label": "성과지표3 목표치", "type": "text" }, { "id": "p3_result","label": "성과지표3 실적",   "type": "text" }, { "id": "p3_grade", "label": "성과지표3 평가",   "type": "text", "placeholder": "달성/미달성" }, { "id": "p3_note",  "label": "성과지표3 비고",   "type": "text" },
+    { "id": "p4_item",  "label": "성과지표4 항목",   "type": "text", "placeholder": "아차사고 보고건수" },   { "id": "p4_plan",  "label": "성과지표4 목표치", "type": "text" }, { "id": "p4_result","label": "성과지표4 실적",   "type": "text" }, { "id": "p4_grade", "label": "성과지표4 평가",   "type": "text", "placeholder": "달성/미달성" }, { "id": "p4_note",  "label": "성과지표4 비고",   "type": "text" },
+    { "id": "p5_item",  "label": "성과지표5 항목",   "type": "text", "placeholder": "개선조치 이행율" },     { "id": "p5_plan",  "label": "성과지표5 목표치", "type": "text" }, { "id": "p5_result","label": "성과지표5 실적",   "type": "text" }, { "id": "p5_grade", "label": "성과지표5 평가",   "type": "text", "placeholder": "달성/미달성" }, { "id": "p5_note",  "label": "성과지표5 비고",   "type": "text" },
+    { "id": "p6_item",  "label": "성과지표6 항목",   "type": "text" },                                       { "id": "p6_plan",  "label": "성과지표6 목표치", "type": "text" }, { "id": "p6_result","label": "성과지표6 실적",   "type": "text" }, { "id": "p6_grade", "label": "성과지표6 평가",   "type": "text", "placeholder": "달성/미달성" }, { "id": "p6_note",  "label": "성과지표6 비고",   "type": "text" },
+    { "id": "improve1_issue",    "label": "개선조치1 문제점",    "type": "text" },
+    { "id": "improve1_action",   "label": "개선조치1 조치내용",  "type": "text" },
+    { "id": "improve1_deadline", "label": "개선조치1 기한",      "type": "text" },
+    { "id": "improve1_person",   "label": "개선조치1 담당자",    "type": "text" },
+    { "id": "improve1_result",   "label": "개선조치1 결과",      "type": "text" },
+    { "id": "improve2_issue",    "label": "개선조치2 문제점",    "type": "text" },
+    { "id": "improve2_action",   "label": "개선조치2 조치내용",  "type": "text" },
+    { "id": "improve2_deadline", "label": "개선조치2 기한",      "type": "text" },
+    { "id": "improve2_person",   "label": "개선조치2 담당자",    "type": "text" },
+    { "id": "improve2_result",   "label": "개선조치2 결과",      "type": "text" },
+    { "id": "improve3_issue",    "label": "개선조치3 문제점",    "type": "text" },
+    { "id": "improve3_action",   "label": "개선조치3 조치내용",  "type": "text" },
+    { "id": "improve3_deadline", "label": "개선조치3 기한",      "type": "text" },
+    { "id": "improve3_person",   "label": "개선조치3 담당자",    "type": "text" },
+    { "id": "improve3_result",   "label": "개선조치3 결과",      "type": "text" },
+    { "id": "overall_eval",      "label": "종합 평가 의견",      "type": "text" },
+    { "id": "next_plan",         "label": "차기 개선 계획",      "type": "text" }
+  ],
+  "layout": {
+    "type": "page",
+    "children": [
+      {
+        "type": "block",
+        "style": { "padding": [8,4,8,4] },
+        "children": [
+          { "type": "text", "value": "안전보건활동 성과평가 절차 및\n개선조치 결과 요구 보고서", "style": { "fontSize": 16, "fontWeight": 900, "textAlign": "center" } },
+          { "type": "text", "value": "중대재해처벌법 시행령 제4조 | 산업안전보건법", "style": { "fontSize": 10, "textAlign": "center", "color": "#555" } }
+        ]
+      },
+      {
+        "type": "section",
+        "title": { "text": "기본 정보" },
+        "children": [
+          {
+            "type": "table",
+            "cols": [{ "w": "20%" }, { "w": "30%" }, { "w": "20%" }, { "w": "30%" }],
+            "style": { "borderColor": "#c0c0c0" },
+            "rows": [
+              { "cells": [
+                { "type": "label", "text": "사 업 장 명", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "company_name" },
+                { "type": "label", "text": "평 가 기 간", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "composite", "children": [
+                  { "type": "field", "fieldId": "eval_year" }, { "type": "text", "value": "년 " },
+                  { "type": "field", "fieldId": "eval_half" }
+                ]}
+              ]},
+              { "cells": [
+                { "type": "label", "text": "보  고  자",  "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "composite", "children": [
+                  { "type": "field", "fieldId": "reporter_title" }, { "type": "text", "value": "  " },
+                  { "type": "field", "fieldId": "reporter_name" }
+                ]},
+                { "type": "label", "text": "보  고  일",  "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "composite", "children": [
+                  { "type": "field", "fieldId": "create_year" }, { "type": "text", "value": "년 " },
+                  { "type": "field", "fieldId": "create_month" }, { "type": "text", "value": "월 " },
+                  { "type": "field", "fieldId": "create_day" }, { "type": "text", "value": "일" }
+                ]}
+              ]},
+              { "cells": [
+                { "type": "label", "text": "승  인  자",  "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "approver_name" },
+                { "type": "label", "text": "", "colspan": 2 }
+              ]}
+            ]
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "title": { "text": "1. 안전보건활동 성과 평가" },
+        "children": [
+          {
+            "type": "table",
+            "cols": [{ "w": "25%" }, { "w": "15%" }, { "w": "15%" }, { "w": "20%" }, { "w": "25%" }],
+            "style": { "borderColor": "#c0c0c0" },
+            "rows": [
+              { "cells": [
+                { "type": "label", "text": "성 과 지 표",  "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "label", "text": "목 표 치",     "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "label", "text": "실  적",       "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "label", "text": "달성 여부",    "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "label", "text": "비  고",       "style": { "bg": "#eef0f3", "fontWeight": 700 } }
+              ]},
+              { "cells": [{ "type": "field", "fieldId": "p1_item" }, { "type": "field", "fieldId": "p1_plan" }, { "type": "field", "fieldId": "p1_result" }, { "type": "field", "fieldId": "p1_grade" }, { "type": "field", "fieldId": "p1_note" }] },
+              { "cells": [{ "type": "field", "fieldId": "p2_item" }, { "type": "field", "fieldId": "p2_plan" }, { "type": "field", "fieldId": "p2_result" }, { "type": "field", "fieldId": "p2_grade" }, { "type": "field", "fieldId": "p2_note" }] },
+              { "cells": [{ "type": "field", "fieldId": "p3_item" }, { "type": "field", "fieldId": "p3_plan" }, { "type": "field", "fieldId": "p3_result" }, { "type": "field", "fieldId": "p3_grade" }, { "type": "field", "fieldId": "p3_note" }] },
+              { "cells": [{ "type": "field", "fieldId": "p4_item" }, { "type": "field", "fieldId": "p4_plan" }, { "type": "field", "fieldId": "p4_result" }, { "type": "field", "fieldId": "p4_grade" }, { "type": "field", "fieldId": "p4_note" }] },
+              { "cells": [{ "type": "field", "fieldId": "p5_item" }, { "type": "field", "fieldId": "p5_plan" }, { "type": "field", "fieldId": "p5_result" }, { "type": "field", "fieldId": "p5_grade" }, { "type": "field", "fieldId": "p5_note" }] },
+              { "cells": [{ "type": "field", "fieldId": "p6_item" }, { "type": "field", "fieldId": "p6_plan" }, { "type": "field", "fieldId": "p6_result" }, { "type": "field", "fieldId": "p6_grade" }, { "type": "field", "fieldId": "p6_note" }] }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "title": { "text": "2. 개선조치 요구 및 결과" },
+        "children": [
+          {
+            "type": "table",
+            "cols": [{ "w": "25%" }, { "w": "25%" }, { "w": "15%" }, { "w": "15%" }, { "w": "20%" }],
+            "style": { "borderColor": "#c0c0c0" },
+            "rows": [
+              { "cells": [
+                { "type": "label", "text": "문 제 점",     "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "label", "text": "개선 조치 내용","style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "label", "text": "기  한",       "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "label", "text": "담당자",       "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "label", "text": "조치 결과",    "style": { "bg": "#eef0f3", "fontWeight": 700 } }
+              ]},
+              { "cells": [{ "type": "field", "fieldId": "improve1_issue" }, { "type": "field", "fieldId": "improve1_action" }, { "type": "field", "fieldId": "improve1_deadline" }, { "type": "field", "fieldId": "improve1_person" }, { "type": "field", "fieldId": "improve1_result" }] },
+              { "cells": [{ "type": "field", "fieldId": "improve2_issue" }, { "type": "field", "fieldId": "improve2_action" }, { "type": "field", "fieldId": "improve2_deadline" }, { "type": "field", "fieldId": "improve2_person" }, { "type": "field", "fieldId": "improve2_result" }] },
+              { "cells": [{ "type": "field", "fieldId": "improve3_issue" }, { "type": "field", "fieldId": "improve3_action" }, { "type": "field", "fieldId": "improve3_deadline" }, { "type": "field", "fieldId": "improve3_person" }, { "type": "field", "fieldId": "improve3_result" }] }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "title": { "text": "3. 종합 평가 및 차기 계획" },
+        "children": [
+          {
+            "type": "table",
+            "cols": [{ "w": "25%" }, { "w": "75%" }],
+            "style": { "borderColor": "#c0c0c0" },
+            "rows": [
+              { "cells": [
+                { "type": "label", "text": "종 합 평 가 의 견", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "overall_eval" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "차 기 개 선 계 획", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "next_plan" }
+              ]}
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

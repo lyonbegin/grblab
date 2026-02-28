@@ -1,0 +1,142 @@
+{
+  "template_id": "safety_management_business_plan_v1",
+  "title": "안전관리업무계획 (경영방침 및 세부목표)",
+  "version": 1,
+  "source": { "file_type": "hwp", "filename": "안전관리업무계획_경영방침_및_세부목표_.hwp" },
+  "meta": { "paper": "A4", "unit": "mm", "page": { "width": 210, "height": 297, "margin": { "top": 20, "right": 15, "bottom": 20, "left": 15 } } },
+  "fields": [
+    { "id": "company_name",   "label": "사업장명",         "type": "text", "placeholder": "㈜0000" },
+    { "id": "plan_year",      "label": "계획 연도",        "type": "text", "placeholder": "2024" },
+    { "id": "create_year",    "label": "작성일 연도",      "type": "text", "placeholder": "2024" },
+    { "id": "create_month",   "label": "작성일 월",        "type": "text", "placeholder": "01" },
+    { "id": "create_day",     "label": "작성일 일",        "type": "text", "placeholder": "01" },
+    { "id": "ceo_name",       "label": "대표자 성명",      "type": "text" },
+    { "id": "policy1",        "label": "경영방침 1",       "type": "text", "placeholder": "종사자의 산업재해 예방 및 건강증진을 위한 산업안전보건 연간 계획 수립" },
+    { "id": "policy2",        "label": "경영방침 2",       "type": "text", "placeholder": "안전문화 정착을 통한 안전사고의 근원적 예방" },
+    { "id": "policy3",        "label": "경영방침 3",       "type": "text", "placeholder": "위험성평가 중심의 자기규율 예방체계 확립" },
+    { "id": "policy4",        "label": "경영방침 4",       "type": "text" },
+    { "id": "goal1_item",     "label": "세부목표1 항목",   "type": "text" },
+    { "id": "goal1_target",   "label": "세부목표1 목표치", "type": "text" },
+    { "id": "goal1_method",   "label": "세부목표1 추진방법","type": "text" },
+    { "id": "goal1_period",   "label": "세부목표1 추진시기","type": "text" },
+    { "id": "goal1_dept",     "label": "세부목표1 담당부서","type": "text" },
+    { "id": "goal2_item",     "label": "세부목표2 항목",   "type": "text" },
+    { "id": "goal2_target",   "label": "세부목표2 목표치", "type": "text" },
+    { "id": "goal2_method",   "label": "세부목표2 추진방법","type": "text" },
+    { "id": "goal2_period",   "label": "세부목표2 추진시기","type": "text" },
+    { "id": "goal2_dept",     "label": "세부목표2 담당부서","type": "text" },
+    { "id": "goal3_item",     "label": "세부목표3 항목",   "type": "text" },
+    { "id": "goal3_target",   "label": "세부목표3 목표치", "type": "text" },
+    { "id": "goal3_method",   "label": "세부목표3 추진방법","type": "text" },
+    { "id": "goal3_period",   "label": "세부목표3 추진시기","type": "text" },
+    { "id": "goal3_dept",     "label": "세부목표3 담당부서","type": "text" },
+    { "id": "goal4_item",     "label": "세부목표4 항목",   "type": "text" },
+    { "id": "goal4_target",   "label": "세부목표4 목표치", "type": "text" },
+    { "id": "goal4_method",   "label": "세부목표4 추진방법","type": "text" },
+    { "id": "goal4_period",   "label": "세부목표4 추진시기","type": "text" },
+    { "id": "goal4_dept",     "label": "세부목표4 담당부서","type": "text" },
+    { "id": "goal5_item",     "label": "세부목표5 항목",   "type": "text" },
+    { "id": "goal5_target",   "label": "세부목표5 목표치", "type": "text" },
+    { "id": "goal5_method",   "label": "세부목표5 추진방법","type": "text" },
+    { "id": "goal5_period",   "label": "세부목표5 추진시기","type": "text" },
+    { "id": "goal5_dept",     "label": "세부목표5 담당부서","type": "text" }
+  ],
+  "layout": {
+    "type": "page",
+    "children": [
+      {
+        "type": "block",
+        "style": { "padding": [8,4,8,4] },
+        "children": [
+          { "type": "text", "value": "안전관리업무계획", "style": { "fontSize": 18, "fontWeight": 900, "textAlign": "center" } },
+          { "type": "text", "value": "경영방침 및 세부목표", "style": { "fontSize": 11, "textAlign": "center", "color": "#444" } }
+        ]
+      },
+      {
+        "type": "section",
+        "title": { "text": "기본 정보" },
+        "children": [
+          {
+            "type": "table",
+            "cols": [{ "w": "20%" }, { "w": "30%" }, { "w": "20%" }, { "w": "30%" }],
+            "style": { "borderColor": "#c0c0c0" },
+            "rows": [
+              { "cells": [
+                { "type": "label", "text": "사 업 장 명", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "company_name" },
+                { "type": "label", "text": "계 획 연 도", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "composite", "children": [
+                  { "type": "field", "fieldId": "plan_year" }, { "type": "text", "value": "년" }
+                ]}
+              ]},
+              { "cells": [
+                { "type": "label", "text": "대  표  자",  "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "ceo_name" },
+                { "type": "label", "text": "작  성  일",  "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "composite", "children": [
+                  { "type": "field", "fieldId": "create_year" }, { "type": "text", "value": "년 " },
+                  { "type": "field", "fieldId": "create_month" }, { "type": "text", "value": "월 " },
+                  { "type": "field", "fieldId": "create_day" }, { "type": "text", "value": "일" }
+                ]}
+              ]}
+            ]
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "title": { "text": "안전보건 경영방침" },
+        "children": [
+          {
+            "type": "table",
+            "cols": [{ "w": "8%" }, { "w": "92%" }],
+            "style": { "borderColor": "#c0c0c0" },
+            "rows": [
+              { "cells": [
+                { "type": "label", "text": "①", "style": { "bg": "#eef0f3" } },
+                { "type": "field", "fieldId": "policy1" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "②", "style": { "bg": "#eef0f3" } },
+                { "type": "field", "fieldId": "policy2" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "③", "style": { "bg": "#eef0f3" } },
+                { "type": "field", "fieldId": "policy3" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "④", "style": { "bg": "#eef0f3" } },
+                { "type": "field", "fieldId": "policy4" }
+              ]}
+            ]
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "title": { "text": "세부 추진 목표" },
+        "children": [
+          {
+            "type": "table",
+            "cols": [{ "w": "25%" }, { "w": "15%" }, { "w": "25%" }, { "w": "15%" }, { "w": "20%" }],
+            "style": { "borderColor": "#c0c0c0" },
+            "rows": [
+              { "cells": [
+                { "type": "label", "text": "목표 항목",   "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "label", "text": "목 표 치",    "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "label", "text": "추진 방법",   "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "label", "text": "추진 시기",   "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "label", "text": "담당 부서",   "style": { "bg": "#eef0f3", "fontWeight": 700 } }
+              ]},
+              { "cells": [{ "type": "field", "fieldId": "goal1_item" }, { "type": "field", "fieldId": "goal1_target" }, { "type": "field", "fieldId": "goal1_method" }, { "type": "field", "fieldId": "goal1_period" }, { "type": "field", "fieldId": "goal1_dept" }] },
+              { "cells": [{ "type": "field", "fieldId": "goal2_item" }, { "type": "field", "fieldId": "goal2_target" }, { "type": "field", "fieldId": "goal2_method" }, { "type": "field", "fieldId": "goal2_period" }, { "type": "field", "fieldId": "goal2_dept" }] },
+              { "cells": [{ "type": "field", "fieldId": "goal3_item" }, { "type": "field", "fieldId": "goal3_target" }, { "type": "field", "fieldId": "goal3_method" }, { "type": "field", "fieldId": "goal3_period" }, { "type": "field", "fieldId": "goal3_dept" }] },
+              { "cells": [{ "type": "field", "fieldId": "goal4_item" }, { "type": "field", "fieldId": "goal4_target" }, { "type": "field", "fieldId": "goal4_method" }, { "type": "field", "fieldId": "goal4_period" }, { "type": "field", "fieldId": "goal4_dept" }] },
+              { "cells": [{ "type": "field", "fieldId": "goal5_item" }, { "type": "field", "fieldId": "goal5_target" }, { "type": "field", "fieldId": "goal5_method" }, { "type": "field", "fieldId": "goal5_period" }, { "type": "field", "fieldId": "goal5_dept" }] }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

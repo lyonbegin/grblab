@@ -1,0 +1,214 @@
+{
+  "template_id": "major_accident_emergency_manual_v2",
+  "title": "중대재해 및 비상조치 대응 매뉴얼",
+  "subtitle": "중대산업재해 조치 매뉴얼 | 중대재해처벌법",
+  "version": 2,
+  "source": { "file_type": "hwp", "filename": "중대재해_및_비상조치_대응_매뉴얼.hwp" },
+  "meta": { "paper": "A4", "unit": "mm", "page": { "width": 210, "height": 297, "margin": { "top": 20, "right": 15, "bottom": 20, "left": 15 } } },
+  "fields": [
+    { "id": "company_name",     "label": "사업장명",           "type": "text", "placeholder": "㈜0000" },
+    { "id": "doc_no",           "label": "문서번호",           "type": "text" },
+    { "id": "issue_year",       "label": "시행 연도",          "type": "text", "placeholder": "2023" },
+    { "id": "issue_month",      "label": "시행 월",            "type": "text", "placeholder": "01" },
+    { "id": "issue_day",        "label": "시행 일",            "type": "text", "placeholder": "01" },
+    { "id": "revision",         "label": "개정번호",           "type": "text", "placeholder": "0" },
+    { "id": "ceo_name",         "label": "대표자 성명",        "type": "text" },
+    { "id": "safety_mgr",       "label": "안전보건관리책임자", "type": "text" },
+    { "id": "purpose",          "label": "1. 목적",            "type": "text", "placeholder": "사업장 내 발생 가능한 중대산업재해를 예방하고 중대재해 발생 시 근로자 대피 및 위험요인 제거 등 대응조치와 추가 피해 방지 조치 및 중대산업재해를 입은 사람에 대한 구호조치를 위한 절차를 규정하기 위함이다." },
+    { "id": "scope",            "label": "2. 적용범위",        "type": "text", "placeholder": "당사 사업장 내에서 발생하는 중대산업재해 전반에 적용한다." },
+    { "id": "def_major",        "label": "3. 용어정의 - 중대산업재해", "type": "text", "placeholder": "산업안전보건법상 중대재해: 사망자 1명 이상, 동일 사고 부상 2명 이상(3개월 이상 요양), 직업성 질병자 1년 내 3명 이상" },
+    { "id": "def_emergency",    "label": "3. 용어정의 - 비상조치", "type": "text", "placeholder": "재해 발생 시 즉각적으로 취해야 하는 초기 대응 및 피해 확산 방지 조치" },
+    { "id": "step1_report",     "label": "4.1 즉각 조치 - 신고", "type": "text", "placeholder": "재해 발생 즉시 119 신고, 작업 중지, 현장 보존" },
+    { "id": "step1_stop",       "label": "4.1 즉각 조치 - 작업중지", "type": "text", "placeholder": "재해 발생 작업 및 관련 작업 즉시 중지 명령" },
+    { "id": "step1_rescue",     "label": "4.1 즉각 조치 - 구호", "type": "text", "placeholder": "부상자 응급처치, 병원 이송 조치" },
+    { "id": "step1_preserve",   "label": "4.1 즉각 조치 - 현장보존", "type": "text", "placeholder": "재해 현장 보존, 임의 변경·훼손 금지" },
+    { "id": "step2_notify_labor","label": "4.2 보고 - 노동관서 신고", "type": "text", "placeholder": "중대재해 발생 즉시 관할 노동지청에 전화 신고" },
+    { "id": "step2_notify_ceo", "label": "4.2 보고 - 사업주 보고", "type": "text", "placeholder": "재해 발생 즉시 사업주 및 안전보건관리책임자에게 보고" },
+    { "id": "step2_written",    "label": "4.2 보고 - 서면 보고",  "type": "text", "placeholder": "재해 발생 후 1개월 내 산재 요양신청서 및 재해 경위서 제출" },
+    { "id": "step3_resume_cond","label": "4.3 작업재개 조건",     "type": "text", "placeholder": "노동관서 확인 후, 위험요인 제거 및 안전조치 완료 확인 시 재개 가능" },
+    { "id": "step3_resume_proc","label": "4.3 작업재개 절차",     "type": "text", "placeholder": "안전보건관리책임자 또는 안전관리자의 현장 확인 후 서면 승인" },
+    { "id": "scenario_type1",  "label": "5.1 시나리오 - 유형1",  "type": "text", "placeholder": "끼임·협착 사고" },
+    { "id": "scenario_action1","label": "5.1 시나리오 - 유형1 조치","type": "text", "placeholder": "기계 즉시 정지 → 119 신고 → 응급처치 → 현장 보존 → 보고" },
+    { "id": "scenario_type2",  "label": "5.2 시나리오 - 유형2",  "type": "text", "placeholder": "추락 사고" },
+    { "id": "scenario_action2","label": "5.2 시나리오 - 유형2 조치","type": "text", "placeholder": "119 신고 → 응급처치 → 추락물 제거 금지 → 현장 보존 → 보고" },
+    { "id": "scenario_type3",  "label": "5.3 시나리오 - 유형3",  "type": "text", "placeholder": "화재·폭발" },
+    { "id": "scenario_action3","label": "5.3 시나리오 - 유형3 조치","type": "text", "placeholder": "대피 → 119 신고 → 초기 진화(가능 시) → 전원 차단 → 현장 통제" },
+    { "id": "edu_period",      "label": "6. 교육 주기",          "type": "text", "placeholder": "연 1회 이상 (신규 채용 시 즉시)" },
+    { "id": "drill_period",    "label": "6. 훈련 주기",          "type": "text", "placeholder": "반기 1회 이상" },
+    { "id": "review_period",   "label": "7. 매뉴얼 검토·개정",  "type": "text", "placeholder": "연 1회 검토, 관련 법령 개정 또는 재해 발생 시 즉시 개정" }
+  ],
+  "layout": {
+    "type": "page",
+    "children": [
+      {
+        "type": "block", "style": { "padding": [8,4,8,4] },
+        "children": [
+          { "type": "text", "value": "중대재해 및 비상조치 대응 매뉴얼", "style": { "fontSize": 16, "fontWeight": 900, "textAlign": "center" } },
+          { "type": "text", "value": "중대산업재해 조치 매뉴얼  |  중대재해처벌법 시행령 제4조", "style": { "fontSize": 9, "textAlign": "center", "color": "#444" } }
+        ]
+      },
+      {
+        "type": "section", "title": { "text": "문서 정보" },
+        "children": [{
+          "type": "table", "cols": [{"w":"20%"},{"w":"30%"},{"w":"20%"},{"w":"30%"}],
+          "style": { "borderColor": "#c0c0c0" },
+          "rows": [
+            { "cells": [
+              { "type": "label", "text": "사 업 장 명", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "company_name" },
+              { "type": "label", "text": "문 서 번 호", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "doc_no" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "대  표  자",  "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "ceo_name" },
+              { "type": "label", "text": "안전보건관리책임자", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "safety_mgr" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "시  행  일",  "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "composite", "children": [
+                { "type": "field", "fieldId": "issue_year" }, { "type": "text", "value": "년 " },
+                { "type": "field", "fieldId": "issue_month" }, { "type": "text", "value": "월 " },
+                { "type": "field", "fieldId": "issue_day" }, { "type": "text", "value": "일" }
+              ]},
+              { "type": "label", "text": "개 정 번 호", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "revision" }
+            ]}
+          ]
+        }]
+      },
+      {
+        "type": "section", "title": { "text": "1. 목적 / 2. 적용범위 / 3. 용어정의" },
+        "children": [{
+          "type": "table", "cols": [{"w":"20%"},{"w":"80%"}],
+          "style": { "borderColor": "#c0c0c0" },
+          "rows": [
+            { "cells": [
+              { "type": "label", "text": "1. 목  적",        "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "purpose", "style": { "minH": 50 } }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "2. 적용범위",      "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "scope" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "중대산업재해 정의","style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "def_major" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "비상조치 정의",    "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "def_emergency" }
+            ]}
+          ]
+        }]
+      },
+      {
+        "type": "section", "title": { "text": "4. 중대재해 발생 시 조치 절차" },
+        "children": [{
+          "type": "table", "cols": [{"w":"20%"},{"w":"25%"},{"w":"55%"}],
+          "style": { "borderColor": "#c0c0c0" },
+          "rows": [
+            { "cells": [
+              { "type": "label", "text": "단  계",          "colspan": 2, "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "label", "text": "조 치 내 용",     "style": { "bg": "#eef0f3", "fontWeight": 700 } }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "4.1 즉각 조치", "rowspan": 4, "style": { "bg": "#f5f5f5", "fontWeight": 600 } },
+              { "type": "label", "text": "긴급신고",        "style": { "bg": "#f9f9f9" } },
+              { "type": "field", "fieldId": "step1_report" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "작업중지",        "style": { "bg": "#f9f9f9" } },
+              { "type": "field", "fieldId": "step1_stop" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "구호조치",        "style": { "bg": "#f9f9f9" } },
+              { "type": "field", "fieldId": "step1_rescue" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "현장보존",        "style": { "bg": "#f9f9f9" } },
+              { "type": "field", "fieldId": "step1_preserve" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "4.2 보고 절차",   "rowspan": 3, "style": { "bg": "#f5f5f5", "fontWeight": 600 } },
+              { "type": "label", "text": "노동관서 신고",   "style": { "bg": "#f9f9f9" } },
+              { "type": "field", "fieldId": "step2_notify_labor" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "사업주 보고",     "style": { "bg": "#f9f9f9" } },
+              { "type": "field", "fieldId": "step2_notify_ceo" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "서면 보고",       "style": { "bg": "#f9f9f9" } },
+              { "type": "field", "fieldId": "step2_written" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "4.3 작업재개",    "rowspan": 2, "style": { "bg": "#f5f5f5", "fontWeight": 600 } },
+              { "type": "label", "text": "재개 조건",       "style": { "bg": "#f9f9f9" } },
+              { "type": "field", "fieldId": "step3_resume_cond" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "재개 절차",       "style": { "bg": "#f9f9f9" } },
+              { "type": "field", "fieldId": "step3_resume_proc" }
+            ]}
+          ]
+        }]
+      },
+      {
+        "type": "section", "title": { "text": "5. 재해 유형별 비상 시나리오" },
+        "children": [{
+          "type": "table", "cols": [{"w":"20%"},{"w":"80%"}],
+          "style": { "borderColor": "#c0c0c0" },
+          "rows": [
+            { "cells": [
+              { "type": "label", "text": "유형 ①\n재해 유형",    "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "scenario_type1" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "유형 ① 조치",           "style": { "bg": "#f9f9f9" } },
+              { "type": "field", "fieldId": "scenario_action1" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "유형 ②\n재해 유형",    "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "scenario_type2" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "유형 ② 조치",           "style": { "bg": "#f9f9f9" } },
+              { "type": "field", "fieldId": "scenario_action2" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "유형 ③\n재해 유형",    "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "scenario_type3" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "유형 ③ 조치",           "style": { "bg": "#f9f9f9" } },
+              { "type": "field", "fieldId": "scenario_action3" }
+            ]}
+          ]
+        }]
+      },
+      {
+        "type": "section", "title": { "text": "6. 교육·훈련 / 7. 매뉴얼 관리" },
+        "children": [{
+          "type": "table", "cols": [{"w":"25%"},{"w":"75%"}],
+          "style": { "borderColor": "#c0c0c0" },
+          "rows": [
+            { "cells": [
+              { "type": "label", "text": "교육 주기",           "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "edu_period" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "훈련 주기",           "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "drill_period" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "매뉴얼 검토·개정",   "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "review_period" }
+            ]}
+          ]
+        }]
+      }
+    ]
+  }
+}

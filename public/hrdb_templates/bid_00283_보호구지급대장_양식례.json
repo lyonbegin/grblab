@@ -1,0 +1,189 @@
+{
+  "template_id": "protective_gear_ledger_v1",
+  "title": "보호구 지급대장",
+  "version": 1,
+  "source": {
+    "file_type": "hwp",
+    "filename": "bid_00283_보호구지급대장_양식례_.hwp",
+    "issuer": "",
+    "legal_basis": "산업안전보건법 제38조",
+    "note": "HWP v3 구형 포맷으로 텍스트 추출 불가 - 파일명 및 일반 양식 기준으로 재구성"
+  },
+  "meta": {
+    "paper": "A4",
+    "unit": "mm",
+    "page": { "width": 297, "height": 210, "margin": { "top": 15, "right": 15, "bottom": 15, "left": 15 }, "orientation": "landscape" },
+    "fonts": { "base": "Noto Sans KR" }
+  },
+  "fields": [
+    { "id": "sign_manager",   "label": "담당 서명",   "type": "text" },
+    { "id": "sign_reviewer",  "label": "검토 서명",   "type": "text" },
+    { "id": "sign_approver",  "label": "승인 서명",   "type": "text" },
+
+    { "id": "row1_date",           "label": "1행 지급일",        "type": "text" },
+    { "id": "row1_gear_name",      "label": "1행 보호구명",      "type": "text" },
+    { "id": "row1_recipient",      "label": "1행 지급대상자",    "type": "text" },
+    { "id": "row1_helmet",         "label": "1행 안전모",        "type": "text" },
+    { "id": "row1_boots",          "label": "1행 안전화",        "type": "text" },
+    { "id": "row1_vest",           "label": "1행 안전조끼",      "type": "text" },
+    { "id": "row1_gaiters",        "label": "1행 각반",          "type": "text" },
+    { "id": "row1_dustmask",       "label": "1행 방진마스크",    "type": "text" },
+    { "id": "row1_other",          "label": "1행 기타",          "type": "text" },
+    { "id": "row1_name",           "label": "1행 성명",          "type": "text" },
+    { "id": "row1_sign",           "label": "1행 서명",          "type": "text" },
+
+    { "id": "row2_date",           "label": "2행 지급일",        "type": "text" },
+    { "id": "row2_gear_name",      "label": "2행 보호구명",      "type": "text" },
+    { "id": "row2_recipient",      "label": "2행 지급대상자",    "type": "text" },
+    { "id": "row2_helmet",         "label": "2행 안전모",        "type": "text" },
+    { "id": "row2_boots",          "label": "2행 안전화",        "type": "text" },
+    { "id": "row2_vest",           "label": "2행 안전조끼",      "type": "text" },
+    { "id": "row2_gaiters",        "label": "2행 각반",          "type": "text" },
+    { "id": "row2_dustmask",       "label": "2행 방진마스크",    "type": "text" },
+    { "id": "row2_other",          "label": "2행 기타",          "type": "text" },
+    { "id": "row2_name",           "label": "2행 성명",          "type": "text" },
+    { "id": "row2_sign",           "label": "2행 서명",          "type": "text" },
+
+    { "id": "row3_date",           "label": "3행 지급일",        "type": "text" },
+    { "id": "row3_gear_name",      "label": "3행 보호구명",      "type": "text" },
+    { "id": "row3_recipient",      "label": "3행 지급대상자",    "type": "text" },
+    { "id": "row3_helmet",         "label": "3행 안전모",        "type": "text" },
+    { "id": "row3_boots",          "label": "3행 안전화",        "type": "text" },
+    { "id": "row3_vest",           "label": "3행 안전조끼",      "type": "text" },
+    { "id": "row3_gaiters",        "label": "3행 각반",          "type": "text" },
+    { "id": "row3_dustmask",       "label": "3행 방진마스크",    "type": "text" },
+    { "id": "row3_other",          "label": "3행 기타",          "type": "text" },
+    { "id": "row3_name",           "label": "3행 성명",          "type": "text" },
+    { "id": "row3_sign",           "label": "3행 서명",          "type": "text" },
+
+    { "id": "row4_date",           "label": "4행 지급일",        "type": "text" },
+    { "id": "row4_gear_name",      "label": "4행 보호구명",      "type": "text" },
+    { "id": "row4_recipient",      "label": "4행 지급대상자",    "type": "text" },
+    { "id": "row4_helmet",         "label": "4행 안전모",        "type": "text" },
+    { "id": "row4_boots",          "label": "4행 안전화",        "type": "text" },
+    { "id": "row4_vest",           "label": "4행 안전조끼",      "type": "text" },
+    { "id": "row4_gaiters",        "label": "4행 각반",          "type": "text" },
+    { "id": "row4_dustmask",       "label": "4행 방진마스크",    "type": "text" },
+    { "id": "row4_other",          "label": "4행 기타",          "type": "text" },
+    { "id": "row4_name",           "label": "4행 성명",          "type": "text" },
+    { "id": "row4_sign",           "label": "4행 서명",          "type": "text" },
+
+    { "id": "row5_date",           "label": "5행 지급일",        "type": "text" },
+    { "id": "row5_gear_name",      "label": "5행 보호구명",      "type": "text" },
+    { "id": "row5_recipient",      "label": "5행 지급대상자",    "type": "text" },
+    { "id": "row5_helmet",         "label": "5행 안전모",        "type": "text" },
+    { "id": "row5_boots",          "label": "5행 안전화",        "type": "text" },
+    { "id": "row5_vest",           "label": "5행 안전조끼",      "type": "text" },
+    { "id": "row5_gaiters",        "label": "5행 각반",          "type": "text" },
+    { "id": "row5_dustmask",       "label": "5행 방진마스크",    "type": "text" },
+    { "id": "row5_other",          "label": "5행 기타",          "type": "text" },
+    { "id": "row5_name",           "label": "5행 성명",          "type": "text" },
+    { "id": "row5_sign",           "label": "5행 서명",          "type": "text" }
+  ],
+  "layout": {
+    "type": "page",
+    "children": [
+      {
+        "type": "block",
+        "style": { "padding": [8, 6, 8, 6] },
+        "children": [
+          { "type": "text", "value": "보호구 지급대장", "style": { "fontSize": 16, "fontWeight": 900, "textAlign": "center" } }
+        ]
+      },
+      {
+        "type": "section",
+        "id": "section_approval",
+        "children": [
+          {
+            "type": "table",
+            "cols": [{ "w": "25%" }, { "w": "25%" }, { "w": "25%" }, { "w": "25%" }],
+            "rows": [
+              { "cells": [
+                { "type": "label", "text": "결 재", "style": { "bg": "#eef0f3", "fontWeight": 700, "align": "center" } },
+                { "type": "label", "text": "담당",  "style": { "bg": "#eef0f3", "fontWeight": 700, "align": "center" } },
+                { "type": "label", "text": "검토",  "style": { "bg": "#eef0f3", "fontWeight": 700, "align": "center" } },
+                { "type": "label", "text": "승인",  "style": { "bg": "#eef0f3", "fontWeight": 700, "align": "center" } }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "서명", "style": { "bg": "#eef0f3" } },
+                { "type": "field", "fieldId": "sign_manager" },
+                { "type": "field", "fieldId": "sign_reviewer" },
+                { "type": "field", "fieldId": "sign_approver" }
+              ]}
+            ]
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "id": "section_ledger",
+        "style": { "marginTop": 10 },
+        "children": [
+          {
+            "type": "table",
+            "cols": [
+              { "w": "9%" }, { "w": "10%" }, { "w": "10%" },
+              { "w": "8%" }, { "w": "8%" }, { "w": "8%" }, { "w": "8%" }, { "w": "9%" }, { "w": "9%" },
+              { "w": "11%" }, { "w": "10%" }
+            ],
+            "rows": [
+              { "cells": [
+                { "type": "label", "text": "지급일",     "style": { "bg": "#eef0f3", "fontWeight": 700, "align": "center" } },
+                { "type": "label", "text": "보호구명",   "style": { "bg": "#eef0f3", "fontWeight": 700, "align": "center" } },
+                { "type": "label", "text": "지급대상자", "style": { "bg": "#eef0f3", "fontWeight": 700, "align": "center" } },
+                { "type": "label", "text": "안전모",     "style": { "bg": "#eef0f3", "fontWeight": 700, "align": "center" } },
+                { "type": "label", "text": "안전화",     "style": { "bg": "#eef0f3", "fontWeight": 700, "align": "center" } },
+                { "type": "label", "text": "안전조끼",   "style": { "bg": "#eef0f3", "fontWeight": 700, "align": "center" } },
+                { "type": "label", "text": "각반",       "style": { "bg": "#eef0f3", "fontWeight": 700, "align": "center" } },
+                { "type": "label", "text": "방진마스크", "style": { "bg": "#eef0f3", "fontWeight": 700, "align": "center" } },
+                { "type": "label", "text": "기타",       "style": { "bg": "#eef0f3", "fontWeight": 700, "align": "center" } },
+                { "type": "label", "text": "성명",       "style": { "bg": "#eef0f3", "fontWeight": 700, "align": "center" } },
+                { "type": "label", "text": "서명",       "style": { "bg": "#eef0f3", "fontWeight": 700, "align": "center" } }
+              ]},
+              { "cells": [
+                { "type": "field", "fieldId": "row1_date" }, { "type": "field", "fieldId": "row1_gear_name" },
+                { "type": "field", "fieldId": "row1_recipient" }, { "type": "field", "fieldId": "row1_helmet" },
+                { "type": "field", "fieldId": "row1_boots" }, { "type": "field", "fieldId": "row1_vest" },
+                { "type": "field", "fieldId": "row1_gaiters" }, { "type": "field", "fieldId": "row1_dustmask" },
+                { "type": "field", "fieldId": "row1_other" }, { "type": "field", "fieldId": "row1_name" },
+                { "type": "field", "fieldId": "row1_sign" }
+              ]},
+              { "cells": [
+                { "type": "field", "fieldId": "row2_date" }, { "type": "field", "fieldId": "row2_gear_name" },
+                { "type": "field", "fieldId": "row2_recipient" }, { "type": "field", "fieldId": "row2_helmet" },
+                { "type": "field", "fieldId": "row2_boots" }, { "type": "field", "fieldId": "row2_vest" },
+                { "type": "field", "fieldId": "row2_gaiters" }, { "type": "field", "fieldId": "row2_dustmask" },
+                { "type": "field", "fieldId": "row2_other" }, { "type": "field", "fieldId": "row2_name" },
+                { "type": "field", "fieldId": "row2_sign" }
+              ]},
+              { "cells": [
+                { "type": "field", "fieldId": "row3_date" }, { "type": "field", "fieldId": "row3_gear_name" },
+                { "type": "field", "fieldId": "row3_recipient" }, { "type": "field", "fieldId": "row3_helmet" },
+                { "type": "field", "fieldId": "row3_boots" }, { "type": "field", "fieldId": "row3_vest" },
+                { "type": "field", "fieldId": "row3_gaiters" }, { "type": "field", "fieldId": "row3_dustmask" },
+                { "type": "field", "fieldId": "row3_other" }, { "type": "field", "fieldId": "row3_name" },
+                { "type": "field", "fieldId": "row3_sign" }
+              ]},
+              { "cells": [
+                { "type": "field", "fieldId": "row4_date" }, { "type": "field", "fieldId": "row4_gear_name" },
+                { "type": "field", "fieldId": "row4_recipient" }, { "type": "field", "fieldId": "row4_helmet" },
+                { "type": "field", "fieldId": "row4_boots" }, { "type": "field", "fieldId": "row4_vest" },
+                { "type": "field", "fieldId": "row4_gaiters" }, { "type": "field", "fieldId": "row4_dustmask" },
+                { "type": "field", "fieldId": "row4_other" }, { "type": "field", "fieldId": "row4_name" },
+                { "type": "field", "fieldId": "row4_sign" }
+              ]},
+              { "cells": [
+                { "type": "field", "fieldId": "row5_date" }, { "type": "field", "fieldId": "row5_gear_name" },
+                { "type": "field", "fieldId": "row5_recipient" }, { "type": "field", "fieldId": "row5_helmet" },
+                { "type": "field", "fieldId": "row5_boots" }, { "type": "field", "fieldId": "row5_vest" },
+                { "type": "field", "fieldId": "row5_gaiters" }, { "type": "field", "fieldId": "row5_dustmask" },
+                { "type": "field", "fieldId": "row5_other" }, { "type": "field", "fieldId": "row5_name" },
+                { "type": "field", "fieldId": "row5_sign" }
+              ]}
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

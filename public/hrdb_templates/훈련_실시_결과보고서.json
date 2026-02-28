@@ -1,0 +1,179 @@
+{
+  "template_id": "training_drill_result_report_v2",
+  "title": "훈련 실시 결과보고서",
+  "subtitle": "비상대응 훈련 결과 | 중대재해처벌법 시행령 제4조",
+  "version": 2,
+  "source": { "file_type": "hwp", "filename": "훈련_실시_결과보고서.hwp" },
+  "meta": { "paper": "A4", "unit": "mm", "page": { "width": 210, "height": 297, "margin": { "top": 20, "right": 15, "bottom": 20, "left": 15 } } },
+  "fields": [
+    { "id": "company_name",   "label": "사업장명",         "type": "text" },
+    { "id": "doc_no",         "label": "문서번호",         "type": "text" },
+    { "id": "drill_year",     "label": "훈련일 연도",      "type": "text", "placeholder": "2024" },
+    { "id": "drill_month",    "label": "훈련일 월",        "type": "text", "placeholder": "01" },
+    { "id": "drill_day",      "label": "훈련일 일",        "type": "text", "placeholder": "01" },
+    { "id": "drill_time",     "label": "훈련 시간",        "type": "text", "placeholder": "00:00 ~ 00:00" },
+    { "id": "drill_location", "label": "훈련 장소",        "type": "text" },
+    { "id": "drill_type",     "label": "훈련 유형",        "type": "text", "placeholder": "화재대피/화학물질누출/중대재해/종합 등" },
+    { "id": "drill_scenario", "label": "훈련 시나리오",    "type": "text" },
+    { "id": "participants",   "label": "참가 인원",        "type": "text", "placeholder": "0명" },
+    { "id": "trainer_name",   "label": "훈련 지휘자",      "type": "text" },
+    { "id": "trainer_title",  "label": "훈련 지휘자 직책", "type": "text" },
+    { "id": "eval1_item",     "label": "평가항목1",        "type": "text", "placeholder": "초기 대응 신속성" },
+    { "id": "eval1_score",    "label": "평가항목1 점수",   "type": "text", "placeholder": "A/B/C/D" },
+    { "id": "eval1_note",     "label": "평가항목1 비고",   "type": "text" },
+    { "id": "eval2_item",     "label": "평가항목2",        "type": "text", "placeholder": "비상연락 이행" },
+    { "id": "eval2_score",    "label": "평가항목2 점수",   "type": "text", "placeholder": "A/B/C/D" },
+    { "id": "eval2_note",     "label": "평가항목2 비고",   "type": "text" },
+    { "id": "eval3_item",     "label": "평가항목3",        "type": "text", "placeholder": "대피 절차 준수" },
+    { "id": "eval3_score",    "label": "평가항목3 점수",   "type": "text", "placeholder": "A/B/C/D" },
+    { "id": "eval3_note",     "label": "평가항목3 비고",   "type": "text" },
+    { "id": "eval4_item",     "label": "평가항목4",        "type": "text", "placeholder": "응급처치 수행" },
+    { "id": "eval4_score",    "label": "평가항목4 점수",   "type": "text", "placeholder": "A/B/C/D" },
+    { "id": "eval4_note",     "label": "평가항목4 비고",   "type": "text" },
+    { "id": "eval5_item",     "label": "평가항목5",        "type": "text", "placeholder": "장비·설비 활용" },
+    { "id": "eval5_score",    "label": "평가항목5 점수",   "type": "text", "placeholder": "A/B/C/D" },
+    { "id": "eval5_note",     "label": "평가항목5 비고",   "type": "text" },
+    { "id": "overall_grade",  "label": "종합 평가 등급",   "type": "text", "placeholder": "우수/양호/보통/미흡" },
+    { "id": "achievement",    "label": "훈련 성과 및 성공 사항",  "type": "text" },
+    { "id": "improvement",    "label": "개선 필요 사항",          "type": "text" },
+    { "id": "imp1_action",    "label": "개선조치1 내용",          "type": "text" },
+    { "id": "imp1_deadline",  "label": "개선조치1 기한",          "type": "text" },
+    { "id": "imp1_person",    "label": "개선조치1 담당자",        "type": "text" },
+    { "id": "imp2_action",    "label": "개선조치2 내용",          "type": "text" },
+    { "id": "imp2_deadline",  "label": "개선조치2 기한",          "type": "text" },
+    { "id": "imp2_person",    "label": "개선조치2 담당자",        "type": "text" },
+    { "id": "next_drill_plan","label": "다음 훈련 계획",          "type": "text" },
+    { "id": "reporter_name",  "label": "보고자 성명",             "type": "text" },
+    { "id": "approver_name",  "label": "승인자 성명",             "type": "text" }
+  ],
+  "layout": {
+    "type": "page",
+    "children": [
+      {
+        "type": "block", "style": { "padding": [8,4,8,4] },
+        "children": [
+          { "type": "text", "value": "훈련 실시 결과보고서", "style": { "fontSize": 18, "fontWeight": 900, "textAlign": "center" } }
+        ]
+      },
+      {
+        "type": "section", "title": { "text": "1. 훈련 개요" },
+        "children": [{
+          "type": "table", "cols": [{"w":"20%"},{"w":"30%"},{"w":"20%"},{"w":"30%"}],
+          "style": { "borderColor": "#c0c0c0" },
+          "rows": [
+            { "cells": [
+              { "type": "label", "text": "사 업 장 명",   "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "company_name" },
+              { "type": "label", "text": "문 서 번 호",   "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "doc_no" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "훈  련  일",    "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "composite", "children": [
+                { "type": "field", "fieldId": "drill_year" }, { "type": "text", "value": "년 " },
+                { "type": "field", "fieldId": "drill_month" }, { "type": "text", "value": "월 " },
+                { "type": "field", "fieldId": "drill_day" }, { "type": "text", "value": "일" }
+              ]},
+              { "type": "label", "text": "훈련 시간",     "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "drill_time" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "훈련 장소",     "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "drill_location" },
+              { "type": "label", "text": "훈련 유형",     "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "drill_type" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "참 가 인 원",   "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "participants" },
+              { "type": "label", "text": "훈련 지휘자",   "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "composite", "children": [
+                { "type": "field", "fieldId": "trainer_title" }, { "type": "text", "value": "  " },
+                { "type": "field", "fieldId": "trainer_name" }
+              ]}
+            ]},
+            { "cells": [
+              { "type": "label", "text": "훈련 시나리오", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "drill_scenario", "colspan": 3 }
+            ]}
+          ]
+        }]
+      },
+      {
+        "type": "section", "title": { "text": "2. 훈련 평가" },
+        "children": [{
+          "type": "table", "cols": [{"w":"30%"},{"w":"15%"},{"w":"55%"}],
+          "style": { "borderColor": "#c0c0c0" },
+          "rows": [
+            { "cells": [
+              { "type": "label", "text": "평 가 항 목",  "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "label", "text": "평 가 등 급",  "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "label", "text": "비  고",        "style": { "bg": "#eef0f3", "fontWeight": 700 } }
+            ]},
+            { "cells": [{"type":"field","fieldId":"eval1_item"},{"type":"field","fieldId":"eval1_score"},{"type":"field","fieldId":"eval1_note"}] },
+            { "cells": [{"type":"field","fieldId":"eval2_item"},{"type":"field","fieldId":"eval2_score"},{"type":"field","fieldId":"eval2_note"}] },
+            { "cells": [{"type":"field","fieldId":"eval3_item"},{"type":"field","fieldId":"eval3_score"},{"type":"field","fieldId":"eval3_note"}] },
+            { "cells": [{"type":"field","fieldId":"eval4_item"},{"type":"field","fieldId":"eval4_score"},{"type":"field","fieldId":"eval4_note"}] },
+            { "cells": [{"type":"field","fieldId":"eval5_item"},{"type":"field","fieldId":"eval5_score"},{"type":"field","fieldId":"eval5_note"}] },
+            { "cells": [
+              { "type": "label", "text": "종 합 평 가 등 급", "colspan": 2, "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "overall_grade" }
+            ]}
+          ]
+        }]
+      },
+      {
+        "type": "section", "title": { "text": "3. 훈련 성과 및 개선사항" },
+        "children": [{
+          "type": "table", "cols": [{"w":"25%"},{"w":"75%"}],
+          "style": { "borderColor": "#c0c0c0" },
+          "rows": [
+            { "cells": [
+              { "type": "label", "text": "훈련 성과 및 성공 사항", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "achievement", "style": { "minH": 40 } }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "개선 필요 사항",         "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "improvement", "style": { "minH": 40 } }
+            ]}
+          ]
+        }]
+      },
+      {
+        "type": "section", "title": { "text": "4. 개선조치 계획" },
+        "children": [{
+          "type": "table", "cols": [{"w":"45%"},{"w":"20%"},{"w":"35%"}],
+          "style": { "borderColor": "#c0c0c0" },
+          "rows": [
+            { "cells": [
+              { "type": "label", "text": "개 선 조 치 내 용",  "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "label", "text": "완 료 기 한",         "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "label", "text": "담  당  자",           "style": { "bg": "#eef0f3", "fontWeight": 700 } }
+            ]},
+            { "cells": [{"type":"field","fieldId":"imp1_action"},{"type":"field","fieldId":"imp1_deadline"},{"type":"field","fieldId":"imp1_person"}] },
+            { "cells": [{"type":"field","fieldId":"imp2_action"},{"type":"field","fieldId":"imp2_deadline"},{"type":"field","fieldId":"imp2_person"}] },
+            { "cells": [
+              { "type": "label", "text": "다음 훈련 계획",     "colspan": 2, "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "next_drill_plan" }
+            ]}
+          ]
+        }]
+      },
+      {
+        "type": "section", "title": { "text": "5. 보고 및 승인" },
+        "children": [{
+          "type": "table", "cols": [{"w":"25%"},{"w":"25%"},{"w":"25%"},{"w":"25%"}],
+          "style": { "borderColor": "#c0c0c0" },
+          "rows": [
+            { "cells": [
+              { "type": "label", "text": "보  고  자", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "reporter_name" },
+              { "type": "label", "text": "승  인  자", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "approver_name" }
+            ]}
+          ]
+        }]
+      }
+    ]
+  }
+}

@@ -1,0 +1,151 @@
+{
+  "template_id": "work_risk_management_permit_v2",
+  "title": "작업별 위험관리대장 및 작업허가 절차",
+  "version": 2,
+  "source": { "file_type": "hwp", "filename": "작업별_위험관리대장_및_작업허가_절차.hwp" },
+  "meta": { "paper": "A4", "unit": "mm", "page": { "width": 210, "height": 297, "margin": { "top": 20, "right": 15, "bottom": 20, "left": 15 } } },
+  "fields": [
+    { "id": "company_name",     "label": "사업장명",              "type": "text", "placeholder": "㈜0000" },
+    { "id": "permit_no",        "label": "허가번호",              "type": "text" },
+    { "id": "req_year",         "label": "신청일 연도",           "type": "text", "placeholder": "202 " },
+    { "id": "req_month",        "label": "신청일 월",             "type": "text", "placeholder": "  " },
+    { "id": "req_day",          "label": "신청일 일",             "type": "text", "placeholder": "  " },
+    { "id": "work_name",        "label": "작업명",                "type": "text" },
+    { "id": "work_location",    "label": "작업 장소",             "type": "text" },
+    { "id": "work_dept",        "label": "작업 부서",             "type": "text" },
+    { "id": "work_start",       "label": "작업 시작일시",         "type": "text" },
+    { "id": "work_end",         "label": "작업 완료일시",         "type": "text" },
+    { "id": "work_lead",        "label": "작업 책임자",           "type": "text" },
+    { "id": "worker_count",     "label": "투입 인원",             "type": "text", "placeholder": "0명" },
+    { "id": "work_desc",        "label": "작업 내용",             "type": "text" },
+    { "id": "h1_hazard",  "label": "위험요인1",         "type": "text" }, { "id": "h1_type",  "label": "위험요인1 유형",   "type": "text", "placeholder": "물리적/화학적/전기적/기계적" }, { "id": "h1_control","label": "위험요인1 관리방법","type": "text" }, { "id": "h1_ppe",   "label": "위험요인1 보호구",  "type": "text" },
+    { "id": "h2_hazard",  "label": "위험요인2",         "type": "text" }, { "id": "h2_type",  "label": "위험요인2 유형",   "type": "text", "placeholder": "물리적/화학적/전기적/기계적" }, { "id": "h2_control","label": "위험요인2 관리방법","type": "text" }, { "id": "h2_ppe",   "label": "위험요인2 보호구",  "type": "text" },
+    { "id": "h3_hazard",  "label": "위험요인3",         "type": "text" }, { "id": "h3_type",  "label": "위험요인3 유형",   "type": "text", "placeholder": "물리적/화학적/전기적/기계적" }, { "id": "h3_control","label": "위험요인3 관리방법","type": "text" }, { "id": "h3_ppe",   "label": "위험요인3 보호구",  "type": "text" },
+    { "id": "h4_hazard",  "label": "위험요인4",         "type": "text" }, { "id": "h4_type",  "label": "위험요인4 유형",   "type": "text", "placeholder": "물리적/화학적/전기적/기계적" }, { "id": "h4_control","label": "위험요인4 관리방법","type": "text" }, { "id": "h4_ppe",   "label": "위험요인4 보호구",  "type": "text" },
+    { "id": "pre_check1", "label": "작업전 확인1",      "type": "text", "placeholder": "양호/불량/해당없음" },
+    { "id": "pre_check2", "label": "작업전 확인2",      "type": "text", "placeholder": "양호/불량/해당없음" },
+    { "id": "pre_check3", "label": "작업전 확인3",      "type": "text", "placeholder": "양호/불량/해당없음" },
+    { "id": "pre_check4", "label": "작업전 확인4",      "type": "text", "placeholder": "양호/불량/해당없음" },
+    { "id": "requester_name",   "label": "신청자 성명",           "type": "text" },
+    { "id": "reviewer_name",    "label": "검토자 성명",           "type": "text" },
+    { "id": "approver_name",    "label": "허가자(승인) 성명",     "type": "text" },
+    { "id": "completion_date",  "label": "작업 완료 확인일",      "type": "text" },
+    { "id": "completion_sign",  "label": "완료 확인자",           "type": "text" }
+  ],
+  "layout": {
+    "type": "page",
+    "children": [
+      {
+        "type": "block", "style": { "padding": [8,4,8,4] },
+        "children": [
+          { "type": "text", "value": "작업별 위험관리대장 및 작업허가 절차", "style": { "fontSize": 16, "fontWeight": 900, "textAlign": "center" } },
+          { "type": "text", "value": "KISA Safety is first! KISA is best!", "style": { "fontSize": 9, "textAlign": "center", "color": "#555" } }
+        ]
+      },
+      {
+        "type": "section", "title": { "text": "1. 작업 기본 정보" },
+        "children": [{
+          "type": "table", "cols": [{"w":"15%"},{"w":"25%"},{"w":"15%"},{"w":"20%"},{"w":"10%"},{"w":"15%"}],
+          "style": { "borderColor": "#c0c0c0" },
+          "rows": [
+            { "cells": [
+              { "type": "label", "text": "사 업 장 명", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "company_name" },
+              { "type": "label", "text": "허 가 번 호", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "permit_no" },
+              { "type": "label", "text": "신 청 일",    "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "composite", "children": [
+                { "type": "field", "fieldId": "req_year" }, { "type": "text", "value": ". " },
+                { "type": "field", "fieldId": "req_month" }, { "type": "text", "value": ". " },
+                { "type": "field", "fieldId": "req_day" }
+              ]}
+            ]},
+            { "cells": [
+              { "type": "label", "text": "작 업 명",    "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "work_name" },
+              { "type": "label", "text": "작업 장소",   "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "work_location" },
+              { "type": "label", "text": "작업 부서",   "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "work_dept" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "작업 기간",   "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "composite", "children": [
+                { "type": "field", "fieldId": "work_start" }, { "type": "text", "value": " ~ " },
+                { "type": "field", "fieldId": "work_end" }
+              ], "colspan": 3 },
+              { "type": "label", "text": "투입 인원",   "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "worker_count" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "작업 책임자", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "work_lead" },
+              { "type": "label", "text": "작 업 내 용", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "work_desc", "colspan": 3 }
+            ]}
+          ]
+        }]
+      },
+      {
+        "type": "section", "title": { "text": "2. 위험관리대장 (위험요인 분석 및 관리방법)" },
+        "children": [{
+          "type": "table", "cols": [{"w":"25%"},{"w":"20%"},{"w":"30%"},{"w":"25%"}],
+          "style": { "borderColor": "#c0c0c0" },
+          "rows": [
+            { "cells": [
+              { "type": "label", "text": "위 험 요 인",   "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "label", "text": "위험 유형",      "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "label", "text": "위험 관리 방법", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "label", "text": "필요 보호구",    "style": { "bg": "#eef0f3", "fontWeight": 700 } }
+            ]},
+            { "cells": [{"type":"field","fieldId":"h1_hazard"},{"type":"field","fieldId":"h1_type"},{"type":"field","fieldId":"h1_control"},{"type":"field","fieldId":"h1_ppe"}] },
+            { "cells": [{"type":"field","fieldId":"h2_hazard"},{"type":"field","fieldId":"h2_type"},{"type":"field","fieldId":"h2_control"},{"type":"field","fieldId":"h2_ppe"}] },
+            { "cells": [{"type":"field","fieldId":"h3_hazard"},{"type":"field","fieldId":"h3_type"},{"type":"field","fieldId":"h3_control"},{"type":"field","fieldId":"h3_ppe"}] },
+            { "cells": [{"type":"field","fieldId":"h4_hazard"},{"type":"field","fieldId":"h4_type"},{"type":"field","fieldId":"h4_control"},{"type":"field","fieldId":"h4_ppe"}] }
+          ]
+        }]
+      },
+      {
+        "type": "section", "title": { "text": "3. 작업 전 안전 확인" },
+        "children": [{
+          "type": "table", "cols": [{"w":"55%"},{"w":"45%"}],
+          "style": { "borderColor": "#c0c0c0" },
+          "rows": [
+            { "cells": [
+              { "type": "label", "text": "확 인 항 목",            "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "label", "text": "확 인 결 과 (양호/불량/해당없음)", "style": { "bg": "#eef0f3", "fontWeight": 700 } }
+            ]},
+            { "cells": [{ "type": "label", "text": "보호구 착용 상태 확인" }, { "type": "field", "fieldId": "pre_check1" }] },
+            { "cells": [{ "type": "label", "text": "위험 구역 출입 통제 확인" }, { "type": "field", "fieldId": "pre_check2" }] },
+            { "cells": [{ "type": "label", "text": "작업 장비·도구 이상 유무 확인" }, { "type": "field", "fieldId": "pre_check3" }] },
+            { "cells": [{ "type": "label", "text": "비상 대피 경로 확보 확인" }, { "type": "field", "fieldId": "pre_check4" }] }
+          ]
+        }]
+      },
+      {
+        "type": "section", "title": { "text": "4. 결재 및 완료 확인" },
+        "children": [{
+          "type": "table", "cols": [{"w":"15%"},{"w":"20%"},{"w":"15%"},{"w":"20%"},{"w":"15%"},{"w":"15%"}],
+          "style": { "borderColor": "#c0c0c0" },
+          "rows": [
+            { "cells": [
+              { "type": "label", "text": "신  청  자",      "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "requester_name" },
+              { "type": "label", "text": "검  토  자",      "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "reviewer_name" },
+              { "type": "label", "text": "허  가  자",      "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "approver_name" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "작업 완료 확인일","style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "completion_date" },
+              { "type": "label", "text": "완료 확인자",     "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "completion_sign" },
+              { "type": "label", "text": "", "colspan": 2 }
+            ]}
+          ]
+        }]
+      }
+    ]
+  }
+}

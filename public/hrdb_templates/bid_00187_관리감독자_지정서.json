@@ -1,0 +1,115 @@
+{
+  "template_id": "supervisor_designation_v1",
+  "title": "관리감독자 지정서",
+  "version": 1,
+  "source": {
+    "file_type": "hwp",
+    "filename": "bid_00187_관리감독자_지정서_양식.hwp",
+    "issuer": "",
+    "legal_basis": "산업안전보건법 제16조, 동법 시행령 제15조"
+  },
+  "meta": {
+    "paper": "A4",
+    "unit": "mm",
+    "page": { "width": 210, "height": 297, "margin": { "top": 25, "right": 20, "bottom": 25, "left": 20 } },
+    "fonts": { "base": "Noto Sans KR", "mono": "monospace" }
+  },
+  "fields": [
+    { "id": "dept",              "label": "소  속",        "type": "text", "placeholder": "부서명" },
+    { "id": "rank",              "label": "직  급",        "type": "text", "placeholder": "직급" },
+    { "id": "name",              "label": "성  명",        "type": "text", "placeholder": "성명" },
+    { "id": "appoint_year",      "label": "지정일 연도",   "type": "text", "placeholder": "2024" },
+    { "id": "appoint_month",     "label": "지정일 월",     "type": "text", "placeholder": "01" },
+    { "id": "appoint_day",       "label": "지정일 일",     "type": "text", "placeholder": "01" },
+    { "id": "company_name",      "label": "회사명",        "type": "text", "placeholder": "회사명" },
+    { "id": "ceo_name",          "label": "대표자명",      "type": "text", "placeholder": "성명" },
+    { "id": "work_scope",        "label": "담당 작업 범위","type": "text", "placeholder": "담당 작업 내용을 기재하세요." }
+  ],
+  "layout": {
+    "type": "page",
+    "children": [
+      {
+        "type": "block",
+        "style": { "padding": [20,4,16,4] },
+        "children": [
+          { "type": "text", "value": "관리감독자 지정서", "style": { "fontSize": 20, "fontWeight": 900, "textAlign": "center" } },
+          { "type": "text", "value": "(산업안전보건법 제16조)", "style": { "fontSize": 11, "textAlign": "center", "color": "#555" } }
+        ]
+      },
+      {
+        "type": "section",
+        "title": { "text": "지정 대상자" },
+        "children": [
+          {
+            "type": "table",
+            "cols": [{ "w": "25%" }, { "w": "75%" }],
+            "style": { "borderColor": "#c0c0c0" },
+            "rows": [
+              { "cells": [
+                { "type": "label", "text": "소   속", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "dept" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "직   급", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "rank" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "성   명", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "name" }
+              ]}
+            ]
+          }
+        ]
+      },
+      {
+        "type": "block",
+        "style": { "padding": [12,4,12,4] },
+        "children": [
+          { "type": "text", "value": "위 사람을 산업안전보건법 제16조 및 동법 시행령 제15조에 따라, 아래와 같은 안전·보건관리에 대한 업무를 수행할 관리감독자로 지정합니다.", "style": { "fontSize": 11, "lineHeight": 1.8 } }
+        ]
+      },
+      {
+        "type": "section",
+        "title": { "text": "관리감독자 업무 및 담당 범위" },
+        "children": [
+          {
+            "type": "static_list",
+            "items": [
+              "1. 사업장 내 관리감독자가 지휘·감독하는 작업과 관련된 기계·기구 또는 설비의 안전·보건 점검 및 이상 유무의 확인",
+              "2. 관리감독자에게 소속된 근로자의 작업복·보호구 및 방호장치의 점검과 그 착용·사용에 관한 교육·지도",
+              "3. 해당 작업에서 발생한 산업재해에 관한 보고 및 이에 대한 응급조치",
+              "4. 해당 작업의 작업장 정리·정돈 및 통로확보에 대한 확인·감독",
+              "5. 위험성 평가를 위한 업무에 기인하는 유해·위험요인의 파악 및 그 결과에 따른 개선조치의 시행"
+            ]
+          },
+          {
+            "type": "table",
+            "cols": [{ "w": "25%" }, { "w": "75%" }],
+            "style": { "borderColor": "#c0c0c0" },
+            "rows": [
+              { "cells": [
+                { "type": "label", "text": "담당 작업 범위", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "work_scope" }
+              ]}
+            ]
+          }
+        ]
+      },
+      {
+        "type": "block",
+        "style": { "padding": [16,4,4,4] },
+        "children": [
+          { "type": "composite", "children": [
+            { "type": "field", "fieldId": "appoint_year" }, { "type": "text", "value": " 년  " },
+            { "type": "field", "fieldId": "appoint_month" }, { "type": "text", "value": " 월  " },
+            { "type": "field", "fieldId": "appoint_day" }, { "type": "text", "value": " 일" }
+          ]},
+          { "type": "composite", "children": [
+            { "type": "field", "fieldId": "company_name" }, { "type": "text", "value": "  대표이사  " },
+            { "type": "field", "fieldId": "ceo_name" }, { "type": "text", "value": "  (인)" }
+          ]}
+        ]
+      }
+    ]
+  }
+}

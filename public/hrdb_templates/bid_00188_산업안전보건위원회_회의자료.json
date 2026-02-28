@@ -1,0 +1,171 @@
+{
+  "template_id": "safety_committee_meeting_v1",
+  "title": "산업안전보건위원회 회의자료",
+  "version": 1,
+  "source": {
+    "file_type": "hwp",
+    "filename": "bid_00188_산업안전보건위원회_회의자료.hwp",
+    "issuer": "",
+    "legal_basis": "산업안전보건법 제24조"
+  },
+  "meta": {
+    "paper": "A4",
+    "unit": "mm",
+    "page": { "width": 210, "height": 297, "margin": { "top": 20, "right": 20, "bottom": 20, "left": 20 } },
+    "fonts": { "base": "Noto Sans KR", "mono": "monospace" }
+  },
+  "fields": [
+    { "id": "meeting_no",          "label": "회의 차수",         "type": "text", "placeholder": "제0회" },
+    { "id": "meeting_year",        "label": "개최 연도",         "type": "text", "placeholder": "2024" },
+    { "id": "meeting_month",       "label": "개최 월",           "type": "text", "placeholder": "01" },
+    { "id": "meeting_day",         "label": "개최 일",           "type": "text", "placeholder": "01" },
+    { "id": "meeting_time",        "label": "개최 시각",         "type": "text", "placeholder": "14:00" },
+    { "id": "meeting_place",       "label": "개최 장소",         "type": "text", "placeholder": "회의실" },
+    { "id": "company_name",        "label": "사업장명",          "type": "text" },
+    { "id": "attendees_mgmt",      "label": "참석자 (사측)",     "type": "text" },
+    { "id": "attendees_labor",     "label": "참석자 (근로자측)", "type": "text" },
+    { "id": "agenda1",             "label": "안건 1",            "type": "text" },
+    { "id": "agenda2",             "label": "안건 2",            "type": "text" },
+    { "id": "agenda3",             "label": "안건 3",            "type": "text" },
+    { "id": "resolution1",        "label": "의결사항 1",        "type": "text" },
+    { "id": "resolution2",        "label": "의결사항 2",        "type": "text" },
+    { "id": "resolution3",        "label": "의결사항 3",        "type": "text" },
+    { "id": "next_meeting",        "label": "차기 회의 예정일",  "type": "text", "placeholder": "0000년 00월 00일" },
+    { "id": "chairman_name",       "label": "위원장 성명",       "type": "text" },
+    { "id": "secretary_name",      "label": "간사 성명",         "type": "text" }
+  ],
+  "layout": {
+    "type": "page",
+    "children": [
+      {
+        "type": "block",
+        "style": { "padding": [8,4,8,4] },
+        "children": [
+          { "type": "text", "value": "산업안전보건위원회 회의자료", "style": { "fontSize": 18, "fontWeight": 900, "textAlign": "center" } }
+        ]
+      },
+      {
+        "type": "section",
+        "title": { "text": "회의 기본 정보" },
+        "children": [
+          {
+            "type": "table",
+            "cols": [{ "w": "25%" }, { "w": "75%" }],
+            "style": { "borderColor": "#c0c0c0" },
+            "rows": [
+              { "cells": [
+                { "type": "label", "text": "회 의 명", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "composite", "children": [
+                  { "type": "field", "fieldId": "meeting_no" }, { "type": "text", "value": " 산업안전보건위원회" }
+                ]}
+              ]},
+              { "cells": [
+                { "type": "label", "text": "개최 일시", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "composite", "children": [
+                  { "type": "field", "fieldId": "meeting_year" }, { "type": "text", "value": "년 " },
+                  { "type": "field", "fieldId": "meeting_month" }, { "type": "text", "value": "월 " },
+                  { "type": "field", "fieldId": "meeting_day" }, { "type": "text", "value": "일  " },
+                  { "type": "field", "fieldId": "meeting_time" }
+                ]}
+              ]},
+              { "cells": [
+                { "type": "label", "text": "개최 장소", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "meeting_place" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "사 업 장 명", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "company_name" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "참석자 (사측)", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "attendees_mgmt" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "참석자 (근로자측)", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "attendees_labor" }
+              ]}
+            ]
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "title": { "text": "회의 안건" },
+        "children": [
+          {
+            "type": "table",
+            "cols": [{ "w": "10%" }, { "w": "90%" }],
+            "style": { "borderColor": "#c0c0c0" },
+            "rows": [
+              { "cells": [
+                { "type": "label", "text": "안건1", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "agenda1" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "안건2", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "agenda2" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "안건3", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "agenda3" }
+              ]}
+            ]
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "title": { "text": "심의·의결 사항" },
+        "children": [
+          {
+            "type": "table",
+            "cols": [{ "w": "10%" }, { "w": "90%" }],
+            "style": { "borderColor": "#c0c0c0" },
+            "rows": [
+              { "cells": [
+                { "type": "label", "text": "제1호", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "resolution1" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "제2호", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "resolution2" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "제3호", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "resolution3" }
+              ]}
+            ]
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "title": { "text": "차기 회의" },
+        "children": [
+          {
+            "type": "table",
+            "cols": [{ "w": "25%" }, { "w": "75%" }],
+            "style": { "borderColor": "#c0c0c0" },
+            "rows": [
+              { "cells": [
+                { "type": "label", "text": "차기 회의 예정일", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "next_meeting" }
+              ]}
+            ]
+          }
+        ]
+      },
+      {
+        "type": "block",
+        "style": { "padding": [12,4,4,4] },
+        "children": [
+          { "type": "composite", "children": [
+            { "type": "text", "value": "위원장 " }, { "type": "field", "fieldId": "chairman_name" },
+            { "type": "text", "value": "  (인)     간사 " }, { "type": "field", "fieldId": "secretary_name" },
+            { "type": "text", "value": "  (인)" }
+          ]}
+        ]
+      }
+    ]
+  }
+}

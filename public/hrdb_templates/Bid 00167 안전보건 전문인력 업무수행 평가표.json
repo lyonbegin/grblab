@@ -1,0 +1,326 @@
+{
+  "template_id": "kras_safety_professional_evaluation_v1",
+  "title": "안전보건 전문인력 업무수행 평가표",
+  "version": 4,
+  "source": {
+    "file_type": "hwp",
+    "filename": "bid_00167_안전보건_전문인력_업무수행_평가표.hwp",
+    "issuer": "고용노동부",
+    "legal_basis": "산업안전보건법 제15조"
+  },
+  "meta": {
+    "paper": "A4",
+    "unit": "mm",
+    "page": {
+      "width": 210,
+      "height": 297,
+      "margin": { "top": 20, "right": 20, "bottom": 20, "left": 20 }
+    },
+    "fonts": { "base": "Noto Sans KR", "mono": "monospace" }
+  },
+  "schema": {
+    "record": { "record_id": "string", "created_at": "string", "values": "object" }
+  },
+  "fields": [
+    { "id": "eval_date_year",       "label": "평가일 연도", "type": "text", "placeholder": "2023" },
+    { "id": "eval_date_month",      "label": "평가일 월",   "type": "text", "placeholder": "01" },
+    { "id": "eval_date_day",        "label": "평가일 일",   "type": "text", "placeholder": "01" },
+    { "id": "evaluator_name",       "label": "평가자",       "type": "text", "placeholder": "성명" },
+
+    { "id": "mgr_task1_bad",  "label": "산재예방계획수립 - 미흡", "type": "checkbox" },
+    { "id": "mgr_task1_mid",  "label": "산재예방계획수립 - 보통", "type": "checkbox" },
+    { "id": "mgr_task1_good", "label": "산재예방계획수립 - 양호", "type": "checkbox" },
+
+    { "id": "mgr_task2_bad",  "label": "안전보건관리규정 - 미흡", "type": "checkbox" },
+    { "id": "mgr_task2_mid",  "label": "안전보건관리규정 - 보통", "type": "checkbox" },
+    { "id": "mgr_task2_good", "label": "안전보건관리규정 - 양호", "type": "checkbox" },
+
+    { "id": "mgr_task3_bad",  "label": "안전보건교육 - 미흡", "type": "checkbox" },
+    { "id": "mgr_task3_mid",  "label": "안전보건교육 - 보통", "type": "checkbox" },
+    { "id": "mgr_task3_good", "label": "안전보건교육 - 양호", "type": "checkbox" },
+
+    { "id": "mgr_task4_bad",  "label": "작업환경점검 - 미흡", "type": "checkbox" },
+    { "id": "mgr_task4_mid",  "label": "작업환경점검 - 보통", "type": "checkbox" },
+    { "id": "mgr_task4_good", "label": "작업환경점검 - 양호", "type": "checkbox" },
+
+    { "id": "mgr_task5_bad",  "label": "건강진단 - 미흡", "type": "checkbox" },
+    { "id": "mgr_task5_mid",  "label": "건강진단 - 보통", "type": "checkbox" },
+    { "id": "mgr_task5_good", "label": "건강진단 - 양호", "type": "checkbox" },
+
+    { "id": "mgr_task6_bad",  "label": "재해원인조사 - 미흡", "type": "checkbox" },
+    { "id": "mgr_task6_mid",  "label": "재해원인조사 - 보통", "type": "checkbox" },
+    { "id": "mgr_task6_good", "label": "재해원인조사 - 양호", "type": "checkbox" },
+
+    { "id": "mgr_task7_bad",  "label": "재해통계기록 - 미흡", "type": "checkbox" },
+    { "id": "mgr_task7_mid",  "label": "재해통계기록 - 보통", "type": "checkbox" },
+    { "id": "mgr_task7_good", "label": "재해통계기록 - 양호", "type": "checkbox" },
+
+    { "id": "mgr_task8_bad",  "label": "보호구적격품 - 미흡", "type": "checkbox" },
+    { "id": "mgr_task8_mid",  "label": "보호구적격품 - 보통", "type": "checkbox" },
+    { "id": "mgr_task8_good", "label": "보호구적격품 - 양호", "type": "checkbox" },
+
+    { "id": "mgr_task9_bad",  "label": "유해위험방지 - 미흡", "type": "checkbox" },
+    { "id": "mgr_task9_mid",  "label": "유해위험방지 - 보통", "type": "checkbox" },
+    { "id": "mgr_task9_good", "label": "유해위험방지 - 양호", "type": "checkbox" },
+
+    { "id": "gen_task1_bad",  "label": "위험성평가 - 미흡", "type": "checkbox" },
+    { "id": "gen_task1_mid",  "label": "위험성평가 - 보통", "type": "checkbox" },
+    { "id": "gen_task1_good", "label": "위험성평가 - 양호", "type": "checkbox" },
+
+    { "id": "gen_task2_bad",  "label": "작업중지 - 미흡", "type": "checkbox" },
+    { "id": "gen_task2_mid",  "label": "작업중지 - 보통", "type": "checkbox" },
+    { "id": "gen_task2_good", "label": "작업중지 - 양호", "type": "checkbox" },
+
+    { "id": "gen_task3_bad",  "label": "도급재해예방 - 미흡", "type": "checkbox" },
+    { "id": "gen_task3_mid",  "label": "도급재해예방 - 보통", "type": "checkbox" },
+    { "id": "gen_task3_good", "label": "도급재해예방 - 양호", "type": "checkbox" }
+  ],
+  "layout": {
+    "type": "page",
+    "children": [
+      {
+        "type": "block",
+        "id": "header_p1",
+        "style": { "padding": [10, 6, 10, 6] },
+        "children": [
+          {
+            "type": "text",
+            "value": "안전보건 전문인력 업무수행 평가표",
+            "style": { "fontSize": 18, "fontWeight": 900, "textAlign": "center", "color": "#1a1a2e" }
+          }
+        ]
+      },
+      {
+        "type": "block",
+        "id": "section_title_p1",
+        "style": { "marginTop": 8, "marginBottom": 8 },
+        "children": [
+          { "type": "text", "value": "■ 평가부문 : 안전보건관리책임자", "style": { "fontSize": 12, "fontWeight": 700 } }
+        ]
+      },
+      {
+        "type": "section",
+        "id": "section_eval_mgr",
+        "children": [
+          {
+            "type": "table",
+            "id": "eval_table_mgr",
+            "cols": [
+              { "w": "40%" }, { "w": "35%" }, { "w": "8%" }, { "w": "8%" }, { "w": "9%" }
+            ],
+            "rows": [
+              {
+                "cells": [
+                  { "type": "label", "text": "주요 업무 (산업안전보건법 제15조)", "style": { "bg": "#eef0f3", "fontWeight": 800, "align": "center" } },
+                  { "type": "label", "text": "관련자료",  "style": { "bg": "#eef0f3", "fontWeight": 800, "align": "center" } },
+                  { "type": "label", "text": "미흡", "style": { "bg": "#eef0f3", "fontWeight": 700, "align": "center" } },
+                  { "type": "label", "text": "보통", "style": { "bg": "#eef0f3", "fontWeight": 700, "align": "center" } },
+                  { "type": "label", "text": "양호", "style": { "bg": "#eef0f3", "fontWeight": 700, "align": "center" } }
+                ]
+              },
+              {
+                "cells": [
+                  { "type": "label", "text": "＊ 사업장의 산재예방계획 수립에 관한 사항" },
+                  { "type": "label", "text": "- 연간 안전보건계획수립서\n- 안전보건경영방침\n- 안전보건목표 설정\n- 안전보건예산편성 및 집행 내역" },
+                  { "type": "field", "fieldId": "mgr_task1_bad" },
+                  { "type": "field", "fieldId": "mgr_task1_mid" },
+                  { "type": "field", "fieldId": "mgr_task1_good" }
+                ]
+              },
+              {
+                "cells": [
+                  { "type": "label", "text": "＊ 안전보건관리규정의 작성 및 변경에 관한 사항" },
+                  { "type": "label", "text": "- 안전보건관리규정 작성 및 게시" },
+                  { "type": "field", "fieldId": "mgr_task2_bad" },
+                  { "type": "field", "fieldId": "mgr_task2_mid" },
+                  { "type": "field", "fieldId": "mgr_task2_good" }
+                ]
+              },
+              {
+                "cells": [
+                  { "type": "label", "text": "＊ 근로자 안전보건교육에 관한 사항" },
+                  { "type": "label", "text": "- 근로자 안전보건교육 결과표 결재 서류" },
+                  { "type": "field", "fieldId": "mgr_task3_bad" },
+                  { "type": "field", "fieldId": "mgr_task3_mid" },
+                  { "type": "field", "fieldId": "mgr_task3_good" }
+                ]
+              },
+              {
+                "cells": [
+                  { "type": "label", "text": "＊ 작업환경의 점검 및 개선에 관한 사항" },
+                  { "type": "label", "text": "- 안전, 보건 점검 보고서\n- 사업장 유해위험요인 개선 자료" },
+                  { "type": "field", "fieldId": "mgr_task4_bad" },
+                  { "type": "field", "fieldId": "mgr_task4_mid" },
+                  { "type": "field", "fieldId": "mgr_task4_good" }
+                ]
+              },
+              {
+                "cells": [
+                  { "type": "label", "text": "＊ 근로자의 건강진단 등 건강관리에 관한 사항" },
+                  { "type": "label", "text": "- 근로자 건강진단" },
+                  { "type": "field", "fieldId": "mgr_task5_bad" },
+                  { "type": "field", "fieldId": "mgr_task5_mid" },
+                  { "type": "field", "fieldId": "mgr_task5_good" }
+                ]
+              },
+              {
+                "cells": [
+                  { "type": "label", "text": "＊ 산업재해의 원인 조사 및 재발 방지대책 수립에 관한 사항" },
+                  { "type": "label", "text": "- 산업재해조사표\n- 재발방지계획서 및 이행결과표" },
+                  { "type": "field", "fieldId": "mgr_task6_bad" },
+                  { "type": "field", "fieldId": "mgr_task6_mid" },
+                  { "type": "field", "fieldId": "mgr_task6_good" }
+                ]
+              },
+              {
+                "cells": [
+                  { "type": "label", "text": "＊ 산업재해에 관한 통계의 기록 및 유지에 관한 사항" },
+                  { "type": "label", "text": "" },
+                  { "type": "field", "fieldId": "mgr_task7_bad" },
+                  { "type": "field", "fieldId": "mgr_task7_mid" },
+                  { "type": "field", "fieldId": "mgr_task7_good" }
+                ]
+              },
+              {
+                "cells": [
+                  { "type": "label", "text": "＊ 안전장치 및 보호구 구입 시 적격품 여부 확인에 관한 사항" },
+                  { "type": "label", "text": "- 자율안전확인신고대상 리스트\n- 보호구 지급대장\n- 보호구 안전인증 여부" },
+                  { "type": "field", "fieldId": "mgr_task8_bad" },
+                  { "type": "field", "fieldId": "mgr_task8_mid" },
+                  { "type": "field", "fieldId": "mgr_task8_good" }
+                ]
+              },
+              {
+                "cells": [
+                  { "type": "label", "text": "＊ 그 밖에 근로자의 유해·위험 방지조치에 관한 사항으로서 고용노동부령으로 정하는 사항" },
+                  { "type": "label", "text": "- 안전보건 개선조치 결과 보고" },
+                  { "type": "field", "fieldId": "mgr_task9_bad" },
+                  { "type": "field", "fieldId": "mgr_task9_mid" },
+                  { "type": "field", "fieldId": "mgr_task9_good" }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "block",
+        "id": "footer_p1",
+        "style": { "marginTop": 20, "padding": [8, 8, 8, 8] },
+        "children": [
+          {
+            "type": "composite",
+            "style": { "align": "left" },
+            "children": [
+              { "type": "text",  "value": "평가일 : " },
+              { "type": "field", "fieldId": "eval_date_year",  "style": { "inputWidth": "4em" } },
+              { "type": "text",  "value": " 년  " },
+              { "type": "field", "fieldId": "eval_date_month", "style": { "inputWidth": "2.5em" } },
+              { "type": "text",  "value": " 월  " },
+              { "type": "field", "fieldId": "eval_date_day",   "style": { "inputWidth": "2.5em" } },
+              { "type": "text",  "value": " 일          평가자 : " },
+              { "type": "field", "fieldId": "evaluator_name",  "style": { "inputWidth": "8em" } }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "block",
+        "id": "page_break",
+        "style": { "pageBreak": "before", "marginTop": 40 }
+      },
+      {
+        "type": "block",
+        "id": "header_p2",
+        "style": { "padding": [10, 6, 10, 6] },
+        "children": [
+          {
+            "type": "text",
+            "value": "안전보건 전문인력 업무수행 평가표",
+            "style": { "fontSize": 18, "fontWeight": 900, "textAlign": "center", "color": "#1a1a2e" }
+          }
+        ]
+      },
+      {
+        "type": "block",
+        "id": "section_title_p2",
+        "style": { "marginTop": 8, "marginBottom": 8 },
+        "children": [
+          { "type": "text", "value": "■ 평가부문 : 안전보건총괄책임자", "style": { "fontSize": 12, "fontWeight": 700 } }
+        ]
+      },
+      {
+        "type": "section",
+        "id": "section_eval_gen",
+        "children": [
+          {
+            "type": "table",
+            "id": "eval_table_gen",
+            "cols": [
+              { "w": "40%" }, { "w": "35%" }, { "w": "8%" }, { "w": "8%" }, { "w": "9%" }
+            ],
+            "rows": [
+              {
+                "cells": [
+                  { "type": "label", "text": "주요 업무 (산업안전보건법 제15조)", "style": { "bg": "#eef0f3", "fontWeight": 800, "align": "center" } },
+                  { "type": "label", "text": "관련자료",  "style": { "bg": "#eef0f3", "fontWeight": 800, "align": "center" } },
+                  { "type": "label", "text": "미흡", "style": { "bg": "#eef0f3", "fontWeight": 700, "align": "center" } },
+                  { "type": "label", "text": "보통", "style": { "bg": "#eef0f3", "fontWeight": 700, "align": "center" } },
+                  { "type": "label", "text": "양호", "style": { "bg": "#eef0f3", "fontWeight": 700, "align": "center" } }
+                ]
+              },
+              {
+                "cells": [
+                  { "type": "label", "text": "＊ 위험성평가의 실시에 관한 사항" },
+                  { "type": "label", "text": "- 연간 안전보건계획수립서\n- 안전보건경영방침\n- 안전보건목표 설정\n- 안전보건예산편성 및 집행 내역" },
+                  { "type": "field", "fieldId": "gen_task1_bad" },
+                  { "type": "field", "fieldId": "gen_task1_mid" },
+                  { "type": "field", "fieldId": "gen_task1_good" }
+                ]
+              },
+              {
+                "cells": [
+                  { "type": "label", "text": "＊ 산업재해가 발생할 급박한 위험이 있을 때 (법 제51조), 중대재해 발생시 (법 제54조)에 따른 작업의 중지" },
+                  { "type": "label", "text": "- 작업중지권, 사용(대피) 내역 등" },
+                  { "type": "field", "fieldId": "gen_task2_bad" },
+                  { "type": "field", "fieldId": "gen_task2_mid" },
+                  { "type": "field", "fieldId": "gen_task2_good" }
+                ]
+              },
+              {
+                "cells": [
+                  { "type": "label", "text": "＊ 산업안전보건법 제64조 (도급에 따른 산업재해 예방조치)" },
+                  { "type": "label", "text": "- 안전보건 협의체 구성·운영 자료\n- 도급 작업장 순회점검 기록\n- 수급인 안전보건교육 지도·지원 내역" },
+                  { "type": "field", "fieldId": "gen_task3_bad" },
+                  { "type": "field", "fieldId": "gen_task3_mid" },
+                  { "type": "field", "fieldId": "gen_task3_good" }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "block",
+        "id": "footer_p2",
+        "style": { "marginTop": 20, "padding": [8, 8, 8, 8] },
+        "children": [
+          {
+            "type": "composite",
+            "style": { "align": "left" },
+            "children": [
+              { "type": "text",  "value": "평가일 : " },
+              { "type": "field", "fieldId": "eval_date_year",  "style": { "inputWidth": "4em" } },
+              { "type": "text",  "value": " 년  " },
+              { "type": "field", "fieldId": "eval_date_month", "style": { "inputWidth": "2.5em" } },
+              { "type": "text",  "value": " 월  " },
+              { "type": "field", "fieldId": "eval_date_day",   "style": { "inputWidth": "2.5em" } },
+              { "type": "text",  "value": " 일          평가자 : " },
+              { "type": "field", "fieldId": "evaluator_name",  "style": { "inputWidth": "8em" } }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

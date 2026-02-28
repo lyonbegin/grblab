@@ -1,0 +1,112 @@
+{
+  "template_id": "safety_general_manager_appointment_v1",
+  "title": "안전보건총괄책임자 선임서",
+  "version": 1,
+  "source": {
+    "file_type": "hwp",
+    "filename": "bid_00276_안전보건총괄책임자_선임_양식.hwp",
+    "issuer": "",
+    "legal_basis": "산업안전보건법 제62조"
+  },
+  "meta": {
+    "paper": "A4",
+    "unit": "mm",
+    "page": { "width": 210, "height": 297, "margin": { "top": 20, "right": 20, "bottom": 20, "left": 20 } },
+    "fonts": { "base": "Noto Sans KR" }
+  },
+  "fields": [
+    { "id": "site_name",   "label": "현장명",   "type": "text", "placeholder": "현장명" },
+    { "id": "position",    "label": "직위",     "type": "text", "placeholder": "직위" },
+    { "id": "name",        "label": "성명",     "type": "text", "placeholder": "홍길동" },
+    { "id": "sign_year",   "label": "선임일 연도", "type": "text", "placeholder": "2024" },
+    { "id": "sign_month",  "label": "선임일 월",   "type": "text", "placeholder": "01" },
+    { "id": "sign_day",    "label": "선임일 일",   "type": "text", "placeholder": "01" },
+    { "id": "company_name","label": "회사명",   "type": "text", "placeholder": "㈜OOOO" },
+    { "id": "ceo_sign",    "label": "대표이사 서명", "type": "text" }
+  ],
+  "layout": {
+    "type": "page",
+    "children": [
+      {
+        "type": "block",
+        "style": { "padding": [10, 6, 10, 6] },
+        "children": [
+          { "type": "text", "value": "안전보건총괄책임자 선임서", "style": { "fontSize": 18, "fontWeight": 900, "textAlign": "center" } }
+        ]
+      },
+      {
+        "type": "section",
+        "id": "section_person",
+        "children": [
+          {
+            "type": "table",
+            "cols": [{ "w": "25%" }, { "w": "75%" }],
+            "rows": [
+              { "cells": [
+                { "type": "label", "text": "현 장 명", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "site_name" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "직    위", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "position" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "성    명", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "name" }
+              ]}
+            ]
+          }
+        ]
+      },
+      {
+        "type": "block",
+        "style": { "marginTop": 16, "marginBottom": 12 },
+        "children": [
+          { "type": "text", "value": "위 사람을 산업안전보건법 제62조에 의거 도급인의 근로자와 관계수급인 근로자의 산업재해를 예방하기 위한 안전·보건 업무를 총괄하여 관리하는 안전보건총괄책임자로 지정합니다.", "style": { "fontSize": 10, "lineHeight": 1.8 } }
+        ]
+      },
+      {
+        "type": "section",
+        "id": "section_duties",
+        "children": [
+          {
+            "type": "table",
+            "cols": [{ "w": "100%" }],
+            "rows": [
+              { "cells": [
+                { "type": "label", "text": "안전보건총괄책임자의 직무 (산업안전보건법 제62조)", "style": { "bg": "#eef0f3", "fontWeight": 700, "align": "center" } }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "1. 「산업안전보건법」 제36조에 따른 위험성평가의 실시에 관한 사항\n2. 「산업안전보건법」 제51조 및 제54조에 따른 작업의 중지\n3. 「산업안전보건법」 제64조에 따른 도급 시 산업재해 예방조치\n4. 「산업안전보건법」 제72조제1항에 따른 산업안전보건관리비의 관계수급인 간의 사용에 관한 협의·조정 및 그 집행의 감독\n5. 안전인증대상기계등과 자율안전확인대상기계등의 사용 여부 확인" }
+              ]}
+            ]
+          }
+        ]
+      },
+      {
+        "type": "block",
+        "style": { "marginTop": 24 },
+        "children": [
+          {
+            "type": "composite",
+            "children": [
+              { "type": "field", "fieldId": "sign_year" }, { "type": "text", "value": " 년   " },
+              { "type": "field", "fieldId": "sign_month" }, { "type": "text", "value": " 월   " },
+              { "type": "field", "fieldId": "sign_day" }, { "type": "text", "value": " 일" }
+            ]
+          },
+          {
+            "type": "composite",
+            "style": { "marginTop": 10 },
+            "children": [
+              { "type": "field", "fieldId": "company_name" },
+              { "type": "text", "value": "  대표이사  " },
+              { "type": "field", "fieldId": "ceo_sign", "style": { "inputWidth": "6em" } },
+              { "type": "text", "value": "(서명)" }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

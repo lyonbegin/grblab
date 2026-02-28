@@ -1,0 +1,116 @@
+{
+  "template_id": "safety_manager_designation_v2",
+  "title": "안전보건관리책임자 지정서",
+  "version": 1,
+  "source": {
+    "file_type": "hwp",
+    "filename": "bid_00331_01_안전보건관리책임자_지정서.hwp",
+    "issuer": "",
+    "legal_basis": "산업안전보건법 제15조"
+  },
+  "meta": {
+    "paper": "A4",
+    "unit": "mm",
+    "page": { "width": 210, "height": 297, "margin": { "top": 20, "right": 20, "bottom": 20, "left": 20 } },
+    "fonts": { "base": "Noto Sans KR" }
+  },
+  "fields": [
+    { "id": "workplace_name", "label": "사업장명", "type": "text" },
+    { "id": "dept",           "label": "소    속", "type": "text" },
+    { "id": "position",       "label": "직    책", "type": "text" },
+    { "id": "name",           "label": "성    명", "type": "text" },
+    { "id": "sign_year",      "label": "지정일 연도", "type": "text", "placeholder": "202X" },
+    { "id": "sign_month",     "label": "지정일 월",   "type": "text", "placeholder": "XX" },
+    { "id": "sign_day",       "label": "지정일 일",   "type": "text", "placeholder": "XX" },
+    { "id": "company_name",   "label": "회사명",       "type": "text", "placeholder": "(주)000" },
+    { "id": "ceo_name",       "label": "대표이사 성명","type": "text", "placeholder": "홍사장" },
+    { "id": "ceo_sign",       "label": "인",           "type": "text" }
+  ],
+  "layout": {
+    "type": "page",
+    "children": [
+      {
+        "type": "block",
+        "style": { "padding": [10, 6, 16, 6] },
+        "children": [
+          { "type": "text", "value": "안전보건관리책임자 지정서", "style": { "fontSize": 18, "fontWeight": 900, "textAlign": "center" } }
+        ]
+      },
+      {
+        "type": "section", "id": "section_person",
+        "children": [{
+          "type": "table",
+          "cols": [{ "w": "25%" }, { "w": "75%" }],
+          "rows": [
+            { "cells": [
+              { "type": "label", "text": "사업장명", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "workplace_name" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "소    속", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "dept" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "직    책", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "position" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "성    명", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "name" }
+            ]}
+          ]
+        }]
+      },
+      {
+        "type": "section", "id": "section_duties",
+        "style": { "marginTop": 12 },
+        "children": [{
+          "type": "table",
+          "cols": [{ "w": "100%" }],
+          "rows": [
+            { "cells": [
+              { "type": "label", "text": "■ 안전보건관리책임자의 직무", "style": { "bg": "#eef0f3", "fontWeight": 700 } }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "1. 사업장의 산업재해 예방계획 수립\n2. 안전보건관리규정의 작성 및 변경\n3. 소속 근로자에 대한 안전보건교육\n4. 작업환경측정 등 작업환경의 점검 및 개선\n5. 근로자의 건강진단 등 건강관리\n6. 산업재해의 원인 조사 및 재발 방지대책 수립\n7. 산업재해에 관한 통계의 기록 및 유지\n8. 안전장치 및 보호구 구입 시 적격품 여부 확인\n9. 그 밖에 근로자의 유해·위험 방지조치에 관한 사항으로서 고용노동부령으로 정하는 사항" }
+            ]}
+          ]
+        }]
+      },
+      {
+        "type": "block",
+        "style": { "marginTop": 20 },
+        "children": [
+          { "type": "text", "value": "사업주는 상기 본인을 산업안전보건법 제15조에 따라 안전보건관리책임자로 지정한다.", "style": { "fontSize": 10, "lineHeight": 1.8 } }
+        ]
+      },
+      {
+        "type": "block",
+        "style": { "marginTop": 20 },
+        "children": [{
+          "type": "composite",
+          "children": [
+            { "type": "field", "fieldId": "sign_year" }, { "type": "text", "value": "년  " },
+            { "type": "field", "fieldId": "sign_month" }, { "type": "text", "value": "월  " },
+            { "type": "field", "fieldId": "sign_day" }, { "type": "text", "value": "일" }
+          ]
+        }]
+      },
+      {
+        "type": "block",
+        "style": { "marginTop": 10, "textAlign": "right" },
+        "children": [{
+          "type": "composite",
+          "children": [
+            { "type": "field", "fieldId": "company_name" },
+            { "type": "text", "value": "  대표이사  " },
+            { "type": "field", "fieldId": "ceo_name" },
+            { "type": "text", "value": "  " },
+            { "type": "field", "fieldId": "ceo_sign" },
+            { "type": "text", "value": " (인)" }
+          ]
+        }]
+      }
+    ]
+  }
+}

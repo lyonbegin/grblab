@@ -1,0 +1,194 @@
+{
+  "template_id": "safety_suggestion_incentive_v1",
+  "title": "안전제안활동 규정 (인센티브)",
+  "version": 1,
+  "source": { "file_type": "hwp", "filename": "안전제안활동_규정_인센티브_.hwp" },
+  "meta": { "paper": "A4", "unit": "mm", "page": { "width": 210, "height": 297, "margin": { "top": 20, "right": 15, "bottom": 20, "left": 15 } } },
+  "fields": [
+    { "id": "company_name",    "label": "회사명",           "type": "text", "placeholder": "㈜0000" },
+    { "id": "doc_no",          "label": "문서번호",         "type": "text" },
+    { "id": "revision",        "label": "개정번호",         "type": "text", "placeholder": "0" },
+    { "id": "eff_year",        "label": "시행일 연도",      "type": "text", "placeholder": "2024" },
+    { "id": "eff_month",       "label": "시행일 월",        "type": "text", "placeholder": "01" },
+    { "id": "eff_day",         "label": "시행일 일",        "type": "text", "placeholder": "01" },
+    { "id": "submit_year",     "label": "제안일 연도",      "type": "text", "placeholder": "2024" },
+    { "id": "submit_month",    "label": "제안일 월",        "type": "text", "placeholder": "01" },
+    { "id": "submit_day",      "label": "제안일 일",        "type": "text", "placeholder": "01" },
+    { "id": "proposer_name",   "label": "제안자 성명",      "type": "text" },
+    { "id": "proposer_dept",   "label": "제안자 소속",      "type": "text" },
+    { "id": "proposer_title",  "label": "제안자 직책",      "type": "text" },
+    { "id": "suggest_title",   "label": "제안 제목",        "type": "text" },
+    { "id": "suggest_category","label": "제안 분류",        "type": "text", "placeholder": "안전/보건/환경/시설/기타" },
+    { "id": "current_problem", "label": "현재 문제점",      "type": "text" },
+    { "id": "suggest_content", "label": "제안 내용",        "type": "text" },
+    { "id": "expected_effect", "label": "기대 효과",        "type": "text" },
+    { "id": "review_result",   "label": "검토 결과",        "type": "text", "placeholder": "채택/부분채택/보류/미채택" },
+    { "id": "review_comment",  "label": "검토 의견",        "type": "text" },
+    { "id": "reward_grade",    "label": "포상 등급",        "type": "text", "placeholder": "최우수/우수/장려/없음" },
+    { "id": "reward_amount",   "label": "포상 금액",        "type": "text", "placeholder": "0원" },
+    { "id": "impl_plan",       "label": "개선 실시 계획",   "type": "text" },
+    { "id": "impl_deadline",   "label": "개선 완료 기한",   "type": "text" },
+    { "id": "impl_person",     "label": "개선 담당자",      "type": "text" },
+    { "id": "impl_result",     "label": "개선 결과",        "type": "text" },
+    { "id": "reviewer_name",   "label": "검토자 성명",      "type": "text" },
+    { "id": "approver_name",   "label": "승인자 성명",      "type": "text" }
+  ],
+  "layout": {
+    "type": "page",
+    "children": [
+      {
+        "type": "block",
+        "style": { "padding": [8,4,8,4] },
+        "children": [
+          { "type": "text", "value": "안전제안활동 규정 (인센티브)", "style": { "fontSize": 18, "fontWeight": 900, "textAlign": "center" } },
+          { "type": "text", "value": "유해·위험요인 사전 제거 및 무재해 실현", "style": { "fontSize": 10, "textAlign": "center", "color": "#555" } }
+        ]
+      },
+      {
+        "type": "section",
+        "title": { "text": "문서 정보" },
+        "children": [
+          {
+            "type": "table",
+            "cols": [{ "w": "20%" }, { "w": "30%" }, { "w": "20%" }, { "w": "30%" }],
+            "style": { "borderColor": "#c0c0c0" },
+            "rows": [
+              { "cells": [
+                { "type": "label", "text": "회  사  명",  "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "company_name" },
+                { "type": "label", "text": "문 서 번 호",  "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "doc_no" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "개 정 번 호",  "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "revision" },
+                { "type": "label", "text": "시  행  일",   "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "composite", "children": [
+                  { "type": "field", "fieldId": "eff_year" }, { "type": "text", "value": "년 " },
+                  { "type": "field", "fieldId": "eff_month" }, { "type": "text", "value": "월 " },
+                  { "type": "field", "fieldId": "eff_day" }, { "type": "text", "value": "일" }
+                ]}
+              ]}
+            ]
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "title": { "text": "안전 제안서" },
+        "children": [
+          {
+            "type": "table",
+            "cols": [{ "w": "20%" }, { "w": "30%" }, { "w": "20%" }, { "w": "30%" }],
+            "style": { "borderColor": "#c0c0c0" },
+            "rows": [
+              { "cells": [
+                { "type": "label", "text": "제  안  일",   "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "composite", "children": [
+                  { "type": "field", "fieldId": "submit_year" }, { "type": "text", "value": "년 " },
+                  { "type": "field", "fieldId": "submit_month" }, { "type": "text", "value": "월 " },
+                  { "type": "field", "fieldId": "submit_day" }, { "type": "text", "value": "일" }
+                ]},
+                { "type": "label", "text": "제  안  자",   "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "composite", "children": [
+                  { "type": "field", "fieldId": "proposer_dept" }, { "type": "text", "value": "  " },
+                  { "type": "field", "fieldId": "proposer_title" }, { "type": "text", "value": "  " },
+                  { "type": "field", "fieldId": "proposer_name" }
+                ]}
+              ]},
+              { "cells": [
+                { "type": "label", "text": "제 안 제 목",  "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "suggest_title" },
+                { "type": "label", "text": "제 안 분 류",  "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "suggest_category", "placeholder": "안전/보건/환경/시설/기타" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "현재 문제점",  "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "current_problem", "colspan": 3, "style": { "minH": 50 } }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "제 안 내 용",  "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "suggest_content", "colspan": 3, "style": { "minH": 60 } }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "기 대 효 과",  "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "expected_effect", "colspan": 3 }
+              ]}
+            ]
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "title": { "text": "검토 및 포상" },
+        "children": [
+          {
+            "type": "table",
+            "cols": [{ "w": "20%" }, { "w": "30%" }, { "w": "20%" }, { "w": "30%" }],
+            "style": { "borderColor": "#c0c0c0" },
+            "rows": [
+              { "cells": [
+                { "type": "label", "text": "검 토 결 과",  "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "review_result", "placeholder": "채택/부분채택/보류/미채택" },
+                { "type": "label", "text": "포 상 등 급",  "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "reward_grade", "placeholder": "최우수/우수/장려/없음" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "검 토 의 견",  "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "review_comment" },
+                { "type": "label", "text": "포 상 금 액",  "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "composite", "children": [
+                  { "type": "field", "fieldId": "reward_amount" }, { "type": "text", "value": " 원" }
+                ]}
+              ]}
+            ]
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "title": { "text": "개선 실시" },
+        "children": [
+          {
+            "type": "table",
+            "cols": [{ "w": "25%" }, { "w": "25%" }, { "w": "25%" }, { "w": "25%" }],
+            "style": { "borderColor": "#c0c0c0" },
+            "rows": [
+              { "cells": [
+                { "type": "label", "text": "개선 실시 계획", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "label", "text": "완 료 기 한",    "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "label", "text": "개선 담당자",    "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "label", "text": "개선 결과",      "style": { "bg": "#eef0f3", "fontWeight": 700 } }
+              ]},
+              { "cells": [
+                { "type": "field", "fieldId": "impl_plan" },
+                { "type": "field", "fieldId": "impl_deadline" },
+                { "type": "field", "fieldId": "impl_person" },
+                { "type": "field", "fieldId": "impl_result" }
+              ]}
+            ]
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "title": { "text": "검토 / 승인" },
+        "children": [
+          {
+            "type": "table",
+            "cols": [{ "w": "25%" }, { "w": "25%" }, { "w": "25%" }, { "w": "25%" }],
+            "style": { "borderColor": "#c0c0c0" },
+            "rows": [
+              { "cells": [
+                { "type": "label", "text": "검  토  자",  "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "reviewer_name" },
+                { "type": "label", "text": "승  인  자",  "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "approver_name" }
+              ]}
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

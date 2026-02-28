@@ -1,0 +1,204 @@
+{
+  "summary": {
+    "processName": "실내 천장 마감 작업",
+    "workContent": "설치",
+    "equipment": "건축 실내 천장 공사",
+    "basis": "이미지 분석 기반"
+  },
+  "hazards": [
+    {
+      "name": "추락 위험",
+      "category": "추락"
+    },
+    {
+      "name": "PPE 미착용",
+      "category": "PPE미착용"
+    },
+    {
+      "name": "공구 낙하물 위험",
+      "category": "낙하물"
+    }
+  ],
+  "overallLevel": {
+    "label": "고위험",
+    "immediateAction": false,
+    "topHazard": "추락 위험",
+    "score": 12
+  },
+  "raw": {
+    "site_analysis": {
+      "industry": "건축 실내 천장 공사",
+      "detailed_process": "실내 천장 마감 작업",
+      "work_stage": "설치",
+      "analysis_basis": "이미지 분석 기반"
+    },
+    "hazards": [
+      {
+        "id": 1,
+        "hazard_name": "추락 위험",
+        "hazard_category": "추락",
+        "accident_scenario": "작업자가 사다리를 사용하여 높이에서 작업하는 과정에서 균형을 잃어 추락 사고 발생",
+        "direct_cause": "사다리 사용 중 균형 잃음",
+        "expected_injury": "중상(입원)",
+        "probability": 4,
+        "severity": 3,
+        "risk_score": 12,
+        "risk_level": "고위험",
+        "improvement_measure": "KS 규격 사다리 사용 및 고소작업 안전지침 준수",
+        "ocr": null,
+        "bbox": [
+          100,
+          150,
+          400,
+          450
+        ]
+      },
+      {
+        "id": 2,
+        "hazard_name": "PPE 미착용",
+        "hazard_category": "PPE미착용",
+        "accident_scenario": "작업자가 보호구 미착용 상태에서 천장 작업을 수행하면서 손상 발생",
+        "direct_cause": "보호구 미착용",
+        "expected_injury": "경상(통원치료)",
+        "probability": 3,
+        "severity": 2,
+        "risk_score": 6,
+        "risk_level": "중위험",
+        "improvement_measure": "안전 헬멧 및 보호 장구 착용 법적 필수",
+        "ocr": null,
+        "bbox": [
+          500,
+          300,
+          700,
+          600
+        ]
+      },
+      {
+        "id": 3,
+        "hazard_name": "공구 낙하물 위험",
+        "hazard_category": "낙하물",
+        "accident_scenario": "작업자가 천장 작업 시 공구가 떨어져 다른 작업자에게 낙하물 사고 발생",
+        "direct_cause": "공구 낙하",
+        "expected_injury": "경상(통원치료)",
+        "probability": 3,
+        "severity": 2,
+        "risk_score": 6,
+        "risk_level": "중위험",
+        "improvement_measure": "공구 낙하 방지망 설치 및 KS 규격화",
+        "ocr": null,
+        "bbox": [
+          200,
+          250,
+          300,
+          350
+        ]
+      }
+    ],
+    "overall_risk_summary": {
+      "highest_risk_item": "추락 위험",
+      "highest_risk_score": 12,
+      "immediate_action_required": false,
+      "recommended_action": "접근제한 조치 및 안전교육 강화"
+    }
+  },
+  "frequencySeverity": [
+    {
+      "factor": "추락 위험",
+      "category": "추락",
+      "probability": 4,
+      "severity": 3,
+      "score": 12,
+      "level": "고위험"
+    },
+    {
+      "factor": "PPE 미착용",
+      "category": "PPE미착용",
+      "probability": 3,
+      "severity": 2,
+      "score": 6,
+      "level": "중위험"
+    },
+    {
+      "factor": "공구 낙하물 위험",
+      "category": "낙하물",
+      "probability": 3,
+      "severity": 2,
+      "score": 6,
+      "level": "중위험"
+    }
+  ],
+  "checklist": [
+    {
+      "factor": "추락 위험",
+      "category": "추락",
+      "directCause": "사다리 사용 중 균형 잃음",
+      "judgment": "고위험"
+    },
+    {
+      "factor": "PPE 미착용",
+      "category": "PPE미착용",
+      "directCause": "보호구 미착용",
+      "judgment": "중위험"
+    },
+    {
+      "factor": "공구 낙하물 위험",
+      "category": "낙하물",
+      "directCause": "공구 낙하",
+      "judgment": "중위험"
+    }
+  ],
+  "coreFactors": [
+    {
+      "factor": "추락 위험",
+      "riskLevel": "고위험",
+      "scenario": "작업자가 사다리를 사용하여 높이에서 작업하는 과정에서 균형을 잃어 추락 사고 발생",
+      "directCause": "사다리 사용 중 균형 잃음",
+      "expectedInjury": "중상(입원)",
+      "improvementMeasure": "KS 규격 사다리 사용 및 고소작업 안전지침 준수"
+    },
+    {
+      "factor": "PPE 미착용",
+      "riskLevel": "중위험",
+      "scenario": "작업자가 보호구 미착용 상태에서 천장 작업을 수행하면서 손상 발생",
+      "directCause": "보호구 미착용",
+      "expectedInjury": "경상(통원치료)",
+      "improvementMeasure": "안전 헬멧 및 보호 장구 착용 법적 필수"
+    },
+    {
+      "factor": "공구 낙하물 위험",
+      "riskLevel": "중위험",
+      "scenario": "작업자가 천장 작업 시 공구가 떨어져 다른 작업자에게 낙하물 사고 발생",
+      "directCause": "공구 낙하",
+      "expectedInjury": "경상(통원치료)",
+      "improvementMeasure": "공구 낙하 방지망 설치 및 KS 규격화"
+    }
+  ],
+  "threeLevel": [
+    {
+      "factor": "추락 위험",
+      "judgment": "허용불가능",
+      "measure": "KS 규격 사다리 사용 및 고소작업 안전지침 준수"
+    },
+    {
+      "factor": "PPE 미착용",
+      "judgment": "개선필요",
+      "measure": "안전 헬멧 및 보호 장구 착용 법적 필수"
+    },
+    {
+      "factor": "공구 낙하물 위험",
+      "judgment": "개선필요",
+      "measure": "공구 낙하 방지망 설치 및 KS 규격화"
+    }
+  ],
+  "health": {
+    "applicable": false,
+    "summary": "현재 빈도×강도법 평가 모드에서는 건강장해 분석이 포함되지 않습니다.",
+    "items": []
+  },
+  "overallSummary": {
+    "highest_risk_item": "추락 위험",
+    "highest_risk_score": 12,
+    "immediate_action_required": false,
+    "recommended_action": "접근제한 조치 및 안전교육 강화"
+  }
+}

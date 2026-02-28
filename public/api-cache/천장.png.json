@@ -1,0 +1,204 @@
+{
+  "summary": {
+    "processName": "천장 내장재 설치 작업",
+    "workContent": "설치",
+    "equipment": "건축 내장재 설치",
+    "basis": "이미지 분석 기반 위험성 평가"
+  },
+  "hazards": [
+    {
+      "name": "작업자 추락 위험",
+      "category": "추락"
+    },
+    {
+      "name": "낙하물 위험",
+      "category": "낙하물"
+    },
+    {
+      "name": "환기 부족으로 인한 유해가스 흡입",
+      "category": "화재"
+    }
+  ],
+  "overallLevel": {
+    "label": "중위험",
+    "immediateAction": false,
+    "topHazard": "작업자 추락 위험",
+    "score": 9
+  },
+  "raw": {
+    "site_analysis": {
+      "industry": "건축 내장재 설치",
+      "detailed_process": "천장 내장재 설치 작업",
+      "work_stage": "설치",
+      "analysis_basis": "이미지 분석 기반 위험성 평가"
+    },
+    "hazards": [
+      {
+        "id": 1,
+        "hazard_name": "작업자 추락 위험",
+        "hazard_category": "추락",
+        "accident_scenario": "작업자가 사다리 위에서 천장 작업을 하는 과정에서 균형을 잃어 추락 사고 발생",
+        "direct_cause": "사다리 사용 중 불안정한 자세",
+        "expected_injury": "골절",
+        "probability": 3,
+        "severity": 3,
+        "risk_score": 9,
+        "risk_level": "중위험",
+        "improvement_measure": "KOSHA Code 101 기준에 따른 안전 사다리 사용",
+        "ocr": null,
+        "bbox": [
+          450,
+          300,
+          650,
+          500
+        ]
+      },
+      {
+        "id": 2,
+        "hazard_name": "낙하물 위험",
+        "hazard_category": "낙하물",
+        "accident_scenario": "작업자가 천장 작업을 하는 과정에서 도구나 자재가 낙하하여 다른 작업자에게 상해를 입힘",
+        "direct_cause": "불안전한 도구와 자재 보관",
+        "expected_injury": "타박상",
+        "probability": 3,
+        "severity": 2,
+        "risk_score": 6,
+        "risk_level": "중위험",
+        "improvement_measure": "KOSHA Code 501 기준에 따른 도구 및 자재 고정 설치",
+        "ocr": null,
+        "bbox": [
+          300,
+          200,
+          500,
+          400
+        ]
+      },
+      {
+        "id": 3,
+        "hazard_name": "환기 부족으로 인한 유해가스 흡입",
+        "hazard_category": "화재",
+        "accident_scenario": "작업자가 천장 작업을 하는 과정에서 환기 불량으로 유해가스를 흡입하여 건강이 악화됨",
+        "direct_cause": "환기 불량",
+        "expected_injury": "호흡기 질환",
+        "probability": 2,
+        "severity": 3,
+        "risk_score": 6,
+        "risk_level": "중위험",
+        "improvement_measure": "KOSHA Code 292 기준에 따른 환기 시스템 설치",
+        "ocr": null,
+        "bbox": [
+          200,
+          100,
+          400,
+          300
+        ]
+      }
+    ],
+    "overall_risk_summary": {
+      "highest_risk_item": "작업자 추락 위험",
+      "highest_risk_score": 9,
+      "immediate_action_required": false,
+      "recommended_action": "중위험 항목에 대한 개선 조치 강화"
+    }
+  },
+  "frequencySeverity": [
+    {
+      "factor": "작업자 추락 위험",
+      "category": "추락",
+      "probability": 3,
+      "severity": 3,
+      "score": 9,
+      "level": "중위험"
+    },
+    {
+      "factor": "낙하물 위험",
+      "category": "낙하물",
+      "probability": 3,
+      "severity": 2,
+      "score": 6,
+      "level": "중위험"
+    },
+    {
+      "factor": "환기 부족으로 인한 유해가스 흡입",
+      "category": "화재",
+      "probability": 2,
+      "severity": 3,
+      "score": 6,
+      "level": "중위험"
+    }
+  ],
+  "checklist": [
+    {
+      "factor": "작업자 추락 위험",
+      "category": "추락",
+      "directCause": "사다리 사용 중 불안정한 자세",
+      "judgment": "중위험"
+    },
+    {
+      "factor": "낙하물 위험",
+      "category": "낙하물",
+      "directCause": "불안전한 도구와 자재 보관",
+      "judgment": "중위험"
+    },
+    {
+      "factor": "환기 부족으로 인한 유해가스 흡입",
+      "category": "화재",
+      "directCause": "환기 불량",
+      "judgment": "중위험"
+    }
+  ],
+  "coreFactors": [
+    {
+      "factor": "작업자 추락 위험",
+      "riskLevel": "중위험",
+      "scenario": "작업자가 사다리 위에서 천장 작업을 하는 과정에서 균형을 잃어 추락 사고 발생",
+      "directCause": "사다리 사용 중 불안정한 자세",
+      "expectedInjury": "골절",
+      "improvementMeasure": "KOSHA Code 101 기준에 따른 안전 사다리 사용"
+    },
+    {
+      "factor": "낙하물 위험",
+      "riskLevel": "중위험",
+      "scenario": "작업자가 천장 작업을 하는 과정에서 도구나 자재가 낙하하여 다른 작업자에게 상해를 입힘",
+      "directCause": "불안전한 도구와 자재 보관",
+      "expectedInjury": "타박상",
+      "improvementMeasure": "KOSHA Code 501 기준에 따른 도구 및 자재 고정 설치"
+    },
+    {
+      "factor": "환기 부족으로 인한 유해가스 흡입",
+      "riskLevel": "중위험",
+      "scenario": "작업자가 천장 작업을 하는 과정에서 환기 불량으로 유해가스를 흡입하여 건강이 악화됨",
+      "directCause": "환기 불량",
+      "expectedInjury": "호흡기 질환",
+      "improvementMeasure": "KOSHA Code 292 기준에 따른 환기 시스템 설치"
+    }
+  ],
+  "threeLevel": [
+    {
+      "factor": "작업자 추락 위험",
+      "judgment": "개선필요",
+      "measure": "KOSHA Code 101 기준에 따른 안전 사다리 사용"
+    },
+    {
+      "factor": "낙하물 위험",
+      "judgment": "개선필요",
+      "measure": "KOSHA Code 501 기준에 따른 도구 및 자재 고정 설치"
+    },
+    {
+      "factor": "환기 부족으로 인한 유해가스 흡입",
+      "judgment": "개선필요",
+      "measure": "KOSHA Code 292 기준에 따른 환기 시스템 설치"
+    }
+  ],
+  "health": {
+    "applicable": false,
+    "summary": "현재 빈도×강도법 평가 모드에서는 건강장해 분석이 포함되지 않습니다.",
+    "items": []
+  },
+  "overallSummary": {
+    "highest_risk_item": "작업자 추락 위험",
+    "highest_risk_score": 9,
+    "immediate_action_required": false,
+    "recommended_action": "중위험 항목에 대한 개선 조치 강화"
+  }
+}

@@ -1,0 +1,259 @@
+{
+  "template_id": "hazard_prevention_plan_handover_v1",
+  "title": "유해·위험방지계획서 인계·인수 확인서 / 승계 확인·검토서",
+  "version": 1,
+  "source": {
+    "file_type": "hwp",
+    "filename": "bid_00291_유해위험방지_계획서_인계_인수_및_승계_서식례.hwp",
+    "issuer": "",
+    "legal_basis": "산업안전보건법 / [별지 제12호서식] [별지 제13호서식] (신설 2017. 9. 19)",
+    "note": "복합 서식 파일: 인계·인수 확인서(별지12호) + 승계 확인·검토서(별지13호) 포함"
+  },
+  "meta": {
+    "paper": "A4",
+    "unit": "mm",
+    "page": { "width": 210, "height": 297, "margin": { "top": 20, "right": 20, "bottom": 20, "left": 20 } },
+    "fonts": { "base": "Noto Sans KR" }
+  },
+  "fields": [
+    { "id": "company_name",        "label": "회 사 명",             "type": "text" },
+    { "id": "site_name",           "label": "현 장 명",             "type": "text" },
+    { "id": "tel",                 "label": "전화",                 "type": "text" },
+    { "id": "fax",                 "label": "FAX",                  "type": "text" },
+    { "id": "progress_rate",       "label": "공정율",               "type": "text", "placeholder": "예: 60%" },
+    { "id": "ongoing_work",        "label": "진행작업",             "type": "text" },
+
+    { "id": "work1_location",      "label": "1. 흙막이지보공 - 작업장소",   "type": "text" },
+    { "id": "work1_period",        "label": "1. 흙막이지보공 - 작업시기",   "type": "text" },
+    { "id": "work2_location",      "label": "2. 거푸집동바리 - 작업장소",   "type": "text" },
+    { "id": "work2_period",        "label": "2. 거푸집동바리 - 작업시기",   "type": "text" },
+    { "id": "work3_location",      "label": "3. 터널공사 - 작업장소",       "type": "text" },
+    { "id": "work3_period",        "label": "3. 터널공사 - 작업시기",       "type": "text" },
+    { "id": "work4_location",      "label": "4. 교량공사 - 작업장소",       "type": "text" },
+    { "id": "work4_period",        "label": "4. 교량공사 - 작업시기",       "type": "text" },
+    { "id": "work5_location",      "label": "5. 화재·폭발 - 작업장소",     "type": "text" },
+    { "id": "work5_period",        "label": "5. 화재·폭발 - 작업시기",     "type": "text" },
+    { "id": "work6_location",      "label": "6. 기타대형사고위험작업 - 작업장소", "type": "text" },
+    { "id": "work6_period",        "label": "6. 기타대형사고위험작업 - 작업시기", "type": "text" },
+
+    { "id": "key_mgmt_items",      "label": "향후 유해위험방지계획서 이행 시의 중점관리 사항", "type": "textarea" },
+
+    { "id": "confirm_year",        "label": "확인일 연도",          "type": "text", "placeholder": "20" },
+    { "id": "confirm_month",       "label": "확인일 월",            "type": "text" },
+    { "id": "confirm_day",         "label": "확인일 일",            "type": "text" },
+    { "id": "handover_name",       "label": "인계자 성명",          "type": "text" },
+    { "id": "handover_sign",       "label": "인계자 서명",          "type": "text" },
+    { "id": "takeover_name",       "label": "인수자 성명",          "type": "text" },
+    { "id": "takeover_sign",       "label": "인수자 서명",          "type": "text" },
+
+    { "id": "succession_year",     "label": "승계일 연도",          "type": "text", "placeholder": "20" },
+    { "id": "succession_month",    "label": "승계일 월",            "type": "text" },
+    { "id": "succession_day",      "label": "승계일 일",            "type": "text" },
+    { "id": "successor_company",   "label": "승계 회사명",          "type": "text" },
+    { "id": "successor_site",      "label": "승계 현장명",          "type": "text" },
+    { "id": "successor_content",   "label": "승계 내용",            "type": "textarea" },
+    { "id": "successor_sign",      "label": "승계자 서명",          "type": "text" },
+    { "id": "reviewer_sign",       "label": "검토자 서명",          "type": "text" }
+  ],
+  "layout": {
+    "type": "page",
+    "children": [
+      {
+        "type": "block",
+        "style": { "marginBottom": 4 },
+        "children": [
+          { "type": "text", "value": "[별지 제12호서식] (신설 2017. 9. 19)", "style": { "fontSize": 9 } }
+        ]
+      },
+      {
+        "type": "block",
+        "style": { "padding": [6, 6, 10, 6] },
+        "children": [
+          { "type": "text", "value": "관리책임자 변경 시", "style": { "fontSize": 11, "textAlign": "center" } },
+          { "type": "text", "value": "유해·위험방지계획서 인계·인수 확인서", "style": { "fontSize": 16, "fontWeight": 900, "textAlign": "center" } }
+        ]
+      },
+      {
+        "type": "section", "id": "section_basic",
+        "children": [{
+          "type": "table",
+          "cols": [{ "w": "15%" }, { "w": "35%" }, { "w": "15%" }, { "w": "35%" }],
+          "rows": [
+            { "cells": [
+              { "type": "label", "text": "회 사 명", "style": { "bg": "#eef0f3", "fontWeight": 700 } }, { "type": "field", "fieldId": "company_name" },
+              { "type": "label", "text": "현 장 명", "style": { "bg": "#eef0f3", "fontWeight": 700 } }, { "type": "field", "fieldId": "site_name" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "전    화", "style": { "bg": "#eef0f3", "fontWeight": 700 } }, { "type": "field", "fieldId": "tel" },
+              { "type": "label", "text": "F A X", "style": { "bg": "#eef0f3", "fontWeight": 700 } }, { "type": "field", "fieldId": "fax" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "공정율", "style": { "bg": "#eef0f3", "fontWeight": 700 } }, { "type": "field", "fieldId": "progress_rate" },
+              { "type": "label", "text": "진행작업", "style": { "bg": "#eef0f3", "fontWeight": 700 } }, { "type": "field", "fieldId": "ongoing_work" }
+            ]}
+          ]
+        }]
+      },
+      {
+        "type": "block", "style": { "marginTop": 8, "fontSize": 9, "color": "#555" },
+        "children": [
+          { "type": "text", "value": "※ 아래 항목 중 해당공종이 있는 현장은 작업장소 및 예정작업시기를 기입" }
+        ]
+      },
+      {
+        "type": "section", "id": "section_worktypes",
+        "children": [{
+          "type": "table",
+          "cols": [{ "w": "30%" }, { "w": "35%" }, { "w": "35%" }],
+          "rows": [
+            { "cells": [
+              { "type": "label", "text": "공종", "style": { "bg": "#eef0f3", "fontWeight": 700, "align": "center" } },
+              { "type": "label", "text": "작업장소", "style": { "bg": "#eef0f3", "fontWeight": 700, "align": "center" } },
+              { "type": "label", "text": "예정작업시기", "style": { "bg": "#eef0f3", "fontWeight": 700, "align": "center" } }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "1. 흙막이지보공 관련" },
+              { "type": "field", "fieldId": "work1_location" }, { "type": "field", "fieldId": "work1_period" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "2. 거푸집동바리 관련\n(층고 6m 이상, 경사슬래브 등)" },
+              { "type": "field", "fieldId": "work2_location" }, { "type": "field", "fieldId": "work2_period" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "3. 터널공사 관련" },
+              { "type": "field", "fieldId": "work3_location" }, { "type": "field", "fieldId": "work3_period" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "4. 교량공사 관련" },
+              { "type": "field", "fieldId": "work4_location" }, { "type": "field", "fieldId": "work4_period" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "5. 화재·폭발 관련" },
+              { "type": "field", "fieldId": "work5_location" }, { "type": "field", "fieldId": "work5_period" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "6. 기타 대형사고위험작업" },
+              { "type": "field", "fieldId": "work6_location" }, { "type": "field", "fieldId": "work6_period" }
+            ]}
+          ]
+        }]
+      },
+      {
+        "type": "section", "id": "section_key_items",
+        "style": { "marginTop": 10 },
+        "children": [{
+          "type": "table",
+          "cols": [{ "w": "30%" }, { "w": "70%" }],
+          "rows": [
+            { "cells": [
+              { "type": "label", "text": "향후 유해위험방지계획서 이행 시의 중점관리 사항", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "key_mgmt_items" }
+            ]}
+          ]
+        }]
+      },
+      {
+        "type": "block", "style": { "marginTop": 10, "fontSize": 9, "color": "#555" },
+        "children": [
+          { "type": "text", "value": "※ 유해위험방지계획서 이행 관련 내용 일체 및 심사결과서 조건부 사항에 대해 인계·인수하였음을 확인하고 이에 서명 날인한다." }
+        ]
+      },
+      {
+        "type": "block", "style": { "marginTop": 12 },
+        "children": [{
+          "type": "composite",
+          "children": [
+            { "type": "field", "fieldId": "confirm_year" }, { "type": "text", "value": " .  " },
+            { "type": "field", "fieldId": "confirm_month" }, { "type": "text", "value": " .  " },
+            { "type": "field", "fieldId": "confirm_day" }
+          ]
+        }]
+      },
+      {
+        "type": "section", "id": "section_handover_sign",
+        "style": { "marginTop": 10 },
+        "children": [{
+          "type": "table",
+          "cols": [{ "w": "20%" }, { "w": "30%" }, { "w": "20%" }, { "w": "30%" }],
+          "rows": [
+            { "cells": [
+              { "type": "label", "text": "인계자", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "composite", "children": [
+                { "type": "field", "fieldId": "handover_name" }, { "type": "text", "value": " " },
+                { "type": "field", "fieldId": "handover_sign" }, { "type": "text", "value": " (서명)" }
+              ]},
+              { "type": "label", "text": "인수자", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "composite", "children": [
+                { "type": "field", "fieldId": "takeover_name" }, { "type": "text", "value": " " },
+                { "type": "field", "fieldId": "takeover_sign" }, { "type": "text", "value": " (서명)" }
+              ]}
+            ]}
+          ]
+        }]
+      },
+      {
+        "type": "block",
+        "style": { "marginTop": 30, "borderTop": "2px solid #333", "paddingTop": 12 },
+        "children": [
+          { "type": "text", "value": "[별지 제13호서식] (신설 2017. 9. 19)", "style": { "fontSize": 9 } }
+        ]
+      },
+      {
+        "type": "block",
+        "style": { "padding": [6, 6, 10, 6] },
+        "children": [
+          { "type": "text", "value": "유해·위험방지계획서 승계 확인/검토서", "style": { "fontSize": 16, "fontWeight": 900, "textAlign": "center" } }
+        ]
+      },
+      {
+        "type": "block", "style": { "marginBottom": 8 },
+        "children": [{
+          "type": "composite",
+          "children": [
+            { "type": "field", "fieldId": "succession_year" }, { "type": "text", "value": " .  " },
+            { "type": "field", "fieldId": "succession_month" }, { "type": "text", "value": " .  " },
+            { "type": "field", "fieldId": "succession_day" }
+          ]
+        }]
+      },
+      {
+        "type": "section", "id": "section_succession",
+        "children": [{
+          "type": "table",
+          "cols": [{ "w": "20%" }, { "w": "80%" }],
+          "rows": [
+            { "cells": [
+              { "type": "label", "text": "승계 회사명", "style": { "bg": "#eef0f3", "fontWeight": 700 } }, { "type": "field", "fieldId": "successor_company" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "현장명", "style": { "bg": "#eef0f3", "fontWeight": 700 } }, { "type": "field", "fieldId": "successor_site" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "승계 내용", "style": { "bg": "#eef0f3", "fontWeight": 700 } }, { "type": "field", "fieldId": "successor_content" }
+            ]}
+          ]
+        }]
+      },
+      {
+        "type": "section", "id": "section_succession_sign",
+        "style": { "marginTop": 12 },
+        "children": [{
+          "type": "table",
+          "cols": [{ "w": "20%" }, { "w": "30%" }, { "w": "20%" }, { "w": "30%" }],
+          "rows": [
+            { "cells": [
+              { "type": "label", "text": "승계자", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "composite", "children": [
+                { "type": "field", "fieldId": "successor_sign" }, { "type": "text", "value": " (서명)" }
+              ]},
+              { "type": "label", "text": "검토자", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "composite", "children": [
+                { "type": "field", "fieldId": "reviewer_sign" }, { "type": "text", "value": " (서명)" }
+              ]}
+            ]}
+          ]
+        }]
+      }
+    ]
+  }
+}

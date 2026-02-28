@@ -1,0 +1,204 @@
+{
+  "summary": {
+    "processName": "굴착 작업 중",
+    "workContent": "굴착",
+    "equipment": "철골 구조물 건설",
+    "basis": "이미지 분석 및 현장 관찰"
+  },
+  "hazards": [
+    {
+      "name": "굴착기 전도",
+      "category": "전도"
+    },
+    {
+      "name": "작업자 협착",
+      "category": "협착"
+    },
+    {
+      "name": "낙하물 위험",
+      "category": "낙하물"
+    }
+  ],
+  "overallLevel": {
+    "label": "고위험",
+    "immediateAction": false,
+    "topHazard": "굴착기 전도",
+    "score": 12
+  },
+  "raw": {
+    "site_analysis": {
+      "industry": "철골 구조물 건설",
+      "detailed_process": "굴착 작업 중",
+      "work_stage": "굴착",
+      "analysis_basis": "이미지 분석 및 현장 관찰"
+    },
+    "hazards": [
+      {
+        "id": 1,
+        "hazard_name": "굴착기 전도",
+        "hazard_category": "전도",
+        "accident_scenario": "작업자가 굴착기를 운전하는 과정에서 지반 불안정으로 인해 굴착기가 전도됨",
+        "direct_cause": "지반 불안정",
+        "expected_injury": "중상",
+        "probability": 4,
+        "severity": 3,
+        "risk_score": 12,
+        "risk_level": "고위험",
+        "improvement_measure": "굴착기 안정성 확보를 위해 기초 보강 작업 실시, 산업안전보건법 제28조 준수",
+        "ocr": null,
+        "bbox": [
+          100,
+          200,
+          400,
+          600
+        ]
+      },
+      {
+        "id": 2,
+        "hazard_name": "작업자 협착",
+        "hazard_category": "협착",
+        "accident_scenario": "작업자가 굴착기 주변을 이동하는 과정에서 기계의 가동부에 협착됨",
+        "direct_cause": "근접 작업",
+        "expected_injury": "중상",
+        "probability": 3,
+        "severity": 3,
+        "risk_score": 9,
+        "risk_level": "중위험",
+        "improvement_measure": "안전거리 유지 및 안전수칙 교육, 산업안전보건법 제32조 준수",
+        "ocr": null,
+        "bbox": [
+          300,
+          500,
+          650,
+          800
+        ]
+      },
+      {
+        "id": 3,
+        "hazard_name": "낙하물 위험",
+        "hazard_category": "낙하물",
+        "accident_scenario": "작업자가 굴착하는 과정에서 상부에서 건축 자재가 낙하하여 부상당함",
+        "direct_cause": "부실한 상부 자재 고정",
+        "expected_injury": "경상",
+        "probability": 2,
+        "severity": 2,
+        "risk_score": 4,
+        "risk_level": "저위험",
+        "improvement_measure": "자재 고정 상태 점검 및 안전망 설치, 산업안전보건법 제25조 준수",
+        "ocr": null,
+        "bbox": [
+          200,
+          300,
+          500,
+          700
+        ]
+      }
+    ],
+    "overall_risk_summary": {
+      "highest_risk_item": "굴착기 전도",
+      "highest_risk_score": 12,
+      "immediate_action_required": false,
+      "recommended_action": "중위험 수준의 위험 요인을 선제적으로 관리하여 사고 예방"
+    }
+  },
+  "frequencySeverity": [
+    {
+      "factor": "굴착기 전도",
+      "category": "전도",
+      "probability": 4,
+      "severity": 3,
+      "score": 12,
+      "level": "고위험"
+    },
+    {
+      "factor": "작업자 협착",
+      "category": "협착",
+      "probability": 3,
+      "severity": 3,
+      "score": 9,
+      "level": "중위험"
+    },
+    {
+      "factor": "낙하물 위험",
+      "category": "낙하물",
+      "probability": 2,
+      "severity": 2,
+      "score": 4,
+      "level": "저위험"
+    }
+  ],
+  "checklist": [
+    {
+      "factor": "굴착기 전도",
+      "category": "전도",
+      "directCause": "지반 불안정",
+      "judgment": "고위험"
+    },
+    {
+      "factor": "작업자 협착",
+      "category": "협착",
+      "directCause": "근접 작업",
+      "judgment": "중위험"
+    },
+    {
+      "factor": "낙하물 위험",
+      "category": "낙하물",
+      "directCause": "부실한 상부 자재 고정",
+      "judgment": "저위험"
+    }
+  ],
+  "coreFactors": [
+    {
+      "factor": "굴착기 전도",
+      "riskLevel": "고위험",
+      "scenario": "작업자가 굴착기를 운전하는 과정에서 지반 불안정으로 인해 굴착기가 전도됨",
+      "directCause": "지반 불안정",
+      "expectedInjury": "중상",
+      "improvementMeasure": "굴착기 안정성 확보를 위해 기초 보강 작업 실시, 산업안전보건법 제28조 준수"
+    },
+    {
+      "factor": "작업자 협착",
+      "riskLevel": "중위험",
+      "scenario": "작업자가 굴착기 주변을 이동하는 과정에서 기계의 가동부에 협착됨",
+      "directCause": "근접 작업",
+      "expectedInjury": "중상",
+      "improvementMeasure": "안전거리 유지 및 안전수칙 교육, 산업안전보건법 제32조 준수"
+    },
+    {
+      "factor": "낙하물 위험",
+      "riskLevel": "저위험",
+      "scenario": "작업자가 굴착하는 과정에서 상부에서 건축 자재가 낙하하여 부상당함",
+      "directCause": "부실한 상부 자재 고정",
+      "expectedInjury": "경상",
+      "improvementMeasure": "자재 고정 상태 점검 및 안전망 설치, 산업안전보건법 제25조 준수"
+    }
+  ],
+  "threeLevel": [
+    {
+      "factor": "굴착기 전도",
+      "judgment": "허용불가능",
+      "measure": "굴착기 안정성 확보를 위해 기초 보강 작업 실시, 산업안전보건법 제28조 준수"
+    },
+    {
+      "factor": "작업자 협착",
+      "judgment": "개선필요",
+      "measure": "안전거리 유지 및 안전수칙 교육, 산업안전보건법 제32조 준수"
+    },
+    {
+      "factor": "낙하물 위험",
+      "judgment": "허용가능",
+      "measure": "자재 고정 상태 점검 및 안전망 설치, 산업안전보건법 제25조 준수"
+    }
+  ],
+  "health": {
+    "applicable": false,
+    "summary": "현재 빈도×강도법 평가 모드에서는 건강장해 분석이 포함되지 않습니다.",
+    "items": []
+  },
+  "overallSummary": {
+    "highest_risk_item": "굴착기 전도",
+    "highest_risk_score": 12,
+    "immediate_action_required": false,
+    "recommended_action": "중위험 수준의 위험 요인을 선제적으로 관리하여 사고 예방"
+  }
+}

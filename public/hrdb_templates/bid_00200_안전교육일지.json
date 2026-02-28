@@ -1,0 +1,129 @@
+{
+  "template_id": "safety_training_log_v1",
+  "title": "안전교육일지",
+  "version": 1,
+  "source": {
+    "file_type": "hwp",
+    "filename": "bid_00200_안전교육일지.hwp",
+    "issuer": "",
+    "legal_basis": "산업안전보건법 제29조"
+  },
+  "meta": {
+    "paper": "A4",
+    "unit": "mm",
+    "page": { "width": 210, "height": 297, "margin": { "top": 20, "right": 15, "bottom": 20, "left": 15 } },
+    "fonts": { "base": "Noto Sans KR", "mono": "monospace" }
+  },
+  "fields": [
+    { "id": "sign_manager",      "label": "담당 서명",         "type": "text" },
+    { "id": "sign_site_chief",   "label": "현장소장 서명",     "type": "text" },
+    { "id": "site_name",         "label": "현장명",            "type": "text" },
+    { "id": "edu_year",          "label": "교육일 연도",       "type": "text", "placeholder": "2024" },
+    { "id": "edu_month",         "label": "교육일 월",         "type": "text", "placeholder": "01" },
+    { "id": "edu_day",           "label": "교육일 일",         "type": "text", "placeholder": "01" },
+    { "id": "edu_type",          "label": "교육 종류",         "type": "text", "placeholder": "정기/특별/채용시/작업변경시/기타" },
+    { "id": "target_trade",      "label": "교육 대상 직종",    "type": "text" },
+    { "id": "target_company",    "label": "교육 대상 업체",    "type": "text" },
+    { "id": "attendee_male",     "label": "참여 인원 남",      "type": "text", "placeholder": "0" },
+    { "id": "attendee_female",   "label": "참여 인원 여",      "type": "text", "placeholder": "0" },
+    { "id": "edu_content",       "label": "교육 내용",         "type": "text" },
+    { "id": "edu_method",        "label": "교육 방법",         "type": "text", "placeholder": "집합/현장/시청각/동영상/온라인/기타" },
+    { "id": "edu_duration",      "label": "교육 시간 (분)",    "type": "text", "placeholder": "0" },
+    { "id": "instructor",        "label": "강사명",            "type": "text" },
+    { "id": "notes",             "label": "비고",              "type": "text" }
+  ],
+  "layout": {
+    "type": "page",
+    "children": [
+      {
+        "type": "block",
+        "style": { "padding": [4,4,4,4] },
+        "children": [
+          { "type": "text", "value": "안 전 교 육 일 지", "style": { "fontSize": 18, "fontWeight": 900, "textAlign": "center" } }
+        ]
+      },
+      {
+        "type": "section",
+        "title": { "text": "결 재 란" },
+        "children": [
+          {
+            "type": "table",
+            "cols": [{ "w": "25%" }, { "w": "37.5%" }, { "w": "37.5%" }],
+            "style": { "borderColor": "#c0c0c0" },
+            "rows": [
+              { "cells": [
+                { "type": "label", "text": "결  재", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "label", "text": "담당",   "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "label", "text": "현장소장","style": { "bg": "#eef0f3", "fontWeight": 700 } }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "서  명", "style": { "bg": "#eef0f3" } },
+                { "type": "field", "fieldId": "sign_manager" },
+                { "type": "field", "fieldId": "sign_site_chief" }
+              ]}
+            ]
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "title": { "text": "교육 정보" },
+        "children": [
+          {
+            "type": "table",
+            "cols": [{ "w": "22%" }, { "w": "28%" }, { "w": "22%" }, { "w": "28%" }],
+            "style": { "borderColor": "#c0c0c0" },
+            "rows": [
+              { "cells": [
+                { "type": "label", "text": "현  장  명", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "site_name", "colspan": 3 }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "교 육 일 자", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "composite", "children": [
+                  { "type": "field", "fieldId": "edu_year" }, { "type": "text", "value": "년 " },
+                  { "type": "field", "fieldId": "edu_month" }, { "type": "text", "value": "월 " },
+                  { "type": "field", "fieldId": "edu_day" }, { "type": "text", "value": "일" }
+                ]},
+                { "type": "label", "text": "교 육 종 류", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "edu_type", "placeholder": "정기/특별/채용시/작업변경시/기타" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "교육 대상 직종", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "target_trade" },
+                { "type": "label", "text": "교육 대상 업체", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "target_company" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "참 여 인 원", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "composite", "children": [
+                  { "type": "text", "value": "남 " }, { "type": "field", "fieldId": "attendee_male" },
+                  { "type": "text", "value": " 명   여 " }, { "type": "field", "fieldId": "attendee_female" },
+                  { "type": "text", "value": " 명" }
+                ]},
+                { "type": "label", "text": "교 육 방 법", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "edu_method", "placeholder": "집합/현장/시청각/동영상/온라인/기타" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "교 육 시 간", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "composite", "children": [
+                  { "type": "field", "fieldId": "edu_duration" }, { "type": "text", "value": " 분" }
+                ]},
+                { "type": "label", "text": "강    사", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "instructor" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "교 육 내 용", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "edu_content", "colspan": 3, "style": { "minH": 80 } }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "비    고", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "notes", "colspan": 3 }
+              ]}
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,223 @@
+{
+  "template_id": "cut_slope_safety_inspection_v1",
+  "title": "절토사면 정밀안전점검 보고서",
+  "version": 1,
+  "source": {
+    "file_type": "hwp",
+    "filename": "bid_00195_절토사면_정밀안전점검_보고서_표준서식국토안전관리원.hwp",
+    "issuer": "국토안전관리원",
+    "legal_basis": "시설물의 안전 및 유지관리에 관한 특별법 제12조"
+  },
+  "meta": {
+    "paper": "A4",
+    "unit": "mm",
+    "page": { "width": 210, "height": 297, "margin": { "top": 20, "right": 15, "bottom": 20, "left": 15 } },
+    "fonts": { "base": "Noto Sans KR", "mono": "monospace" }
+  },
+  "fields": [
+    { "id": "facility_name",      "label": "시설물 명칭",     "type": "text", "placeholder": "사면명" },
+    { "id": "facility_location",  "label": "시설물 위치",     "type": "text" },
+    { "id": "slope_type",         "label": "사면 형태",       "type": "text", "placeholder": "암반사면/토사사면/혼합사면" },
+    { "id": "slope_height",       "label": "사면 높이 (m)",   "type": "text", "placeholder": "0.0" },
+    { "id": "slope_length",       "label": "사면 연장 (m)",   "type": "text", "placeholder": "0.0" },
+    { "id": "slope_angle",        "label": "경사각 (°)",      "type": "text", "placeholder": "0" },
+    { "id": "protection_type",    "label": "보호 공법",       "type": "text", "placeholder": "숏크리트, 록볼트 등" },
+    { "id": "built_year",         "label": "준공연도",        "type": "text", "placeholder": "0000" },
+    { "id": "manager_org",        "label": "관리 기관",       "type": "text" },
+    { "id": "inspection_org",     "label": "점검 기관",       "type": "text" },
+    { "id": "inspector_name",     "label": "책임기술자",      "type": "text" },
+    { "id": "inspector_license",  "label": "기술사 번호",     "type": "text" },
+    { "id": "insp_start_year",    "label": "점검 시작 연도",  "type": "text", "placeholder": "2024" },
+    { "id": "insp_start_month",   "label": "점검 시작 월",    "type": "text", "placeholder": "01" },
+    { "id": "insp_start_day",     "label": "점검 시작 일",    "type": "text", "placeholder": "01" },
+    { "id": "insp_end_year",      "label": "점검 종료 연도",  "type": "text", "placeholder": "2024" },
+    { "id": "insp_end_month",     "label": "점검 종료 월",    "type": "text", "placeholder": "01" },
+    { "id": "insp_end_day",       "label": "점검 종료 일",    "type": "text", "placeholder": "01" },
+    { "id": "safety_grade",       "label": "안전등급",        "type": "text", "placeholder": "A/B/C/D/E" },
+    { "id": "surface_erosion",    "label": "표면 침식·박락",  "type": "text", "placeholder": "양호/보통/불량" },
+    { "id": "drainage_condition", "label": "배수 상태",       "type": "text", "placeholder": "양호/보통/불량" },
+    { "id": "protection_cond",    "label": "사면 보호 상태",  "type": "text", "placeholder": "양호/보통/불량" },
+    { "id": "anchor_condition",   "label": "앵커/볼트 상태",  "type": "text", "placeholder": "양호/보통/불량/해당없음" },
+    { "id": "vegetation_cond",    "label": "식생 상태",       "type": "text", "placeholder": "양호/보통/불량" },
+    { "id": "failure_risk",       "label": "붕괴 위험",       "type": "text", "placeholder": "없음/낮음/보통/높음/매우높음" },
+    { "id": "defect_summary",     "label": "결함 개요",       "type": "text" },
+    { "id": "major_defects",      "label": "주요 결함 사항",  "type": "text" },
+    { "id": "action_required",    "label": "조치 필요 사항",  "type": "text" },
+    { "id": "repair_priority",    "label": "보수·보강 우선순위","type": "text" },
+    { "id": "special_notes",      "label": "기타 필요한 사항","type": "text" },
+    { "id": "report_year",        "label": "보고서 작성일 연도","type": "text", "placeholder": "2024" },
+    { "id": "report_month",       "label": "보고서 작성일 월", "type": "text", "placeholder": "01" },
+    { "id": "report_day",         "label": "보고서 작성일 일", "type": "text", "placeholder": "01" }
+  ],
+  "layout": {
+    "type": "page",
+    "children": [
+      {
+        "type": "block",
+        "style": { "padding": [8,4,8,4] },
+        "children": [
+          { "type": "text", "value": "절토사면 정밀안전점검 보고서", "style": { "fontSize": 18, "fontWeight": 900, "textAlign": "center" } },
+          { "type": "text", "value": "국토안전관리원 표준서식", "style": { "fontSize": 10, "textAlign": "center", "color": "#555" } }
+        ]
+      },
+      {
+        "type": "section",
+        "title": { "text": "시설물 기본 현황" },
+        "children": [
+          {
+            "type": "table",
+            "cols": [{ "w": "20%" }, { "w": "30%" }, { "w": "20%" }, { "w": "30%" }],
+            "style": { "borderColor": "#c0c0c0" },
+            "rows": [
+              { "cells": [
+                { "type": "label", "text": "시설물 명칭", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "facility_name" },
+                { "type": "label", "text": "시설물 위치", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "facility_location" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "사면 형태", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "slope_type" },
+                { "type": "label", "text": "준공연도",  "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "built_year" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "사면 높이", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "composite", "children": [
+                  { "type": "field", "fieldId": "slope_height" }, { "type": "text", "value": " m" }
+                ]},
+                { "type": "label", "text": "사면 연장", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "composite", "children": [
+                  { "type": "field", "fieldId": "slope_length" }, { "type": "text", "value": " m" }
+                ]}
+              ]},
+              { "cells": [
+                { "type": "label", "text": "경사각",    "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "composite", "children": [
+                  { "type": "field", "fieldId": "slope_angle" }, { "type": "text", "value": " °" }
+                ]},
+                { "type": "label", "text": "보호 공법", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "protection_type" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "관리 기관", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "manager_org" },
+                { "type": "label", "text": "", "colspan": 2 }
+              ]}
+            ]
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "title": { "text": "점검 개요" },
+        "children": [
+          {
+            "type": "table",
+            "cols": [{ "w": "20%" }, { "w": "30%" }, { "w": "20%" }, { "w": "30%" }],
+            "style": { "borderColor": "#c0c0c0" },
+            "rows": [
+              { "cells": [
+                { "type": "label", "text": "점검 기관",   "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "inspection_org" },
+                { "type": "label", "text": "책임기술자",  "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "inspector_name" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "점검 기간", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "composite", "children": [
+                  { "type": "field", "fieldId": "insp_start_year" }, { "type": "text", "value": "." },
+                  { "type": "field", "fieldId": "insp_start_month" }, { "type": "text", "value": "." },
+                  { "type": "field", "fieldId": "insp_start_day" }, { "type": "text", "value": " ~ " },
+                  { "type": "field", "fieldId": "insp_end_year" }, { "type": "text", "value": "." },
+                  { "type": "field", "fieldId": "insp_end_month" }, { "type": "text", "value": "." },
+                  { "type": "field", "fieldId": "insp_end_day" }
+                ]},
+                { "type": "label", "text": "기술사 번호", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "inspector_license" }
+              ]}
+            ]
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "title": { "text": "상태 평가" },
+        "children": [
+          {
+            "type": "table",
+            "cols": [{ "w": "16%" }, { "w": "16%" }, { "w": "17%" }, { "w": "17%" }, { "w": "17%" }, { "w": "17%" }],
+            "style": { "borderColor": "#c0c0c0" },
+            "rows": [
+              { "cells": [
+                { "type": "label", "text": "안전등급",     "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "label", "text": "표면 침식",    "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "label", "text": "배수 상태",    "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "label", "text": "사면 보호",    "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "label", "text": "앵커/볼트",    "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "label", "text": "식생 상태",    "style": { "bg": "#eef0f3", "fontWeight": 700 } }
+              ]},
+              { "cells": [
+                { "type": "field", "fieldId": "safety_grade" },
+                { "type": "field", "fieldId": "surface_erosion" },
+                { "type": "field", "fieldId": "drainage_condition" },
+                { "type": "field", "fieldId": "protection_cond" },
+                { "type": "field", "fieldId": "anchor_condition" },
+                { "type": "field", "fieldId": "vegetation_cond" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "붕괴 위험",    "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "failure_risk" },
+                { "type": "label", "text": "", "colspan": 4 }
+              ]}
+            ]
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "title": { "text": "점검 결과" },
+        "children": [
+          {
+            "type": "table",
+            "cols": [{ "w": "25%" }, { "w": "75%" }],
+            "style": { "borderColor": "#c0c0c0" },
+            "rows": [
+              { "cells": [
+                { "type": "label", "text": "결함 개요",           "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "defect_summary" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "주요 결함 사항",      "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "major_defects" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "조치 필요 사항",      "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "action_required" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "보수·보강 우선순위",  "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "repair_priority" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "기타 필요한 사항",    "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "special_notes" }
+              ]}
+            ]
+          }
+        ]
+      },
+      {
+        "type": "block",
+        "style": { "padding": [12,4,4,4] },
+        "children": [
+          { "type": "composite", "children": [
+            { "type": "field", "fieldId": "report_year" }, { "type": "text", "value": " 년  " },
+            { "type": "field", "fieldId": "report_month" }, { "type": "text", "value": " 월  " },
+            { "type": "field", "fieldId": "report_day" }, { "type": "text", "value": " 일" }
+          ]}
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,211 @@
+{
+  "template_id": "safety_education_log_v1",
+  "title": "안전교육일지",
+  "version": 1,
+  "source": {
+    "file_type": "hwp",
+    "filename": "bid_00287_안전교육일지_양식례작업변경시_교육.hwp / bid_00288_안전교육일지_양식례신규_근로자_교육.hwp",
+    "issuer": "",
+    "legal_basis": "산업안전보건법 제29조"
+  },
+  "meta": {
+    "paper": "A4",
+    "unit": "mm",
+    "page": { "width": 210, "height": 297, "margin": { "top": 20, "right": 15, "bottom": 20, "left": 15 } },
+    "fonts": { "base": "Noto Sans KR" }
+  },
+  "fields": [
+    { "id": "sign_safety_mgr",    "label": "결재 - 안전관리자 서명", "type": "text" },
+    { "id": "sign_chief",         "label": "결재 - 총괄책임자 서명", "type": "text" },
+    { "id": "site_name",          "label": "현장명",                 "type": "text" },
+    { "id": "edu_year",           "label": "교육일자 연도",          "type": "text", "placeholder": "2024" },
+    { "id": "edu_month",          "label": "교육일자 월",            "type": "text" },
+    { "id": "edu_day",            "label": "교육일자 일",            "type": "text" },
+
+    { "id": "type_new_hire",      "label": "교육구분 - 신규채용자",  "type": "checkbox" },
+    { "id": "type_work_change",   "label": "교육구분 - 작업내용변경","type": "checkbox" },
+    { "id": "type_special",       "label": "교육구분 - 안전보건특별","type": "checkbox" },
+    { "id": "type_regular",       "label": "교육구분 - 정기교육",    "type": "checkbox" },
+    { "id": "type_supervisor",    "label": "교육구분 - 관리감독자",  "type": "checkbox" },
+    { "id": "type_other",         "label": "교육구분 - 기타",        "type": "checkbox" },
+
+    { "id": "total_count",        "label": "교육인원 계",            "type": "text" },
+    { "id": "male_count",         "label": "교육인원 남",            "type": "text" },
+    { "id": "female_count",       "label": "교육인원 여",            "type": "text" },
+    { "id": "target_work_type",   "label": "교육대상 공종(협력업체)","type": "text" },
+    { "id": "target_count",       "label": "교육대상 근로자수",      "type": "text" },
+    { "id": "actual_count",       "label": "교육실시 근로자수",      "type": "text" },
+    { "id": "absent_count",       "label": "교육미실시 근로자수",    "type": "text" },
+
+    { "id": "edu_subject",        "label": "교육내용 - 과목/사항",   "type": "text" },
+    { "id": "edu_method",         "label": "교육내용 - 교육방법",    "type": "text", "placeholder": "강의식/시청각/토론식" },
+    { "id": "edu_overview",       "label": "교육내용의 개요",        "type": "textarea" },
+    { "id": "edu_time_start",     "label": "교육시간 시작",          "type": "text", "placeholder": "09:00" },
+    { "id": "edu_time_end",       "label": "교육시간 종료",          "type": "text", "placeholder": "10:00" },
+    { "id": "edu_material",       "label": "사용교재",               "type": "text", "placeholder": "자체교재" },
+
+    { "id": "instructor_position","label": "강사 직위/직책",         "type": "text" },
+    { "id": "instructor_name",    "label": "강사 성명",              "type": "text" },
+    { "id": "edu_location",       "label": "교육 장소",              "type": "text" },
+    { "id": "edu_note",           "label": "비고",                   "type": "text" },
+
+    { "id": "photo_desc",         "label": "사진대지 설명",          "type": "textarea" }
+  ],
+  "layout": {
+    "type": "page",
+    "children": [
+      {
+        "type": "block",
+        "style": { "padding": [8, 6, 8, 6] },
+        "children": [
+          { "type": "text", "value": "안  전  교  육  일  지", "style": { "fontSize": 16, "fontWeight": 900, "textAlign": "center" } }
+        ]
+      },
+      {
+        "type": "section", "id": "section_approval",
+        "children": [{
+          "type": "table",
+          "cols": [{ "w": "25%" }, { "w": "37.5%" }, { "w": "37.5%" }],
+          "rows": [
+            { "cells": [
+              { "type": "label", "text": "결  재", "style": { "bg": "#eef0f3", "fontWeight": 700, "align": "center" } },
+              { "type": "label", "text": "안전관리자", "style": { "bg": "#eef0f3", "fontWeight": 700, "align": "center" } },
+              { "type": "label", "text": "총괄책임자", "style": { "bg": "#eef0f3", "fontWeight": 700, "align": "center" } }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "서명", "style": { "bg": "#f7f7f7" } },
+              { "type": "field", "fieldId": "sign_safety_mgr" },
+              { "type": "field", "fieldId": "sign_chief" }
+            ]}
+          ]
+        }]
+      },
+      {
+        "type": "section", "id": "section_basic",
+        "children": [{
+          "type": "table",
+          "cols": [{ "w": "12%" }, { "w": "38%" }, { "w": "12%" }, { "w": "38%" }],
+          "rows": [
+            { "cells": [
+              { "type": "label", "text": "현장명", "style": { "bg": "#eef0f3", "fontWeight": 700 } }, { "type": "field", "fieldId": "site_name" },
+              { "type": "label", "text": "일   자", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "composite", "children": [
+                { "type": "field", "fieldId": "edu_year" }, { "type": "text", "value": "년 " },
+                { "type": "field", "fieldId": "edu_month" }, { "type": "text", "value": "월 " },
+                { "type": "field", "fieldId": "edu_day" }, { "type": "text", "value": "일" }
+              ]}
+            ]}
+          ]
+        }]
+      },
+      {
+        "type": "section", "id": "section_type",
+        "children": [{
+          "type": "table",
+          "cols": [{ "w": "12%" }, { "w": "88%" }],
+          "rows": [
+            { "cells": [
+              { "type": "label", "text": "교육 구분", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "composite", "children": [
+                { "type": "field", "fieldId": "type_new_hire" }, { "type": "text", "value": " 1. 신규채용자 교육   " },
+                { "type": "field", "fieldId": "type_work_change" }, { "type": "text", "value": " 2. 작업내용 변경시교육   " },
+                { "type": "field", "fieldId": "type_special" }, { "type": "text", "value": " 3. 안전보건 특별교육\n" },
+                { "type": "field", "fieldId": "type_regular" }, { "type": "text", "value": " 4. 정   기    교   육   " },
+                { "type": "field", "fieldId": "type_supervisor" }, { "type": "text", "value": " 5. 관리감독자 교육   " },
+                { "type": "field", "fieldId": "type_other" }, { "type": "text", "value": " 6. 기               타" }
+              ]}
+            ]}
+          ]
+        }]
+      },
+      {
+        "type": "section", "id": "section_attendees",
+        "children": [{
+          "type": "table",
+          "cols": [{ "w": "12%" }, { "w": "8%" }, { "w": "8%" }, { "w": "8%" }, { "w": "20%" }, { "w": "12%" }, { "w": "12%" }, { "w": "20%" }],
+          "rows": [
+            { "cells": [
+              { "type": "label", "text": "교육 인원", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "label", "text": "계", "style": { "bg": "#eef0f3" } },
+              { "type": "label", "text": "남", "style": { "bg": "#eef0f3" } },
+              { "type": "label", "text": "여", "style": { "bg": "#eef0f3" } },
+              { "type": "label", "text": "교육대상 공종(협력업체)", "style": { "bg": "#eef0f3" } },
+              { "type": "label", "text": "대상자수", "style": { "bg": "#eef0f3" } },
+              { "type": "label", "text": "실시자수", "style": { "bg": "#eef0f3" } },
+              { "type": "label", "text": "미실시자수", "style": { "bg": "#eef0f3" } }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "구  분" },
+              { "type": "field", "fieldId": "total_count" }, { "type": "field", "fieldId": "male_count" }, { "type": "field", "fieldId": "female_count" },
+              { "type": "field", "fieldId": "target_work_type" }, { "type": "field", "fieldId": "target_count" },
+              { "type": "field", "fieldId": "actual_count" }, { "type": "field", "fieldId": "absent_count" }
+            ]}
+          ]
+        }]
+      },
+      {
+        "type": "section", "id": "section_content",
+        "children": [{
+          "type": "table",
+          "cols": [{ "w": "12%" }, { "w": "15%" }, { "w": "12%" }, { "w": "33%" }, { "w": "15%" }, { "w": "13%" }],
+          "rows": [
+            { "cells": [
+              { "type": "label", "text": "교육 내용", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "label", "text": "과목 또는 사항", "style": { "bg": "#eef0f3" } },
+              { "type": "label", "text": "교육방법", "style": { "bg": "#eef0f3" } },
+              { "type": "label", "text": "교육내용의 개요", "style": { "bg": "#eef0f3" } },
+              { "type": "label", "text": "교육시간", "style": { "bg": "#eef0f3" } },
+              { "type": "label", "text": "사용교재 등", "style": { "bg": "#eef0f3" } }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "법령 및 안전" },
+              { "type": "field", "fieldId": "edu_subject" },
+              { "type": "field", "fieldId": "edu_method" },
+              { "type": "field", "fieldId": "edu_overview" },
+              { "type": "composite", "children": [
+                { "type": "field", "fieldId": "edu_time_start" }, { "type": "text", "value": " ~\n" }, { "type": "field", "fieldId": "edu_time_end" }
+              ]},
+              { "type": "field", "fieldId": "edu_material" }
+            ]}
+          ]
+        }]
+      },
+      {
+        "type": "section", "id": "section_instructor",
+        "children": [{
+          "type": "table",
+          "cols": [{ "w": "15%" }, { "w": "15%" }, { "w": "15%" }, { "w": "25%" }, { "w": "30%" }],
+          "rows": [
+            { "cells": [
+              { "type": "label", "text": "교육강사 및 장소", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "label", "text": "직위(직책)", "style": { "bg": "#eef0f3" } },
+              { "type": "label", "text": "성    명", "style": { "bg": "#eef0f3" } },
+              { "type": "label", "text": "교 육 장 소", "style": { "bg": "#eef0f3" } },
+              { "type": "label", "text": "비                고", "style": { "bg": "#eef0f3" } }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "안전관리자" },
+              { "type": "field", "fieldId": "instructor_position" },
+              { "type": "field", "fieldId": "instructor_name" },
+              { "type": "field", "fieldId": "edu_location" },
+              { "type": "field", "fieldId": "edu_note" }
+            ]}
+          ]
+        }]
+      },
+      {
+        "type": "section", "id": "section_photo",
+        "children": [{
+          "type": "table",
+          "cols": [{ "w": "15%" }, { "w": "85%" }],
+          "rows": [
+            { "cells": [
+              { "type": "label", "text": "사 진 대 지", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "photo_desc" }
+            ]}
+          ]
+        }]
+      }
+    ]
+  }
+}

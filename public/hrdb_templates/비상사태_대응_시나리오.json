@@ -1,0 +1,160 @@
+{
+  "template_id": "emergency_response_scenario_v1",
+  "title": "비상사태 대응 시나리오",
+  "version": 1,
+  "source": { "file_type": "hwp", "filename": "비상사태_대응_시나리오.hwp" },
+  "meta": { "paper": "A4", "unit": "mm", "page": { "width": 210, "height": 297, "margin": { "top": 20, "right": 15, "bottom": 20, "left": 15 } } },
+  "fields": [
+    { "id": "company_name",     "label": "사업장명",          "type": "text" },
+    { "id": "scenario_no",      "label": "시나리오 번호",     "type": "text", "placeholder": "제0호" },
+    { "id": "scenario_type",    "label": "비상사태 유형",     "type": "text", "placeholder": "화학물질 누출/화재/폭발/붕괴 등" },
+    { "id": "scenario_title",   "label": "시나리오 제목",     "type": "text" },
+    { "id": "create_year",      "label": "작성일 연도",       "type": "text", "placeholder": "2024" },
+    { "id": "create_month",     "label": "작성일 월",         "type": "text", "placeholder": "01" },
+    { "id": "create_day",       "label": "작성일 일",         "type": "text", "placeholder": "01" },
+    { "id": "assumed_location", "label": "가정 발생 장소",    "type": "text" },
+    { "id": "assumed_scale",    "label": "가정 규모",         "type": "text" },
+    { "id": "step1_time",       "label": "단계1 시간",        "type": "text", "placeholder": "H:00+00" },
+    { "id": "step1_actor",      "label": "단계1 행위자",      "type": "text", "placeholder": "사고자" },
+    { "id": "step1_content",    "label": "단계1 주요 내용",   "type": "text" },
+    { "id": "step2_time",       "label": "단계2 시간",        "type": "text", "placeholder": "H:00+01" },
+    { "id": "step2_actor",      "label": "단계2 행위자",      "type": "text", "placeholder": "동료" },
+    { "id": "step2_content",    "label": "단계2 주요 내용",   "type": "text" },
+    { "id": "step3_time",       "label": "단계3 시간",        "type": "text", "placeholder": "H:00+05" },
+    { "id": "step3_actor",      "label": "단계3 행위자",      "type": "text", "placeholder": "관리감독자" },
+    { "id": "step3_content",    "label": "단계3 주요 내용",   "type": "text" },
+    { "id": "step4_time",       "label": "단계4 시간",        "type": "text", "placeholder": "H:00+10" },
+    { "id": "step4_actor",      "label": "단계4 행위자",      "type": "text", "placeholder": "안전관리자" },
+    { "id": "step4_content",    "label": "단계4 주요 내용",   "type": "text" },
+    { "id": "step5_time",       "label": "단계5 시간",        "type": "text", "placeholder": "H:00+20" },
+    { "id": "step5_actor",      "label": "단계5 행위자",      "type": "text", "placeholder": "119/외부기관" },
+    { "id": "step5_content",    "label": "단계5 주요 내용",   "type": "text" },
+    { "id": "step6_time",       "label": "단계6 시간",        "type": "text" },
+    { "id": "step6_actor",      "label": "단계6 행위자",      "type": "text" },
+    { "id": "step6_content",    "label": "단계6 주요 내용",   "type": "text" },
+    { "id": "required_ppe",     "label": "필요 보호구",       "type": "text" },
+    { "id": "required_equip",   "label": "필요 장비·물자",    "type": "text" },
+    { "id": "lessons_learned",  "label": "교훈 및 개선사항", "type": "text" },
+    { "id": "drafter_name",     "label": "작성자 성명",       "type": "text" },
+    { "id": "approver_name",    "label": "검토·승인자 성명",  "type": "text" }
+  ],
+  "layout": {
+    "type": "page",
+    "children": [
+      {
+        "type": "block",
+        "style": { "padding": [8,4,8,4] },
+        "children": [
+          { "type": "text", "value": "비상사태 대응 시나리오", "style": { "fontSize": 18, "fontWeight": 900, "textAlign": "center" } }
+        ]
+      },
+      {
+        "type": "section",
+        "title": { "text": "기본 정보" },
+        "children": [
+          {
+            "type": "table",
+            "cols": [{ "w": "20%" }, { "w": "30%" }, { "w": "20%" }, { "w": "30%" }],
+            "style": { "borderColor": "#c0c0c0" },
+            "rows": [
+              { "cells": [
+                { "type": "label", "text": "사 업 장 명",    "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "company_name" },
+                { "type": "label", "text": "시나리오 번호",  "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "scenario_no" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "비상사태 유형",  "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "scenario_type" },
+                { "type": "label", "text": "작  성  일",     "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "composite", "children": [
+                  { "type": "field", "fieldId": "create_year" }, { "type": "text", "value": "년 " },
+                  { "type": "field", "fieldId": "create_month" }, { "type": "text", "value": "월 " },
+                  { "type": "field", "fieldId": "create_day" }, { "type": "text", "value": "일" }
+                ]}
+              ]},
+              { "cells": [
+                { "type": "label", "text": "시나리오 제목",  "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "scenario_title", "colspan": 3 }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "가정 발생 장소", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "assumed_location" },
+                { "type": "label", "text": "가정 규모",      "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "assumed_scale" }
+              ]}
+            ]
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "title": { "text": "단계별 대응 절차" },
+        "children": [
+          {
+            "type": "table",
+            "cols": [{ "w": "15%" }, { "w": "20%" }, { "w": "65%" }],
+            "style": { "borderColor": "#c0c0c0" },
+            "rows": [
+              { "cells": [
+                { "type": "label", "text": "시간 (H:분)",   "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "label", "text": "행  위  자",    "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "label", "text": "주 요 내 용",   "style": { "bg": "#eef0f3", "fontWeight": 700 } }
+              ]},
+              { "cells": [{ "type": "field", "fieldId": "step1_time" }, { "type": "field", "fieldId": "step1_actor" }, { "type": "field", "fieldId": "step1_content" }] },
+              { "cells": [{ "type": "field", "fieldId": "step2_time" }, { "type": "field", "fieldId": "step2_actor" }, { "type": "field", "fieldId": "step2_content" }] },
+              { "cells": [{ "type": "field", "fieldId": "step3_time" }, { "type": "field", "fieldId": "step3_actor" }, { "type": "field", "fieldId": "step3_content" }] },
+              { "cells": [{ "type": "field", "fieldId": "step4_time" }, { "type": "field", "fieldId": "step4_actor" }, { "type": "field", "fieldId": "step4_content" }] },
+              { "cells": [{ "type": "field", "fieldId": "step5_time" }, { "type": "field", "fieldId": "step5_actor" }, { "type": "field", "fieldId": "step5_content" }] },
+              { "cells": [{ "type": "field", "fieldId": "step6_time" }, { "type": "field", "fieldId": "step6_actor" }, { "type": "field", "fieldId": "step6_content" }] }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "title": { "text": "필요 자원 및 개선사항" },
+        "children": [
+          {
+            "type": "table",
+            "cols": [{ "w": "25%" }, { "w": "75%" }],
+            "style": { "borderColor": "#c0c0c0" },
+            "rows": [
+              { "cells": [
+                { "type": "label", "text": "필요 보호구",      "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "required_ppe" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "필요 장비·물자",   "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "required_equip" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "교훈 및 개선사항", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "lessons_learned" }
+              ]}
+            ]
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "title": { "text": "작성 / 검토" },
+        "children": [
+          {
+            "type": "table",
+            "cols": [{ "w": "25%" }, { "w": "25%" }, { "w": "25%" }, { "w": "25%" }],
+            "style": { "borderColor": "#c0c0c0" },
+            "rows": [
+              { "cells": [
+                { "type": "label", "text": "작  성  자",   "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "drafter_name" },
+                { "type": "label", "text": "검토·승인자",  "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "approver_name" }
+              ]}
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

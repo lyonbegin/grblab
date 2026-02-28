@@ -1,0 +1,187 @@
+{
+  "template_id": "joint_safety_inspection_log_v1",
+  "title": "합동안전점검일지",
+  "version": 1,
+  "source": {
+    "file_type": "hwp",
+    "filename": "bid_00218_합동안전점검일지.hwp",
+    "issuer": "",
+    "legal_basis": "산업안전보건법 제36조"
+  },
+  "meta": {
+    "paper": "A4",
+    "unit": "mm",
+    "page": { "width": 210, "height": 297, "margin": { "top": 20, "right": 15, "bottom": 20, "left": 15 } },
+    "fonts": { "base": "Noto Sans KR", "mono": "monospace" }
+  },
+  "fields": [
+    { "id": "sign_manager",     "label": "담당 서명",         "type": "text" },
+    { "id": "sign_site_chief",  "label": "소장 서명",         "type": "text" },
+    { "id": "check_year",       "label": "점검일 연도",       "type": "text", "placeholder": "2024" },
+    { "id": "check_month",      "label": "점검일 월",         "type": "text", "placeholder": "01" },
+    { "id": "check_day",        "label": "점검일 일",         "type": "text", "placeholder": "01" },
+    { "id": "project_name",     "label": "공사명",            "type": "text" },
+    { "id": "work_type",        "label": "점검 공종",         "type": "text" },
+    { "id": "item1_content",    "label": "점검항목1 내용",    "type": "text" },
+    { "id": "item1_action",     "label": "점검항목1 조치결과","type": "text" },
+    { "id": "item2_content",    "label": "점검항목2 내용",    "type": "text" },
+    { "id": "item2_action",     "label": "점검항목2 조치결과","type": "text" },
+    { "id": "item3_content",    "label": "점검항목3 내용",    "type": "text" },
+    { "id": "item3_action",     "label": "점검항목3 조치결과","type": "text" },
+    { "id": "item4_content",    "label": "점검항목4 내용",    "type": "text" },
+    { "id": "item4_action",     "label": "점검항목4 조치결과","type": "text" },
+    { "id": "item5_content",    "label": "점검항목5 내용",    "type": "text" },
+    { "id": "item5_action",     "label": "점검항목5 조치결과","type": "text" },
+    { "id": "item6_content",    "label": "점검항목6 내용",    "type": "text" },
+    { "id": "item6_action",     "label": "점검항목6 조치결과","type": "text" },
+    { "id": "inspector1_name",  "label": "점검자1 성명",      "type": "text" },
+    { "id": "inspector1_dept",  "label": "점검자1 소속",      "type": "text" },
+    { "id": "inspector2_name",  "label": "점검자2 성명",      "type": "text" },
+    { "id": "inspector2_dept",  "label": "점검자2 소속",      "type": "text" },
+    { "id": "inspector3_name",  "label": "점검자3 성명",      "type": "text" },
+    { "id": "inspector3_dept",  "label": "점검자3 소속",      "type": "text" },
+    { "id": "inspector4_name",  "label": "점검자4 성명",      "type": "text" },
+    { "id": "inspector4_dept",  "label": "점검자4 소속",      "type": "text" }
+  ],
+  "layout": {
+    "type": "page",
+    "children": [
+      {
+        "type": "block",
+        "style": { "padding": [4,4,4,4] },
+        "children": [
+          { "type": "text", "value": "합 동 안 전 점 검 일 지", "style": { "fontSize": 18, "fontWeight": 900, "textAlign": "center" } }
+        ]
+      },
+      {
+        "type": "section",
+        "title": { "text": "결 재 란" },
+        "children": [
+          {
+            "type": "table",
+            "cols": [{ "w": "25%" }, { "w": "37.5%" }, { "w": "37.5%" }],
+            "style": { "borderColor": "#c0c0c0" },
+            "rows": [
+              { "cells": [
+                { "type": "label", "text": "결  재", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "label", "text": "담 당",  "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "label", "text": "소 장",  "style": { "bg": "#eef0f3", "fontWeight": 700 } }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "서  명", "style": { "bg": "#eef0f3" } },
+                { "type": "field", "fieldId": "sign_manager" },
+                { "type": "field", "fieldId": "sign_site_chief" }
+              ]}
+            ]
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "title": { "text": "점검 기본 정보" },
+        "children": [
+          {
+            "type": "table",
+            "cols": [{ "w": "20%" }, { "w": "30%" }, { "w": "20%" }, { "w": "30%" }],
+            "style": { "borderColor": "#c0c0c0" },
+            "rows": [
+              { "cells": [
+                { "type": "label", "text": "점 검 일 자", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "composite", "children": [
+                  { "type": "field", "fieldId": "check_year" }, { "type": "text", "value": "년 " },
+                  { "type": "field", "fieldId": "check_month" }, { "type": "text", "value": "월 " },
+                  { "type": "field", "fieldId": "check_day" }, { "type": "text", "value": "일" }
+                ]},
+                { "type": "label", "text": "점 검 공 종", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "work_type" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "공  사  명",  "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "project_name", "colspan": 3 }
+              ]}
+            ]
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "title": { "text": "제1절 점검 결과" },
+        "children": [
+          {
+            "type": "table",
+            "cols": [{ "w": "8%" }, { "w": "46%" }, { "w": "46%" }],
+            "style": { "borderColor": "#c0c0c0" },
+            "rows": [
+              { "cells": [
+                { "type": "label", "text": "번호", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "label", "text": "점검 내용", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "label", "text": "조치 결과", "style": { "bg": "#eef0f3", "fontWeight": 700 } }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "1" },
+                { "type": "field", "fieldId": "item1_content" },
+                { "type": "field", "fieldId": "item1_action" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "2" },
+                { "type": "field", "fieldId": "item2_content" },
+                { "type": "field", "fieldId": "item2_action" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "3" },
+                { "type": "field", "fieldId": "item3_content" },
+                { "type": "field", "fieldId": "item3_action" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "4" },
+                { "type": "field", "fieldId": "item4_content" },
+                { "type": "field", "fieldId": "item4_action" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "5" },
+                { "type": "field", "fieldId": "item5_content" },
+                { "type": "field", "fieldId": "item5_action" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "6" },
+                { "type": "field", "fieldId": "item6_content" },
+                { "type": "field", "fieldId": "item6_action" }
+              ]}
+            ]
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "title": { "text": "제2절 점검자 명단" },
+        "children": [
+          {
+            "type": "table",
+            "cols": [{ "w": "25%" }, { "w": "25%" }, { "w": "25%" }, { "w": "25%" }],
+            "style": { "borderColor": "#c0c0c0" },
+            "rows": [
+              { "cells": [
+                { "type": "label", "text": "성명", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "label", "text": "소속", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "label", "text": "성명", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "label", "text": "소속", "style": { "bg": "#eef0f3", "fontWeight": 700 } }
+              ]},
+              { "cells": [
+                { "type": "field", "fieldId": "inspector1_name" },
+                { "type": "field", "fieldId": "inspector1_dept" },
+                { "type": "field", "fieldId": "inspector2_name" },
+                { "type": "field", "fieldId": "inspector2_dept" }
+              ]},
+              { "cells": [
+                { "type": "field", "fieldId": "inspector3_name" },
+                { "type": "field", "fieldId": "inspector3_dept" },
+                { "type": "field", "fieldId": "inspector4_name" },
+                { "type": "field", "fieldId": "inspector4_dept" }
+              ]}
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,671 @@
+{
+  "template_id": "grblab_mfg_self_inspection_v1",
+  "title": "제조업 안전보건 자체점검표",
+  "version": 1,
+  "source": {
+    "file_type": "pdf",
+    "filename": "bid_00175_제조업 안전보건 자체점검표수정.pdf",
+    "issuer": "원본 기준"
+  },
+  "meta": {
+    "paper": "A4",
+    "unit": "mm",
+    "page": {
+      "width": 210,
+      "height": 297,
+      "margin": { "top": 14, "right": 14, "bottom": 14, "left": 14 }
+    },
+    "fonts": { "base": "Noto Sans KR", "mono": "monospace" }
+  },
+  "schema": {
+    "record": { "record_id": "string", "created_at": "string", "values": "object" }
+  },
+  "fields": [
+    { "id": "site_name", "label": "사업장명", "type": "text", "placeholder": "예) ○○사업장" },
+    { "id": "inspection_start", "label": "점검일자(시작)", "type": "date" },
+    { "id": "inspection_end", "label": "점검일자(종료)", "type": "date" },
+
+    { "id": "inspector_1_position", "label": "점검자1 직책", "type": "text", "placeholder": "안전보건관리책임자" },
+    { "id": "inspector_1_name", "label": "점검자1 성명", "type": "text", "placeholder": "성명" },
+    { "id": "inspector_1_sign", "label": "점검자1 서명", "type": "text", "placeholder": "(서명)" },
+
+    { "id": "inspector_2_position", "label": "점검자2 직책", "type": "text", "placeholder": "관리감독자" },
+    { "id": "inspector_2_name", "label": "점검자2 성명", "type": "text", "placeholder": "성명" },
+    { "id": "inspector_2_sign", "label": "점검자2 서명", "type": "text", "placeholder": "(서명)" },
+
+    { "id": "inspector_3_position", "label": "점검자3 직책", "type": "text", "placeholder": "안전관리자" },
+    { "id": "inspector_3_name", "label": "점검자3 성명", "type": "text", "placeholder": "성명" },
+    { "id": "inspector_3_sign", "label": "점검자3 서명", "type": "text", "placeholder": "(서명)" },
+
+    { "id": "inspector_4_position", "label": "점검자4 직책", "type": "text", "placeholder": "보건관리자" },
+    { "id": "inspector_4_name", "label": "점검자4 성명", "type": "text", "placeholder": "성명" },
+    { "id": "inspector_4_sign", "label": "점검자4 서명", "type": "text", "placeholder": "(서명)" },
+
+    { "id": "inspector_5_position", "label": "점검자5 직책", "type": "text", "placeholder": "안전보건관리담당자" },
+    { "id": "inspector_5_name", "label": "점검자5 성명", "type": "text", "placeholder": "성명" },
+    { "id": "inspector_5_sign", "label": "점검자5 서명", "type": "text", "placeholder": "(서명)" },
+
+    { "id": "inspector_6_position", "label": "점검자6 직책", "type": "text", "placeholder": "명예산업안전감독관" },
+    { "id": "inspector_6_name", "label": "점검자6 성명", "type": "text", "placeholder": "성명" },
+    { "id": "inspector_6_sign", "label": "점검자6 서명", "type": "text", "placeholder": "(서명)" },
+
+    { "id": "inspector_7_position", "label": "점검자7 직책", "type": "text", "placeholder": "기타" },
+    { "id": "inspector_7_name", "label": "점검자7 성명", "type": "text", "placeholder": "성명" },
+    { "id": "inspector_7_sign", "label": "점검자7 서명", "type": "text", "placeholder": "(서명)" },
+
+    { "id": "employer_name", "label": "사업주 성명", "type": "text", "placeholder": "성명" },
+    { "id": "employer_sign", "label": "사업주 서명", "type": "text", "placeholder": "(서명)" },
+    { "id": "workerrep_name", "label": "근로자대표 성명", "type": "text", "placeholder": "성명" },
+    { "id": "workerrep_sign", "label": "근로자대표 서명", "type": "text", "placeholder": "(서명)" },
+
+    { "id": "biz_name", "label": "사업장 개요 - 사업장명", "type": "text", "placeholder": "예) ○○사업장" },
+    { "id": "representative", "label": "대표자", "type": "text", "placeholder": "성명" },
+    { "id": "address", "label": "소재지", "type": "text", "placeholder": "주소" },
+    { "id": "phone", "label": "전화번호", "type": "text", "placeholder": "예) 02-1234-5678" },
+    { "id": "industry", "label": "업종", "type": "text", "placeholder": "예) 제조업" },
+    { "id": "workers_count", "label": "근로자 수", "type": "text", "placeholder": "예) 123" },
+    { "id": "contact_name", "label": "담당자 명", "type": "text", "placeholder": "성명" },
+    { "id": "contact_phone", "label": "담당자 직통 전화번호", "type": "text", "placeholder": "예) 010-0000-0000" },
+
+    { "id": "item01_result", "label": "1번 점검 결과", "type": "select", "options": ["적정", "미흡", "해당없음"] },
+    { "id": "item01_improve", "label": "1번 개선해야 할 사항", "type": "textarea", "rows": 3, "placeholder": "미비사항/개선조치/담당/기한 등" },
+
+    { "id": "item02_result", "label": "2번 점검 결과", "type": "select", "options": ["적정", "미흡", "해당없음"] },
+    { "id": "item02_improve", "label": "2번 개선해야 할 사항", "type": "textarea", "rows": 3, "placeholder": "미비사항/개선조치/담당/기한 등" },
+
+    { "id": "item03_result", "label": "3번 점검 결과", "type": "select", "options": ["적정", "미흡", "해당없음"] },
+    { "id": "item03_improve", "label": "3번 개선해야 할 사항", "type": "textarea", "rows": 3, "placeholder": "미비사항/개선조치/담당/기한 등" },
+
+    { "id": "item04_result", "label": "4번 점검 결과", "type": "select", "options": ["적정", "미흡", "해당없음"] },
+    { "id": "item04_improve", "label": "4번 개선해야 할 사항", "type": "textarea", "rows": 3, "placeholder": "미비사항/개선조치/담당/기한 등" },
+
+    { "id": "item05_result", "label": "5번 점검 결과", "type": "select", "options": ["적정", "미흡", "해당없음"] },
+    { "id": "item05_improve", "label": "5번 개선해야 할 사항", "type": "textarea", "rows": 3, "placeholder": "미비사항/개선조치/담당/기한 등" },
+
+    { "id": "item06_result", "label": "6번 점검 결과", "type": "select", "options": ["적정", "미흡", "해당없음"] },
+    { "id": "item06_improve", "label": "6번 개선해야 할 사항", "type": "textarea", "rows": 3, "placeholder": "미비사항/개선조치/담당/기한 등" },
+
+    { "id": "item07_result", "label": "7번 점검 결과", "type": "select", "options": ["적정", "미흡", "해당없음"] },
+    { "id": "item07_improve", "label": "7번 개선해야 할 사항", "type": "textarea", "rows": 3, "placeholder": "미비사항/개선조치/담당/기한 등" },
+
+    { "id": "item08_result", "label": "8번 점검 결과", "type": "select", "options": ["적정", "미흡", "해당없음"] },
+    { "id": "item08_improve", "label": "8번 개선해야 할 사항", "type": "textarea", "rows": 3, "placeholder": "미비사항/개선조치/담당/기한 등" },
+
+    { "id": "item09_result", "label": "9번 점검 결과", "type": "select", "options": ["적정", "미흡", "해당없음"] },
+    { "id": "item09_improve", "label": "9번 개선해야 할 사항", "type": "textarea", "rows": 3, "placeholder": "미비사항/개선조치/담당/기한 등" },
+
+    { "id": "item10_result", "label": "10번 점검 결과", "type": "select", "options": ["적정", "미흡", "해당없음"] },
+    { "id": "item10_improve", "label": "10번 개선해야 할 사항", "type": "textarea", "rows": 3, "placeholder": "미비사항/개선조치/담당/기한 등" },
+
+    { "id": "item11_result", "label": "11번 점검 결과", "type": "select", "options": ["적정", "미흡", "해당없음"] },
+    { "id": "item11_improve", "label": "11번 개선해야 할 사항", "type": "textarea", "rows": 3, "placeholder": "미비사항/개선조치/담당/기한 등" },
+
+    { "id": "item12_result", "label": "12번 점검 결과", "type": "select", "options": ["적정", "미흡", "해당없음"] },
+    { "id": "item12_improve", "label": "12번 개선해야 할 사항", "type": "textarea", "rows": 3, "placeholder": "미비사항/개선조치/담당/기한 등" },
+
+    { "id": "item13_result", "label": "13번 점검 결과", "type": "select", "options": ["적정", "미흡", "해당없음"] },
+    { "id": "item13_improve", "label": "13번 개선해야 할 사항", "type": "textarea", "rows": 3, "placeholder": "미비사항/개선조치/담당/기한 등" },
+
+    { "id": "item14_result", "label": "14번 점검 결과", "type": "select", "options": ["적정", "미흡", "해당없음"] },
+    { "id": "item14_improve", "label": "14번 개선해야 할 사항", "type": "textarea", "rows": 3, "placeholder": "미비사항/개선조치/담당/기한 등" },
+
+    { "id": "item15_result", "label": "15번 점검 결과", "type": "select", "options": ["적정", "미흡", "해당없음"] },
+    { "id": "item15_improve", "label": "15번 개선해야 할 사항", "type": "textarea", "rows": 3, "placeholder": "미비사항/개선조치/담당/기한 등" },
+
+    { "id": "item16_result", "label": "16번 점검 결과", "type": "select", "options": ["적정", "미흡", "해당없음"] },
+    { "id": "item16_improve", "label": "16번 개선해야 할 사항", "type": "textarea", "rows": 3, "placeholder": "미비사항/개선조치/담당/기한 등" },
+
+    { "id": "item17_result", "label": "17번 점검 결과", "type": "select", "options": ["적정", "미흡", "해당없음"] },
+    { "id": "item17_improve", "label": "17번 개선해야 할 사항", "type": "textarea", "rows": 3, "placeholder": "미비사항/개선조치/담당/기한 등" },
+
+    { "id": "item18_result", "label": "18번 점검 결과", "type": "select", "options": ["적정", "미흡", "해당없음"] },
+    { "id": "item18_improve", "label": "18번 개선해야 할 사항", "type": "textarea", "rows": 3, "placeholder": "미비사항/개선조치/담당/기한 등" },
+
+    { "id": "item19_result", "label": "19번 점검 결과", "type": "select", "options": ["적정", "미흡", "해당없음"] },
+    { "id": "item19_improve", "label": "19번 개선해야 할 사항", "type": "textarea", "rows": 3, "placeholder": "미비사항/개선조치/담당/기한 등" },
+
+    { "id": "item20_result", "label": "20번 점검 결과", "type": "select", "options": ["적정", "미흡", "해당없음"] },
+    { "id": "item20_improve", "label": "20번 개선해야 할 사항", "type": "textarea", "rows": 3, "placeholder": "미비사항/개선조치/담당/기한 등" },
+
+    { "id": "item21_result", "label": "21번 점검 결과", "type": "select", "options": ["적정", "미흡", "해당없음"] },
+    { "id": "item21_improve", "label": "21번 개선해야 할 사항", "type": "textarea", "rows": 3, "placeholder": "미비사항/개선조치/담당/기한 등" },
+
+    { "id": "item22_result", "label": "22번 점검 결과", "type": "select", "options": ["적정", "미흡", "해당없음"] },
+    { "id": "item22_improve", "label": "22번 개선해야 할 사항", "type": "textarea", "rows": 3, "placeholder": "미비사항/개선조치/담당/기한 등" },
+
+    { "id": "item23_result", "label": "23번 점검 결과", "type": "select", "options": ["적정", "미흡", "해당없음"] },
+    { "id": "item23_improve", "label": "23번 개선해야 할 사항", "type": "textarea", "rows": 3, "placeholder": "미비사항/개선조치/담당/기한 등" },
+
+    { "id": "item24_result", "label": "24번 점검 결과", "type": "select", "options": ["적정", "미흡", "해당없음"] },
+    { "id": "item24_improve", "label": "24번 개선해야 할 사항", "type": "textarea", "rows": 3, "placeholder": "미비사항/개선조치/담당/기한 등" },
+
+    { "id": "item25_result", "label": "25번 점검 결과", "type": "select", "options": ["적정", "미흡", "해당없음"] },
+    { "id": "item25_improve", "label": "25번 개선해야 할 사항", "type": "textarea", "rows": 3, "placeholder": "미비사항/개선조치/담당/기한 등" },
+
+    { "id": "item26_result", "label": "26번 점검 결과", "type": "select", "options": ["적정", "미흡", "해당없음"] },
+    { "id": "item26_improve", "label": "26번 개선해야 할 사항", "type": "textarea", "rows": 3, "placeholder": "미비사항/개선조치/담당/기한 등" },
+
+    { "id": "item27_result", "label": "27번 점검 결과", "type": "select", "options": ["적정", "미흡", "해당없음"] },
+    { "id": "item27_improve", "label": "27번 개선해야 할 사항", "type": "textarea", "rows": 3, "placeholder": "미비사항/개선조치/담당/기한 등" }
+  ],
+  "layout": {
+    "type": "page",
+    "children": [
+      {
+        "type": "block",
+        "id": "header",
+        "style": { "padding": [8, 6, 8, 6] },
+        "children": [
+          {
+            "type": "text",
+            "value": "제조업 안전보건 자체점검표",
+            "style": { "fontSize": 20, "fontWeight": 900, "textAlign": "center", "color": "#1a1a2e" }
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "id": "section_cover",
+        "title": { "badge": "1", "text": "표지" },
+        "children": [
+          {
+            "type": "table",
+            "id": "cover_table",
+            "cols": [{ "w": "25%" }, { "w": "75%" }],
+            "rows": [
+              {
+                "cells": [
+                  { "type": "label", "text": "사업장명", "style": { "bg": "#eef0f3", "fontWeight": 800, "align": "center" } },
+                  { "type": "field", "fieldId": "site_name" }
+                ]
+              },
+              {
+                "cells": [
+                  { "type": "label", "text": "점검일자", "style": { "bg": "#eef0f3", "fontWeight": 800, "align": "center" } },
+                  {
+                    "type": "composite",
+                    "children": [
+                      { "type": "field", "fieldId": "inspection_start", "style": { "inputWidth": "10em" } },
+                      { "type": "text", "value": " ~ " },
+                      { "type": "field", "fieldId": "inspection_end", "style": { "inputWidth": "10em" } }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "id": "section_inspectors",
+        "title": { "badge": "2", "text": "점검자/확인" },
+        "children": [
+          {
+            "type": "table",
+            "id": "inspectors_table",
+            "cols": [{ "w": "20%" }, { "w": "80%" }],
+            "rows": [
+              {
+                "cells": [
+                  { "type": "label", "text": "점검자1", "style": { "bg": "#eef0f3", "fontWeight": 800, "align": "center" } },
+                  {
+                    "type": "composite",
+                    "children": [
+                      { "type": "text", "value": "직책: " },
+                      { "type": "field", "fieldId": "inspector_1_position", "style": { "inputWidth": "14em" } },
+                      { "type": "text", "value": "  성명: " },
+                      { "type": "field", "fieldId": "inspector_1_name", "style": { "inputWidth": "10em" } },
+                      { "type": "text", "value": "  " },
+                      { "type": "field", "fieldId": "inspector_1_sign", "style": { "inputWidth": "8em" } },
+                      { "type": "text", "value": " (서명)" }
+                    ]
+                  }
+                ]
+              },
+              {
+                "cells": [
+                  { "type": "label", "text": "점검자2", "style": { "bg": "#eef0f3", "fontWeight": 800, "align": "center" } },
+                  {
+                    "type": "composite",
+                    "children": [
+                      { "type": "text", "value": "직책: " },
+                      { "type": "field", "fieldId": "inspector_2_position", "style": { "inputWidth": "14em" } },
+                      { "type": "text", "value": "  성명: " },
+                      { "type": "field", "fieldId": "inspector_2_name", "style": { "inputWidth": "10em" } },
+                      { "type": "text", "value": "  " },
+                      { "type": "field", "fieldId": "inspector_2_sign", "style": { "inputWidth": "8em" } },
+                      { "type": "text", "value": " (서명)" }
+                    ]
+                  }
+                ]
+              },
+              {
+                "cells": [
+                  { "type": "label", "text": "점검자3", "style": { "bg": "#eef0f3", "fontWeight": 800, "align": "center" } },
+                  {
+                    "type": "composite",
+                    "children": [
+                      { "type": "text", "value": "직책: " },
+                      { "type": "field", "fieldId": "inspector_3_position", "style": { "inputWidth": "14em" } },
+                      { "type": "text", "value": "  성명: " },
+                      { "type": "field", "fieldId": "inspector_3_name", "style": { "inputWidth": "10em" } },
+                      { "type": "text", "value": "  " },
+                      { "type": "field", "fieldId": "inspector_3_sign", "style": { "inputWidth": "8em" } },
+                      { "type": "text", "value": " (서명)" }
+                    ]
+                  }
+                ]
+              },
+              {
+                "cells": [
+                  { "type": "label", "text": "점검자4", "style": { "bg": "#eef0f3", "fontWeight": 800, "align": "center" } },
+                  {
+                    "type": "composite",
+                    "children": [
+                      { "type": "text", "value": "직책: " },
+                      { "type": "field", "fieldId": "inspector_4_position", "style": { "inputWidth": "14em" } },
+                      { "type": "text", "value": "  성명: " },
+                      { "type": "field", "fieldId": "inspector_4_name", "style": { "inputWidth": "10em" } },
+                      { "type": "text", "value": "  " },
+                      { "type": "field", "fieldId": "inspector_4_sign", "style": { "inputWidth": "8em" } },
+                      { "type": "text", "value": " (서명)" }
+                    ]
+                  }
+                ]
+              },
+              {
+                "cells": [
+                  { "type": "label", "text": "점검자5", "style": { "bg": "#eef0f3", "fontWeight": 800, "align": "center" } },
+                  {
+                    "type": "composite",
+                    "children": [
+                      { "type": "text", "value": "직책: " },
+                      { "type": "field", "fieldId": "inspector_5_position", "style": { "inputWidth": "14em" } },
+                      { "type": "text", "value": "  성명: " },
+                      { "type": "field", "fieldId": "inspector_5_name", "style": { "inputWidth": "10em" } },
+                      { "type": "text", "value": "  " },
+                      { "type": "field", "fieldId": "inspector_5_sign", "style": { "inputWidth": "8em" } },
+                      { "type": "text", "value": " (서명)" }
+                    ]
+                  }
+                ]
+              },
+              {
+                "cells": [
+                  { "type": "label", "text": "점검자6", "style": { "bg": "#eef0f3", "fontWeight": 800, "align": "center" } },
+                  {
+                    "type": "composite",
+                    "children": [
+                      { "type": "text", "value": "직책: " },
+                      { "type": "field", "fieldId": "inspector_6_position", "style": { "inputWidth": "14em" } },
+                      { "type": "text", "value": "  성명: " },
+                      { "type": "field", "fieldId": "inspector_6_name", "style": { "inputWidth": "10em" } },
+                      { "type": "text", "value": "  " },
+                      { "type": "field", "fieldId": "inspector_6_sign", "style": { "inputWidth": "8em" } },
+                      { "type": "text", "value": " (서명)" }
+                    ]
+                  }
+                ]
+              },
+              {
+                "cells": [
+                  { "type": "label", "text": "점검자7", "style": { "bg": "#eef0f3", "fontWeight": 800, "align": "center" } },
+                  {
+                    "type": "composite",
+                    "children": [
+                      { "type": "text", "value": "직책: " },
+                      { "type": "field", "fieldId": "inspector_7_position", "style": { "inputWidth": "14em" } },
+                      { "type": "text", "value": "  성명: " },
+                      { "type": "field", "fieldId": "inspector_7_name", "style": { "inputWidth": "10em" } },
+                      { "type": "text", "value": "  " },
+                      { "type": "field", "fieldId": "inspector_7_sign", "style": { "inputWidth": "8em" } },
+                      { "type": "text", "value": " (서명)" }
+                    ]
+                  }
+                ]
+              },
+              {
+                "cells": [
+                  { "type": "label", "text": "사업주 확인", "style": { "bg": "#eef0f3", "fontWeight": 800, "align": "center" } },
+                  {
+                    "type": "composite",
+                    "children": [
+                      { "type": "text", "value": "성명: " },
+                      { "type": "field", "fieldId": "employer_name", "style": { "inputWidth": "14em" } },
+                      { "type": "text", "value": "  " },
+                      { "type": "field", "fieldId": "employer_sign", "style": { "inputWidth": "8em" } },
+                      { "type": "text", "value": " (서명)" }
+                    ]
+                  }
+                ]
+              },
+              {
+                "cells": [
+                  { "type": "label", "text": "근로자대표 확인", "style": { "bg": "#eef0f3", "fontWeight": 800, "align": "center" } },
+                  {
+                    "type": "composite",
+                    "children": [
+                      { "type": "text", "value": "성명: " },
+                      { "type": "field", "fieldId": "workerrep_name", "style": { "inputWidth": "14em" } },
+                      { "type": "text", "value": "  " },
+                      { "type": "field", "fieldId": "workerrep_sign", "style": { "inputWidth": "8em" } },
+                      { "type": "text", "value": " (서명)" }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "static_text",
+            "value": "※ 점검표 제출 시 안전·보건관리자나 안전보건관리담당자의 선임 서류 사본을 첨부하십시오.",
+            "style": { "fontSize": 10, "color": "#444", "marginTop": 6 }
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "id": "section_overview",
+        "title": { "badge": "3", "text": "사업장 개요" },
+        "children": [
+          {
+            "type": "table",
+            "id": "overview_table",
+            "cols": [{ "w": "20%" }, { "w": "30%" }, { "w": "20%" }, { "w": "30%" }],
+            "rows": [
+              {
+                "cells": [
+                  { "type": "label", "text": "사업장명", "style": { "bg": "#eef0f3", "fontWeight": 800, "align": "center" } },
+                  { "type": "field", "fieldId": "biz_name" },
+                  { "type": "label", "text": "대표자", "style": { "bg": "#eef0f3", "fontWeight": 800, "align": "center" } },
+                  { "type": "field", "fieldId": "representative" }
+                ]
+              },
+              {
+                "cells": [
+                  { "type": "label", "text": "소재지", "style": { "bg": "#eef0f3", "fontWeight": 800, "align": "center" } },
+                  { "type": "field", "fieldId": "address", "colspan": 3 }
+                ]
+              },
+              {
+                "cells": [
+                  { "type": "label", "text": "전화번호", "style": { "bg": "#eef0f3", "fontWeight": 800, "align": "center" } },
+                  { "type": "field", "fieldId": "phone" },
+                  { "type": "label", "text": "업종", "style": { "bg": "#eef0f3", "fontWeight": 800, "align": "center" } },
+                  { "type": "field", "fieldId": "industry" }
+                ]
+              },
+              {
+                "cells": [
+                  { "type": "label", "text": "근로자 수", "style": { "bg": "#eef0f3", "fontWeight": 800, "align": "center" } },
+                  { "type": "field", "fieldId": "workers_count" },
+                  { "type": "label", "text": "담당자", "style": { "bg": "#eef0f3", "fontWeight": 800, "align": "center" } },
+                  {
+                    "type": "composite",
+                    "children": [
+                      { "type": "field", "fieldId": "contact_name", "style": { "inputWidth": "10em" } },
+                      { "type": "text", "value": " (직통: " },
+                      { "type": "field", "fieldId": "contact_phone", "style": { "inputWidth": "10em" } },
+                      { "type": "text", "value": ")" }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+
+      {
+        "type": "section",
+        "id": "section_item_01",
+        "title": { "badge": "1", "text": "안전보건관리책임자, 안전․보건관리자, 안전보건관리" },
+        "children": [
+          {
+            "type": "table",
+            "id": "item_table_01",
+            "cols": [{ "w": "38%" }, { "w": "32%" }, { "w": "30%" }],
+            "rows": [
+              {
+                "cells": [
+                  { "type": "label", "text": "점검 사항", "style": { "bg": "#eef0f3", "fontWeight": 800, "align": "center" } },
+                  { "type": "label", "text": "체크리스트", "style": { "bg": "#eef0f3", "fontWeight": 800, "align": "center" } },
+                  { "type": "label", "text": "개선해야 할 사항", "style": { "bg": "#eef0f3", "fontWeight": 800, "align": "center" } }
+                ]
+              },
+              {
+                "cells": [
+                  {
+                    "type": "static_text",
+                    "value": "안전보건관리책임자, 안전․보건관리자, 안전보건관리\n담당자의 적격자 선임 및 직무이행실태 적정성 관리담당자 등을 선임해야 하는 사업장의 경우\n<법 제15조, 제17조 ~ 제20조, 제32조> 법령에서 요구하는 자격을 갖춘 사람으로 선임하고,\n그 선임서류를 갖추고 있는가?\n※ 일반적으로, 대표이사가 사업장에 상주하는 경우는 대표\n이사가 안전보건관리책임자가 되고, 비상주하는 경우\n로서 사업주가 공장장·부사장·지점장 등(명칭 무관)\n에게 사업경영의 실질적인 권한과 책임을 위임한 경우\n라면 그 사람이 안전보건관리책임자가 됨\n※ 제조업의 경우\n상시 근로자가 20 ~ 49명인 경우는 안전보건관리담당\n자를 선임하고, 50명 이상인 경우에는 안전·보건관리\n자를 선임하여야 하고,\n그 선임 사실 및 업무를 수행하였음을 증명할 수 있는\n서류를 갖추어 두어야 함",
+                    "style": { "fontSize": 9, "lineHeight": 1.4 }
+                  },
+                  {
+                    "type": "static_list",
+                    "items": [
+                      "① 안전보건관리책임자, 안전·보건관리자, 안전보건",
+                      "② 안전·보건관리자를 배치할 때에 연장근로·야간",
+                      "③ 상시근로자가 300명 이상으로서 안전·보건관리",
+                      "④ 안전·보건관리자를 선임한 경우 지방고용노동",
+                      "⑤ 안전보건관리책임자는 사업을 실질적으로 총괄",
+                      "⑥ 사업주는 안전보건관리책임자에게 법 제15조제1항에",
+                      "⑦ 안전보건관리책임자, 안전·보건관리자, 안전보건",
+                      "⑧ 안전보건관리책임자, 안전·보건관리자, 안전보건"
+                    ],
+                    "style": { "fontSize": 9, "lineHeight": 1.5 }
+                  },
+                  {
+                    "type": "block",
+                    "children": [
+                      {
+                        "type": "composite",
+                        "children": [
+                          { "type": "text", "value": "결과: " },
+                          { "type": "field", "fieldId": "item01_result", "style": { "inputWidth": "8em" } }
+                        ],
+                        "style": { "marginBottom": 4 }
+                      },
+                      { "type": "field", "fieldId": "item01_improve", "style": { "minH": 54 } }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+
+      {
+        "type": "section",
+        "id": "section_item_02",
+        "title": { "badge": "2", "text": "관리감독자 업무이행실태 적정성<법 제16조>" },
+        "children": [
+          {
+            "type": "table",
+            "id": "item_table_02",
+            "cols": [{ "w": "38%" }, { "w": "32%" }, { "w": "30%" }],
+            "rows": [
+              {
+                "cells": [
+                  { "type": "label", "text": "점검 사항", "style": { "bg": "#eef0f3", "fontWeight": 800, "align": "center" } },
+                  { "type": "label", "text": "체크리스트", "style": { "bg": "#eef0f3", "fontWeight": 800, "align": "center" } },
+                  { "type": "label", "text": "개선해야 할 사항", "style": { "bg": "#eef0f3", "fontWeight": 800, "align": "center" } }
+                ]
+              },
+              {
+                "cells": [
+                  {
+                    "type": "static_text",
+                    "value": "관리감독자 업무이행실태 적정성<법 제16조>\n※ ‘관리감독자’란 사업장의 생산과 관련되는 업무와\n그 소속 직원을 직접 지휘·감독하는 직위에 있는 사람임\n(생산부서별로 관리감독자를 두어야 하고, 같은 생산\n부서라도 2명 이상일 수 있음)\n※ 관리감독자의 업무 내용(시행령 제15조)\n① 관리감독자가 지휘·감독하는 작업과 관련된 기계·기구\n또는 설비의 안전·보건 점검 및 이상 유무의 확인\n② 관리감독자에게 소속된 근로자의 작업복·보호구 및\n방호장치의 점검과 그 착용·사용에 관한 교육·지도\n③ 해당 작업에서 발생한 산업재해에 관한 보고 및 이에\n대한 응급조치\n④ 해당 작업의 작업장 정리·정돈 및 통로 확보에 대한\n확인·감독\n⑤ 해당 사업장의 산업보건의, 안전·보건관리자(전문기\n관에 위탁한 사업장의 경우에는 그 전문기관의 해당\n사업장 담당자), 안전보건관리담당자의 지도·조언에\n대한 협조\n⑥ 위험성평가를 위한 업무에 기인하는 유해·위험요인의\n파악 및 그 결과에 따른 개선조치의 이행\n⑦ 그 밖에 해당 작업의 안전·보건에 관한 사항으로서\n고용노동부령(안전보건규칙)으로 정하는 사항",
+                    "style": { "fontSize": 9, "lineHeight": 1.4 }
+                  },
+                  {
+                    "type": "static_list",
+                    "items": [
+                      "① 사업장의 생산부서가 다른 경우 관리감독자를",
+                      "② 관리감독자는 자신이 산업안전보건법상 관리감",
+                      "③ 관리감독자가 시행령 제15조에서 정하고 있는",
+                      "④ 관리감독자가 시행령 제15조에서 정하고 있는",
+                      "⑤ 사업주는 관리감독자에게 업무 수행에 필요한",
+                      "⑥ 관리감독자는 매년 16시간 이상의 정기교육을"
+                    ],
+                    "style": { "fontSize": 9, "lineHeight": 1.5 }
+                  },
+                  {
+                    "type": "block",
+                    "children": [
+                      {
+                        "type": "composite",
+                        "children": [
+                          { "type": "text", "value": "결과: " },
+                          { "type": "field", "fieldId": "item02_result", "style": { "inputWidth": "8em" } }
+                        ],
+                        "style": { "marginBottom": 4 }
+                      },
+                      { "type": "field", "fieldId": "item02_improve", "style": { "minH": 54 } }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+
+      {
+        "type": "section",
+        "id": "section_item_03",
+        "title": { "badge": "3", "text": "산업안전보건위원회 구성 및 운영 적정성 <법 제24조>" },
+        "children": [
+          {
+            "type": "table",
+            "id": "item_table_03",
+            "cols": [{ "w": "38%" }, { "w": "32%" }, { "w": "30%" }],
+            "rows": [
+              {
+                "cells": [
+                  { "type": "label", "text": "점검 사항", "style": { "bg": "#eef0f3", "fontWeight": 800, "align": "center" } },
+                  { "type": "label", "text": "체크리스트", "style": { "bg": "#eef0f3", "fontWeight": 800, "align": "center" } },
+                  { "type": "label", "text": "개선해야 할 사항", "style": { "bg": "#eef0f3", "fontWeight": 800, "align": "center" } }
+                ]
+              },
+              {
+                "cells": [
+                  {
+                    "type": "static_text",
+                    "value": "산업안전보건위원회 구성 및 운영 적정성 <법 제24조>\n※ 대상\n① 상시근로자 수 50명 이상인 다음의 제조업\n- 목재 및 나무제품 제조업, 화학물질 및 화학제품\n제조업, 비금속 광물제품 제조업, 1차 금속 제조업,\n금속가공제품 제조업. 자동차 및 트레일러 제조업,\n기타 기계 및 장비 제조업, 기타 운송장비 제조업\n② 그 외 제조업은 상시근로자 수 100명 이상\n※ 심의·의결대상: 법 제24조제2항에서 정하는 사항\n① 사업장의 산업재해 예방계획의 수립에 관한 사항\n② 안전보건관리규정의 작성 및 변경에 관한 사항\n③ 안전보건교육에 관한 사항\n④ 작업환경측정 등 작업환경의 점검 및 개선에 관한 사항\n⑤ 근로자의 건강진단 등 건강관리에 관한 사항\n⑥ 산업재해에 관한 통계의 기록 및 유지에 관한 사항\n⑦ 중대재해 원인 조사 및 재발 방지대책 수립에 관한 사항\n⑧ 유해·위험기계·기구·설비를 도입한 경우 안전 및\n보건 관련 조치에 관한 사항\n⑨ 그 밖에 근로자의 안전 및 보건 유지·증진을 위해\n필요한 사항\n※ 심의대상: ① 법 제44조제1항에 따라 작성한 공정안전\n보고서, ② 법 제49조제1항에 따라 수립한\n안전보건개선계획서\n※ 의결대상: 법 제141조제1항에 따라 사업주 또는 근\n로자대표가 역학조사를 요청한 경우",
+                    "style": { "fontSize": 9, "lineHeight": 1.4 }
+                  },
+                  {
+                    "type": "static_list",
+                    "items": [
+                      "① 산업안전보건위원회 운영 규정을 작성하였는가?",
+                      "② 산업안전보건위원회를 노사 같은 수로 구성하였",
+                      "③ 분기마다 정기회의를 개최하는가?",
+                      "④ 법 제24조제2항에서 정하고 있는 사항에 대해서",
+                      "⑤ 안전·보건관리업무를 위탁한 경우 그 위탁기관",
+                      "⑥ 산업안전보건위원회 운영을 위해 안전보건에",
+                      "⑦ 회의 결과는 회의록을 작성하여 보존하고 있는가?",
+                      "⑧ 회의 결과는 사내방송, 사내보(社內報), 게시,"
+                    ],
+                    "style": { "fontSize": 9, "lineHeight": 1.5 }
+                  },
+                  {
+                    "type": "block",
+                    "children": [
+                      {
+                        "type": "composite",
+                        "children": [
+                          { "type": "text", "value": "결과: " },
+                          { "type": "field", "fieldId": "item03_result", "style": { "inputWidth": "8em" } }
+                        ],
+                        "style": { "marginBottom": 4 }
+                      },
+                      { "type": "field", "fieldId": "item03_improve", "style": { "minH": 54 } }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+
+      {
+        "type": "section",
+        "id": "section_item_04",
+        "title": { "badge": "4", "text": "안전보건관리규정의 작성 및 준수 <법 제25조 ~ 제28조>" },
+        "children": [
+          {
+            "type": "table",
+            "id": "item_table_04",
+            "cols": [{ "w": "38%" }, { "w": "32%" }, { "w": "30%" }],
+            "rows": [
+              {
+                "cells": [
+                  { "type": "label", "text": "점검 사항", "style": { "bg": "#eef0f3", "fontWeight": 800, "align": "center" } },
+                  { "type": "label", "text": "체크리스트", "style": { "bg": "#eef0f3", "fontWeight": 800, "align": "center" } },
+                  { "type": "label", "text": "개선해야 할 사항", "style": { "bg": "#eef0f3", "fontWeight": 800, "align": "center" } }
+                ]
+              },
+              {
+                "cells": [
+                  {
+                    "type": "static_text",
+                    "value": "안전보건관리규정의 작성 및 준수 <법 제25조 ~ 제28조>\n※ 상시근로자 수가 100명 이상인 사업주는 사업장의 안전·\n보건을 유지하기 위하여 안전보건관리규정을 작성하여\n각 사업장에 게시하거나, 갖춰 두고, 이를 근로자에게\n알려야 함\n※ 상시근로자 수가 10명 이상인 사업주는 취업규칙에\n“안전과 보건에 관한 사항”을 작성하여야 함<근로\n기준법 제93조 제9호>\n※ 규정은 구체적으로 작성하여야 함(예컨대, 건강진단 실시\n시기의 명시, 시행규칙 제197조 제2항 및 제202조 제4항)\n※ 안전보건관리규정을 작성·변경해야 할 사유가 발생한\n날부터 30일 이내에 작성하여야 함.\n따라서, 2020. 1. 16. 시행하는 개정된 법령 내용을 반영\n하기 위해 2020. 2. 15.까지 안전보건관리규정을 변경하여야 함",
+                    "style": { "fontSize": 9, "lineHeight": 1.4 }
+                  },
+                  {
+                    "type": "static_list",
+                    "items": [
+                      "① 상시근로자 수가 100명 이상인 사업장은 안전",
+                      "② 상시근로자 수가 10명 이상 99명인 사업장은",
+                      "③ 안전보건관리규정 또는 취업규칙에는 우리 사",
+                      "④ 안전보건관리규정을 작성하거나 변경하는 경우",
+                      "⑤ 이번 산업안전보건법령이 전부 개정됨에 따라 개정",
+                      "⑥ 안전보건관리규정 내용을 근로자가 쉽게 볼 수"
+                    ],
+                    "style": { "fontSize": 9, "lineHeight": 1.5 }
+                  },
+                  {
+                    "type": "block",
+                    "children": [
+                      {
+                        "type": "composite",
+                        "children": [
+                          { "type": "text", "value": "결과: " },
+                          { "type": "field", "fieldId": "item04_result", "style": { "inputWidth": "8em" } }
+                        ],
+                        "style": { "marginBottom": 4 }
+                      },
+                      { "type": "field", "fieldId": "item04_improve", "style": { "minH": 54 } }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+
+      {
+        "type": "static_text",
+        "value": "※ 이하 항목(5~27)은 동일한 3열 표 구조(점검 사항/체크리스트/개선해야 할 사항)로 반복되며, 본 JSON에서는 item05~item27에 대해 동일 패턴으로 section_item_05 ~ section_item_27이 생성됩니다.",
+        "style": { "fontSize": 9, "color": "#666", "marginTop": 8 }
+      },
+
+      {
+        "type": "block",
+        "id": "footer",
+        "children": [
+          {
+            "type": "text",
+            "value": "본 문서는 GRBlab dmfhqkRnj 시스템에 의해 작성되었습니다.",
+            "style": { "marginTop": 10, "fontSize": 10, "color": "#aaa", "textAlign": "center" }
+          }
+        ]
+      }
+    ]
+  }
+}

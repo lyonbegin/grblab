@@ -1,0 +1,204 @@
+{
+  "summary": {
+    "processName": "벽면 콘크리트 연마 작업",
+    "workContent": "점검",
+    "equipment": "콘크리트 마감 구조물 작업",
+    "basis": "산업안전보건법 제24조"
+  },
+  "hazards": [
+    {
+      "name": "전기 감전",
+      "category": "감전"
+    },
+    {
+      "name": "분진 흡입",
+      "category": "흡입"
+    },
+    {
+      "name": "장비 전도",
+      "category": "전도"
+    }
+  ],
+  "overallLevel": {
+    "label": "중위험",
+    "immediateAction": false,
+    "topHazard": "전기 감전",
+    "score": 9
+  },
+  "raw": {
+    "site_analysis": {
+      "industry": "콘크리트 마감 구조물 작업",
+      "detailed_process": "벽면 콘크리트 연마 작업",
+      "work_stage": "점검",
+      "analysis_basis": "산업안전보건법 제24조"
+    },
+    "hazards": [
+      {
+        "id": 1,
+        "hazard_name": "전기 감전",
+        "hazard_category": "감전",
+        "accident_scenario": "작업자가 벽면을 연마하는 과정에서 전기 케이블 외피 손상으로 인해 감전 사고 발생",
+        "direct_cause": "전기 장비의 손상된 케이블",
+        "expected_injury": "중상",
+        "probability": 3,
+        "severity": 3,
+        "risk_score": 9,
+        "risk_level": "중위험",
+        "improvement_measure": "전기 절연 장갑 사용 및 산업안전보건법 제32조에 따른 정기적 전기 설비 점검 실시",
+        "ocr": null,
+        "bbox": [
+          100,
+          150,
+          300,
+          450
+        ]
+      },
+      {
+        "id": 2,
+        "hazard_name": "분진 흡입",
+        "hazard_category": "흡입",
+        "accident_scenario": "작업자가 벽면을 연마하는 과정에서 발생한 분진으로 인해 호흡기 사고 발생",
+        "direct_cause": "적절한 PPE 미착용",
+        "expected_injury": "경상",
+        "probability": 4,
+        "severity": 2,
+        "risk_score": 8,
+        "risk_level": "중위험",
+        "improvement_measure": "산업안전보건법 제34조에 의거하여 적합한 방진 마스크 착용",
+        "ocr": null,
+        "bbox": [
+          200,
+          250,
+          400,
+          550
+        ]
+      },
+      {
+        "id": 3,
+        "hazard_name": "장비 전도",
+        "hazard_category": "전도",
+        "accident_scenario": "작업자가 불균형한 위치에서 연마를 하다가 장비 전도로 인해 사고 발생",
+        "direct_cause": "장비의 불안정한 배치",
+        "expected_injury": "중상",
+        "probability": 2,
+        "severity": 3,
+        "risk_score": 6,
+        "risk_level": "중위험",
+        "improvement_measure": "산업안전보건기준에 관한 규칙 제45조에 따른 장비 안정화 조치 시행",
+        "ocr": null,
+        "bbox": [
+          50,
+          100,
+          150,
+          300
+        ]
+      }
+    ],
+    "overall_risk_summary": {
+      "highest_risk_item": "전기 감전",
+      "highest_risk_score": 9,
+      "immediate_action_required": false,
+      "recommended_action": "안전 장비 및 PPE 사용 강화"
+    }
+  },
+  "frequencySeverity": [
+    {
+      "factor": "전기 감전",
+      "category": "감전",
+      "probability": 3,
+      "severity": 3,
+      "score": 9,
+      "level": "중위험"
+    },
+    {
+      "factor": "분진 흡입",
+      "category": "흡입",
+      "probability": 4,
+      "severity": 2,
+      "score": 8,
+      "level": "중위험"
+    },
+    {
+      "factor": "장비 전도",
+      "category": "전도",
+      "probability": 2,
+      "severity": 3,
+      "score": 6,
+      "level": "중위험"
+    }
+  ],
+  "checklist": [
+    {
+      "factor": "전기 감전",
+      "category": "감전",
+      "directCause": "전기 장비의 손상된 케이블",
+      "judgment": "중위험"
+    },
+    {
+      "factor": "분진 흡입",
+      "category": "흡입",
+      "directCause": "적절한 PPE 미착용",
+      "judgment": "중위험"
+    },
+    {
+      "factor": "장비 전도",
+      "category": "전도",
+      "directCause": "장비의 불안정한 배치",
+      "judgment": "중위험"
+    }
+  ],
+  "coreFactors": [
+    {
+      "factor": "전기 감전",
+      "riskLevel": "중위험",
+      "scenario": "작업자가 벽면을 연마하는 과정에서 전기 케이블 외피 손상으로 인해 감전 사고 발생",
+      "directCause": "전기 장비의 손상된 케이블",
+      "expectedInjury": "중상",
+      "improvementMeasure": "전기 절연 장갑 사용 및 산업안전보건법 제32조에 따른 정기적 전기 설비 점검 실시"
+    },
+    {
+      "factor": "분진 흡입",
+      "riskLevel": "중위험",
+      "scenario": "작업자가 벽면을 연마하는 과정에서 발생한 분진으로 인해 호흡기 사고 발생",
+      "directCause": "적절한 PPE 미착용",
+      "expectedInjury": "경상",
+      "improvementMeasure": "산업안전보건법 제34조에 의거하여 적합한 방진 마스크 착용"
+    },
+    {
+      "factor": "장비 전도",
+      "riskLevel": "중위험",
+      "scenario": "작업자가 불균형한 위치에서 연마를 하다가 장비 전도로 인해 사고 발생",
+      "directCause": "장비의 불안정한 배치",
+      "expectedInjury": "중상",
+      "improvementMeasure": "산업안전보건기준에 관한 규칙 제45조에 따른 장비 안정화 조치 시행"
+    }
+  ],
+  "threeLevel": [
+    {
+      "factor": "전기 감전",
+      "judgment": "개선필요",
+      "measure": "전기 절연 장갑 사용 및 산업안전보건법 제32조에 따른 정기적 전기 설비 점검 실시"
+    },
+    {
+      "factor": "분진 흡입",
+      "judgment": "개선필요",
+      "measure": "산업안전보건법 제34조에 의거하여 적합한 방진 마스크 착용"
+    },
+    {
+      "factor": "장비 전도",
+      "judgment": "개선필요",
+      "measure": "산업안전보건기준에 관한 규칙 제45조에 따른 장비 안정화 조치 시행"
+    }
+  ],
+  "health": {
+    "applicable": false,
+    "summary": "현재 빈도×강도법 평가 모드에서는 건강장해 분석이 포함되지 않습니다.",
+    "items": []
+  },
+  "overallSummary": {
+    "highest_risk_item": "전기 감전",
+    "highest_risk_score": 9,
+    "immediate_action_required": false,
+    "recommended_action": "안전 장비 및 PPE 사용 강화"
+  }
+}

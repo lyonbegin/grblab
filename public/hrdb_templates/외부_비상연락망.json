@@ -1,0 +1,80 @@
+{
+  "template_id": "external_emergency_contact_v1",
+  "title": "외부 비상연락망",
+  "version": 1,
+  "source": { "file_type": "hwp", "filename": "외부_비상연락망.hwp" },
+  "meta": { "paper": "A4", "unit": "mm", "page": { "width": 210, "height": 297, "margin": { "top": 20, "right": 15, "bottom": 20, "left": 15 } } },
+  "fields": [
+    { "id": "company_name",  "label": "사업장명",     "type": "text" },
+    { "id": "region",        "label": "관할 지역",    "type": "text" },
+    { "id": "update_year",   "label": "최신화 연도",  "type": "text", "placeholder": "2024" },
+    { "id": "update_month",  "label": "최신화 월",    "type": "text", "placeholder": "01" },
+    { "id": "update_day",    "label": "최신화 일",    "type": "text", "placeholder": "01" },
+    { "id": "fire_name",     "label": "소방서 명칭",  "type": "text" }, { "id": "fire_phone",  "label": "소방서 전화",  "type": "text", "placeholder": "119" },
+    { "id": "police_name",   "label": "경찰서 명칭",  "type": "text" }, { "id": "police_phone","label": "경찰서 전화",  "type": "text", "placeholder": "112" },
+    { "id": "labor_name",    "label": "노동관서 명칭","type": "text" }, { "id": "labor_phone", "label": "노동관서 전화","type": "text" },
+    { "id": "env_name",      "label": "환경관서 명칭","type": "text" }, { "id": "env_phone",   "label": "환경관서 전화","type": "text" },
+    { "id": "gas_name",      "label": "가스기관 명칭","type": "text" }, { "id": "gas_phone",   "label": "가스기관 전화","type": "text", "placeholder": "1544-4500" },
+    { "id": "elec_name",     "label": "전기기관 명칭","type": "text" }, { "id": "elec_phone",  "label": "전기기관 전화","type": "text", "placeholder": "123" },
+    { "id": "hospital_name", "label": "응급병원 명칭","type": "text" }, { "id": "hospital_phone","label": "응급병원 전화","type": "text" },
+    { "id": "kosha_name",    "label": "안전공단 명칭","type": "text" }, { "id": "kosha_phone", "label": "안전공단 전화","type": "text" },
+    { "id": "etc1_org",      "label": "기타기관1 명칭","type": "text"}, { "id": "etc1_phone",  "label": "기타기관1 전화","type": "text"},
+    { "id": "etc2_org",      "label": "기타기관2 명칭","type": "text"}, { "id": "etc2_phone",  "label": "기타기관2 전화","type": "text"},
+    { "id": "notes",         "label": "비고",         "type": "text" }
+  ],
+  "layout": {
+    "type": "page",
+    "children": [
+      { "type": "block", "style": { "padding": [8,4,8,4] }, "children": [
+        { "type": "text", "value": "외부 비상연락망", "style": { "fontSize": 18, "fontWeight": 900, "textAlign": "center" } },
+        { "type": "text", "value": "관내 유관기관 비상연락망을 작성하여 관리감독자 및 종사자가 인지할 수 있도록 안내 및 게시", "style": { "fontSize": 9, "textAlign": "center", "color": "#555" } }
+      ]},
+      { "type": "section", "title": { "text": "사업장 정보" }, "children": [
+        { "type": "table", "cols": [{"w":"20%"},{"w":"30%"},{"w":"20%"},{"w":"30%"}], "style": { "borderColor": "#c0c0c0" },
+          "rows": [
+            { "cells": [
+              { "type": "label", "text": "사 업 장 명", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "company_name" },
+              { "type": "label", "text": "관  할  지  역", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "region" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "최 신 화 일", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "composite", "children": [
+                { "type": "field", "fieldId": "update_year" }, { "type": "text", "value": "년 " },
+                { "type": "field", "fieldId": "update_month" }, { "type": "text", "value": "월 " },
+                { "type": "field", "fieldId": "update_day" }, { "type": "text", "value": "일" }
+              ]},
+              { "type": "label", "text": "", "colspan": 2 }
+            ]}
+          ]
+        }
+      ]},
+      { "type": "section", "title": { "text": "유관기관 비상연락처" }, "children": [
+        { "type": "table", "cols": [{"w":"25%"},{"w":"35%"},{"w":"40%"}], "style": { "borderColor": "#c0c0c0" },
+          "rows": [
+            { "cells": [
+              { "type": "label", "text": "구  분",       "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "label", "text": "기 관 명",     "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "label", "text": "연 락 처",     "style": { "bg": "#eef0f3", "fontWeight": 700 } }
+            ]},
+            { "cells": [{ "type": "label", "text": "소방서 (화재·구조)", "style": { "bg": "#f9f9f9" } }, { "type": "field", "fieldId": "fire_name" },    { "type": "field", "fieldId": "fire_phone"    }] },
+            { "cells": [{ "type": "label", "text": "경찰서",             "style": { "bg": "#f9f9f9" } }, { "type": "field", "fieldId": "police_name" },  { "type": "field", "fieldId": "police_phone"  }] },
+            { "cells": [{ "type": "label", "text": "고용노동지청",       "style": { "bg": "#f9f9f9" } }, { "type": "field", "fieldId": "labor_name" },   { "type": "field", "fieldId": "labor_phone"   }] },
+            { "cells": [{ "type": "label", "text": "환경청(유해물질)",   "style": { "bg": "#f9f9f9" } }, { "type": "field", "fieldId": "env_name" },     { "type": "field", "fieldId": "env_phone"     }] },
+            { "cells": [{ "type": "label", "text": "가스안전공사",       "style": { "bg": "#f9f9f9" } }, { "type": "field", "fieldId": "gas_name" },     { "type": "field", "fieldId": "gas_phone"     }] },
+            { "cells": [{ "type": "label", "text": "한국전력(전기)",     "style": { "bg": "#f9f9f9" } }, { "type": "field", "fieldId": "elec_name" },    { "type": "field", "fieldId": "elec_phone"    }] },
+            { "cells": [{ "type": "label", "text": "인근 응급병원",      "style": { "bg": "#f9f9f9" } }, { "type": "field", "fieldId": "hospital_name" },{ "type": "field", "fieldId": "hospital_phone"}] },
+            { "cells": [{ "type": "label", "text": "안전보건공단",       "style": { "bg": "#f9f9f9" } }, { "type": "field", "fieldId": "kosha_name" },   { "type": "field", "fieldId": "kosha_phone"   }] },
+            { "cells": [{ "type": "label", "text": "기타기관",           "style": { "bg": "#f9f9f9" } }, { "type": "field", "fieldId": "etc1_org" },     { "type": "field", "fieldId": "etc1_phone"    }] },
+            { "cells": [{ "type": "label", "text": "기타기관",           "style": { "bg": "#f9f9f9" } }, { "type": "field", "fieldId": "etc2_org" },     { "type": "field", "fieldId": "etc2_phone"    }] },
+            { "cells": [
+              { "type": "label", "text": "비  고", "colspan": 2, "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "notes" }
+            ]}
+          ]
+        }
+      ]}
+    ]
+  }
+}

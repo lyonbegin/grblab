@@ -1,0 +1,123 @@
+{
+  "template_id": "safety_resource_allocation_v1",
+  "title": "안전보건 필수자원 배정",
+  "version": 1,
+  "source": { "file_type": "hwp", "filename": "안전보건_필수자원_배정.hwp" },
+  "meta": { "paper": "A4", "unit": "mm", "page": { "width": 210, "height": 297, "margin": { "top": 20, "right": 15, "bottom": 20, "left": 15 } } },
+  "fields": [
+    { "id": "company_name",     "label": "사업장명",         "type": "text" },
+    { "id": "plan_year",        "label": "계획 연도",        "type": "text", "placeholder": "2024" },
+    { "id": "create_year",      "label": "작성일 연도",      "type": "text", "placeholder": "2024" },
+    { "id": "create_month",     "label": "작성일 월",        "type": "text", "placeholder": "01" },
+    { "id": "create_day",       "label": "작성일 일",        "type": "text", "placeholder": "01" },
+    { "id": "p1_role",   "label": "인력1 역할",   "type": "text", "placeholder": "안전보건관리책임자" }, { "id": "p1_name",   "label": "인력1 성명",   "type": "text" }, { "id": "p1_title",  "label": "인력1 직책",   "type": "text" }, { "id": "p1_appt",   "label": "인력1 선임일", "type": "text" }, { "id": "p1_remark", "label": "인력1 비고",   "type": "text" },
+    { "id": "p2_role",   "label": "인력2 역할",   "type": "text", "placeholder": "안전관리자" },       { "id": "p2_name",   "label": "인력2 성명",   "type": "text" }, { "id": "p2_title",  "label": "인력2 직책",   "type": "text" }, { "id": "p2_appt",   "label": "인력2 선임일", "type": "text" }, { "id": "p2_remark", "label": "인력2 비고",   "type": "text" },
+    { "id": "p3_role",   "label": "인력3 역할",   "type": "text", "placeholder": "보건관리자" },       { "id": "p3_name",   "label": "인력3 성명",   "type": "text" }, { "id": "p3_title",  "label": "인력3 직책",   "type": "text" }, { "id": "p3_appt",   "label": "인력3 선임일", "type": "text" }, { "id": "p3_remark", "label": "인력3 비고",   "type": "text" },
+    { "id": "p4_role",   "label": "인력4 역할",   "type": "text", "placeholder": "관리감독자" },       { "id": "p4_name",   "label": "인력4 성명",   "type": "text" }, { "id": "p4_title",  "label": "인력4 직책",   "type": "text" }, { "id": "p4_appt",   "label": "인력4 선임일", "type": "text" }, { "id": "p4_remark", "label": "인력4 비고",   "type": "text" },
+    { "id": "p5_role",   "label": "인력5 역할",   "type": "text" },                                   { "id": "p5_name",   "label": "인력5 성명",   "type": "text" }, { "id": "p5_title",  "label": "인력5 직책",   "type": "text" }, { "id": "p5_appt",   "label": "인력5 선임일", "type": "text" }, { "id": "p5_remark", "label": "인력5 비고",   "type": "text" },
+    { "id": "b1_item",    "label": "예산1 항목",   "type": "text" }, { "id": "b1_amount",  "label": "예산1 금액",   "type": "text", "placeholder": "0" }, { "id": "b1_remark",  "label": "예산1 비고",   "type": "text" },
+    { "id": "b2_item",    "label": "예산2 항목",   "type": "text" }, { "id": "b2_amount",  "label": "예산2 금액",   "type": "text", "placeholder": "0" }, { "id": "b2_remark",  "label": "예산2 비고",   "type": "text" },
+    { "id": "b3_item",    "label": "예산3 항목",   "type": "text" }, { "id": "b3_amount",  "label": "예산3 금액",   "type": "text", "placeholder": "0" }, { "id": "b3_remark",  "label": "예산3 비고",   "type": "text" },
+    { "id": "b4_item",    "label": "예산4 항목",   "type": "text" }, { "id": "b4_amount",  "label": "예산4 금액",   "type": "text", "placeholder": "0" }, { "id": "b4_remark",  "label": "예산4 비고",   "type": "text" },
+    { "id": "budget_total","label": "예산 합계",   "type": "text", "placeholder": "0" },
+    { "id": "overall_notes","label": "종합 의견",  "type": "text" }
+  ],
+  "layout": {
+    "type": "page",
+    "children": [
+      {
+        "type": "block",
+        "style": { "padding": [8,4,8,4] },
+        "children": [
+          { "type": "text", "value": "안전보건 필수자원 배정", "style": { "fontSize": 18, "fontWeight": 900, "textAlign": "center" } }
+        ]
+      },
+      {
+        "type": "section",
+        "title": { "text": "기본 정보" },
+        "children": [
+          {
+            "type": "table",
+            "cols": [{ "w": "20%" }, { "w": "30%" }, { "w": "20%" }, { "w": "30%" }],
+            "style": { "borderColor": "#c0c0c0" },
+            "rows": [
+              { "cells": [
+                { "type": "label", "text": "사 업 장 명", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "company_name" },
+                { "type": "label", "text": "계 획 연 도", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "composite", "children": [
+                  { "type": "field", "fieldId": "plan_year" }, { "type": "text", "value": "년" }
+                ]}
+              ]},
+              { "cells": [
+                { "type": "label", "text": "작  성  일",  "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "composite", "children": [
+                  { "type": "field", "fieldId": "create_year" }, { "type": "text", "value": "년 " },
+                  { "type": "field", "fieldId": "create_month" }, { "type": "text", "value": "월 " },
+                  { "type": "field", "fieldId": "create_day" }, { "type": "text", "value": "일" }
+                ]},
+                { "type": "label", "text": "", "colspan": 2 }
+              ]}
+            ]
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "title": { "text": "1. 인력 배정" },
+        "children": [
+          {
+            "type": "table",
+            "cols": [{ "w": "20%" }, { "w": "15%" }, { "w": "20%" }, { "w": "20%" }, { "w": "25%" }],
+            "style": { "borderColor": "#c0c0c0" },
+            "rows": [
+              { "cells": [
+                { "type": "label", "text": "역  할",   "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "label", "text": "성  명",   "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "label", "text": "직  책",   "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "label", "text": "선 임 일", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "label", "text": "비  고",   "style": { "bg": "#eef0f3", "fontWeight": 700 } }
+              ]},
+              { "cells": [{ "type": "field", "fieldId": "p1_role" }, { "type": "field", "fieldId": "p1_name" }, { "type": "field", "fieldId": "p1_title" }, { "type": "field", "fieldId": "p1_appt" }, { "type": "field", "fieldId": "p1_remark" }] },
+              { "cells": [{ "type": "field", "fieldId": "p2_role" }, { "type": "field", "fieldId": "p2_name" }, { "type": "field", "fieldId": "p2_title" }, { "type": "field", "fieldId": "p2_appt" }, { "type": "field", "fieldId": "p2_remark" }] },
+              { "cells": [{ "type": "field", "fieldId": "p3_role" }, { "type": "field", "fieldId": "p3_name" }, { "type": "field", "fieldId": "p3_title" }, { "type": "field", "fieldId": "p3_appt" }, { "type": "field", "fieldId": "p3_remark" }] },
+              { "cells": [{ "type": "field", "fieldId": "p4_role" }, { "type": "field", "fieldId": "p4_name" }, { "type": "field", "fieldId": "p4_title" }, { "type": "field", "fieldId": "p4_appt" }, { "type": "field", "fieldId": "p4_remark" }] },
+              { "cells": [{ "type": "field", "fieldId": "p5_role" }, { "type": "field", "fieldId": "p5_name" }, { "type": "field", "fieldId": "p5_title" }, { "type": "field", "fieldId": "p5_appt" }, { "type": "field", "fieldId": "p5_remark" }] }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "title": { "text": "2. 예산 배정" },
+        "children": [
+          {
+            "type": "table",
+            "cols": [{ "w": "45%" }, { "w": "30%" }, { "w": "25%" }],
+            "style": { "borderColor": "#c0c0c0" },
+            "rows": [
+              { "cells": [
+                { "type": "label", "text": "예산 항목",   "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "label", "text": "금액 (원)",   "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "label", "text": "비  고",      "style": { "bg": "#eef0f3", "fontWeight": 700 } }
+              ]},
+              { "cells": [{ "type": "field", "fieldId": "b1_item" }, { "type": "field", "fieldId": "b1_amount" }, { "type": "field", "fieldId": "b1_remark" }] },
+              { "cells": [{ "type": "field", "fieldId": "b2_item" }, { "type": "field", "fieldId": "b2_amount" }, { "type": "field", "fieldId": "b2_remark" }] },
+              { "cells": [{ "type": "field", "fieldId": "b3_item" }, { "type": "field", "fieldId": "b3_amount" }, { "type": "field", "fieldId": "b3_remark" }] },
+              { "cells": [{ "type": "field", "fieldId": "b4_item" }, { "type": "field", "fieldId": "b4_amount" }, { "type": "field", "fieldId": "b4_remark" }] },
+              { "cells": [
+                { "type": "label", "text": "합  계",      "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "budget_total" },
+                { "type": "label", "text": "" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "종합 의견",   "colspan": 2, "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "overall_notes" }
+              ]}
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

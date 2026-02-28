@@ -1,0 +1,208 @@
+{
+  "template_id": "medical_privacy_protection_v2",
+  "title": "의료기관 개인정보보호 조치사항",
+  "subtitle": "개인정보보호법 적용 사례 (의료기관) | 행정안전부",
+  "version": 2,
+  "source": { "file_type": "hwp", "filename": "의료기관_개인정보보호_조치사항.hwp" },
+  "meta": { "paper": "A4", "unit": "mm", "page": { "width": 210, "height": 297, "margin": { "top": 25, "right": 20, "bottom": 25, "left": 20 } } },
+  "fields": [
+    { "id": "institution_name",   "label": "의료기관명",              "type": "text" },
+    { "id": "institution_type",   "label": "의료기관 종류",           "type": "text", "placeholder": "병원/의원/치과/한의원 등" },
+    { "id": "privacy_officer",    "label": "개인정보 보호책임자",     "type": "text" },
+    { "id": "officer_contact",    "label": "책임자 연락처",           "type": "text" },
+    { "id": "update_year",        "label": "작성 연도",               "type": "text", "placeholder": "2024" },
+    { "id": "update_month",       "label": "작성 월",                 "type": "text", "placeholder": "01" },
+    { "id": "update_day",         "label": "작성 일",                 "type": "text", "placeholder": "01" },
+    { "id": "ch1_purpose",        "label": "Ⅰ. 개인정보 처리 목적", "type": "text", "placeholder": "진료 및 의료서비스 제공" },
+    { "id": "ch1_items",          "label": "Ⅰ. 수집 항목",          "type": "text", "placeholder": "성명, 주민번호, 연락처, 진료기록 등" },
+    { "id": "ch1_retention",      "label": "Ⅰ. 보유·이용 기간",    "type": "text", "placeholder": "의료법에 따라 최소 10년" },
+    { "id": "ch2_third_party",    "label": "Ⅱ. 제3자 제공 여부",   "type": "text", "placeholder": "원칙적 미제공 / 예외사항 기재" },
+    { "id": "ch2_provide_to",     "label": "Ⅱ. 제공 대상 및 목적", "type": "text" },
+    { "id": "ch3_access_control", "label": "Ⅲ. 접근권한 관리",     "type": "text", "placeholder": "역할기반 접근권한 부여·관리" },
+    { "id": "ch3_encrypt",        "label": "Ⅲ. 암호화 조치",       "type": "text", "placeholder": "주민번호·금융정보 암호화 저장" },
+    { "id": "ch3_backup",         "label": "Ⅲ. 접속기록 보관",     "type": "text", "placeholder": "6개월 이상 보관·반기 1회 점검" },
+    { "id": "ch3_vaccine",        "label": "Ⅲ. 악성프로그램 방지", "type": "text", "placeholder": "백신 설치·최신 업데이트 유지" },
+    { "id": "ch3_physical",       "label": "Ⅲ. 물리적 보안조치",  "type": "text", "placeholder": "전산실 출입통제, 잠금장치 등" },
+    { "id": "ch4_report",         "label": "Ⅳ. 침해 신고 절차",   "type": "text", "placeholder": "개인정보침해 신고센터(118) 신고" },
+    { "id": "ch4_notify",         "label": "Ⅳ. 정보주체 통지",    "type": "text", "placeholder": "침해 발생 72시간 내 통지" },
+    { "id": "ch4_recovery",       "label": "Ⅳ. 피해구제 방법",    "type": "text", "placeholder": "개인정보 분쟁조정위원회 신청 가능" },
+    { "id": "att1_window_date",   "label": "붙임1 접수창구 동의서 작성일","type": "text" },
+    { "id": "att1_patient_name",  "label": "붙임1 환자(정보주체)명",     "type": "text" },
+    { "id": "att1_purpose_consent","label": "붙임1 수집·이용 동의 여부", "type": "text", "placeholder": "동의함/동의하지않음" },
+    { "id": "att1_third_consent", "label": "붙임1 제3자 제공 동의",      "type": "text", "placeholder": "동의함/동의하지않음" },
+    { "id": "att2_web_purpose",   "label": "붙임2 홈페이지 수집·이용 동의","type": "text", "placeholder": "동의함/동의하지않음" },
+    { "id": "att2_web_third",     "label": "붙임2 홈페이지 제3자 제공",  "type": "text", "placeholder": "동의함/동의하지않음" },
+    { "id": "att3_policy_ver",    "label": "붙임3 처리방침(진료) 시행일","type": "text" },
+    { "id": "att4_extra_ver",     "label": "붙임4 처리방침(추가서비스) 시행일","type": "text" },
+    { "id": "att5_web_ver",       "label": "붙임5 처리방침(홈페이지회원) 시행일","type": "text" }
+  ],
+  "layout": {
+    "type": "page",
+    "children": [
+      {
+        "type": "block", "style": { "padding": [8,4,8,4] },
+        "children": [
+          { "type": "text", "value": "의료기관 개인정보보호 조치사항", "style": { "fontSize": 17, "fontWeight": 900, "textAlign": "center" } },
+          { "type": "text", "value": "개인정보보호법 적용 사례 (의료기관)  |  행 정 안 전 부", "style": { "fontSize": 9, "textAlign": "center", "color": "#444" } }
+        ]
+      },
+      {
+        "type": "section", "title": { "text": "의료기관 기본 정보" },
+        "children": [{
+          "type": "table", "cols": [{"w":"20%"},{"w":"30%"},{"w":"20%"},{"w":"30%"}],
+          "style": { "borderColor": "#c0c0c0" },
+          "rows": [
+            { "cells": [
+              { "type": "label", "text": "의료기관명",         "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "institution_name" },
+              { "type": "label", "text": "기관 종류",          "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "institution_type" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "개인정보보호책임자", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "privacy_officer" },
+              { "type": "label", "text": "연  락  처",         "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "officer_contact" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "작  성  일",         "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "composite", "children": [
+                { "type": "field", "fieldId": "update_year" }, { "type": "text", "value": "년 " },
+                { "type": "field", "fieldId": "update_month" }, { "type": "text", "value": "월 " },
+                { "type": "field", "fieldId": "update_day" }, { "type": "text", "value": "일" }
+              ]},
+              { "type": "label", "text": "", "colspan": 2 }
+            ]}
+          ]
+        }]
+      },
+      {
+        "type": "section", "title": { "text": "Ⅰ. 개요 (개인정보 수집·이용)" },
+        "children": [{
+          "type": "table", "cols": [{"w":"25%"},{"w":"75%"}],
+          "style": { "borderColor": "#c0c0c0" },
+          "rows": [
+            { "cells": [
+              { "type": "label", "text": "처리 목적",           "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "ch1_purpose" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "수집 항목",           "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "ch1_items" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "보유·이용 기간",      "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "ch1_retention" }
+            ]}
+          ]
+        }]
+      },
+      {
+        "type": "section", "title": { "text": "Ⅱ. 개인정보의 수집·이용·제3자 제공" },
+        "children": [{
+          "type": "table", "cols": [{"w":"25%"},{"w":"75%"}],
+          "style": { "borderColor": "#c0c0c0" },
+          "rows": [
+            { "cells": [
+              { "type": "label", "text": "제3자 제공 여부",     "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "ch2_third_party" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "제공 대상 및 목적",   "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "ch2_provide_to" }
+            ]}
+          ]
+        }]
+      },
+      {
+        "type": "section", "title": { "text": "Ⅲ. 개인정보의 안전성 확보를 위한 조치사항" },
+        "children": [{
+          "type": "table", "cols": [{"w":"25%"},{"w":"75%"}],
+          "style": { "borderColor": "#c0c0c0" },
+          "rows": [
+            { "cells": [
+              { "type": "label", "text": "접근권한 관리",       "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "ch3_access_control" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "개인정보 암호화",     "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "ch3_encrypt" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "접속기록 보관",       "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "ch3_backup" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "악성프로그램 방지",   "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "ch3_vaccine" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "물리적 보안조치",     "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "ch3_physical" }
+            ]}
+          ]
+        }]
+      },
+      {
+        "type": "section", "title": { "text": "Ⅳ. 개인정보 침해 발생 시 조치사항" },
+        "children": [{
+          "type": "table", "cols": [{"w":"25%"},{"w":"75%"}],
+          "style": { "borderColor": "#c0c0c0" },
+          "rows": [
+            { "cells": [
+              { "type": "label", "text": "침해 신고 절차",      "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "ch4_report" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "정보주체 통지",       "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "ch4_notify" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "피해구제 방법",       "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "ch4_recovery" }
+            ]}
+          ]
+        }]
+      },
+      {
+        "type": "section", "title": { "text": "붙임 서식 관리" },
+        "children": [{
+          "type": "table", "cols": [{"w":"35%"},{"w":"40%"},{"w":"25%"}],
+          "style": { "borderColor": "#c0c0c0" },
+          "rows": [
+            { "cells": [
+              { "type": "label", "text": "붙임 서식",                      "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "label", "text": "내  용",                          "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "label", "text": "시행일",                          "style": { "bg": "#eef0f3", "fontWeight": 700 } }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "붙임1 개인정보 수집·활용 동의서", "style": { "bg": "#f9f9f9" } },
+              { "type": "label", "text": "접수창구용" },
+              { "type": "field", "fieldId": "att1_window_date" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "붙임2 개인정보 수집·활용 동의서", "style": { "bg": "#f9f9f9" } },
+              { "type": "label", "text": "홈페이지용" },
+              { "type": "field", "fieldId": "att2_web_purpose" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "붙임3 개인정보처리방침",         "style": { "bg": "#f9f9f9" } },
+              { "type": "label", "text": "진료용" },
+              { "type": "field", "fieldId": "att3_policy_ver" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "붙임4 개인정보처리방침",         "style": { "bg": "#f9f9f9" } },
+              { "type": "label", "text": "진료외 추가서비스 제공시" },
+              { "type": "field", "fieldId": "att4_extra_ver" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "붙임5 개인정보처리방침",         "style": { "bg": "#f9f9f9" } },
+              { "type": "label", "text": "홈페이지 회원정보용" },
+              { "type": "field", "fieldId": "att5_web_ver" }
+            ]}
+          ]
+        }]
+      }
+    ]
+  }
+}

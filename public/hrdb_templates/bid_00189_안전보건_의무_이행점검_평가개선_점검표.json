@@ -1,0 +1,157 @@
+{
+  "template_id": "safety_obligation_check_v1",
+  "title": "안전보건 의무 이행점검 및 평가·개선 점검표",
+  "version": 1,
+  "source": {
+    "file_type": "hwp",
+    "filename": "bid_00189_안전보건_의무_이행점검_및_평가개선_점검표.hwp",
+    "issuer": "",
+    "legal_basis": "산업안전보건법"
+  },
+  "meta": {
+    "paper": "A4",
+    "unit": "mm",
+    "page": { "width": 210, "height": 297, "margin": { "top": 20, "right": 15, "bottom": 20, "left": 15 } },
+    "fonts": { "base": "Noto Sans KR", "mono": "monospace" }
+  },
+  "fields": [
+    { "id": "company_name",    "label": "사업장명",    "type": "text" },
+    { "id": "check_year",      "label": "점검 연도",   "type": "text", "placeholder": "2024" },
+    { "id": "check_month",     "label": "점검 월",     "type": "text", "placeholder": "01" },
+    { "id": "check_day",       "label": "점검 일",     "type": "text", "placeholder": "01" },
+    { "id": "checker_name",    "label": "점검자",      "type": "text" },
+    { "id": "item1_result",    "label": "항목1 이행여부", "type": "text", "placeholder": "이행/미이행/해당없음" },
+    { "id": "item1_improve",   "label": "항목1 개선사항", "type": "text" },
+    { "id": "item2_result",    "label": "항목2 이행여부", "type": "text", "placeholder": "이행/미이행/해당없음" },
+    { "id": "item2_improve",   "label": "항목2 개선사항", "type": "text" },
+    { "id": "item3_result",    "label": "항목3 이행여부", "type": "text", "placeholder": "이행/미이행/해당없음" },
+    { "id": "item3_improve",   "label": "항목3 개선사항", "type": "text" },
+    { "id": "item4_result",    "label": "항목4 이행여부", "type": "text", "placeholder": "이행/미이행/해당없음" },
+    { "id": "item4_improve",   "label": "항목4 개선사항", "type": "text" },
+    { "id": "item5_result",    "label": "항목5 이행여부", "type": "text", "placeholder": "이행/미이행/해당없음" },
+    { "id": "item5_improve",   "label": "항목5 개선사항", "type": "text" },
+    { "id": "item6_result",    "label": "항목6 이행여부", "type": "text", "placeholder": "이행/미이행/해당없음" },
+    { "id": "item6_improve",   "label": "항목6 개선사항", "type": "text" },
+    { "id": "item7_result",    "label": "항목7 이행여부", "type": "text", "placeholder": "이행/미이행/해당없음" },
+    { "id": "item7_improve",   "label": "항목7 개선사항", "type": "text" },
+    { "id": "item8_result",    "label": "항목8 이행여부", "type": "text", "placeholder": "이행/미이행/해당없음" },
+    { "id": "item8_improve",   "label": "항목8 개선사항", "type": "text" },
+    { "id": "item9_result",    "label": "항목9 이행여부", "type": "text", "placeholder": "이행/미이행/해당없음" },
+    { "id": "item9_improve",   "label": "항목9 개선사항", "type": "text" },
+    { "id": "item10_result",   "label": "항목10 이행여부","type": "text", "placeholder": "이행/미이행/해당없음" },
+    { "id": "item10_improve",  "label": "항목10 개선사항","type": "text" },
+    { "id": "overall_comment", "label": "종합 의견",   "type": "text" }
+  ],
+  "layout": {
+    "type": "page",
+    "children": [
+      {
+        "type": "block",
+        "style": { "padding": [8,4,8,4] },
+        "children": [
+          { "type": "text", "value": "안전보건 의무 이행점검 및 평가·개선 점검표", "style": { "fontSize": 16, "fontWeight": 900, "textAlign": "center" } }
+        ]
+      },
+      {
+        "type": "section",
+        "title": { "text": "기본 정보" },
+        "children": [
+          {
+            "type": "table",
+            "cols": [{ "w": "20%" }, { "w": "30%" }, { "w": "20%" }, { "w": "30%" }],
+            "style": { "borderColor": "#c0c0c0" },
+            "rows": [
+              { "cells": [
+                { "type": "label", "text": "사업장명", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "company_name" },
+                { "type": "label", "text": "점검일자", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "composite", "children": [
+                  { "type": "field", "fieldId": "check_year" }, { "type": "text", "value": ". " },
+                  { "type": "field", "fieldId": "check_month" }, { "type": "text", "value": ". " },
+                  { "type": "field", "fieldId": "check_day" }
+                ]}
+              ]},
+              { "cells": [
+                { "type": "label", "text": "점검자", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "checker_name" },
+                { "type": "label", "text": "", "colspan": 2 }
+              ]}
+            ]
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "title": { "text": "점검 항목" },
+        "children": [
+          {
+            "type": "table",
+            "cols": [{ "w": "45%" }, { "w": "20%" }, { "w": "35%" }],
+            "style": { "borderColor": "#c0c0c0" },
+            "rows": [
+              { "cells": [
+                { "type": "label", "text": "점검 항목",  "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "label", "text": "이행 여부",  "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "label", "text": "개선 사항",  "style": { "bg": "#eef0f3", "fontWeight": 700 } }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "안전보건관리책임자 선임 (법 제15조)" },
+                { "type": "field", "fieldId": "item1_result" },
+                { "type": "field", "fieldId": "item1_improve" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "관리감독자 지정 및 업무 이행 (법 제16조)" },
+                { "type": "field", "fieldId": "item2_result" },
+                { "type": "field", "fieldId": "item2_improve" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "안전관리자 선임 (법 제17조)" },
+                { "type": "field", "fieldId": "item3_result" },
+                { "type": "field", "fieldId": "item3_improve" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "보건관리자 선임 (법 제18조)" },
+                { "type": "field", "fieldId": "item4_result" },
+                { "type": "field", "fieldId": "item4_improve" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "산업안전보건위원회 구성·운영 (법 제24조)" },
+                { "type": "field", "fieldId": "item5_result" },
+                { "type": "field", "fieldId": "item5_improve" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "안전보건관리규정 작성 (법 제25조)" },
+                { "type": "field", "fieldId": "item6_result" },
+                { "type": "field", "fieldId": "item6_improve" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "안전보건교육 실시 (법 제29조)" },
+                { "type": "field", "fieldId": "item7_result" },
+                { "type": "field", "fieldId": "item7_improve" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "위험성평가 실시 (법 제36조)" },
+                { "type": "field", "fieldId": "item8_result" },
+                { "type": "field", "fieldId": "item8_improve" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "작업환경측정 (법 제125조)" },
+                { "type": "field", "fieldId": "item9_result" },
+                { "type": "field", "fieldId": "item9_improve" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "근로자 건강진단 (법 제129조)" },
+                { "type": "field", "fieldId": "item10_result" },
+                { "type": "field", "fieldId": "item10_improve" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "종합 의견", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "overall_comment", "colspan": 2 }
+              ]}
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,93 @@
+{
+  "template_id": "accident_response_equipment_v1",
+  "title": "사고대응 장비 현황",
+  "version": 1,
+  "source": { "file_type": "hwp", "filename": "사고대응_장비_현황.hwp" },
+  "meta": { "paper": "A4", "unit": "mm", "page": { "width": 210, "height": 297, "margin": { "top": 20, "right": 15, "bottom": 20, "left": 15 } } },
+  "fields": [
+    { "id": "company_name",  "label": "사업장명",     "type": "text" },
+    { "id": "check_year",    "label": "점검 연도",    "type": "text", "placeholder": "2024" },
+    { "id": "check_month",   "label": "점검 월",      "type": "text", "placeholder": "01" },
+    { "id": "check_day",     "label": "점검 일",      "type": "text", "placeholder": "01" },
+    { "id": "checker_name",  "label": "점검자 성명",  "type": "text" },
+    { "id": "e1_name",   "label": "장비1 명칭",   "type": "text", "placeholder": "소화기" },          { "id": "e1_qty",    "label": "장비1 수량",   "type": "text", "placeholder": "0" }, { "id": "e1_loc",    "label": "장비1 위치",   "type": "text" }, { "id": "e1_state",  "label": "장비1 상태",   "type": "text", "placeholder": "양호/불량/교체필요" }, { "id": "e1_next",   "label": "장비1 차기점검", "type": "text" },
+    { "id": "e2_name",   "label": "장비2 명칭",   "type": "text", "placeholder": "소화전" },          { "id": "e2_qty",    "label": "장비2 수량",   "type": "text", "placeholder": "0" }, { "id": "e2_loc",    "label": "장비2 위치",   "type": "text" }, { "id": "e2_state",  "label": "장비2 상태",   "type": "text", "placeholder": "양호/불량/교체필요" }, { "id": "e2_next",   "label": "장비2 차기점검", "type": "text" },
+    { "id": "e3_name",   "label": "장비3 명칭",   "type": "text", "placeholder": "응급구호함" },      { "id": "e3_qty",    "label": "장비3 수량",   "type": "text", "placeholder": "0" }, { "id": "e3_loc",    "label": "장비3 위치",   "type": "text" }, { "id": "e3_state",  "label": "장비3 상태",   "type": "text", "placeholder": "양호/불량/교체필요" }, { "id": "e3_next",   "label": "장비3 차기점검", "type": "text" },
+    { "id": "e4_name",   "label": "장비4 명칭",   "type": "text", "placeholder": "방독마스크" },      { "id": "e4_qty",    "label": "장비4 수량",   "type": "text", "placeholder": "0" }, { "id": "e4_loc",    "label": "장비4 위치",   "type": "text" }, { "id": "e4_state",  "label": "장비4 상태",   "type": "text", "placeholder": "양호/불량/교체필요" }, { "id": "e4_next",   "label": "장비4 차기점검", "type": "text" },
+    { "id": "e5_name",   "label": "장비5 명칭",   "type": "text", "placeholder": "화학물질 흡착포"}, { "id": "e5_qty",    "label": "장비5 수량",   "type": "text", "placeholder": "0" }, { "id": "e5_loc",    "label": "장비5 위치",   "type": "text" }, { "id": "e5_state",  "label": "장비5 상태",   "type": "text", "placeholder": "양호/불량/교체필요" }, { "id": "e5_next",   "label": "장비5 차기점검", "type": "text" },
+    { "id": "e6_name",   "label": "장비6 명칭",   "type": "text" },                                  { "id": "e6_qty",    "label": "장비6 수량",   "type": "text", "placeholder": "0" }, { "id": "e6_loc",    "label": "장비6 위치",   "type": "text" }, { "id": "e6_state",  "label": "장비6 상태",   "type": "text", "placeholder": "양호/불량/교체필요" }, { "id": "e6_next",   "label": "장비6 차기점검", "type": "text" },
+    { "id": "e7_name",   "label": "장비7 명칭",   "type": "text" },                                  { "id": "e7_qty",    "label": "장비7 수량",   "type": "text", "placeholder": "0" }, { "id": "e7_loc",    "label": "장비7 위치",   "type": "text" }, { "id": "e7_state",  "label": "장비7 상태",   "type": "text", "placeholder": "양호/불량/교체필요" }, { "id": "e7_next",   "label": "장비7 차기점검", "type": "text" },
+    { "id": "overall_notes", "label": "종합 비고", "type": "text" }
+  ],
+  "layout": {
+    "type": "page",
+    "children": [
+      {
+        "type": "block",
+        "style": { "padding": [8,4,8,4] },
+        "children": [
+          { "type": "text", "value": "사고대응 장비 현황", "style": { "fontSize": 18, "fontWeight": 900, "textAlign": "center" } }
+        ]
+      },
+      {
+        "type": "section",
+        "title": { "text": "기본 정보" },
+        "children": [
+          {
+            "type": "table",
+            "cols": [{ "w": "20%" }, { "w": "30%" }, { "w": "20%" }, { "w": "30%" }],
+            "style": { "borderColor": "#c0c0c0" },
+            "rows": [
+              { "cells": [
+                { "type": "label", "text": "사 업 장 명", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "company_name" },
+                { "type": "label", "text": "점 검 일 자", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "composite", "children": [
+                  { "type": "field", "fieldId": "check_year" }, { "type": "text", "value": "." },
+                  { "type": "field", "fieldId": "check_month" }, { "type": "text", "value": "." },
+                  { "type": "field", "fieldId": "check_day" }
+                ]}
+              ]},
+              { "cells": [
+                { "type": "label", "text": "점  검  자",  "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "checker_name" },
+                { "type": "label", "text": "", "colspan": 2 }
+              ]}
+            ]
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "title": { "text": "장비 현황" },
+        "children": [
+          {
+            "type": "table",
+            "cols": [{ "w": "25%" }, { "w": "8%" }, { "w": "20%" }, { "w": "20%" }, { "w": "27%" }],
+            "style": { "borderColor": "#c0c0c0" },
+            "rows": [
+              { "cells": [
+                { "type": "label", "text": "장  비  명",   "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "label", "text": "수량",         "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "label", "text": "비치 위치",    "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "label", "text": "상  태",       "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "label", "text": "차기 점검일",  "style": { "bg": "#eef0f3", "fontWeight": 700 } }
+              ]},
+              { "cells": [{ "type": "field", "fieldId": "e1_name" }, { "type": "field", "fieldId": "e1_qty" }, { "type": "field", "fieldId": "e1_loc" }, { "type": "field", "fieldId": "e1_state" }, { "type": "field", "fieldId": "e1_next" }] },
+              { "cells": [{ "type": "field", "fieldId": "e2_name" }, { "type": "field", "fieldId": "e2_qty" }, { "type": "field", "fieldId": "e2_loc" }, { "type": "field", "fieldId": "e2_state" }, { "type": "field", "fieldId": "e2_next" }] },
+              { "cells": [{ "type": "field", "fieldId": "e3_name" }, { "type": "field", "fieldId": "e3_qty" }, { "type": "field", "fieldId": "e3_loc" }, { "type": "field", "fieldId": "e3_state" }, { "type": "field", "fieldId": "e3_next" }] },
+              { "cells": [{ "type": "field", "fieldId": "e4_name" }, { "type": "field", "fieldId": "e4_qty" }, { "type": "field", "fieldId": "e4_loc" }, { "type": "field", "fieldId": "e4_state" }, { "type": "field", "fieldId": "e4_next" }] },
+              { "cells": [{ "type": "field", "fieldId": "e5_name" }, { "type": "field", "fieldId": "e5_qty" }, { "type": "field", "fieldId": "e5_loc" }, { "type": "field", "fieldId": "e5_state" }, { "type": "field", "fieldId": "e5_next" }] },
+              { "cells": [{ "type": "field", "fieldId": "e6_name" }, { "type": "field", "fieldId": "e6_qty" }, { "type": "field", "fieldId": "e6_loc" }, { "type": "field", "fieldId": "e6_state" }, { "type": "field", "fieldId": "e6_next" }] },
+              { "cells": [{ "type": "field", "fieldId": "e7_name" }, { "type": "field", "fieldId": "e7_qty" }, { "type": "field", "fieldId": "e7_loc" }, { "type": "field", "fieldId": "e7_state" }, { "type": "field", "fieldId": "e7_next" }] },
+              { "cells": [
+                { "type": "label", "text": "종합 비고", "colspan": 4, "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "overall_notes" }
+              ]}
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

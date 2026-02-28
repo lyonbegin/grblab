@@ -1,0 +1,143 @@
+{
+  "template_id": "personal_info_consent_general_v1",
+  "title": "개인정보 수집·이용 동의서",
+  "version": 1,
+  "source": {
+    "file_type": "hwp",
+    "filename": "bid_00322_개인정보_수집_및_이용_동의서_양식례.hwp",
+    "issuer": "",
+    "legal_basis": "개인정보 보호법"
+  },
+  "meta": {
+    "paper": "A4",
+    "unit": "mm",
+    "page": { "width": 210, "height": 297, "margin": { "top": 20, "right": 20, "bottom": 20, "left": 20 } },
+    "fonts": { "base": "Noto Sans KR" }
+  },
+  "fields": [
+    { "id": "org_name",         "label": "기관/회사명",              "type": "text", "placeholder": "OOOOO" },
+    { "id": "purpose_desc",     "label": "수집·이용 목적 (목적 기술)", "type": "textarea" },
+    { "id": "collect_items",    "label": "수집·이용 항목",           "type": "textarea",
+      "placeholder": "성명, 연락처(이메일, 휴대전화), 소속, 직위(직급), 이메일, 최종학력, 경력사항 등" },
+    { "id": "retention_period", "label": "보유·이용 기간",           "type": "text", "placeholder": "5년" },
+    { "id": "consent_agree",    "label": "동의",                     "type": "checkbox" },
+    { "id": "consent_disagree", "label": "미동의",                   "type": "checkbox" },
+    { "id": "sign_year",        "label": "동의일 연도",              "type": "text", "placeholder": "2024" },
+    { "id": "sign_month",       "label": "동의일 월",                "type": "text", "placeholder": "01" },
+    { "id": "sign_day",         "label": "동의일 일",                "type": "text", "placeholder": "01" },
+    { "id": "signer_name",      "label": "본인 성명",                "type": "text" },
+    { "id": "signer_sign",      "label": "인 또는 서명",             "type": "text" },
+    { "id": "recipient_org",    "label": "제출처 (귀중)",            "type": "text", "placeholder": "OOOO 귀중" }
+  ],
+  "layout": {
+    "type": "page",
+    "children": [
+      {
+        "type": "block",
+        "style": { "padding": [10, 6, 16, 6] },
+        "children": [
+          { "type": "text", "value": "개인정보 수집·이용 동의서", "style": { "fontSize": 18, "fontWeight": 900, "textAlign": "center" } }
+        ]
+      },
+      {
+        "type": "block",
+        "style": { "marginBottom": 12 },
+        "children": [{
+          "type": "composite",
+          "children": [
+            { "type": "field", "fieldId": "org_name" },
+            { "type": "text", "value": "는 '목적 기술'에 필요한 최소한의 개인정보만을 처리하며 수집된 정보는 '목적 기술' 관리·운영을 위한 용도로만 사용합니다.", "style": { "fontSize": 10, "lineHeight": 1.7 } }
+          ]
+        }]
+      },
+      {
+        "type": "block",
+        "style": { "marginBottom": 6 },
+        "children": [
+          { "type": "text", "value": "□ 개인정보 수집·이용 내역", "style": { "fontWeight": 700 } }
+        ]
+      },
+      {
+        "type": "section", "id": "section_items",
+        "children": [{
+          "type": "table",
+          "cols": [{ "w": "45%" }, { "w": "35%" }, { "w": "20%" }],
+          "rows": [
+            { "cells": [
+              { "type": "label", "text": "항목",             "style": { "bg": "#eef0f3", "fontWeight": 700, "align": "center" } },
+              { "type": "label", "text": "수집·이용 목적",   "style": { "bg": "#eef0f3", "fontWeight": 700, "align": "center" } },
+              { "type": "label", "text": "보유·이용 기간",   "style": { "bg": "#eef0f3", "fontWeight": 700, "align": "center" } }
+            ]},
+            { "cells": [
+              { "type": "field", "fieldId": "collect_items" },
+              { "type": "field", "fieldId": "purpose_desc" },
+              { "type": "field", "fieldId": "retention_period" }
+            ]}
+          ]
+        }]
+      },
+      {
+        "type": "block",
+        "style": { "marginTop": 8, "marginBottom": 10, "fontSize": 9, "color": "#555" },
+        "children": [{
+          "type": "composite",
+          "children": [
+            { "type": "text", "value": "※ 위의 개인정보 수집·이용에 대한 동의를 거부할 권리가 있습니다. 그러나 동의를 거부할 경우 " },
+            { "type": "field", "fieldId": "org_name" },
+            { "type": "text", "value": "으로 선정되지 않으실 수 있습니다." }
+          ]
+        }]
+      },
+      {
+        "type": "block",
+        "style": { "marginBottom": 16 },
+        "children": [{
+          "type": "composite",
+          "children": [
+            { "type": "text", "value": "☞ 위와 같이 개인정보를 수집·이용하는데 동의하십니까?   " },
+            { "type": "field", "fieldId": "consent_agree" },
+            { "type": "text", "value": " 동의     " },
+            { "type": "field", "fieldId": "consent_disagree" },
+            { "type": "text", "value": " 미동의" }
+          ]
+        }]
+      },
+      {
+        "type": "block",
+        "style": { "marginBottom": 10 },
+        "children": [{
+          "type": "composite",
+          "children": [
+            { "type": "field", "fieldId": "sign_year" }, { "type": "text", "value": " 년  " },
+            { "type": "field", "fieldId": "sign_month" }, { "type": "text", "value": " 월  " },
+            { "type": "field", "fieldId": "sign_day" }, { "type": "text", "value": " 일" }
+          ]
+        }]
+      },
+      {
+        "type": "block",
+        "style": { "marginBottom": 10 },
+        "children": [{
+          "type": "composite",
+          "children": [
+            { "type": "text", "value": "본인 성명 " },
+            { "type": "field", "fieldId": "signer_name", "style": { "inputWidth": "8em" } },
+            { "type": "text", "value": "   " },
+            { "type": "field", "fieldId": "signer_sign", "style": { "inputWidth": "4em" } },
+            { "type": "text", "value": " (인 또는 서명)" }
+          ]
+        }]
+      },
+      {
+        "type": "block",
+        "children": [{
+          "type": "composite",
+          "children": [
+            { "type": "field", "fieldId": "recipient_org" },
+            { "type": "text", "value": " 귀중" }
+          ]
+        }]
+      }
+    ]
+  }
+}

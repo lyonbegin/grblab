@@ -1,0 +1,169 @@
+{
+  "template_id": "major_accident_compliance_checklist_v1",
+  "title": "안전보건관리체계 구축 이행 점검 체크리스트",
+  "version": 1,
+  "source": {
+    "file_type": "hwp",
+    "filename": "bid_00168_중대재해처벌법_이행사항_점검_체크리스트.hwp",
+    "issuer": "고용노동부",
+    "legal_basis": "중대재해 처벌 등에 관한 법률 시행령 제4조"
+  },
+  "meta": {
+    "paper": "A4",
+    "unit": "mm",
+    "page": { "width": 210, "height": 297, "margin": { "top": 20, "right": 15, "bottom": 20, "left": 15 } },
+    "fonts": { "base": "Noto Sans KR", "mono": "monospace" }
+  },
+  "fields": [
+    { "id": "sign_manager",    "label": "담당 서명",       "type": "text" },
+    { "id": "sign_supervisor", "label": "관리감독자 서명", "type": "text" },
+    { "id": "sign_safety_mgr", "label": "관리책임자 서명", "type": "text" },
+    { "id": "sign_ceo",        "label": "대표이사 서명",   "type": "text" },
+    { "id": "item1_score",  "label": "제1호 평가", "type": "select", "options": ["상","중","하"] },
+    { "id": "item1_note",   "label": "제1호 비고", "type": "text" },
+    { "id": "item2_score",  "label": "제2호 평가", "type": "select", "options": ["상","중","하","비해당"] },
+    { "id": "item2_note",   "label": "제2호 비고", "type": "text" },
+    { "id": "item3_score",  "label": "제3호 평가", "type": "select", "options": ["상","중","하"] },
+    { "id": "item3_note",   "label": "제3호 비고", "type": "text" },
+    { "id": "item4_score",  "label": "제4호 평가", "type": "select", "options": ["상","중","하"] },
+    { "id": "item4_note",   "label": "제4호 비고", "type": "text" },
+    { "id": "item5_score",  "label": "제5호 평가", "type": "select", "options": ["상","중","하"] },
+    { "id": "item5_note",   "label": "제5호 비고", "type": "text" },
+    { "id": "item6_score",  "label": "제6호 평가", "type": "select", "options": ["상","중","하"] },
+    { "id": "item6_note",   "label": "제6호 비고", "type": "text" },
+    { "id": "item7_score",  "label": "제7호 평가", "type": "select", "options": ["상","중","하"] },
+    { "id": "item7_note",   "label": "제7호 비고", "type": "text" },
+    { "id": "item8_score",  "label": "제8호 평가", "type": "select", "options": ["상","중","하"] },
+    { "id": "item8_note",   "label": "제8호 비고", "type": "text" },
+    { "id": "item9_note",   "label": "관계법령 비고", "type": "text" }
+  ],
+  "layout": {
+    "type": "page",
+    "children": [
+      {
+        "type": "block",
+        "style": { "padding": [8,4,8,4] },
+        "children": [
+          { "type": "text", "value": "안전보건관리체계 구축 이행 점검 체크리스트", "style": { "fontSize": 16, "fontWeight": 900, "textAlign": "center" } },
+          { "type": "text", "value": "중대재해처벌법 시행령 제4조", "style": { "fontSize": 10, "textAlign": "center", "color": "#555" } }
+        ]
+      },
+      {
+        "type": "section",
+        "title": { "text": "결 재 란" },
+        "children": [
+          {
+            "type": "table",
+            "cols": [{ "w": "20%" }, { "w": "20%" }, { "w": "20%" }, { "w": "20%" }, { "w": "20%" }],
+            "style": { "borderColor": "#c0c0c0" },
+            "rows": [
+              { "cells": [
+                { "type": "label", "text": "결  재", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "label", "text": "담당",   "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "label", "text": "관리감독자", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "label", "text": "관리책임자", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "label", "text": "대표이사",   "style": { "bg": "#eef0f3", "fontWeight": 700 } }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "서명", "style": { "bg": "#eef0f3" } },
+                { "type": "field", "fieldId": "sign_manager" },
+                { "type": "field", "fieldId": "sign_supervisor" },
+                { "type": "field", "fieldId": "sign_safety_mgr" },
+                { "type": "field", "fieldId": "sign_ceo" }
+              ]}
+            ]
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "title": { "text": "점검 항목" },
+        "children": [
+          {
+            "type": "table",
+            "cols": [{ "w": "8%" }, { "w": "52%" }, { "w": "8%" }, { "w": "8%" }, { "w": "8%" }, { "w": "16%" }],
+            "style": { "borderColor": "#c0c0c0" },
+            "rows": [
+              { "cells": [
+                { "type": "label", "text": "시행령",   "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "label", "text": "점검 항목","style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "label", "text": "상",       "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "label", "text": "중",       "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "label", "text": "하",       "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "label", "text": "비고",     "style": { "bg": "#eef0f3", "fontWeight": 700 } }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "제1호" },
+                { "type": "label", "text": "사업 또는 사업장의 안전, 보건에 관한 목표와 경영방침을 설정" },
+                { "type": "field", "fieldId": "item1_score", "placeholder": "상/중/하" },
+                { "type": "field", "fieldId": "item1_score", "placeholder": "" },
+                { "type": "field", "fieldId": "item1_score", "placeholder": "" },
+                { "type": "field", "fieldId": "item1_note" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "제2호" },
+                { "type": "label", "text": "상시근로자수 500인 이상인 사업장의 안전보건 전담 조직 구성" },
+                { "type": "field", "fieldId": "item2_score", "placeholder": "상/중/하" },
+                { "type": "field", "fieldId": "item2_score", "placeholder": "" },
+                { "type": "field", "fieldId": "item2_score", "placeholder": "" },
+                { "type": "field", "fieldId": "item2_note", "placeholder": "비해당 시 기재" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "제3호" },
+                { "type": "label", "text": "유해·위험요인을 확인하여 개선하는 업무절차를 마련하고 반기 1회 이상 점검" },
+                { "type": "field", "fieldId": "item3_score", "placeholder": "상/중/하" },
+                { "type": "field", "fieldId": "item3_score", "placeholder": "" },
+                { "type": "field", "fieldId": "item3_score", "placeholder": "" },
+                { "type": "field", "fieldId": "item3_note" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "제4호" },
+                { "type": "label", "text": "안전·보건에 관한 예산 편성 및 집행 내역 확인" },
+                { "type": "field", "fieldId": "item4_score", "placeholder": "상/중/하" },
+                { "type": "field", "fieldId": "item4_score", "placeholder": "" },
+                { "type": "field", "fieldId": "item4_score", "placeholder": "" },
+                { "type": "field", "fieldId": "item4_note" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "제5호" },
+                { "type": "label", "text": "안전보건관리책임자 등이 해당업무를 충실히 수행하는지 반기 1회 이상 평가·관리" },
+                { "type": "field", "fieldId": "item5_score", "placeholder": "상/중/하" },
+                { "type": "field", "fieldId": "item5_score", "placeholder": "" },
+                { "type": "field", "fieldId": "item5_score", "placeholder": "" },
+                { "type": "field", "fieldId": "item5_note" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "제6호" },
+                { "type": "label", "text": "종사자의 의견을 듣는 절차를 마련하고 반기 1회 이상 점검" },
+                { "type": "field", "fieldId": "item6_score", "placeholder": "상/중/하" },
+                { "type": "field", "fieldId": "item6_score", "placeholder": "" },
+                { "type": "field", "fieldId": "item6_score", "placeholder": "" },
+                { "type": "field", "fieldId": "item6_note" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "제7호" },
+                { "type": "label", "text": "중대산업재해 발생 시 작업중지·구호조치·재발방지 대응매뉴얼 마련" },
+                { "type": "field", "fieldId": "item7_score", "placeholder": "상/중/하" },
+                { "type": "field", "fieldId": "item7_score", "placeholder": "" },
+                { "type": "field", "fieldId": "item7_score", "placeholder": "" },
+                { "type": "field", "fieldId": "item7_note" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "제8호" },
+                { "type": "label", "text": "도급·용역·위탁 시 종사자 안전·보건 확보를 위한 기준 및 절차 마련" },
+                { "type": "field", "fieldId": "item8_score", "placeholder": "상/중/하" },
+                { "type": "field", "fieldId": "item8_score", "placeholder": "" },
+                { "type": "field", "fieldId": "item8_score", "placeholder": "" },
+                { "type": "field", "fieldId": "item8_note" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "관계법령", "colspan": 5, "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "item9_note" }
+              ]}
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

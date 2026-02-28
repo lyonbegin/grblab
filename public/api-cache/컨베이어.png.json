@@ -1,0 +1,204 @@
+{
+  "summary": {
+    "processName": "컨베이어 시스템 정비",
+    "workContent": "점검",
+    "equipment": "물류센터 컨베이어 시스템 관리",
+    "basis": "이미지 분석 기반 위험성 평가"
+  },
+  "hazards": [
+    {
+      "name": "기계 협착 위험",
+      "category": "협착"
+    },
+    {
+      "name": "전기 감전 위험",
+      "category": "감전"
+    },
+    {
+      "name": "낙하물에 의한 부상 위험",
+      "category": "낙하물"
+    }
+  ],
+  "overallLevel": {
+    "label": "고위험",
+    "immediateAction": false,
+    "topHazard": "기계 협착 위험",
+    "score": 12
+  },
+  "raw": {
+    "site_analysis": {
+      "industry": "물류센터 컨베이어 시스템 관리",
+      "detailed_process": "컨베이어 시스템 정비",
+      "work_stage": "점검",
+      "analysis_basis": "이미지 분석 기반 위험성 평가"
+    },
+    "hazards": [
+      {
+        "id": 1,
+        "hazard_name": "기계 협착 위험",
+        "hazard_category": "협착",
+        "accident_scenario": "작업자가 컨베이어 시스템을 점검하는 과정에서 움직이는 부품에 의해 협착 사고 발생",
+        "direct_cause": "움직이는 기계 부품",
+        "expected_injury": "골절",
+        "probability": 4,
+        "severity": 3,
+        "risk_score": 12,
+        "risk_level": "고위험",
+        "improvement_measure": "KS B ISO 13850에 따른 비상정지장치 설치",
+        "ocr": null,
+        "bbox": [
+          100,
+          200,
+          400,
+          600
+        ]
+      },
+      {
+        "id": 2,
+        "hazard_name": "전기 감전 위험",
+        "hazard_category": "감전",
+        "accident_scenario": "작업자가 전기 회로 점검 중 감전 사고 발생",
+        "direct_cause": "노출된 전기 회로",
+        "expected_injury": "화상",
+        "probability": 3,
+        "severity": 3,
+        "risk_score": 9,
+        "risk_level": "중위험",
+        "improvement_measure": "KS C IEC 60364에 따른 절연 보호장치 설치",
+        "ocr": null,
+        "bbox": [
+          200,
+          300,
+          500,
+          700
+        ]
+      },
+      {
+        "id": 3,
+        "hazard_name": "낙하물에 의한 부상 위험",
+        "hazard_category": "낙하물",
+        "accident_scenario": "작업자가 고장 수리 중 위에 있던 도구가 떨어지면서 부상 발생",
+        "direct_cause": "고지에 놓인 도구",
+        "expected_injury": "두부외상",
+        "probability": 2,
+        "severity": 4,
+        "risk_score": 8,
+        "risk_level": "중위험",
+        "improvement_measure": "고지작업시 KS T 1301에 따른 안전망 설치",
+        "ocr": null,
+        "bbox": [
+          300,
+          100,
+          600,
+          400
+        ]
+      }
+    ],
+    "overall_risk_summary": {
+      "highest_risk_item": "기계 협착 위험",
+      "highest_risk_score": 12,
+      "immediate_action_required": false,
+      "recommended_action": "비상정지장치 추가 설치 및 정기적인 안전 점검 시행"
+    }
+  },
+  "frequencySeverity": [
+    {
+      "factor": "기계 협착 위험",
+      "category": "협착",
+      "probability": 4,
+      "severity": 3,
+      "score": 12,
+      "level": "고위험"
+    },
+    {
+      "factor": "전기 감전 위험",
+      "category": "감전",
+      "probability": 3,
+      "severity": 3,
+      "score": 9,
+      "level": "중위험"
+    },
+    {
+      "factor": "낙하물에 의한 부상 위험",
+      "category": "낙하물",
+      "probability": 2,
+      "severity": 4,
+      "score": 8,
+      "level": "중위험"
+    }
+  ],
+  "checklist": [
+    {
+      "factor": "기계 협착 위험",
+      "category": "협착",
+      "directCause": "움직이는 기계 부품",
+      "judgment": "고위험"
+    },
+    {
+      "factor": "전기 감전 위험",
+      "category": "감전",
+      "directCause": "노출된 전기 회로",
+      "judgment": "중위험"
+    },
+    {
+      "factor": "낙하물에 의한 부상 위험",
+      "category": "낙하물",
+      "directCause": "고지에 놓인 도구",
+      "judgment": "중위험"
+    }
+  ],
+  "coreFactors": [
+    {
+      "factor": "기계 협착 위험",
+      "riskLevel": "고위험",
+      "scenario": "작업자가 컨베이어 시스템을 점검하는 과정에서 움직이는 부품에 의해 협착 사고 발생",
+      "directCause": "움직이는 기계 부품",
+      "expectedInjury": "골절",
+      "improvementMeasure": "KS B ISO 13850에 따른 비상정지장치 설치"
+    },
+    {
+      "factor": "전기 감전 위험",
+      "riskLevel": "중위험",
+      "scenario": "작업자가 전기 회로 점검 중 감전 사고 발생",
+      "directCause": "노출된 전기 회로",
+      "expectedInjury": "화상",
+      "improvementMeasure": "KS C IEC 60364에 따른 절연 보호장치 설치"
+    },
+    {
+      "factor": "낙하물에 의한 부상 위험",
+      "riskLevel": "중위험",
+      "scenario": "작업자가 고장 수리 중 위에 있던 도구가 떨어지면서 부상 발생",
+      "directCause": "고지에 놓인 도구",
+      "expectedInjury": "두부외상",
+      "improvementMeasure": "고지작업시 KS T 1301에 따른 안전망 설치"
+    }
+  ],
+  "threeLevel": [
+    {
+      "factor": "기계 협착 위험",
+      "judgment": "허용불가능",
+      "measure": "KS B ISO 13850에 따른 비상정지장치 설치"
+    },
+    {
+      "factor": "전기 감전 위험",
+      "judgment": "개선필요",
+      "measure": "KS C IEC 60364에 따른 절연 보호장치 설치"
+    },
+    {
+      "factor": "낙하물에 의한 부상 위험",
+      "judgment": "개선필요",
+      "measure": "고지작업시 KS T 1301에 따른 안전망 설치"
+    }
+  ],
+  "health": {
+    "applicable": false,
+    "summary": "현재 빈도×강도법 평가 모드에서는 건강장해 분석이 포함되지 않습니다.",
+    "items": []
+  },
+  "overallSummary": {
+    "highest_risk_item": "기계 협착 위험",
+    "highest_risk_score": 12,
+    "immediate_action_required": false,
+    "recommended_action": "비상정지장치 추가 설치 및 정기적인 안전 점검 시행"
+  }
+}

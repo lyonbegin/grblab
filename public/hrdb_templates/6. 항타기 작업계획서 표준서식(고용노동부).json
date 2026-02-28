@@ -1,0 +1,895 @@
+{
+  "template_id": "grblab_piledriver_work_plan_v1",
+  "title": "항타기 작업계획서",
+  "version": 1,
+  "source": {
+    "file_type": "hwp",
+    "filename": "항타기 작업계획서 표준서식(고용노동부).hwp",
+    "issuer": "고용노동부"
+  },
+  "meta": {
+    "paper": "A4",
+    "unit": "mm",
+    "page": {
+      "width": 210,
+      "height": 297,
+      "margin": {
+        "top": 14,
+        "right": 14,
+        "bottom": 14,
+        "left": 14
+      }
+    },
+    "fonts": {
+      "base": "Noto Sans KR",
+      "mono": "monospace"
+    }
+  },
+  "schema": {
+    "record": {
+      "record_id": "string",
+      "created_at": "string",
+      "values": "object"
+    }
+  },
+  "fields": [
+    {
+      "id": "doc_no",
+      "label": "문서번호",
+      "type": "text",
+      "placeholder": "GRB-000001"
+    },
+    {
+      "id": "written_date",
+      "label": "작성일",
+      "type": "date"
+    },
+    {
+      "id": "site_name",
+      "label": "현장명",
+      "type": "text",
+      "placeholder": "예) ○○현장"
+    },
+    {
+      "id": "project_name",
+      "label": "공사명",
+      "type": "text",
+      "placeholder": "예) ○○공사"
+    },
+    {
+      "id": "company_name",
+      "label": "업체명",
+      "type": "text",
+      "placeholder": "예) ○○건설(주)"
+    },
+    {
+      "id": "equip_type",
+      "label": "장비종류",
+      "type": "text",
+      "placeholder": "예) 항타기/항발기"
+    },
+    {
+      "id": "equip_no",
+      "label": "장비번호",
+      "type": "text",
+      "placeholder": "예) 관리번호"
+    },
+    {
+      "id": "rated_capacity",
+      "label": "해머중량/정격",
+      "type": "text",
+      "placeholder": "예) 3.5 ton"
+    },
+    {
+      "id": "main_spec",
+      "label": "리더 길이/주요제원",
+      "type": "text",
+      "placeholder": "예) 리더 18m"
+    },
+    {
+      "id": "work_date",
+      "label": "작업일",
+      "type": "date"
+    },
+    {
+      "id": "work_time",
+      "label": "작업시간",
+      "type": "text",
+      "placeholder": "예) 09:00~18:00"
+    },
+    {
+      "id": "work_place",
+      "label": "작업장소",
+      "type": "text",
+      "placeholder": "예) 1층 적재장"
+    },
+    {
+      "id": "work_content",
+      "label": "작업내용",
+      "type": "textarea",
+      "rows": 3,
+      "placeholder": "예) 작업 개요를 기재"
+    },
+    {
+      "id": "workers",
+      "label": "작업인원",
+      "type": "text",
+      "placeholder": "예) 4명"
+    },
+    {
+      "id": "supervisor_name",
+      "label": "작업지휘자",
+      "type": "text",
+      "placeholder": "성명"
+    },
+    {
+      "id": "signalman_name",
+      "label": "신호수",
+      "type": "text",
+      "placeholder": "성명"
+    },
+    {
+      "id": "operator_name",
+      "label": "운전자/조종사",
+      "type": "text",
+      "placeholder": "성명"
+    },
+    {
+      "id": "procedure",
+      "label": "작업절차",
+      "type": "textarea",
+      "rows": 5,
+      "placeholder": "예) 장비 반입 → 준비 → 신호수 배치 → 작업 → 정리"
+    },
+    {
+      "id": "hazards",
+      "label": "위험요인",
+      "type": "textarea",
+      "rows": 5,
+      "placeholder": "예) 협착/충돌/전도/낙하/감전 등"
+    },
+    {
+      "id": "measures",
+      "label": "안전대책",
+      "type": "textarea",
+      "rows": 5,
+      "placeholder": "예) 작업반경 통제, 신호체계, 전도방지, PPE 착용"
+    },
+    {
+      "id": "check_pre",
+      "label": "작업 전 점검",
+      "type": "textarea",
+      "rows": 4,
+      "placeholder": "예) 장비상태/브레이크/경광등/타이어/지면상태"
+    },
+    {
+      "id": "check_during",
+      "label": "작업 중 점검",
+      "type": "textarea",
+      "rows": 4,
+      "placeholder": "예) 출입통제/신호수 위치/상부 낙하물/근접설비"
+    },
+    {
+      "id": "attach_note",
+      "label": "첨부(도면/사진) 비고",
+      "type": "textarea",
+      "rows": 3,
+      "placeholder": "예) 작업구역 배치도/사진 첨부"
+    },
+    {
+      "id": "writer_sign",
+      "label": "작성자 (인)",
+      "type": "text",
+      "placeholder": "성명"
+    },
+    {
+      "id": "reviewer_sign",
+      "label": "검토자 (인)",
+      "type": "text",
+      "placeholder": "성명"
+    },
+    {
+      "id": "approver_sign",
+      "label": "승인자 (인)",
+      "type": "text",
+      "placeholder": "성명"
+    }
+  ],
+  "layout": {
+    "type": "page",
+    "children": [
+      {
+        "type": "block",
+        "id": "header",
+        "style": {
+          "padding": [
+            6,
+            6,
+            6,
+            6
+          ]
+        },
+        "children": [
+          {
+            "type": "text",
+            "value": "항타기 작업계획서",
+            "style": {
+              "fontSize": 22,
+              "fontWeight": 900,
+              "textAlign": "center",
+              "letterSpacing": -0.8,
+              "color": "#1a1a2e"
+            }
+          },
+          {
+            "type": "table",
+            "id": "meta_table",
+            "style": {
+              "marginTop": 8,
+              "borderWidth": 1,
+              "borderColor": "#c0c0c0"
+            },
+            "cols": [
+              {
+                "w": "20%"
+              },
+              {
+                "w": "30%"
+              },
+              {
+                "w": "20%"
+              },
+              {
+                "w": "30%"
+              }
+            ],
+            "rows": [
+              {
+                "cells": [
+                  {
+                    "type": "label",
+                    "text": "문서번호",
+                    "style": {
+                      "bg": "#eef0f3",
+                      "fontWeight": 800,
+                      "align": "center"
+                    }
+                  },
+                  {
+                    "type": "field",
+                    "fieldId": "doc_no"
+                  },
+                  {
+                    "type": "label",
+                    "text": "작성일",
+                    "style": {
+                      "bg": "#eef0f3",
+                      "fontWeight": 800,
+                      "align": "center"
+                    }
+                  },
+                  {
+                    "type": "field",
+                    "fieldId": "written_date"
+                  }
+                ]
+              },
+              {
+                "cells": [
+                  {
+                    "type": "label",
+                    "text": "현장명",
+                    "style": {
+                      "bg": "#eef0f3",
+                      "fontWeight": 800,
+                      "align": "center"
+                    }
+                  },
+                  {
+                    "type": "field",
+                    "fieldId": "site_name",
+                    "colspan": 3
+                  }
+                ]
+              },
+              {
+                "cells": [
+                  {
+                    "type": "label",
+                    "text": "공사명",
+                    "style": {
+                      "bg": "#eef0f3",
+                      "fontWeight": 800,
+                      "align": "center"
+                    }
+                  },
+                  {
+                    "type": "field",
+                    "fieldId": "project_name",
+                    "colspan": 3
+                  }
+                ]
+              },
+              {
+                "cells": [
+                  {
+                    "type": "label",
+                    "text": "업체명",
+                    "style": {
+                      "bg": "#eef0f3",
+                      "fontWeight": 800,
+                      "align": "center"
+                    }
+                  },
+                  {
+                    "type": "field",
+                    "fieldId": "company_name",
+                    "colspan": 3
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "id": "section_overview",
+        "title": {
+          "badge": "1",
+          "text": "작업 개요"
+        },
+        "children": [
+          {
+            "type": "table",
+            "id": "work_overview",
+            "cols": [
+              {
+                "w": "22%"
+              },
+              {
+                "w": "28%"
+              },
+              {
+                "w": "22%"
+              },
+              {
+                "w": "28%"
+              }
+            ],
+            "rows": [
+              {
+                "cells": [
+                  {
+                    "type": "label",
+                    "text": "작업일",
+                    "style": {
+                      "bg": "#eef0f3",
+                      "fontWeight": 800,
+                      "align": "center"
+                    }
+                  },
+                  {
+                    "type": "field",
+                    "fieldId": "work_date"
+                  },
+                  {
+                    "type": "label",
+                    "text": "작업시간",
+                    "style": {
+                      "bg": "#eef0f3",
+                      "fontWeight": 800,
+                      "align": "center"
+                    }
+                  },
+                  {
+                    "type": "field",
+                    "fieldId": "work_time"
+                  }
+                ]
+              },
+              {
+                "cells": [
+                  {
+                    "type": "label",
+                    "text": "작업장소",
+                    "style": {
+                      "bg": "#eef0f3",
+                      "fontWeight": 800,
+                      "align": "center"
+                    }
+                  },
+                  {
+                    "type": "field",
+                    "fieldId": "work_place",
+                    "colspan": 3
+                  }
+                ]
+              },
+              {
+                "cells": [
+                  {
+                    "type": "label",
+                    "text": "작업내용",
+                    "style": {
+                      "bg": "#eef0f3",
+                      "fontWeight": 800,
+                      "align": "center"
+                    }
+                  },
+                  {
+                    "type": "field",
+                    "fieldId": "work_content",
+                    "colspan": 3,
+                    "style": {
+                      "minH": 24
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "id": "section_equipment",
+        "title": {
+          "badge": "2",
+          "text": "장비 및 작업인원"
+        },
+        "children": [
+          {
+            "type": "table",
+            "id": "equip_info",
+            "cols": [
+              {
+                "w": "22%"
+              },
+              {
+                "w": "28%"
+              },
+              {
+                "w": "22%"
+              },
+              {
+                "w": "28%"
+              }
+            ],
+            "rows": [
+              {
+                "cells": [
+                  {
+                    "type": "label",
+                    "text": "장비종류",
+                    "style": {
+                      "bg": "#eef0f3",
+                      "fontWeight": 800,
+                      "align": "center"
+                    }
+                  },
+                  {
+                    "type": "field",
+                    "fieldId": "equip_type"
+                  },
+                  {
+                    "type": "label",
+                    "text": "장비번호",
+                    "style": {
+                      "bg": "#eef0f3",
+                      "fontWeight": 800,
+                      "align": "center"
+                    }
+                  },
+                  {
+                    "type": "field",
+                    "fieldId": "equip_no"
+                  }
+                ]
+              },
+              {
+                "cells": [
+                  {
+                    "type": "label",
+                    "text": "정격능력",
+                    "style": {
+                      "bg": "#eef0f3",
+                      "fontWeight": 800,
+                      "align": "center"
+                    }
+                  },
+                  {
+                    "type": "field",
+                    "fieldId": "rated_capacity"
+                  },
+                  {
+                    "type": "label",
+                    "text": "주요치수",
+                    "style": {
+                      "bg": "#eef0f3",
+                      "fontWeight": 800,
+                      "align": "center"
+                    }
+                  },
+                  {
+                    "type": "field",
+                    "fieldId": "main_spec"
+                  }
+                ]
+              },
+              {
+                "cells": [
+                  {
+                    "type": "label",
+                    "text": "운전자/조종사",
+                    "style": {
+                      "bg": "#eef0f3",
+                      "fontWeight": 800,
+                      "align": "center"
+                    }
+                  },
+                  {
+                    "type": "field",
+                    "fieldId": "operator_name"
+                  },
+                  {
+                    "type": "label",
+                    "text": "신호수",
+                    "style": {
+                      "bg": "#eef0f3",
+                      "fontWeight": 800,
+                      "align": "center"
+                    }
+                  },
+                  {
+                    "type": "field",
+                    "fieldId": "signalman_name"
+                  }
+                ]
+              },
+              {
+                "cells": [
+                  {
+                    "type": "label",
+                    "text": "작업지휘자",
+                    "style": {
+                      "bg": "#eef0f3",
+                      "fontWeight": 800,
+                      "align": "center"
+                    }
+                  },
+                  {
+                    "type": "field",
+                    "fieldId": "supervisor_name"
+                  },
+                  {
+                    "type": "label",
+                    "text": "작업인원",
+                    "style": {
+                      "bg": "#eef0f3",
+                      "fontWeight": 800,
+                      "align": "center"
+                    }
+                  },
+                  {
+                    "type": "field",
+                    "fieldId": "workers"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "id": "section_safety",
+        "title": {
+          "badge": "3",
+          "text": "작업절차 · 위험요인 · 안전대책"
+        },
+        "children": [
+          {
+            "type": "table",
+            "id": "safety_plan",
+            "cols": [
+              {
+                "w": "22%"
+              },
+              {
+                "w": "78%"
+              }
+            ],
+            "rows": [
+              {
+                "cells": [
+                  {
+                    "type": "label",
+                    "text": "작업절차",
+                    "style": {
+                      "bg": "#eef0f3",
+                      "fontWeight": 800,
+                      "align": "center"
+                    }
+                  },
+                  {
+                    "type": "field",
+                    "fieldId": "procedure",
+                    "style": {
+                      "minH": 68
+                    }
+                  }
+                ]
+              },
+              {
+                "cells": [
+                  {
+                    "type": "label",
+                    "text": "위험요인",
+                    "style": {
+                      "bg": "#eef0f3",
+                      "fontWeight": 800,
+                      "align": "center"
+                    }
+                  },
+                  {
+                    "type": "field",
+                    "fieldId": "hazards",
+                    "style": {
+                      "minH": 68
+                    }
+                  }
+                ]
+              },
+              {
+                "cells": [
+                  {
+                    "type": "label",
+                    "text": "안전대책",
+                    "style": {
+                      "bg": "#eef0f3",
+                      "fontWeight": 800,
+                      "align": "center"
+                    }
+                  },
+                  {
+                    "type": "field",
+                    "fieldId": "measures",
+                    "style": {
+                      "minH": 68
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "id": "section_check",
+        "title": {
+          "badge": "4",
+          "text": "점검 및 첨부"
+        },
+        "children": [
+          {
+            "type": "table",
+            "id": "checklist",
+            "cols": [
+              {
+                "w": "22%"
+              },
+              {
+                "w": "78%"
+              }
+            ],
+            "rows": [
+              {
+                "cells": [
+                  {
+                    "type": "label",
+                    "text": "작업 전 점검",
+                    "style": {
+                      "bg": "#eef0f3",
+                      "fontWeight": 800,
+                      "align": "center"
+                    }
+                  },
+                  {
+                    "type": "field",
+                    "fieldId": "check_pre",
+                    "style": {
+                      "minH": 54
+                    }
+                  }
+                ]
+              },
+              {
+                "cells": [
+                  {
+                    "type": "label",
+                    "text": "작업 중 점검",
+                    "style": {
+                      "bg": "#eef0f3",
+                      "fontWeight": 800,
+                      "align": "center"
+                    }
+                  },
+                  {
+                    "type": "field",
+                    "fieldId": "check_during",
+                    "style": {
+                      "minH": 54
+                    }
+                  }
+                ]
+              },
+              {
+                "cells": [
+                  {
+                    "type": "label",
+                    "text": "첨부(도면/사진) 비고",
+                    "style": {
+                      "bg": "#eef0f3",
+                      "fontWeight": 800,
+                      "align": "center"
+                    }
+                  },
+                  {
+                    "type": "field",
+                    "fieldId": "attach_note",
+                    "style": {
+                      "minH": 34
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "block",
+        "id": "sign",
+        "style": {
+          "marginTop": 10
+        },
+        "children": [
+          {
+            "type": "table",
+            "id": "sign_table",
+            "cols": [
+              {
+                "w": "33.33%"
+              },
+              {
+                "w": "33.33%"
+              },
+              {
+                "w": "33.33%"
+              }
+            ],
+            "rows": [
+              {
+                "cells": [
+                  {
+                    "type": "label",
+                    "text": "작 성 자",
+                    "style": {
+                      "bg": "#f5f5f5",
+                      "fontWeight": 800,
+                      "align": "center"
+                    }
+                  },
+                  {
+                    "type": "label",
+                    "text": "검 토 자",
+                    "style": {
+                      "bg": "#f5f5f5",
+                      "fontWeight": 800,
+                      "align": "center"
+                    }
+                  },
+                  {
+                    "type": "label",
+                    "text": "승 인 자",
+                    "style": {
+                      "bg": "#f5f5f5",
+                      "fontWeight": 800,
+                      "align": "center"
+                    }
+                  }
+                ]
+              },
+              {
+                "cells": [
+                  {
+                    "type": "field",
+                    "fieldId": "writer_sign",
+                    "style": {
+                      "minH": 34
+                    }
+                  },
+                  {
+                    "type": "field",
+                    "fieldId": "reviewer_sign",
+                    "style": {
+                      "minH": 34
+                    }
+                  },
+                  {
+                    "type": "field",
+                    "fieldId": "approver_sign",
+                    "style": {
+                      "minH": 34
+                    }
+                  }
+                ]
+              },
+              {
+                "cells": [
+                  {
+                    "type": "text",
+                    "value": "(인)",
+                    "style": {
+                      "fontSize": 11,
+                      "color": "#999",
+                      "textAlign": "right",
+                      "padding": [
+                        2,
+                        8,
+                        4,
+                        0
+                      ]
+                    }
+                  },
+                  {
+                    "type": "text",
+                    "value": "(인)",
+                    "style": {
+                      "fontSize": 11,
+                      "color": "#999",
+                      "textAlign": "right",
+                      "padding": [
+                        2,
+                        8,
+                        4,
+                        0
+                      ]
+                    }
+                  },
+                  {
+                    "type": "text",
+                    "value": "(인)",
+                    "style": {
+                      "fontSize": 11,
+                      "color": "#999",
+                      "textAlign": "right",
+                      "padding": [
+                        2,
+                        8,
+                        4,
+                        0
+                      ]
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "text",
+            "value": "본 문서는 GRBlab dmfhqkRnj 시스템에 의해 작성되었습니다.",
+            "style": {
+              "marginTop": 10,
+              "fontSize": 10,
+              "color": "#aaa",
+              "textAlign": "center"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

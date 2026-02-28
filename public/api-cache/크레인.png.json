@@ -1,0 +1,204 @@
+{
+  "summary": {
+    "processName": "용탕 이동 작업",
+    "workContent": "운반",
+    "equipment": "제강 공장",
+    "basis": "이미지 분석 및 안전 규정 준수"
+  },
+  "hazards": [
+    {
+      "name": "낙하물",
+      "category": "낙하물"
+    },
+    {
+      "name": "화재",
+      "category": "화재"
+    },
+    {
+      "name": "충돌",
+      "category": "충돌"
+    }
+  ],
+  "overallLevel": {
+    "label": "고위험",
+    "immediateAction": false,
+    "topHazard": "낙하물",
+    "score": 12
+  },
+  "raw": {
+    "site_analysis": {
+      "industry": "제강 공장",
+      "detailed_process": "용탕 이동 작업",
+      "work_stage": "운반",
+      "analysis_basis": "이미지 분석 및 안전 규정 준수"
+    },
+    "hazards": [
+      {
+        "id": 1,
+        "hazard_name": "낙하물",
+        "hazard_category": "낙하물",
+        "accident_scenario": "작업자가 용탕을 운반하는 과정에서 용기가 미끄러져 낙하물 사고 발생",
+        "direct_cause": "장비 결함",
+        "expected_injury": "중상",
+        "probability": 3,
+        "severity": 4,
+        "risk_score": 12,
+        "risk_level": "고위험",
+        "improvement_measure": "용기 취급 안전 장비 설치, 산업안전보건법 제34조 준수",
+        "ocr": null,
+        "bbox": [
+          150,
+          350,
+          650,
+          800
+        ]
+      },
+      {
+        "id": 2,
+        "hazard_name": "화재",
+        "hazard_category": "화재",
+        "accident_scenario": "작업자가 용탕을 운반하는 과정에서 온도 상승으로 인해 화재 사고 발생",
+        "direct_cause": "온도 조절 실패",
+        "expected_injury": "중대재해",
+        "probability": 2,
+        "severity": 4,
+        "risk_score": 8,
+        "risk_level": "중위험",
+        "improvement_measure": "화재 경보 시스템 설치, 산업안전보건법 제34조 준수",
+        "ocr": null,
+        "bbox": [
+          200,
+          400,
+          700,
+          850
+        ]
+      },
+      {
+        "id": 3,
+        "hazard_name": "충돌",
+        "hazard_category": "충돌",
+        "accident_scenario": "작업자가 크레인을 작동하는 과정에서 다른 장비와 충돌 사고 발생",
+        "direct_cause": "작업 공간 협소",
+        "expected_injury": "경상",
+        "probability": 3,
+        "severity": 2,
+        "risk_score": 6,
+        "risk_level": "중위험",
+        "improvement_measure": "충돌 방지 센서 설치, 산업안전보건기준 규칙 제40조 준수",
+        "ocr": null,
+        "bbox": [
+          100,
+          300,
+          600,
+          750
+        ]
+      }
+    ],
+    "overall_risk_summary": {
+      "highest_risk_item": "낙하물",
+      "highest_risk_score": 12,
+      "immediate_action_required": false,
+      "recommended_action": "위험 요소 제거 및 예방 대책 강화"
+    }
+  },
+  "frequencySeverity": [
+    {
+      "factor": "낙하물",
+      "category": "낙하물",
+      "probability": 3,
+      "severity": 4,
+      "score": 12,
+      "level": "고위험"
+    },
+    {
+      "factor": "화재",
+      "category": "화재",
+      "probability": 2,
+      "severity": 4,
+      "score": 8,
+      "level": "중위험"
+    },
+    {
+      "factor": "충돌",
+      "category": "충돌",
+      "probability": 3,
+      "severity": 2,
+      "score": 6,
+      "level": "중위험"
+    }
+  ],
+  "checklist": [
+    {
+      "factor": "낙하물",
+      "category": "낙하물",
+      "directCause": "장비 결함",
+      "judgment": "고위험"
+    },
+    {
+      "factor": "화재",
+      "category": "화재",
+      "directCause": "온도 조절 실패",
+      "judgment": "중위험"
+    },
+    {
+      "factor": "충돌",
+      "category": "충돌",
+      "directCause": "작업 공간 협소",
+      "judgment": "중위험"
+    }
+  ],
+  "coreFactors": [
+    {
+      "factor": "낙하물",
+      "riskLevel": "고위험",
+      "scenario": "작업자가 용탕을 운반하는 과정에서 용기가 미끄러져 낙하물 사고 발생",
+      "directCause": "장비 결함",
+      "expectedInjury": "중상",
+      "improvementMeasure": "용기 취급 안전 장비 설치, 산업안전보건법 제34조 준수"
+    },
+    {
+      "factor": "화재",
+      "riskLevel": "중위험",
+      "scenario": "작업자가 용탕을 운반하는 과정에서 온도 상승으로 인해 화재 사고 발생",
+      "directCause": "온도 조절 실패",
+      "expectedInjury": "중대재해",
+      "improvementMeasure": "화재 경보 시스템 설치, 산업안전보건법 제34조 준수"
+    },
+    {
+      "factor": "충돌",
+      "riskLevel": "중위험",
+      "scenario": "작업자가 크레인을 작동하는 과정에서 다른 장비와 충돌 사고 발생",
+      "directCause": "작업 공간 협소",
+      "expectedInjury": "경상",
+      "improvementMeasure": "충돌 방지 센서 설치, 산업안전보건기준 규칙 제40조 준수"
+    }
+  ],
+  "threeLevel": [
+    {
+      "factor": "낙하물",
+      "judgment": "허용불가능",
+      "measure": "용기 취급 안전 장비 설치, 산업안전보건법 제34조 준수"
+    },
+    {
+      "factor": "화재",
+      "judgment": "개선필요",
+      "measure": "화재 경보 시스템 설치, 산업안전보건법 제34조 준수"
+    },
+    {
+      "factor": "충돌",
+      "judgment": "개선필요",
+      "measure": "충돌 방지 센서 설치, 산업안전보건기준 규칙 제40조 준수"
+    }
+  ],
+  "health": {
+    "applicable": false,
+    "summary": "현재 빈도×강도법 평가 모드에서는 건강장해 분석이 포함되지 않습니다.",
+    "items": []
+  },
+  "overallSummary": {
+    "highest_risk_item": "낙하물",
+    "highest_risk_score": 12,
+    "immediate_action_required": false,
+    "recommended_action": "위험 요소 제거 및 예방 대책 강화"
+  }
+}

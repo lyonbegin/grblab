@@ -1,0 +1,149 @@
+{
+  "template_id": "work_order_v1",
+  "title": "업무지시서",
+  "version": 1,
+  "source": {
+    "file_type": "hwp",
+    "filename": "bid_00210_업무지시서.hwp",
+    "issuer": "",
+    "legal_basis": ""
+  },
+  "meta": {
+    "paper": "A4",
+    "unit": "mm",
+    "page": { "width": 210, "height": 297, "margin": { "top": 25, "right": 20, "bottom": 25, "left": 20 } },
+    "fonts": { "base": "Noto Sans KR", "mono": "monospace" }
+  },
+  "fields": [
+    { "id": "scheduled_year",   "label": "지시일 연도",         "type": "text", "placeholder": "2024" },
+    { "id": "scheduled_month",  "label": "지시일 월",           "type": "text", "placeholder": "01" },
+    { "id": "scheduled_day",    "label": "지시일 일",           "type": "text", "placeholder": "01" },
+    { "id": "completion_year",  "label": "완료 예정 연도",      "type": "text", "placeholder": "2024" },
+    { "id": "completion_month", "label": "완료 예정 월",        "type": "text", "placeholder": "01" },
+    { "id": "completion_day",   "label": "완료 예정 일",        "type": "text", "placeholder": "01" },
+    { "id": "issuer_name",      "label": "지시자 성명",         "type": "text" },
+    { "id": "issuer_title",     "label": "지시자 직위",         "type": "text" },
+    { "id": "assignee_name",    "label": "수임자 성명",         "type": "text" },
+    { "id": "assignee_title",   "label": "수임자 직위",         "type": "text" },
+    { "id": "work_title",       "label": "업무 제목",           "type": "text" },
+    { "id": "detail1",          "label": "세부사항 1",          "type": "text" },
+    { "id": "detail2",          "label": "세부사항 2",          "type": "text" },
+    { "id": "detail3",          "label": "세부사항 3",          "type": "text" },
+    { "id": "detail4",          "label": "세부사항 4",          "type": "text" },
+    { "id": "detail5",          "label": "세부사항 5",          "type": "text" },
+    { "id": "completion_status","label": "완료 상태",           "type": "text", "placeholder": "완료/진행중/미완료/보류" },
+    { "id": "eval_grade",       "label": "평가 등급",           "type": "text", "placeholder": "우수/양호/보통/미흡" },
+    { "id": "eval_comment",     "label": "평가 의견",           "type": "text" }
+  ],
+  "layout": {
+    "type": "page",
+    "children": [
+      {
+        "type": "block",
+        "style": { "padding": [8,4,8,4] },
+        "children": [
+          { "type": "text", "value": "업 무 지 시 서", "style": { "fontSize": 20, "fontWeight": 900, "textAlign": "center" } }
+        ]
+      },
+      {
+        "type": "section",
+        "title": { "text": "기본 정보" },
+        "children": [
+          {
+            "type": "table",
+            "cols": [{ "w": "22%" }, { "w": "28%" }, { "w": "22%" }, { "w": "28%" }],
+            "style": { "borderColor": "#c0c0c0" },
+            "rows": [
+              { "cells": [
+                { "type": "label", "text": "지 시 일 자", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "composite", "children": [
+                  { "type": "field", "fieldId": "scheduled_year" }, { "type": "text", "value": "년 " },
+                  { "type": "field", "fieldId": "scheduled_month" }, { "type": "text", "value": "월 " },
+                  { "type": "field", "fieldId": "scheduled_day" }, { "type": "text", "value": "일" }
+                ]},
+                { "type": "label", "text": "완료 예정일", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "composite", "children": [
+                  { "type": "field", "fieldId": "completion_year" }, { "type": "text", "value": "년 " },
+                  { "type": "field", "fieldId": "completion_month" }, { "type": "text", "value": "월 " },
+                  { "type": "field", "fieldId": "completion_day" }, { "type": "text", "value": "일" }
+                ]}
+              ]},
+              { "cells": [
+                { "type": "label", "text": "지 시 자", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "composite", "children": [
+                  { "type": "field", "fieldId": "issuer_title" }, { "type": "text", "value": "  " },
+                  { "type": "field", "fieldId": "issuer_name" }
+                ]},
+                { "type": "label", "text": "수 임 자", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "composite", "children": [
+                  { "type": "field", "fieldId": "assignee_title" }, { "type": "text", "value": "  " },
+                  { "type": "field", "fieldId": "assignee_name" }
+                ]}
+              ]},
+              { "cells": [
+                { "type": "label", "text": "업 무 제 목", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "work_title", "colspan": 3 }
+              ]}
+            ]
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "title": { "text": "업무 세부사항" },
+        "children": [
+          {
+            "type": "table",
+            "cols": [{ "w": "8%" }, { "w": "92%" }],
+            "style": { "borderColor": "#c0c0c0" },
+            "rows": [
+              { "cells": [
+                { "type": "label", "text": "1", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "detail1" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "2", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "detail2" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "3", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "detail3" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "4", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "detail4" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "5", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "detail5" }
+              ]}
+            ]
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "title": { "text": "완료 확인 및 평가" },
+        "children": [
+          {
+            "type": "table",
+            "cols": [{ "w": "25%" }, { "w": "25%" }, { "w": "25%" }, { "w": "25%" }],
+            "style": { "borderColor": "#c0c0c0" },
+            "rows": [
+              { "cells": [
+                { "type": "label", "text": "완 료 상 태", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "completion_status", "placeholder": "완료/진행중/미완료/보류" },
+                { "type": "label", "text": "평 가 등 급", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "eval_grade", "placeholder": "우수/양호/보통/미흡" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "평 가 의 견", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "eval_comment", "colspan": 3 }
+              ]}
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

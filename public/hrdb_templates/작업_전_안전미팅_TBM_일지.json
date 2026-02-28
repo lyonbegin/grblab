@@ -1,0 +1,133 @@
+{
+  "template_id": "tbm_meeting_log_v2",
+  "title": "작업 전 안전미팅 (TBM) 일지",
+  "subtitle": "Tool Box Meeting 일일 안전미팅 기록",
+  "version": 2,
+  "source": { "file_type": "hwp", "filename": "작업_전_안전미팅_TBM__일지.hwp" },
+  "meta": { "paper": "A4", "unit": "mm", "page": { "width": 210, "height": 297, "margin": { "top": 20, "right": 15, "bottom": 20, "left": 15 } } },
+  "fields": [
+    { "id": "company_name",   "label": "사업장명",         "type": "text", "placeholder": "㈜0000" },
+    { "id": "meet_year",      "label": "미팅일 연도",      "type": "text", "placeholder": "202 " },
+    { "id": "meet_month",     "label": "미팅일 월",        "type": "text", "placeholder": "  " },
+    { "id": "meet_day",       "label": "미팅일 일",        "type": "text", "placeholder": "  " },
+    { "id": "meet_time",      "label": "미팅 시간",        "type": "text", "placeholder": "07:50 ~ 08:00" },
+    { "id": "work_location",  "label": "작업 장소",        "type": "text" },
+    { "id": "dept",           "label": "작업 부서",        "type": "text" },
+    { "id": "leader_name",    "label": "TBM 진행자 성명",  "type": "text" },
+    { "id": "leader_title",   "label": "TBM 진행자 직책",  "type": "text" },
+    { "id": "attendee_count", "label": "참석 인원",        "type": "text", "placeholder": "0명" },
+    { "id": "work_type",      "label": "오늘의 작업 내용", "type": "text" },
+    { "id": "key_hazard1",    "label": "주요 위험요인1",   "type": "text" },
+    { "id": "key_control1",   "label": "주요 위험요인1 대책", "type": "text" },
+    { "id": "key_hazard2",    "label": "주요 위험요인2",   "type": "text" },
+    { "id": "key_control2",   "label": "주요 위험요인2 대책", "type": "text" },
+    { "id": "key_hazard3",    "label": "주요 위험요인3",   "type": "text" },
+    { "id": "key_control3",   "label": "주요 위험요인3 대책", "type": "text" },
+    { "id": "ppe_required",   "label": "착용 보호구",      "type": "text", "placeholder": "안전모/안전화/안전장갑/보안경 등" },
+    { "id": "today_safety",   "label": "오늘의 안전 메시지","type": "text" },
+    { "id": "special_notice", "label": "특이사항 및 전달사항", "type": "text" },
+    { "id": "attendee1",  "label": "참석자1 성명",  "type": "text" }, { "id": "att1_sign",  "label": "참석자1 서명",  "type": "text" },
+    { "id": "attendee2",  "label": "참석자2 성명",  "type": "text" }, { "id": "att2_sign",  "label": "참석자2 서명",  "type": "text" },
+    { "id": "attendee3",  "label": "참석자3 성명",  "type": "text" }, { "id": "att3_sign",  "label": "참석자3 서명",  "type": "text" },
+    { "id": "attendee4",  "label": "참석자4 성명",  "type": "text" }, { "id": "att4_sign",  "label": "참석자4 서명",  "type": "text" },
+    { "id": "attendee5",  "label": "참석자5 성명",  "type": "text" }, { "id": "att5_sign",  "label": "참석자5 서명",  "type": "text" },
+    { "id": "attendee6",  "label": "참석자6 성명",  "type": "text" }, { "id": "att6_sign",  "label": "참석자6 서명",  "type": "text" }
+  ],
+  "layout": {
+    "type": "page",
+    "children": [
+      {
+        "type": "block", "style": { "padding": [8,4,6,4] },
+        "children": [
+          { "type": "text", "value": "작업 전 안전미팅 (TBM) 일지", "style": { "fontSize": 17, "fontWeight": 900, "textAlign": "center" } },
+          { "type": "text", "value": "Tool Box Meeting  |  매일 작업 시작 전 실시", "style": { "fontSize": 9, "textAlign": "center", "color": "#555" } }
+        ]
+      },
+      {
+        "type": "section", "title": { "text": "미팅 기본 정보" },
+        "children": [{
+          "type": "table", "cols": [{"w":"15%"},{"w":"18%"},{"w":"12%"},{"w":"18%"},{"w":"12%"},{"w":"25%"}],
+          "style": { "borderColor": "#c0c0c0" },
+          "rows": [
+            { "cells": [
+              { "type": "label", "text": "사 업 장 명",  "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "company_name" },
+              { "type": "label", "text": "미  팅  일",   "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "composite", "children": [
+                { "type": "field", "fieldId": "meet_year" }, { "type": "text", "value": ". " },
+                { "type": "field", "fieldId": "meet_month" }, { "type": "text", "value": ". " },
+                { "type": "field", "fieldId": "meet_day" }
+              ]},
+              { "type": "label", "text": "미팅 시간",    "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "meet_time" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "작업 장소",    "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "work_location" },
+              { "type": "label", "text": "작업 부서",    "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "dept" },
+              { "type": "label", "text": "참석 인원",    "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "attendee_count" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "진  행  자",   "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "composite", "children": [
+                { "type": "field", "fieldId": "leader_title" }, { "type": "text", "value": "  " },
+                { "type": "field", "fieldId": "leader_name" }
+              ]},
+              { "type": "label", "text": "오늘 작업 내용","style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "work_type", "colspan": 3 }
+            ]}
+          ]
+        }]
+      },
+      {
+        "type": "section", "title": { "text": "위험요인 및 안전대책" },
+        "children": [{
+          "type": "table", "cols": [{"w":"45%"},{"w":"55%"}],
+          "style": { "borderColor": "#c0c0c0" },
+          "rows": [
+            { "cells": [
+              { "type": "label", "text": "주 요 위 험 요 인",  "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "label", "text": "안 전 대 책",         "style": { "bg": "#eef0f3", "fontWeight": 700 } }
+            ]},
+            { "cells": [{"type":"field","fieldId":"key_hazard1"},{"type":"field","fieldId":"key_control1"}] },
+            { "cells": [{"type":"field","fieldId":"key_hazard2"},{"type":"field","fieldId":"key_control2"}] },
+            { "cells": [{"type":"field","fieldId":"key_hazard3"},{"type":"field","fieldId":"key_control3"}] },
+            { "cells": [
+              { "type": "label", "text": "착용 보호구",         "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "ppe_required" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "오늘의 안전 메시지",  "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "today_safety" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "특이사항 및 전달사항","style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "special_notice" }
+            ]}
+          ]
+        }]
+      },
+      {
+        "type": "section", "title": { "text": "참석자 서명" },
+        "children": [{
+          "type": "table", "cols": [{"w":"17%"},{"w":"16%"},{"w":"17%"},{"w":"16%"},{"w":"17%"},{"w":"17%"}],
+          "style": { "borderColor": "#c0c0c0" },
+          "rows": [
+            { "cells": [
+              { "type": "label", "text": "성  명",  "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "label", "text": "서  명",  "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "label", "text": "성  명",  "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "label", "text": "서  명",  "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "label", "text": "성  명",  "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "label", "text": "서  명",  "style": { "bg": "#eef0f3", "fontWeight": 700 } }
+            ]},
+            { "cells": [{"type":"field","fieldId":"attendee1"},{"type":"field","fieldId":"att1_sign"},{"type":"field","fieldId":"attendee2"},{"type":"field","fieldId":"att2_sign"},{"type":"field","fieldId":"attendee3"},{"type":"field","fieldId":"att3_sign"}] },
+            { "cells": [{"type":"field","fieldId":"attendee4"},{"type":"field","fieldId":"att4_sign"},{"type":"field","fieldId":"attendee5"},{"type":"field","fieldId":"att5_sign"},{"type":"field","fieldId":"attendee6"},{"type":"field","fieldId":"att6_sign"}] }
+          ]
+        }]
+      }
+    ]
+  }
+}

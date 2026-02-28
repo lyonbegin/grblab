@@ -1,0 +1,289 @@
+{
+  "template_id": "serious_accident_report_v1",
+  "title": "중대재해 발생보고",
+  "version": 1,
+  "source": {
+    "file_type": "hwp",
+    "filename": "bid_00325_중대재해발생보고_양식례-사업장용제조업__기타업종_등.hwp",
+    "issuer": "",
+    "legal_basis": "산업안전보건법 / 중대재해 처벌 등에 관한 법률"
+  },
+  "meta": {
+    "paper": "A4",
+    "unit": "mm",
+    "page": { "width": 210, "height": 297, "margin": { "top": 20, "right": 20, "bottom": 20, "left": 20 } },
+    "fonts": { "base": "Noto Sans KR" }
+  },
+  "fields": [
+    { "id": "recv_agency",          "label": "수신 고용노동지청",        "type": "text", "placeholder": "OO고용노동지청" },
+    { "id": "recv_dept",            "label": "참조 담당부서",            "type": "text", "placeholder": "산재예방지도과장" },
+    { "id": "recv_phone",           "label": "수신처 전화",              "type": "text" },
+    { "id": "recv_fax",             "label": "수신처 팩스",              "type": "text" },
+    { "id": "sender_company",       "label": "발신 사업장명",            "type": "text" },
+
+    { "id": "prime_company",        "label": "도급인 사업장명",          "type": "text" },
+    { "id": "prime_rep",            "label": "도급인 대표자",            "type": "text" },
+    { "id": "prime_workers",        "label": "도급인 근로자수",          "type": "text" },
+    { "id": "prime_industry",       "label": "도급인 업종",              "type": "text" },
+    { "id": "prime_address",        "label": "도급인 주소(현장)",        "type": "text" },
+
+    { "id": "sub_company",          "label": "수급인 사업장명",          "type": "text" },
+    { "id": "sub_rep",              "label": "수급인 대표자",            "type": "text" },
+    { "id": "sub_workers",          "label": "수급인 근로자수",          "type": "text" },
+    { "id": "sub_industry",         "label": "수급인 업종",              "type": "text" },
+    { "id": "sub_address",          "label": "수급인 주소(현장)",        "type": "text" },
+
+    { "id": "sandzai_established",  "label": "산재보험 성립여부",        "type": "text", "placeholder": "성립/미성립" },
+    { "id": "safety_mgr_type",      "label": "안전관리자 선임 관계",     "type": "text", "placeholder": "안전위탁(기관명)/선임(전담)/비대상" },
+    { "id": "health_mgr_type",      "label": "보건관리자 선임 관계",     "type": "text", "placeholder": "보건위탁(기관명)/선임(전담)/비대상" },
+    { "id": "corp_no",              "label": "법인번호",                 "type": "text" },
+    { "id": "site_mgmt_no",         "label": "사업장관리번호",           "type": "text" },
+    { "id": "biz_reg_no",           "label": "사업자등록번호",           "type": "text" },
+    { "id": "biz_start_no",         "label": "사업개시번호",             "type": "text" },
+
+    { "id": "prime2_company",       "label": "기업전체 도급인 업체명",   "type": "text" },
+    { "id": "prime2_rep",           "label": "기업전체 도급인 대표자",   "type": "text" },
+    { "id": "prime2_workers",       "label": "기업전체 도급인 근로자수", "type": "text" },
+    { "id": "prime2_industry",      "label": "기업전체 도급인 업종",     "type": "text" },
+    { "id": "prime2_address",       "label": "기업전체 도급인 주소(본사)","type": "text" },
+    { "id": "sub2_company",         "label": "기업전체 수급인 업체명",   "type": "text" },
+    { "id": "sub2_rep",             "label": "기업전체 수급인 대표자",   "type": "text" },
+    { "id": "sub2_workers",         "label": "기업전체 수급인 근로자수", "type": "text" },
+    { "id": "sub2_industry",        "label": "기업전체 수급인 업종",     "type": "text" },
+    { "id": "sub2_address",         "label": "기업전체 수급인 주소(본사)","type": "text" },
+
+    { "id": "victim_name",          "label": "재해자 성명",              "type": "text" },
+    { "id": "victim_rrn",           "label": "재해자 주민등록번호",      "type": "text" },
+    { "id": "injury_severity",      "label": "재해 정도",                "type": "text", "placeholder": "사망/중상" },
+    { "id": "victim_org",           "label": "재해자 소속",              "type": "text" },
+    { "id": "hire_date",            "label": "입사일자(동종경력)",       "type": "text" },
+    { "id": "job_type",             "label": "직종(고용형태)",           "type": "text" },
+    { "id": "victim_note",          "label": "비고(국적 등)",            "type": "text" },
+
+    { "id": "accident_datetime",    "label": "발생일시(사망일시)",       "type": "text" },
+    { "id": "accident_location",    "label": "발생 장소",                "type": "text" },
+    { "id": "accident_type",        "label": "발생 형태",                "type": "text" },
+    { "id": "cause_object",         "label": "기인물",                   "type": "text" },
+    { "id": "accident_note",        "label": "비고",                     "type": "text" },
+
+    { "id": "accident_description", "label": "사고발생경위",             "type": "textarea" },
+    { "id": "contact_list",         "label": "관계자 연락처",            "type": "textarea" },
+    { "id": "writer_org",           "label": "작성자 소속",              "type": "text" },
+    { "id": "writer_name",          "label": "작성자 성명",              "type": "text" },
+    { "id": "writer_contact",       "label": "작성자 연락처",            "type": "text" }
+  ],
+  "layout": {
+    "type": "page",
+    "children": [
+      {
+        "type": "block",
+        "style": { "marginBottom": 4 },
+        "children": [
+          { "type": "text", "value": "(예시) 중대재해 발생보고 (제조업, 기타업종 등)", "style": { "fontSize": 9, "color": "#555" } }
+        ]
+      },
+      {
+        "type": "block",
+        "style": { "padding": [8, 6, 8, 6] },
+        "children": [
+          { "type": "text", "value": "중대재해 발생보고", "style": { "fontSize": 16, "fontWeight": 900, "textAlign": "center" } }
+        ]
+      },
+      {
+        "type": "section", "id": "section_header",
+        "children": [{
+          "type": "table",
+          "cols": [{ "w": "12%" }, { "w": "88%" }],
+          "rows": [
+            { "cells": [
+              { "type": "label", "text": "수신", "style": { "bg": "#f7f7f7" } },
+              { "type": "composite", "children": [
+                { "type": "field", "fieldId": "recv_agency" },
+                { "type": "text", "value": " (참조 " },
+                { "type": "field", "fieldId": "recv_dept" },
+                { "type": "text", "value": " ☎ " }, { "type": "field", "fieldId": "recv_phone" },
+                { "type": "text", "value": " fax. " }, { "type": "field", "fieldId": "recv_fax" },
+                { "type": "text", "value": ")" }
+              ]}
+            ]},
+            { "cells": [
+              { "type": "label", "text": "발신", "style": { "bg": "#f7f7f7" } },
+              { "type": "field", "fieldId": "sender_company" }
+            ]}
+          ]
+        }]
+      },
+      {
+        "type": "block", "style": { "marginTop": 8, "fontWeight": 700 },
+        "children": [{ "type": "text", "value": "1. 사업장 현장개요" }]
+      },
+      {
+        "type": "section", "id": "section_site",
+        "children": [{
+          "type": "table",
+          "cols": [{ "w": "10%" }, { "w": "18%" }, { "w": "12%" }, { "w": "12%" }, { "w": "12%" }, { "w": "36%" }],
+          "rows": [
+            { "cells": [
+              { "type": "label", "text": "구분", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "label", "text": "사업장명", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "label", "text": "대표자", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "label", "text": "근로자수", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "label", "text": "업종", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "label", "text": "주소(현장)", "style": { "bg": "#eef0f3", "fontWeight": 700 } }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "도급인" }, { "type": "field", "fieldId": "prime_company" },
+              { "type": "field", "fieldId": "prime_rep" }, { "type": "field", "fieldId": "prime_workers" },
+              { "type": "field", "fieldId": "prime_industry" }, { "type": "field", "fieldId": "prime_address" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "수급인" }, { "type": "field", "fieldId": "sub_company" },
+              { "type": "field", "fieldId": "sub_rep" }, { "type": "field", "fieldId": "sub_workers" },
+              { "type": "field", "fieldId": "sub_industry" }, { "type": "field", "fieldId": "sub_address" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "산재보험 성립", "colspan": 2, "style": { "bg": "#f7f7f7" } },
+              { "type": "field", "fieldId": "sandzai_established", "colspan": 2 },
+              { "type": "label", "text": "안전관리자", "style": { "bg": "#f7f7f7" } },
+              { "type": "field", "fieldId": "safety_mgr_type" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "법인번호", "colspan": 2, "style": { "bg": "#f7f7f7" } },
+              { "type": "field", "fieldId": "corp_no", "colspan": 2 },
+              { "type": "label", "text": "보건관리자", "style": { "bg": "#f7f7f7" } },
+              { "type": "field", "fieldId": "health_mgr_type" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "사업자등록번호", "colspan": 2, "style": { "bg": "#f7f7f7" } },
+              { "type": "field", "fieldId": "biz_reg_no" },
+              { "type": "label", "text": "사업장관리번호", "style": { "bg": "#f7f7f7" } },
+              { "type": "field", "fieldId": "site_mgmt_no" },
+              { "type": "field", "fieldId": "biz_start_no" }
+            ]}
+          ]
+        }]
+      },
+      {
+        "type": "block", "style": { "marginTop": 8, "fontWeight": 700 },
+        "children": [{ "type": "text", "value": "2. '사업 또는 사업장' 개요 (기업 전체의 상시 근로자수 정확히 기재)" }]
+      },
+      {
+        "type": "section", "id": "section_company_overview",
+        "children": [{
+          "type": "table",
+          "cols": [{ "w": "10%" }, { "w": "18%" }, { "w": "12%" }, { "w": "12%" }, { "w": "12%" }, { "w": "36%" }],
+          "rows": [
+            { "cells": [
+              { "type": "label", "text": "구분", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "label", "text": "업체명", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "label", "text": "대표자", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "label", "text": "근로자수", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "label", "text": "업종", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "label", "text": "주소(본사)", "style": { "bg": "#eef0f3", "fontWeight": 700 } }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "도급인" }, { "type": "field", "fieldId": "prime2_company" },
+              { "type": "field", "fieldId": "prime2_rep" }, { "type": "field", "fieldId": "prime2_workers" },
+              { "type": "field", "fieldId": "prime2_industry" }, { "type": "field", "fieldId": "prime2_address" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "수급인" }, { "type": "field", "fieldId": "sub2_company" },
+              { "type": "field", "fieldId": "sub2_rep" }, { "type": "field", "fieldId": "sub2_workers" },
+              { "type": "field", "fieldId": "sub2_industry" }, { "type": "field", "fieldId": "sub2_address" }
+            ]}
+          ]
+        }]
+      },
+      {
+        "type": "block", "style": { "marginTop": 8, "fontWeight": 700 },
+        "children": [{ "type": "text", "value": "3. 재해자 인적사항" }]
+      },
+      {
+        "type": "section", "id": "section_victim",
+        "children": [{
+          "type": "table",
+          "cols": [{ "w": "12%" }, { "w": "16%" }, { "w": "10%" }, { "w": "10%" }, { "w": "16%" }, { "w": "16%" }, { "w": "20%" }],
+          "rows": [
+            { "cells": [
+              { "type": "label", "text": "성명", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "label", "text": "주민등록번호", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "label", "text": "재해정도", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "label", "text": "소속", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "label", "text": "입사일자(동종경력)", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "label", "text": "직종(고용형태)", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "label", "text": "비고(국적 등)", "style": { "bg": "#eef0f3", "fontWeight": 700 } }
+            ]},
+            { "cells": [
+              { "type": "field", "fieldId": "victim_name" }, { "type": "field", "fieldId": "victim_rrn" },
+              { "type": "field", "fieldId": "injury_severity" }, { "type": "field", "fieldId": "victim_org" },
+              { "type": "field", "fieldId": "hire_date" }, { "type": "field", "fieldId": "job_type" },
+              { "type": "field", "fieldId": "victim_note" }
+            ]}
+          ]
+        }]
+      },
+      {
+        "type": "block", "style": { "marginTop": 8, "fontWeight": 700 },
+        "children": [{ "type": "text", "value": "4. 재해발생 내용" }]
+      },
+      {
+        "type": "section", "id": "section_accident",
+        "children": [{
+          "type": "table",
+          "cols": [{ "w": "25%" }, { "w": "20%" }, { "w": "15%" }, { "w": "15%" }, { "w": "25%" }],
+          "rows": [
+            { "cells": [
+              { "type": "label", "text": "발생일시(사망일시)", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "label", "text": "장소", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "label", "text": "발생형태", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "label", "text": "기인물", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "label", "text": "비고", "style": { "bg": "#eef0f3", "fontWeight": 700 } }
+            ]},
+            { "cells": [
+              { "type": "field", "fieldId": "accident_datetime" }, { "type": "field", "fieldId": "accident_location" },
+              { "type": "field", "fieldId": "accident_type" }, { "type": "field", "fieldId": "cause_object" },
+              { "type": "field", "fieldId": "accident_note" }
+            ]}
+          ]
+        }]
+      },
+      {
+        "type": "block", "style": { "marginTop": 8, "fontWeight": 700 },
+        "children": [{ "type": "text", "value": "5. 사고발생경위 (6하원칙에 의거 구체적으로 작성, 별지 추가 가능)" }]
+      },
+      {
+        "type": "section", "id": "section_description",
+        "children": [{
+          "type": "table", "cols": [{ "w": "100%" }],
+          "rows": [
+            { "cells": [{ "type": "field", "fieldId": "accident_description" }] }
+          ]
+        }]
+      },
+      {
+        "type": "block", "style": { "marginTop": 8, "fontWeight": 700 },
+        "children": [{ "type": "text", "value": "○ 관계자 연락처 (현장소장, 안전관리자, 목격자 등)" }]
+      },
+      {
+        "type": "section", "id": "section_contacts",
+        "children": [{
+          "type": "table", "cols": [{ "w": "100%" }],
+          "rows": [
+            { "cells": [{ "type": "field", "fieldId": "contact_list" }] }
+          ]
+        }]
+      },
+      {
+        "type": "block", "style": { "marginTop": 10 },
+        "children": [{
+          "type": "composite",
+          "children": [
+            { "type": "text", "value": "작성자 소속: " }, { "type": "field", "fieldId": "writer_org" },
+            { "type": "text", "value": "   성명: " }, { "type": "field", "fieldId": "writer_name" },
+            { "type": "text", "value": "   연락처: " }, { "type": "field", "fieldId": "writer_contact" }
+          ]
+        }]
+      }
+    ]
+  }
+}

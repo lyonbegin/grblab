@@ -1,0 +1,138 @@
+{
+  "template_id": "emergency_plan_inspection_v1",
+  "title": "비상사태 조치 및 대응 계획 점검표",
+  "version": 1,
+  "source": { "file_type": "hwp", "filename": "비상사태_조치_및_대응_계획_점검.hwp" },
+  "meta": { "paper": "A4", "unit": "mm", "page": { "width": 210, "height": 297, "margin": { "top": 20, "right": 15, "bottom": 20, "left": 15 } } },
+  "fields": [
+    { "id": "company_name",  "label": "사업장명",     "type": "text" },
+    { "id": "check_year",    "label": "점검 연도",    "type": "text", "placeholder": "2024" },
+    { "id": "check_month",   "label": "점검 월",      "type": "text", "placeholder": "01" },
+    { "id": "check_day",     "label": "점검 일",      "type": "text", "placeholder": "01" },
+    { "id": "checker_name",  "label": "점검자",       "type": "text" },
+    { "id": "i1_result",  "label": "항목1 결과",  "type": "text", "placeholder": "적합/부적합/해당없음" }, { "id": "i1_improve",  "label": "항목1 개선",  "type": "text" },
+    { "id": "i2_result",  "label": "항목2 결과",  "type": "text", "placeholder": "적합/부적합/해당없음" }, { "id": "i2_improve",  "label": "항목2 개선",  "type": "text" },
+    { "id": "i3_result",  "label": "항목3 결과",  "type": "text", "placeholder": "적합/부적합/해당없음" }, { "id": "i3_improve",  "label": "항목3 개선",  "type": "text" },
+    { "id": "i4_result",  "label": "항목4 결과",  "type": "text", "placeholder": "적합/부적합/해당없음" }, { "id": "i4_improve",  "label": "항목4 개선",  "type": "text" },
+    { "id": "i5_result",  "label": "항목5 결과",  "type": "text", "placeholder": "적합/부적합/해당없음" }, { "id": "i5_improve",  "label": "항목5 개선",  "type": "text" },
+    { "id": "i6_result",  "label": "항목6 결과",  "type": "text", "placeholder": "적합/부적합/해당없음" }, { "id": "i6_improve",  "label": "항목6 개선",  "type": "text" },
+    { "id": "i7_result",  "label": "항목7 결과",  "type": "text", "placeholder": "적합/부적합/해당없음" }, { "id": "i7_improve",  "label": "항목7 개선",  "type": "text" },
+    { "id": "i8_result",  "label": "항목8 결과",  "type": "text", "placeholder": "적합/부적합/해당없음" }, { "id": "i8_improve",  "label": "항목8 개선",  "type": "text" },
+    { "id": "i9_result",  "label": "항목9 결과",  "type": "text", "placeholder": "적합/부적합/해당없음" }, { "id": "i9_improve",  "label": "항목9 개선",  "type": "text" },
+    { "id": "i10_result", "label": "항목10 결과", "type": "text", "placeholder": "적합/부적합/해당없음" }, { "id": "i10_improve", "label": "항목10 개선", "type": "text" },
+    { "id": "overall_comment", "label": "종합 의견", "type": "text" }
+  ],
+  "layout": {
+    "type": "page",
+    "children": [
+      {
+        "type": "block",
+        "style": { "padding": [8,4,8,4] },
+        "children": [
+          { "type": "text", "value": "비상사태 조치 및 대응 계획 점검표", "style": { "fontSize": 16, "fontWeight": 900, "textAlign": "center" } }
+        ]
+      },
+      {
+        "type": "section",
+        "title": { "text": "기본 정보" },
+        "children": [
+          {
+            "type": "table",
+            "cols": [{ "w": "20%" }, { "w": "30%" }, { "w": "20%" }, { "w": "30%" }],
+            "style": { "borderColor": "#c0c0c0" },
+            "rows": [
+              { "cells": [
+                { "type": "label", "text": "사 업 장 명", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "company_name" },
+                { "type": "label", "text": "점 검 일 자", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "composite", "children": [
+                  { "type": "field", "fieldId": "check_year" }, { "type": "text", "value": "." },
+                  { "type": "field", "fieldId": "check_month" }, { "type": "text", "value": "." },
+                  { "type": "field", "fieldId": "check_day" }
+                ]}
+              ]},
+              { "cells": [
+                { "type": "label", "text": "점  검  자",  "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "checker_name" },
+                { "type": "label", "text": "", "colspan": 2 }
+              ]}
+            ]
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "title": { "text": "점검 항목" },
+        "children": [
+          {
+            "type": "table",
+            "cols": [{ "w": "5%" }, { "w": "50%" }, { "w": "20%" }, { "w": "25%" }],
+            "style": { "borderColor": "#c0c0c0" },
+            "rows": [
+              { "cells": [
+                { "type": "label", "text": "No", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "label", "text": "점  검  항  목", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "label", "text": "점검 결과",      "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "label", "text": "개선 사항",      "style": { "bg": "#eef0f3", "fontWeight": 700 } }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "1" },
+                { "type": "label", "text": "비상사태 유형별 대응 시나리오가 수립되어 있는가?" },
+                { "type": "field", "fieldId": "i1_result" }, { "type": "field", "fieldId": "i1_improve" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "2" },
+                { "type": "label", "text": "비상연락망이 최신 상태로 유지되고 현장에 게시되어 있는가?" },
+                { "type": "field", "fieldId": "i2_result" }, { "type": "field", "fieldId": "i2_improve" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "3" },
+                { "type": "label", "text": "대피 경로 및 집결지가 지정되고 표시되어 있는가?" },
+                { "type": "field", "fieldId": "i3_result" }, { "type": "field", "fieldId": "i3_improve" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "4" },
+                { "type": "label", "text": "소화기·소화전·응급구호장비가 지정 위치에 비치되어 있는가?" },
+                { "type": "field", "fieldId": "i4_result" }, { "type": "field", "fieldId": "i4_improve" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "5" },
+                { "type": "label", "text": "비상사태 훈련(소방·대피)을 연 1회 이상 실시하였는가?" },
+                { "type": "field", "fieldId": "i5_result" }, { "type": "field", "fieldId": "i5_improve" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "6" },
+                { "type": "label", "text": "사고대책본부 구성 및 역할이 문서화되어 있는가?" },
+                { "type": "field", "fieldId": "i6_result" }, { "type": "field", "fieldId": "i6_improve" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "7" },
+                { "type": "label", "text": "응급처치 교육을 이수한 담당자가 배치되어 있는가?" },
+                { "type": "field", "fieldId": "i7_result" }, { "type": "field", "fieldId": "i7_improve" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "8" },
+                { "type": "label", "text": "화학물질 누출 시 중화제·흡착포 등 대응물자가 비치되어 있는가?" },
+                { "type": "field", "fieldId": "i8_result" }, { "type": "field", "fieldId": "i8_improve" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "9" },
+                { "type": "label", "text": "비상 전원·통신 장비의 작동 상태를 주기적으로 점검하는가?" },
+                { "type": "field", "fieldId": "i9_result" }, { "type": "field", "fieldId": "i9_improve" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "10" },
+                { "type": "label", "text": "훈련 후 미비점을 반영하여 시나리오를 개정하고 있는가?" },
+                { "type": "field", "fieldId": "i10_result" }, { "type": "field", "fieldId": "i10_improve" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "종합 의견", "colspan": 3, "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "overall_comment" }
+              ]}
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,175 @@
+{
+  "template_id": "safety_budget_plan_v1",
+  "title": "안전보건 예산 편성 계획서",
+  "version": 1,
+  "source": {
+    "file_type": "hwp",
+    "filename": "bid_00193_안전보건_예산_편성예시.hwp",
+    "issuer": "고용노동부",
+    "legal_basis": "중대재해처벌법 시행령 제4조 제4호"
+  },
+  "meta": {
+    "paper": "A4",
+    "unit": "mm",
+    "page": { "width": 210, "height": 297, "margin": { "top": 20, "right": 15, "bottom": 20, "left": 15 } },
+    "fonts": { "base": "Noto Sans KR", "mono": "monospace" }
+  },
+  "fields": [
+    { "id": "company_name",     "label": "사업장명",          "type": "text" },
+    { "id": "budget_year",      "label": "예산 연도",         "type": "text", "placeholder": "2024" },
+    { "id": "plan_year",        "label": "편성일 연도",       "type": "text", "placeholder": "2024" },
+    { "id": "plan_month",       "label": "편성일 월",         "type": "text", "placeholder": "01" },
+    { "id": "plan_day",         "label": "편성일 일",         "type": "text", "placeholder": "01" },
+    { "id": "budget_facility",  "label": "안전시설 개선",     "type": "text", "placeholder": "0" },
+    { "id": "budget_assess",    "label": "위험성평가·환경개선","type": "text", "placeholder": "0" },
+    { "id": "budget_ppe",       "label": "보호장비 구입",     "type": "text", "placeholder": "0" },
+    { "id": "budget_consult",   "label": "위험성평가 컨설팅", "type": "text", "placeholder": "0" },
+    { "id": "budget_workenv",   "label": "작업환경 측정",     "type": "text", "placeholder": "0" },
+    { "id": "budget_msd",       "label": "근골격계 개선",     "type": "text", "placeholder": "0" },
+    { "id": "budget_legal_edu", "label": "법정 의무교육",     "type": "text", "placeholder": "0" },
+    { "id": "budget_worker_edu","label": "근로자 안전교육",   "type": "text", "placeholder": "0" },
+    { "id": "budget_campaign",  "label": "안전보건 캠페인",   "type": "text", "placeholder": "0" },
+    { "id": "budget_major_acc", "label": "중대재해처벌법 이행","type": "text", "placeholder": "0" },
+    { "id": "budget_osh",       "label": "산업안전보건법 이행","type": "text", "placeholder": "0" },
+    { "id": "budget_other",     "label": "기타",              "type": "text", "placeholder": "0" },
+    { "id": "budget_total",     "label": "합 계",             "type": "text", "placeholder": "0" }
+  ],
+  "layout": {
+    "type": "page",
+    "children": [
+      {
+        "type": "block",
+        "style": { "padding": [8,4,8,4] },
+        "children": [
+          { "type": "text", "value": "안전보건 예산 편성 계획서", "style": { "fontSize": 18, "fontWeight": 900, "textAlign": "center" } }
+        ]
+      },
+      {
+        "type": "section",
+        "title": { "text": "기본 정보" },
+        "children": [
+          {
+            "type": "table",
+            "cols": [{ "w": "20%" }, { "w": "30%" }, { "w": "20%" }, { "w": "30%" }],
+            "style": { "borderColor": "#c0c0c0" },
+            "rows": [
+              { "cells": [
+                { "type": "label", "text": "사업장명", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "company_name" },
+                { "type": "label", "text": "예산 연도", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "composite", "children": [
+                  { "type": "field", "fieldId": "budget_year" }, { "type": "text", "value": "년" }
+                ]}
+              ]},
+              { "cells": [
+                { "type": "label", "text": "편성일", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "composite", "children": [
+                  { "type": "field", "fieldId": "plan_year" }, { "type": "text", "value": "년 " },
+                  { "type": "field", "fieldId": "plan_month" }, { "type": "text", "value": "월 " },
+                  { "type": "field", "fieldId": "plan_day" }, { "type": "text", "value": "일" }
+                ]},
+                { "type": "label", "text": "", "colspan": 2 }
+              ]}
+            ]
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "title": { "text": "안전보건 예산 편성 내역" },
+        "children": [
+          {
+            "type": "table",
+            "cols": [{ "w": "8%" }, { "w": "52%" }, { "w": "25%" }, { "w": "15%" }],
+            "style": { "borderColor": "#c0c0c0" },
+            "rows": [
+              { "cells": [
+                { "type": "label", "text": "구분",      "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "label", "text": "항목",      "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "label", "text": "금액 (원)", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "label", "text": "비고",      "style": { "bg": "#eef0f3", "fontWeight": 700 } }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "①" },
+                { "type": "label", "text": "위험설비 자동화 등 안전시설 개선" },
+                { "type": "field", "fieldId": "budget_facility" },
+                { "type": "label", "text": "" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "②" },
+                { "type": "label", "text": "위험성평가 실시 후 작업환경 개선" },
+                { "type": "field", "fieldId": "budget_assess" },
+                { "type": "label", "text": "" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "③" },
+                { "type": "label", "text": "안전모·안전벨트 등 보호장비 구입" },
+                { "type": "field", "fieldId": "budget_ppe" },
+                { "type": "label", "text": "" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "④" },
+                { "type": "label", "text": "위험성평가 실시 및 사전 컨설팅" },
+                { "type": "field", "fieldId": "budget_consult" },
+                { "type": "label", "text": "" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "⑤" },
+                { "type": "label", "text": "작업환경 측정 (유해인자 노출 근로자 대상)" },
+                { "type": "field", "fieldId": "budget_workenv" },
+                { "type": "label", "text": "" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "⑥" },
+                { "type": "label", "text": "근골격계 부담작업 개선" },
+                { "type": "field", "fieldId": "budget_msd" },
+                { "type": "label", "text": "" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "⑦" },
+                { "type": "label", "text": "안전보건관리책임자 등 법정 의무교육 (위탁비 포함)" },
+                { "type": "field", "fieldId": "budget_legal_edu" },
+                { "type": "label", "text": "" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "⑧" },
+                { "type": "label", "text": "근로자 안전보건교육 (위탁비 포함)" },
+                { "type": "field", "fieldId": "budget_worker_edu" },
+                { "type": "label", "text": "" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "⑨" },
+                { "type": "label", "text": "안전보건 캠페인 비용 등" },
+                { "type": "field", "fieldId": "budget_campaign" },
+                { "type": "label", "text": "" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "⑩" },
+                { "type": "label", "text": "중대재해처벌법 이행을 위한 안전보건 조치" },
+                { "type": "field", "fieldId": "budget_major_acc" },
+                { "type": "label", "text": "" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "⑪" },
+                { "type": "label", "text": "산업안전보건법 이행을 위한 안전보건 조치" },
+                { "type": "field", "fieldId": "budget_osh" },
+                { "type": "label", "text": "" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "⑫" },
+                { "type": "label", "text": "기타 안전보건 관련 항목" },
+                { "type": "field", "fieldId": "budget_other" },
+                { "type": "label", "text": "" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "합  계", "colspan": 2, "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "budget_total" },
+                { "type": "label", "text": "" }
+              ]}
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

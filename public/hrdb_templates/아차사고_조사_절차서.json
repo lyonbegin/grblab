@@ -1,0 +1,187 @@
+{
+  "template_id": "near_miss_investigation_v1",
+  "title": "아차사고 조사 절차서",
+  "version": 1,
+  "source": { "file_type": "hwp", "filename": "아차사고_조사_절차서.hwp" },
+  "meta": { "paper": "A4", "unit": "mm", "page": { "width": 210, "height": 297, "margin": { "top": 20, "right": 15, "bottom": 20, "left": 15 } } },
+  "fields": [
+    { "id": "company_name",     "label": "회사명",             "type": "text", "placeholder": "㈜0000" },
+    { "id": "doc_no",           "label": "문서번호",           "type": "text" },
+    { "id": "revision",         "label": "개정번호",           "type": "text", "placeholder": "0" },
+    { "id": "eff_year",         "label": "시행일 연도",        "type": "text", "placeholder": "2024" },
+    { "id": "eff_month",        "label": "시행일 월",          "type": "text", "placeholder": "01" },
+    { "id": "eff_day",          "label": "시행일 일",          "type": "text", "placeholder": "01" },
+    { "id": "report_date",      "label": "보고일",             "type": "text" },
+    { "id": "incident_year",    "label": "발생 연도",          "type": "text", "placeholder": "2024" },
+    { "id": "incident_month",   "label": "발생 월",            "type": "text", "placeholder": "01" },
+    { "id": "incident_day",     "label": "발생 일",            "type": "text", "placeholder": "01" },
+    { "id": "incident_time",    "label": "발생 시각",          "type": "text", "placeholder": "00:00" },
+    { "id": "incident_location","label": "발생 장소",          "type": "text" },
+    { "id": "incident_dept",    "label": "발생 부서",          "type": "text" },
+    { "id": "reporter_name",    "label": "발생자/보고자 성명", "type": "text" },
+    { "id": "reporter_title",   "label": "발생자/보고자 직책", "type": "text" },
+    { "id": "incident_summary", "label": "아차사고 개요",      "type": "text" },
+    { "id": "direct_cause",     "label": "직접 원인",          "type": "text", "placeholder": "불안전한 행동/불안전한 상태" },
+    { "id": "root_cause",       "label": "근본 원인",          "type": "text" },
+    { "id": "hazard_potential",  "label": "잠재 위험",          "type": "text" },
+    { "id": "corrective_action","label": "개선 조치",          "type": "text" },
+    { "id": "action_deadline",  "label": "조치 기한",          "type": "text" },
+    { "id": "action_person",    "label": "조치 담당자",        "type": "text" },
+    { "id": "action_result",    "label": "조치 결과",          "type": "text" },
+    { "id": "action_verify_date","label": "결과 확인일",       "type": "text" },
+    { "id": "investigator_name","label": "조사자 성명",        "type": "text" },
+    { "id": "approver_name",    "label": "승인자 성명",        "type": "text" }
+  ],
+  "layout": {
+    "type": "page",
+    "children": [
+      {
+        "type": "block",
+        "style": { "padding": [8,4,8,4] },
+        "children": [
+          { "type": "text", "value": "아차사고 조사 절차서", "style": { "fontSize": 18, "fontWeight": 900, "textAlign": "center" } },
+          { "type": "text", "value": "아차사고 원인 규명 및 재해 예방", "style": { "fontSize": 10, "textAlign": "center", "color": "#555" } }
+        ]
+      },
+      {
+        "type": "section",
+        "title": { "text": "문서 정보" },
+        "children": [
+          {
+            "type": "table",
+            "cols": [{ "w": "20%" }, { "w": "30%" }, { "w": "20%" }, { "w": "30%" }],
+            "style": { "borderColor": "#c0c0c0" },
+            "rows": [
+              { "cells": [
+                { "type": "label", "text": "회  사  명",  "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "company_name" },
+                { "type": "label", "text": "문 서 번 호",  "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "doc_no" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "개 정 번 호",  "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "revision" },
+                { "type": "label", "text": "시  행  일",   "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "composite", "children": [
+                  { "type": "field", "fieldId": "eff_year" }, { "type": "text", "value": "년 " },
+                  { "type": "field", "fieldId": "eff_month" }, { "type": "text", "value": "월 " },
+                  { "type": "field", "fieldId": "eff_day" }, { "type": "text", "value": "일" }
+                ]}
+              ]}
+            ]
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "title": { "text": "아차사고 발생 현황" },
+        "children": [
+          {
+            "type": "table",
+            "cols": [{ "w": "20%" }, { "w": "30%" }, { "w": "20%" }, { "w": "30%" }],
+            "style": { "borderColor": "#c0c0c0" },
+            "rows": [
+              { "cells": [
+                { "type": "label", "text": "발 생 일 시",  "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "composite", "children": [
+                  { "type": "field", "fieldId": "incident_year" }, { "type": "text", "value": "년 " },
+                  { "type": "field", "fieldId": "incident_month" }, { "type": "text", "value": "월 " },
+                  { "type": "field", "fieldId": "incident_day" }, { "type": "text", "value": "일  " },
+                  { "type": "field", "fieldId": "incident_time" }
+                ]},
+                { "type": "label", "text": "발 생 장 소",  "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "incident_location" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "발 생 부 서",  "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "incident_dept" },
+                { "type": "label", "text": "보 고 자",     "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "composite", "children": [
+                  { "type": "field", "fieldId": "reporter_title" }, { "type": "text", "value": "  " },
+                  { "type": "field", "fieldId": "reporter_name" }
+                ]}
+              ]},
+              { "cells": [
+                { "type": "label", "text": "아차사고 개요","style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "incident_summary", "colspan": 3, "style": { "minH": 60 } }
+              ]}
+            ]
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "title": { "text": "원인 분석" },
+        "children": [
+          {
+            "type": "table",
+            "cols": [{ "w": "25%" }, { "w": "75%" }],
+            "style": { "borderColor": "#c0c0c0" },
+            "rows": [
+              { "cells": [
+                { "type": "label", "text": "직 접 원 인",   "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "direct_cause" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "근 본 원 인",   "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "root_cause" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "잠 재 위 험",   "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "hazard_potential" }
+              ]}
+            ]
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "title": { "text": "개선 조치" },
+        "children": [
+          {
+            "type": "table",
+            "cols": [{ "w": "25%" }, { "w": "25%" }, { "w": "25%" }, { "w": "25%" }],
+            "style": { "borderColor": "#c0c0c0" },
+            "rows": [
+              { "cells": [
+                { "type": "label", "text": "개 선 조 치",   "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "label", "text": "조 치 기 한",   "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "label", "text": "조치 담당자",   "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "label", "text": "결과 확인일",   "style": { "bg": "#eef0f3", "fontWeight": 700 } }
+              ]},
+              { "cells": [
+                { "type": "field", "fieldId": "corrective_action" },
+                { "type": "field", "fieldId": "action_deadline" },
+                { "type": "field", "fieldId": "action_person" },
+                { "type": "field", "fieldId": "action_verify_date" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "조 치 결 과",   "style": { "bg": "#eef0f3", "fontWeight": 700 }, "colspan": 1 },
+                { "type": "field", "fieldId": "action_result", "colspan": 3 }
+              ]}
+            ]
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "title": { "text": "조사 확인" },
+        "children": [
+          {
+            "type": "table",
+            "cols": [{ "w": "25%" }, { "w": "25%" }, { "w": "25%" }, { "w": "25%" }],
+            "style": { "borderColor": "#c0c0c0" },
+            "rows": [
+              { "cells": [
+                { "type": "label", "text": "조  사  자",  "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "investigator_name" },
+                { "type": "label", "text": "승  인  자",  "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "approver_name" }
+              ]}
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

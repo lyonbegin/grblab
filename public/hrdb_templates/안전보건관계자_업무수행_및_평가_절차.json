@@ -1,0 +1,149 @@
+{
+  "template_id": "safety_personnel_evaluation_v1",
+  "title": "안전보건관계자 업무수행 및 평가 절차",
+  "version": 1,
+  "source": { "file_type": "hwp", "filename": "안전보건관계자_업무수행_및_평가_절차.hwp" },
+  "meta": { "paper": "A4", "unit": "mm", "page": { "width": 210, "height": 297, "margin": { "top": 20, "right": 15, "bottom": 20, "left": 15 } } },
+  "fields": [
+    { "id": "company_name",   "label": "사업장명",           "type": "text", "placeholder": "㈜0000" },
+    { "id": "eval_year",      "label": "평가 연도",          "type": "text", "placeholder": "2024" },
+    { "id": "eval_half",      "label": "평가 반기",          "type": "text", "placeholder": "상반기/하반기" },
+    { "id": "eval_year2",     "label": "작성일 연도",        "type": "text", "placeholder": "2024" },
+    { "id": "eval_month",     "label": "작성일 월",          "type": "text", "placeholder": "01" },
+    { "id": "eval_day",       "label": "작성일 일",          "type": "text", "placeholder": "01" },
+    { "id": "e1_name",    "label": "평가자1 성명",     "type": "text" }, { "id": "e1_title",   "label": "평가자1 직책",     "type": "text" }, { "id": "e1_role",    "label": "평가자1 역할",     "type": "text" },
+    { "id": "e1_s1",     "label": "평가자1 항목1점수", "type": "text", "placeholder": "상/중/하" },
+    { "id": "e1_s2",     "label": "평가자1 항목2점수", "type": "text", "placeholder": "상/중/하" },
+    { "id": "e1_s3",     "label": "평가자1 항목3점수", "type": "text", "placeholder": "상/중/하" },
+    { "id": "e1_s4",     "label": "평가자1 항목4점수", "type": "text", "placeholder": "상/중/하" },
+    { "id": "e1_total",  "label": "평가자1 종합등급",  "type": "text", "placeholder": "우수/양호/보통/미흡" },
+    { "id": "e1_comment","label": "평가자1 의견",      "type": "text" },
+    { "id": "e2_name",    "label": "평가자2 성명",     "type": "text" }, { "id": "e2_title",   "label": "평가자2 직책",     "type": "text" }, { "id": "e2_role",    "label": "평가자2 역할",     "type": "text" },
+    { "id": "e2_s1",     "label": "평가자2 항목1점수", "type": "text", "placeholder": "상/중/하" },
+    { "id": "e2_s2",     "label": "평가자2 항목2점수", "type": "text", "placeholder": "상/중/하" },
+    { "id": "e2_s3",     "label": "평가자2 항목3점수", "type": "text", "placeholder": "상/중/하" },
+    { "id": "e2_s4",     "label": "평가자2 항목4점수", "type": "text", "placeholder": "상/중/하" },
+    { "id": "e2_total",  "label": "평가자2 종합등급",  "type": "text", "placeholder": "우수/양호/보통/미흡" },
+    { "id": "e2_comment","label": "평가자2 의견",      "type": "text" },
+    { "id": "e3_name",    "label": "평가자3 성명",     "type": "text" }, { "id": "e3_title",   "label": "평가자3 직책",     "type": "text" }, { "id": "e3_role",    "label": "평가자3 역할",     "type": "text" },
+    { "id": "e3_s1",     "label": "평가자3 항목1점수", "type": "text", "placeholder": "상/중/하" },
+    { "id": "e3_s2",     "label": "평가자3 항목2점수", "type": "text", "placeholder": "상/중/하" },
+    { "id": "e3_s3",     "label": "평가자3 항목3점수", "type": "text", "placeholder": "상/중/하" },
+    { "id": "e3_s4",     "label": "평가자3 항목4점수", "type": "text", "placeholder": "상/중/하" },
+    { "id": "e3_total",  "label": "평가자3 종합등급",  "type": "text", "placeholder": "우수/양호/보통/미흡" },
+    { "id": "e3_comment","label": "평가자3 의견",      "type": "text" },
+    { "id": "overall_comment", "label": "종합 의견",   "type": "text" },
+    { "id": "approver_name",   "label": "승인자 성명", "type": "text" }
+  ],
+  "layout": {
+    "type": "page",
+    "children": [
+      {
+        "type": "block",
+        "style": { "padding": [8,4,8,4] },
+        "children": [
+          { "type": "text", "value": "안전보건관계자 업무수행 및 평가 절차", "style": { "fontSize": 16, "fontWeight": 900, "textAlign": "center" } },
+          { "type": "text", "value": "중대재해처벌법 시행령 제4조 제5호", "style": { "fontSize": 10, "textAlign": "center", "color": "#555" } }
+        ]
+      },
+      {
+        "type": "section",
+        "title": { "text": "기본 정보" },
+        "children": [
+          {
+            "type": "table",
+            "cols": [{ "w": "20%" }, { "w": "30%" }, { "w": "20%" }, { "w": "30%" }],
+            "style": { "borderColor": "#c0c0c0" },
+            "rows": [
+              { "cells": [
+                { "type": "label", "text": "사 업 장 명", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "company_name" },
+                { "type": "label", "text": "평 가 기 간", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "composite", "children": [
+                  { "type": "field", "fieldId": "eval_year" }, { "type": "text", "value": "년 " },
+                  { "type": "field", "fieldId": "eval_half" }
+                ]}
+              ]},
+              { "cells": [
+                { "type": "label", "text": "작  성  일",  "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "composite", "children": [
+                  { "type": "field", "fieldId": "eval_year2" }, { "type": "text", "value": "년 " },
+                  { "type": "field", "fieldId": "eval_month" }, { "type": "text", "value": "월 " },
+                  { "type": "field", "fieldId": "eval_day" }, { "type": "text", "value": "일" }
+                ]},
+                { "type": "label", "text": "승  인  자",  "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "approver_name" }
+              ]}
+            ]
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "title": { "text": "평가 항목 (공통 기준)" },
+        "children": [
+          {
+            "type": "static_list",
+            "items": [
+              "① 재해예방에 필요한 인력 및 예산 등 안전보건관리체계 구축 및 이행",
+              "② 안전보건 관련 법규 준수 여부 및 안전보건교육 이수",
+              "③ 위험성평가 실시 및 개선조치 이행 여부",
+              "④ 사고 발생 시 즉각적인 조치 및 보고 여부"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "title": { "text": "개인별 평가표" },
+        "children": [
+          {
+            "type": "table",
+            "cols": [{ "w": "15%" }, { "w": "15%" }, { "w": "20%" }, { "w": "10%" }, { "w": "10%" }, { "w": "10%" }, { "w": "10%" }, { "w": "10%" }],
+            "style": { "borderColor": "#c0c0c0" },
+            "rows": [
+              { "cells": [
+                { "type": "label", "text": "성  명",   "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "label", "text": "직  책",   "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "label", "text": "역  할",   "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "label", "text": "①",        "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "label", "text": "②",        "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "label", "text": "③",        "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "label", "text": "④",        "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "label", "text": "종합등급",  "style": { "bg": "#eef0f3", "fontWeight": 700 } }
+              ]},
+              { "cells": [
+                { "type": "field", "fieldId": "e1_name" }, { "type": "field", "fieldId": "e1_title" }, { "type": "field", "fieldId": "e1_role" },
+                { "type": "field", "fieldId": "e1_s1" }, { "type": "field", "fieldId": "e1_s2" }, { "type": "field", "fieldId": "e1_s3" }, { "type": "field", "fieldId": "e1_s4" }, { "type": "field", "fieldId": "e1_total" }
+              ]},
+              { "cells": [
+                { "type": "field", "fieldId": "e2_name" }, { "type": "field", "fieldId": "e2_title" }, { "type": "field", "fieldId": "e2_role" },
+                { "type": "field", "fieldId": "e2_s1" }, { "type": "field", "fieldId": "e2_s2" }, { "type": "field", "fieldId": "e2_s3" }, { "type": "field", "fieldId": "e2_s4" }, { "type": "field", "fieldId": "e2_total" }
+              ]},
+              { "cells": [
+                { "type": "field", "fieldId": "e3_name" }, { "type": "field", "fieldId": "e3_title" }, { "type": "field", "fieldId": "e3_role" },
+                { "type": "field", "fieldId": "e3_s1" }, { "type": "field", "fieldId": "e3_s2" }, { "type": "field", "fieldId": "e3_s3" }, { "type": "field", "fieldId": "e3_s4" }, { "type": "field", "fieldId": "e3_total" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "의견/조치", "colspan": 3, "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "e1_comment", "colspan": 5 }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "의견/조치", "colspan": 3, "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "e2_comment", "colspan": 5 }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "의견/조치", "colspan": 3, "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "e3_comment", "colspan": 5 }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "종합 의견", "colspan": 3, "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "overall_comment", "colspan": 5 }
+              ]}
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

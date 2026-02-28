@@ -1,0 +1,230 @@
+{
+  "template_id": "safety_management_plan_v1",
+  "title": "안전보건관리 업무계획서",
+  "version": 1,
+  "source": {
+    "file_type": "hwp",
+    "filename": "bid_00280_안전관리업무_계획서_양식례.hwp",
+    "issuer": "",
+    "legal_basis": "산업안전보건법"
+  },
+  "meta": {
+    "paper": "A4",
+    "unit": "mm",
+    "page": { "width": 210, "height": 297, "margin": { "top": 20, "right": 15, "bottom": 20, "left": 15 } },
+    "fonts": { "base": "Noto Sans KR" }
+  },
+  "fields": [
+    { "id": "plan_year",        "label": "계획 연도",       "type": "text", "placeholder": "202X" },
+    { "id": "company_name",     "label": "회사명",          "type": "text", "placeholder": "회사명" },
+    { "id": "policy_content",   "label": "안전보건방침 내용", "type": "textarea", "placeholder": "안전하고 쾌적한 작업장 조성..." },
+    { "id": "target_rate",      "label": "목표 재해율",     "type": "text", "placeholder": "0%" },
+
+    { "id": "item1_subject",    "label": "1번 항목 - 세부추진사항", "type": "text" },
+    { "id": "item1_target",     "label": "1번 항목 - 대상(주관)",   "type": "text" },
+    { "id": "item1_goal",       "label": "1번 항목 - 목표(기준)",   "type": "text" },
+    { "id": "item1_q1",         "label": "1번 항목 - 1/4분기",     "type": "checkbox" },
+    { "id": "item1_q2",         "label": "1번 항목 - 2/4분기",     "type": "checkbox" },
+    { "id": "item1_q3",         "label": "1번 항목 - 3/4분기",     "type": "checkbox" },
+    { "id": "item1_q4",         "label": "1번 항목 - 4/4분기",     "type": "checkbox" },
+    { "id": "item1_budget",     "label": "1번 항목 - 예산",        "type": "text" },
+    { "id": "item1_note",       "label": "1번 항목 - 비고",        "type": "text" },
+
+    { "id": "item2_subject",    "label": "2번 항목 - 세부추진사항", "type": "text" },
+    { "id": "item2_target",     "label": "2번 항목 - 대상(주관)",   "type": "text" },
+    { "id": "item2_goal",       "label": "2번 항목 - 목표(기준)",   "type": "text" },
+    { "id": "item2_q1",         "label": "2번 항목 - 1/4분기",     "type": "checkbox" },
+    { "id": "item2_q2",         "label": "2번 항목 - 2/4분기",     "type": "checkbox" },
+    { "id": "item2_q3",         "label": "2번 항목 - 3/4분기",     "type": "checkbox" },
+    { "id": "item2_q4",         "label": "2번 항목 - 4/4분기",     "type": "checkbox" },
+    { "id": "item2_budget",     "label": "2번 항목 - 예산",        "type": "text" },
+    { "id": "item2_note",       "label": "2번 항목 - 비고",        "type": "text" },
+
+    { "id": "item3_subject",    "label": "3번 항목 - 세부추진사항", "type": "text" },
+    { "id": "item3_target",     "label": "3번 항목 - 대상(주관)",   "type": "text" },
+    { "id": "item3_goal",       "label": "3번 항목 - 목표(기준)",   "type": "text" },
+    { "id": "item3_q1",         "label": "3번 항목 - 1/4분기",     "type": "checkbox" },
+    { "id": "item3_q2",         "label": "3번 항목 - 2/4분기",     "type": "checkbox" },
+    { "id": "item3_q3",         "label": "3번 항목 - 3/4분기",     "type": "checkbox" },
+    { "id": "item3_q4",         "label": "3번 항목 - 4/4분기",     "type": "checkbox" },
+    { "id": "item3_budget",     "label": "3번 항목 - 예산",        "type": "text" },
+    { "id": "item3_note",       "label": "3번 항목 - 비고",        "type": "text" },
+
+    { "id": "item4_subject",    "label": "4번 항목 - 세부추진사항", "type": "text" },
+    { "id": "item4_target",     "label": "4번 항목 - 대상(주관)",   "type": "text" },
+    { "id": "item4_goal",       "label": "4번 항목 - 목표(기준)",   "type": "text" },
+    { "id": "item4_q1",         "label": "4번 항목 - 1/4분기",     "type": "checkbox" },
+    { "id": "item4_q2",         "label": "4번 항목 - 2/4분기",     "type": "checkbox" },
+    { "id": "item4_q3",         "label": "4번 항목 - 3/4분기",     "type": "checkbox" },
+    { "id": "item4_q4",         "label": "4번 항목 - 4/4분기",     "type": "checkbox" },
+    { "id": "item4_budget",     "label": "4번 항목 - 예산",        "type": "text" },
+    { "id": "item4_note",       "label": "4번 항목 - 비고",        "type": "text" },
+
+    { "id": "item5_subject",    "label": "5번 항목 - 세부추진사항", "type": "text" },
+    { "id": "item5_target",     "label": "5번 항목 - 대상(주관)",   "type": "text" },
+    { "id": "item5_goal",       "label": "5번 항목 - 목표(기준)",   "type": "text" },
+    { "id": "item5_q1",         "label": "5번 항목 - 1/4분기",     "type": "checkbox" },
+    { "id": "item5_q2",         "label": "5번 항목 - 2/4분기",     "type": "checkbox" },
+    { "id": "item5_q3",         "label": "5번 항목 - 3/4분기",     "type": "checkbox" },
+    { "id": "item5_q4",         "label": "5번 항목 - 4/4분기",     "type": "checkbox" },
+    { "id": "item5_budget",     "label": "5번 항목 - 예산",        "type": "text" },
+    { "id": "item5_note",       "label": "5번 항목 - 비고",        "type": "text" }
+  ],
+  "layout": {
+    "type": "page",
+    "children": [
+      {
+        "type": "block",
+        "style": { "padding": [10, 6, 10, 6] },
+        "children": [
+          {
+            "type": "composite",
+            "children": [
+              { "type": "field", "fieldId": "plan_year" },
+              { "type": "text", "value": "년 안전보건관리 업무계획서", "style": { "fontSize": 18, "fontWeight": 900 } }
+            ]
+          },
+          { "type": "field", "fieldId": "company_name", "style": { "fontSize": 14, "textAlign": "center" } }
+        ]
+      },
+      {
+        "type": "block",
+        "id": "section_policy",
+        "style": { "marginTop": 12 },
+        "children": [
+          { "type": "text", "value": "♣ 안 전 보 건 방 침 ♣", "style": { "fontSize": 13, "fontWeight": 700, "textAlign": "center" } },
+          { "type": "field", "fieldId": "policy_content", "style": { "marginTop": 6 } }
+        ]
+      },
+      {
+        "type": "block",
+        "id": "section_target",
+        "style": { "marginTop": 12 },
+        "children": [
+          { "type": "text", "value": "♣ 기 본 목 표 ♣", "style": { "fontSize": 13, "fontWeight": 700, "textAlign": "center" } },
+          {
+            "type": "composite",
+            "style": { "marginTop": 6 },
+            "children": [
+              { "type": "field", "fieldId": "plan_year" },
+              { "type": "text", "value": "년 목표 재해율 ( " },
+              { "type": "field", "fieldId": "target_rate", "style": { "inputWidth": "4em" } },
+              { "type": "text", "value": " )" }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "block",
+        "id": "section_focus",
+        "style": { "marginTop": 12 },
+        "children": [
+          { "type": "text", "value": "♣ 중 점 실 시 항 목 ♣", "style": { "fontSize": 13, "fontWeight": 700, "textAlign": "center" } },
+          { "type": "text", "value": "1. 안전관리 체제 확립 및 직무수행 철저\n2. 안전순찰 활동 및 안전점검의 날 행사\n3. 현장별 무재해운동 및 5C 활동전개 및 활성화\n4. 법정 안전보건교육 및 작업시작전 5분 안전교육 내실화\n5. 안전성 확보를 위한 위험기계기구 정기 및 자체검사\n6. 설비별 작업시작전 점검 및 표준안전작업방법 제정\n7. 근골격계질환 예방을 위한 활동 강화\n8. 산업안전관계 서류의 체계적인 관리", "style": { "fontSize": 10, "marginTop": 6 } }
+        ]
+      },
+      {
+        "type": "block",
+        "id": "section_plan_title",
+        "style": { "marginTop": 16 },
+        "children": [
+          {
+            "type": "composite",
+            "children": [
+              { "type": "field", "fieldId": "plan_year" },
+              { "type": "text", "value": "년도 안전관리 업무계획서", "style": { "fontSize": 13, "fontWeight": 700 } }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "id": "section_plan_table",
+        "children": [
+          {
+            "type": "table",
+            "cols": [
+              { "w": "15%" }, { "w": "17%" }, { "w": "10%" }, { "w": "10%" },
+              { "w": "6%" }, { "w": "6%" }, { "w": "6%" }, { "w": "6%" },
+              { "w": "8%" }, { "w": "16%" }
+            ],
+            "rows": [
+              { "cells": [
+                { "type": "label", "text": "구분 / 항목",         "style": { "bg": "#eef0f3", "fontWeight": 700, "align": "center" } },
+                { "type": "label", "text": "세부추진사항",         "style": { "bg": "#eef0f3", "fontWeight": 700, "align": "center" } },
+                { "type": "label", "text": "대상(주관)",           "style": { "bg": "#eef0f3", "fontWeight": 700, "align": "center" } },
+                { "type": "label", "text": "목표(기준)",           "style": { "bg": "#eef0f3", "fontWeight": 700, "align": "center" } },
+                { "type": "label", "text": "1/4분기",              "style": { "bg": "#eef0f3", "fontWeight": 700, "align": "center" } },
+                { "type": "label", "text": "2/4분기",              "style": { "bg": "#eef0f3", "fontWeight": 700, "align": "center" } },
+                { "type": "label", "text": "3/4분기",              "style": { "bg": "#eef0f3", "fontWeight": 700, "align": "center" } },
+                { "type": "label", "text": "4/4분기",              "style": { "bg": "#eef0f3", "fontWeight": 700, "align": "center" } },
+                { "type": "label", "text": "예산",                 "style": { "bg": "#eef0f3", "fontWeight": 700, "align": "center" } },
+                { "type": "label", "text": "비고",                 "style": { "bg": "#eef0f3", "fontWeight": 700, "align": "center" } }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "1. 안전관리 체제 확립" },
+                { "type": "field", "fieldId": "item1_subject" },
+                { "type": "field", "fieldId": "item1_target" },
+                { "type": "field", "fieldId": "item1_goal" },
+                { "type": "field", "fieldId": "item1_q1" },
+                { "type": "field", "fieldId": "item1_q2" },
+                { "type": "field", "fieldId": "item1_q3" },
+                { "type": "field", "fieldId": "item1_q4" },
+                { "type": "field", "fieldId": "item1_budget" },
+                { "type": "field", "fieldId": "item1_note" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "2. 안전순찰 활동" },
+                { "type": "field", "fieldId": "item2_subject" },
+                { "type": "field", "fieldId": "item2_target" },
+                { "type": "field", "fieldId": "item2_goal" },
+                { "type": "field", "fieldId": "item2_q1" },
+                { "type": "field", "fieldId": "item2_q2" },
+                { "type": "field", "fieldId": "item2_q3" },
+                { "type": "field", "fieldId": "item2_q4" },
+                { "type": "field", "fieldId": "item2_budget" },
+                { "type": "field", "fieldId": "item2_note" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "3. 무재해운동 및 5C 활동" },
+                { "type": "field", "fieldId": "item3_subject" },
+                { "type": "field", "fieldId": "item3_target" },
+                { "type": "field", "fieldId": "item3_goal" },
+                { "type": "field", "fieldId": "item3_q1" },
+                { "type": "field", "fieldId": "item3_q2" },
+                { "type": "field", "fieldId": "item3_q3" },
+                { "type": "field", "fieldId": "item3_q4" },
+                { "type": "field", "fieldId": "item3_budget" },
+                { "type": "field", "fieldId": "item3_note" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "4. 안전보건교육" },
+                { "type": "field", "fieldId": "item4_subject" },
+                { "type": "field", "fieldId": "item4_target" },
+                { "type": "field", "fieldId": "item4_goal" },
+                { "type": "field", "fieldId": "item4_q1" },
+                { "type": "field", "fieldId": "item4_q2" },
+                { "type": "field", "fieldId": "item4_q3" },
+                { "type": "field", "fieldId": "item4_q4" },
+                { "type": "field", "fieldId": "item4_budget" },
+                { "type": "field", "fieldId": "item4_note" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "5. 위험기계기구 검사" },
+                { "type": "field", "fieldId": "item5_subject" },
+                { "type": "field", "fieldId": "item5_target" },
+                { "type": "field", "fieldId": "item5_goal" },
+                { "type": "field", "fieldId": "item5_q1" },
+                { "type": "field", "fieldId": "item5_q2" },
+                { "type": "field", "fieldId": "item5_q3" },
+                { "type": "field", "fieldId": "item5_q4" },
+                { "type": "field", "fieldId": "item5_budget" },
+                { "type": "field", "fieldId": "item5_note" }
+              ]}
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

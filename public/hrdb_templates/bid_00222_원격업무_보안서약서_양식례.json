@@ -1,0 +1,142 @@
+{
+  "template_id": "remote_work_security_pledge_v1",
+  "title": "원격업무 보안서약서",
+  "version": 1,
+  "source": {
+    "file_type": "hwp",
+    "filename": "bid_00222_원격업무_보안서약서_양식례.hwp",
+    "issuer": "",
+    "legal_basis": ""
+  },
+  "meta": {
+    "paper": "A4",
+    "unit": "mm",
+    "page": { "width": 210, "height": 297, "margin": { "top": 20, "right": 20, "bottom": 20, "left": 20 } },
+    "fonts": { "base": "Noto Sans KR" }
+  },
+  "fields": [
+    { "id": "start_year",      "label": "원격근무 시작 연도", "type": "text", "placeholder": "2024" },
+    { "id": "start_month",     "label": "원격근무 시작 월",   "type": "text", "placeholder": "01" },
+    { "id": "start_day",       "label": "원격근무 시작 일",   "type": "text", "placeholder": "01" },
+
+    { "id": "sign_year",       "label": "서약일 연도", "type": "text", "placeholder": "2024" },
+    { "id": "sign_month",      "label": "서약일 월",   "type": "text", "placeholder": "01" },
+    { "id": "sign_day",        "label": "서약일 일",   "type": "text", "placeholder": "01" },
+
+    { "id": "pledger_dept",    "label": "서약자 소속 부서", "type": "text" },
+    { "id": "pledger_position","label": "서약자 직위(급)",  "type": "text" },
+    { "id": "pledger_name",    "label": "서약자 성명",      "type": "text" },
+    { "id": "pledger_sign",    "label": "서약자 서명",      "type": "text" },
+
+    { "id": "executor_dept",   "label": "서약집행자 소속 부서장", "type": "text" },
+    { "id": "executor_position","label": "서약집행자 직위(급)",   "type": "text" },
+    { "id": "executor_name",   "label": "서약집행자 성명",        "type": "text" },
+    { "id": "executor_sign",   "label": "서약집행자 서명",        "type": "text" }
+  ],
+  "layout": {
+    "type": "page",
+    "children": [
+      {
+        "type": "block",
+        "style": { "padding": [10, 6, 16, 6] },
+        "children": [
+          { "type": "text", "value": "원격업무 보안서약서", "style": { "fontSize": 18, "fontWeight": 900, "textAlign": "center" } }
+        ]
+      },
+      {
+        "type": "block",
+        "id": "intro",
+        "style": { "marginBottom": 16 },
+        "children": [
+          {
+            "type": "composite",
+            "children": [
+              { "type": "text", "value": "본인은 20" },
+              { "type": "field", "fieldId": "start_year", "style": { "inputWidth": "4em" } },
+              { "type": "text", "value": "년 " },
+              { "type": "field", "fieldId": "start_month", "style": { "inputWidth": "2.5em" } },
+              { "type": "text", "value": "월 " },
+              { "type": "field", "fieldId": "start_day", "style": { "inputWidth": "2.5em" } },
+              { "type": "text", "value": "일부로 원격근무를 수행함에 있어 다음 사항을 준수할 것을 엄숙히 서약합니다." }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "block",
+        "id": "pledge_items",
+        "style": { "marginBottom": 24 },
+        "children": [
+          { "type": "text", "value": "1. 나는 부여받은 인증 관련 정보 및 매체를 타인에게 유출하지 아니한다.\n2. 나는 원격근무 중 작성·저장·열람·출력한 문서는 업무 목적에만 활용하고 타인에게 유출하지 아니한다.\n3. 나는 원격근무용 소프트웨어 및 전산장비를 업무목적에만 활용하며 바이러스 백신 프로그램 및 기타 보안 프로그램을 설치하여 최신 상태로 유지한다.\n4. 나는 여타 보안사항들을 성실히 준수하며 위반 시 관련 규정에 따라 처벌도 감수한다.", "style": { "fontSize": 11, "lineHeight": 2.0 } }
+        ]
+      },
+      {
+        "type": "block",
+        "id": "sign_date",
+        "style": { "marginBottom": 20 },
+        "children": [
+          {
+            "type": "composite",
+            "children": [
+              { "type": "text", "value": "20 " },
+              { "type": "field", "fieldId": "sign_year", "style": { "inputWidth": "4em" } },
+              { "type": "text", "value": " 년   " },
+              { "type": "field", "fieldId": "sign_month", "style": { "inputWidth": "2.5em" } },
+              { "type": "text", "value": " 월   " },
+              { "type": "field", "fieldId": "sign_day", "style": { "inputWidth": "2.5em" } },
+              { "type": "text", "value": " 일" }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "id": "section_signatures",
+        "children": [
+          {
+            "type": "table",
+            "cols": [{ "w": "15%" }, { "w": "30%" }, { "w": "55%" }],
+            "rows": [
+              { "cells": [
+                { "type": "label", "text": "서  약  자", "style": { "bg": "#eef0f3", "fontWeight": 700 }, "rowspan": 3 },
+                { "type": "label", "text": "소 속 부 서", "style": { "bg": "#f7f7f7" } },
+                { "type": "field", "fieldId": "pledger_dept" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "직  위(급)", "style": { "bg": "#f7f7f7" } },
+                { "type": "field", "fieldId": "pledger_position" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "성        명", "style": { "bg": "#f7f7f7" } },
+                { "type": "composite", "children": [
+                  { "type": "field", "fieldId": "pledger_name" },
+                  { "type": "text", "value": "   " },
+                  { "type": "field", "fieldId": "pledger_sign" },
+                  { "type": "text", "value": " (서명)" }
+                ]}
+              ]},
+              { "cells": [
+                { "type": "label", "text": "서약집행자", "style": { "bg": "#eef0f3", "fontWeight": 700 }, "rowspan": 3 },
+                { "type": "label", "text": "소속 부서장", "style": { "bg": "#f7f7f7" } },
+                { "type": "field", "fieldId": "executor_dept" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "직    위(급)", "style": { "bg": "#f7f7f7" } },
+                { "type": "field", "fieldId": "executor_position" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "성        명", "style": { "bg": "#f7f7f7" } },
+                { "type": "composite", "children": [
+                  { "type": "field", "fieldId": "executor_name" },
+                  { "type": "text", "value": "   " },
+                  { "type": "field", "fieldId": "executor_sign" },
+                  { "type": "text", "value": " (서명)" }
+                ]}
+              ]}
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

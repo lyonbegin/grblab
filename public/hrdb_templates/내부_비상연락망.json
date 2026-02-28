@@ -1,0 +1,117 @@
+{
+  "template_id": "internal_emergency_contact_v1",
+  "title": "내부 비상연락망",
+  "version": 1,
+  "source": { "file_type": "hwp", "filename": "내부_비상연락망.hwp" },
+  "meta": { "paper": "A4", "unit": "mm", "page": { "width": 210, "height": 297, "margin": { "top": 20, "right": 15, "bottom": 20, "left": 15 } } },
+  "fields": [
+    { "id": "company_name",   "label": "사업장명",        "type": "text" },
+    { "id": "update_year",    "label": "최종 수정 연도",  "type": "text", "placeholder": "2024" },
+    { "id": "update_month",   "label": "최종 수정 월",    "type": "text", "placeholder": "01" },
+    { "id": "update_day",     "label": "최종 수정 일",    "type": "text", "placeholder": "01" },
+    { "id": "c1_dept",  "label": "1 부서",   "type": "text" }, { "id": "c1_title", "label": "1 직책",   "type": "text" }, { "id": "c1_name",  "label": "1 성명",   "type": "text" }, { "id": "c1_phone", "label": "1 내선",   "type": "text" }, { "id": "c1_mobile","label": "1 휴대폰", "type": "text" },
+    { "id": "c2_dept",  "label": "2 부서",   "type": "text" }, { "id": "c2_title", "label": "2 직책",   "type": "text" }, { "id": "c2_name",  "label": "2 성명",   "type": "text" }, { "id": "c2_phone", "label": "2 내선",   "type": "text" }, { "id": "c2_mobile","label": "2 휴대폰", "type": "text" },
+    { "id": "c3_dept",  "label": "3 부서",   "type": "text" }, { "id": "c3_title", "label": "3 직책",   "type": "text" }, { "id": "c3_name",  "label": "3 성명",   "type": "text" }, { "id": "c3_phone", "label": "3 내선",   "type": "text" }, { "id": "c3_mobile","label": "3 휴대폰", "type": "text" },
+    { "id": "c4_dept",  "label": "4 부서",   "type": "text" }, { "id": "c4_title", "label": "4 직책",   "type": "text" }, { "id": "c4_name",  "label": "4 성명",   "type": "text" }, { "id": "c4_phone", "label": "4 내선",   "type": "text" }, { "id": "c4_mobile","label": "4 휴대폰", "type": "text" },
+    { "id": "c5_dept",  "label": "5 부서",   "type": "text" }, { "id": "c5_title", "label": "5 직책",   "type": "text" }, { "id": "c5_name",  "label": "5 성명",   "type": "text" }, { "id": "c5_phone", "label": "5 내선",   "type": "text" }, { "id": "c5_mobile","label": "5 휴대폰", "type": "text" },
+    { "id": "c6_dept",  "label": "6 부서",   "type": "text" }, { "id": "c6_title", "label": "6 직책",   "type": "text" }, { "id": "c6_name",  "label": "6 성명",   "type": "text" }, { "id": "c6_phone", "label": "6 내선",   "type": "text" }, { "id": "c6_mobile","label": "6 휴대폰", "type": "text" },
+    { "id": "c7_dept",  "label": "7 부서",   "type": "text" }, { "id": "c7_title", "label": "7 직책",   "type": "text" }, { "id": "c7_name",  "label": "7 성명",   "type": "text" }, { "id": "c7_phone", "label": "7 내선",   "type": "text" }, { "id": "c7_mobile","label": "7 휴대폰", "type": "text" },
+    { "id": "c8_dept",  "label": "8 부서",   "type": "text" }, { "id": "c8_title", "label": "8 직책",   "type": "text" }, { "id": "c8_name",  "label": "8 성명",   "type": "text" }, { "id": "c8_phone", "label": "8 내선",   "type": "text" }, { "id": "c8_mobile","label": "8 휴대폰", "type": "text" },
+    { "id": "ext_119",  "label": "119 (소방/구조)",  "type": "text", "placeholder": "119" },
+    { "id": "ext_112",  "label": "112 (경찰)",       "type": "text", "placeholder": "112" },
+    { "id": "ext_hospital","label": "인근 응급병원", "type": "text" },
+    { "id": "ext_gas",  "label": "가스 긴급",        "type": "text", "placeholder": "1544-4500" }
+  ],
+  "layout": {
+    "type": "page",
+    "children": [
+      {
+        "type": "block",
+        "style": { "padding": [8,4,8,4] },
+        "children": [
+          { "type": "text", "value": "내부 비상연락망", "style": { "fontSize": 18, "fontWeight": 900, "textAlign": "center" } }
+        ]
+      },
+      {
+        "type": "section",
+        "title": { "text": "사업장 정보" },
+        "children": [
+          {
+            "type": "table",
+            "cols": [{ "w": "25%" }, { "w": "35%" }, { "w": "20%" }, { "w": "20%" }],
+            "style": { "borderColor": "#c0c0c0" },
+            "rows": [
+              { "cells": [
+                { "type": "label", "text": "사 업 장 명", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "company_name" },
+                { "type": "label", "text": "최종 수정일", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "composite", "children": [
+                  { "type": "field", "fieldId": "update_year" }, { "type": "text", "value": "." },
+                  { "type": "field", "fieldId": "update_month" }, { "type": "text", "value": "." },
+                  { "type": "field", "fieldId": "update_day" }
+                ]}
+              ]}
+            ]
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "title": { "text": "내부 비상연락 명단" },
+        "children": [
+          {
+            "type": "table",
+            "cols": [{ "w": "20%" }, { "w": "15%" }, { "w": "15%" }, { "w": "15%" }, { "w": "35%" }],
+            "style": { "borderColor": "#c0c0c0" },
+            "rows": [
+              { "cells": [
+                { "type": "label", "text": "부  서",  "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "label", "text": "직  책",  "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "label", "text": "성  명",  "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "label", "text": "내선번호","style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "label", "text": "휴대폰",  "style": { "bg": "#eef0f3", "fontWeight": 700 } }
+              ]},
+              { "cells": [{ "type": "field", "fieldId": "c1_dept" }, { "type": "field", "fieldId": "c1_title" }, { "type": "field", "fieldId": "c1_name" }, { "type": "field", "fieldId": "c1_phone" }, { "type": "field", "fieldId": "c1_mobile" }] },
+              { "cells": [{ "type": "field", "fieldId": "c2_dept" }, { "type": "field", "fieldId": "c2_title" }, { "type": "field", "fieldId": "c2_name" }, { "type": "field", "fieldId": "c2_phone" }, { "type": "field", "fieldId": "c2_mobile" }] },
+              { "cells": [{ "type": "field", "fieldId": "c3_dept" }, { "type": "field", "fieldId": "c3_title" }, { "type": "field", "fieldId": "c3_name" }, { "type": "field", "fieldId": "c3_phone" }, { "type": "field", "fieldId": "c3_mobile" }] },
+              { "cells": [{ "type": "field", "fieldId": "c4_dept" }, { "type": "field", "fieldId": "c4_title" }, { "type": "field", "fieldId": "c4_name" }, { "type": "field", "fieldId": "c4_phone" }, { "type": "field", "fieldId": "c4_mobile" }] },
+              { "cells": [{ "type": "field", "fieldId": "c5_dept" }, { "type": "field", "fieldId": "c5_title" }, { "type": "field", "fieldId": "c5_name" }, { "type": "field", "fieldId": "c5_phone" }, { "type": "field", "fieldId": "c5_mobile" }] },
+              { "cells": [{ "type": "field", "fieldId": "c6_dept" }, { "type": "field", "fieldId": "c6_title" }, { "type": "field", "fieldId": "c6_name" }, { "type": "field", "fieldId": "c6_phone" }, { "type": "field", "fieldId": "c6_mobile" }] },
+              { "cells": [{ "type": "field", "fieldId": "c7_dept" }, { "type": "field", "fieldId": "c7_title" }, { "type": "field", "fieldId": "c7_name" }, { "type": "field", "fieldId": "c7_phone" }, { "type": "field", "fieldId": "c7_mobile" }] },
+              { "cells": [{ "type": "field", "fieldId": "c8_dept" }, { "type": "field", "fieldId": "c8_title" }, { "type": "field", "fieldId": "c8_name" }, { "type": "field", "fieldId": "c8_phone" }, { "type": "field", "fieldId": "c8_mobile" }] }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "title": { "text": "외부 비상연락처" },
+        "children": [
+          {
+            "type": "table",
+            "cols": [{ "w": "30%" }, { "w": "70%" }],
+            "style": { "borderColor": "#c0c0c0" },
+            "rows": [
+              { "cells": [
+                { "type": "label", "text": "119 (소방·구조)", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "ext_119" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "112 (경찰)",       "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "ext_112" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "인근 응급병원",    "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "ext_hospital" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "가스 긴급",        "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "ext_gas" }
+              ]}
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

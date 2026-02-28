@@ -1,0 +1,183 @@
+{
+  "template_id": "risk_assessment_register_v1",
+  "title": "위험성평가 등록부",
+  "version": 1,
+  "source": {
+    "file_type": "hwp",
+    "filename": "bid_00294_위험성평가_등록부_양식례.hwp",
+    "issuer": "",
+    "legal_basis": "산업안전보건법 제36조"
+  },
+  "meta": {
+    "paper": "A4",
+    "unit": "mm",
+    "page": { "width": 297, "height": 210, "margin": { "top": 15, "right": 15, "bottom": 15, "left": 15 }, "orientation": "landscape" },
+    "fonts": { "base": "Noto Sans KR" }
+  },
+  "fields": [
+    { "id": "eval_method",       "label": "평가 방법 (예: 3등급 판단법)", "type": "text", "placeholder": "3등급(상·중·하) 판단법" },
+    { "id": "appendix_current",  "label": "별지 현재 번호", "type": "text" },
+    { "id": "appendix_total",    "label": "별지 전체 번호", "type": "text" },
+    { "id": "eval_month",        "label": "평가 월",        "type": "text", "placeholder": "5" },
+
+    { "id": "row1_work_type",    "label": "1행 ①공종분류",   "type": "text" },
+    { "id": "row1_unit_work",    "label": "1행 ②단위작업",   "type": "text" },
+    { "id": "row1_hazard",       "label": "1행 ③위험요인",   "type": "textarea" },
+    { "id": "row1_grade_high",   "label": "1행 위험도 상",   "type": "checkbox" },
+    { "id": "row1_grade_mid",    "label": "1행 위험도 중",   "type": "checkbox" },
+    { "id": "row1_grade_low",    "label": "1행 위험도 하",   "type": "checkbox" },
+    { "id": "row1_measure",      "label": "1행 ⑤위험방지대책", "type": "textarea" },
+    { "id": "row1_manager",      "label": "1행 ⑥개선조치 담당자(예정일)", "type": "text" },
+    { "id": "row1_worker_rep",   "label": "1행 근로자대표 확인", "type": "checkbox" },
+    { "id": "row1_site_mgr",     "label": "1행 공사담당자 확인", "type": "checkbox" },
+
+    { "id": "row2_work_type",    "label": "2행 ①공종분류",   "type": "text" },
+    { "id": "row2_unit_work",    "label": "2행 ②단위작업",   "type": "text" },
+    { "id": "row2_hazard",       "label": "2행 ③위험요인",   "type": "textarea" },
+    { "id": "row2_grade_high",   "label": "2행 위험도 상",   "type": "checkbox" },
+    { "id": "row2_grade_mid",    "label": "2행 위험도 중",   "type": "checkbox" },
+    { "id": "row2_grade_low",    "label": "2행 위험도 하",   "type": "checkbox" },
+    { "id": "row2_measure",      "label": "2행 ⑤위험방지대책", "type": "textarea" },
+    { "id": "row2_manager",      "label": "2행 ⑥개선조치 담당자(예정일)", "type": "text" },
+    { "id": "row2_worker_rep",   "label": "2행 근로자대표 확인", "type": "checkbox" },
+    { "id": "row2_site_mgr",     "label": "2행 공사담당자 확인", "type": "checkbox" },
+
+    { "id": "row3_work_type",    "label": "3행 ①공종분류",   "type": "text" },
+    { "id": "row3_unit_work",    "label": "3행 ②단위작업",   "type": "text" },
+    { "id": "row3_hazard",       "label": "3행 ③위험요인",   "type": "textarea" },
+    { "id": "row3_grade_high",   "label": "3행 위험도 상",   "type": "checkbox" },
+    { "id": "row3_grade_mid",    "label": "3행 위험도 중",   "type": "checkbox" },
+    { "id": "row3_grade_low",    "label": "3행 위험도 하",   "type": "checkbox" },
+    { "id": "row3_measure",      "label": "3행 ⑤위험방지대책", "type": "textarea" },
+    { "id": "row3_manager",      "label": "3행 ⑥개선조치 담당자(예정일)", "type": "text" },
+    { "id": "row3_worker_rep",   "label": "3행 근로자대표 확인", "type": "checkbox" },
+    { "id": "row3_site_mgr",     "label": "3행 공사담당자 확인", "type": "checkbox" },
+
+    { "id": "row4_work_type",    "label": "4행 ①공종분류",   "type": "text" },
+    { "id": "row4_unit_work",    "label": "4행 ②단위작업",   "type": "text" },
+    { "id": "row4_hazard",       "label": "4행 ③위험요인",   "type": "textarea" },
+    { "id": "row4_grade_high",   "label": "4행 위험도 상",   "type": "checkbox" },
+    { "id": "row4_grade_mid",    "label": "4행 위험도 중",   "type": "checkbox" },
+    { "id": "row4_grade_low",    "label": "4행 위험도 하",   "type": "checkbox" },
+    { "id": "row4_measure",      "label": "4행 ⑤위험방지대책", "type": "textarea" },
+    { "id": "row4_manager",      "label": "4행 ⑥개선조치 담당자(예정일)", "type": "text" },
+    { "id": "row4_worker_rep",   "label": "4행 근로자대표 확인", "type": "checkbox" },
+    { "id": "row4_site_mgr",     "label": "4행 공사담당자 확인", "type": "checkbox" },
+
+    { "id": "row5_work_type",    "label": "5행 ①공종분류",   "type": "text" },
+    { "id": "row5_unit_work",    "label": "5행 ②단위작업",   "type": "text" },
+    { "id": "row5_hazard",       "label": "5행 ③위험요인",   "type": "textarea" },
+    { "id": "row5_grade_high",   "label": "5행 위험도 상",   "type": "checkbox" },
+    { "id": "row5_grade_mid",    "label": "5행 위험도 중",   "type": "checkbox" },
+    { "id": "row5_grade_low",    "label": "5행 위험도 하",   "type": "checkbox" },
+    { "id": "row5_measure",      "label": "5행 ⑤위험방지대책", "type": "textarea" },
+    { "id": "row5_manager",      "label": "5행 ⑥개선조치 담당자(예정일)", "type": "text" },
+    { "id": "row5_worker_rep",   "label": "5행 근로자대표 확인", "type": "checkbox" },
+    { "id": "row5_site_mgr",     "label": "5행 공사담당자 확인", "type": "checkbox" }
+  ],
+  "layout": {
+    "type": "page",
+    "children": [
+      {
+        "type": "block",
+        "style": { "marginBottom": 4 },
+        "children": [
+          {
+            "type": "composite",
+            "children": [
+              { "type": "text", "value": "< " },
+              { "type": "field", "fieldId": "eval_method" },
+              { "type": "text", "value": " >   별지 (" },
+              { "type": "field", "fieldId": "appendix_current", "style": { "inputWidth": "2em" } },
+              { "type": "text", "value": " ) / (" },
+              { "type": "field", "fieldId": "appendix_total", "style": { "inputWidth": "2em" } },
+              { "type": "text", "value": " )" }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "block",
+        "style": { "padding": [6, 6, 6, 6] },
+        "children": [
+          {
+            "type": "composite",
+            "children": [
+              { "type": "text", "value": "( " },
+              { "type": "field", "fieldId": "eval_month", "style": { "inputWidth": "2em" } },
+              { "type": "text", "value": " 월 )  위험성평가 등록부 (별지)", "style": { "fontSize": 14, "fontWeight": 900, "textAlign": "center" } }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "block",
+        "style": { "marginBottom": 6, "fontSize": 9, "color": "#555" },
+        "children": [
+          { "type": "text", "value": "상 등급 대책 우선 순위: 공법변경→작업변경→안전시설물→개인보호구 순 / 중 등급 대책 우선 순위: 관리자 배치(신호수 등)→위험저감 교육 등" }
+        ]
+      },
+      {
+        "type": "section", "id": "section_register",
+        "children": [{
+          "type": "table",
+          "cols": [
+            { "w": "7%" }, { "w": "8%" }, { "w": "15%" },
+            { "w": "5%" }, { "w": "5%" }, { "w": "5%" },
+            { "w": "25%" }, { "w": "12%" },
+            { "w": "7%" }, { "w": "7%" }
+          ],
+          "rows": [
+            { "cells": [
+              { "type": "label", "text": "①공종분류",  "style": { "bg": "#eef0f3", "fontWeight": 700, "align": "center" } },
+              { "type": "label", "text": "②단위작업",  "style": { "bg": "#eef0f3", "fontWeight": 700, "align": "center" } },
+              { "type": "label", "text": "③위험요인",  "style": { "bg": "#eef0f3", "fontWeight": 700, "align": "center" } },
+              { "type": "label", "text": "상",          "style": { "bg": "#eef0f3", "fontWeight": 700, "align": "center" } },
+              { "type": "label", "text": "중",          "style": { "bg": "#eef0f3", "fontWeight": 700, "align": "center" } },
+              { "type": "label", "text": "하",          "style": { "bg": "#eef0f3", "fontWeight": 700, "align": "center" } },
+              { "type": "label", "text": "⑤위험방지대책", "style": { "bg": "#eef0f3", "fontWeight": 700, "align": "center" } },
+              { "type": "label", "text": "⑥개선조치 담당자\n(조치예정일)", "style": { "bg": "#eef0f3", "fontWeight": 700, "align": "center" } },
+              { "type": "label", "text": "근로자대표",  "style": { "bg": "#eef0f3", "fontWeight": 700, "align": "center" } },
+              { "type": "label", "text": "공사담당자",  "style": { "bg": "#eef0f3", "fontWeight": 700, "align": "center" } }
+            ]},
+            { "cells": [
+              { "type": "field", "fieldId": "row1_work_type" }, { "type": "field", "fieldId": "row1_unit_work" },
+              { "type": "field", "fieldId": "row1_hazard" },
+              { "type": "field", "fieldId": "row1_grade_high" }, { "type": "field", "fieldId": "row1_grade_mid" }, { "type": "field", "fieldId": "row1_grade_low" },
+              { "type": "field", "fieldId": "row1_measure" }, { "type": "field", "fieldId": "row1_manager" },
+              { "type": "field", "fieldId": "row1_worker_rep" }, { "type": "field", "fieldId": "row1_site_mgr" }
+            ]},
+            { "cells": [
+              { "type": "field", "fieldId": "row2_work_type" }, { "type": "field", "fieldId": "row2_unit_work" },
+              { "type": "field", "fieldId": "row2_hazard" },
+              { "type": "field", "fieldId": "row2_grade_high" }, { "type": "field", "fieldId": "row2_grade_mid" }, { "type": "field", "fieldId": "row2_grade_low" },
+              { "type": "field", "fieldId": "row2_measure" }, { "type": "field", "fieldId": "row2_manager" },
+              { "type": "field", "fieldId": "row2_worker_rep" }, { "type": "field", "fieldId": "row2_site_mgr" }
+            ]},
+            { "cells": [
+              { "type": "field", "fieldId": "row3_work_type" }, { "type": "field", "fieldId": "row3_unit_work" },
+              { "type": "field", "fieldId": "row3_hazard" },
+              { "type": "field", "fieldId": "row3_grade_high" }, { "type": "field", "fieldId": "row3_grade_mid" }, { "type": "field", "fieldId": "row3_grade_low" },
+              { "type": "field", "fieldId": "row3_measure" }, { "type": "field", "fieldId": "row3_manager" },
+              { "type": "field", "fieldId": "row3_worker_rep" }, { "type": "field", "fieldId": "row3_site_mgr" }
+            ]},
+            { "cells": [
+              { "type": "field", "fieldId": "row4_work_type" }, { "type": "field", "fieldId": "row4_unit_work" },
+              { "type": "field", "fieldId": "row4_hazard" },
+              { "type": "field", "fieldId": "row4_grade_high" }, { "type": "field", "fieldId": "row4_grade_mid" }, { "type": "field", "fieldId": "row4_grade_low" },
+              { "type": "field", "fieldId": "row4_measure" }, { "type": "field", "fieldId": "row4_manager" },
+              { "type": "field", "fieldId": "row4_worker_rep" }, { "type": "field", "fieldId": "row4_site_mgr" }
+            ]},
+            { "cells": [
+              { "type": "field", "fieldId": "row5_work_type" }, { "type": "field", "fieldId": "row5_unit_work" },
+              { "type": "field", "fieldId": "row5_hazard" },
+              { "type": "field", "fieldId": "row5_grade_high" }, { "type": "field", "fieldId": "row5_grade_mid" }, { "type": "field", "fieldId": "row5_grade_low" },
+              { "type": "field", "fieldId": "row5_measure" }, { "type": "field", "fieldId": "row5_manager" },
+              { "type": "field", "fieldId": "row5_worker_rep" }, { "type": "field", "fieldId": "row5_site_mgr" }
+            ]}
+          ]
+        }]
+      }
+    ]
+  }
+}

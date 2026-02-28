@@ -1,0 +1,194 @@
+{
+  "template_id": "construction_safety_ledger_v1",
+  "title": "건설공사 안전보건대장",
+  "version": 1,
+  "source": {
+    "file_type": "hwp",
+    "filename": "bid_00177_건설공사_안전보건대장의_작성_등에_관한_고시고용노동부.hwp",
+    "issuer": "고용노동부",
+    "legal_basis": "산업안전보건법 제67조, 동법 시행령 제56조"
+  },
+  "meta": {
+    "paper": "A4",
+    "unit": "mm",
+    "page": { "width": 210, "height": 297, "margin": { "top": 20, "right": 15, "bottom": 20, "left": 15 } },
+    "fonts": { "base": "Noto Sans KR", "mono": "monospace" }
+  },
+  "fields": [
+    { "id": "project_name",       "label": "공사명",               "type": "text" },
+    { "id": "project_location",   "label": "공사 장소",            "type": "text" },
+    { "id": "project_amount",     "label": "총 공사금액",          "type": "text" },
+    { "id": "start_year",         "label": "착공일 연도",          "type": "text", "placeholder": "2024" },
+    { "id": "start_month",        "label": "착공일 월",            "type": "text", "placeholder": "01" },
+    { "id": "start_day",          "label": "착공일 일",            "type": "text", "placeholder": "01" },
+    { "id": "end_year",           "label": "준공 예정일 연도",     "type": "text", "placeholder": "2025" },
+    { "id": "end_month",          "label": "준공 예정일 월",       "type": "text", "placeholder": "12" },
+    { "id": "end_day",            "label": "준공 예정일 일",       "type": "text", "placeholder": "31" },
+    { "id": "ordering_company",   "label": "발주자명",             "type": "text" },
+    { "id": "ordering_manager",   "label": "안전보건 담당자",      "type": "text" },
+    { "id": "ordering_contact",   "label": "연락처",               "type": "text" },
+    { "id": "prime_company",      "label": "원도급인명",           "type": "text" },
+    { "id": "prime_ceo",          "label": "대표자",               "type": "text" },
+    { "id": "prime_safety_mgr",   "label": "안전보건관리책임자",   "type": "text" },
+    { "id": "prime_safety_person","label": "안전관리자",           "type": "text" },
+    { "id": "prime_health_person","label": "보건관리자",           "type": "text" },
+    { "id": "hazard_summary",     "label": "유해·위험 요인",       "type": "text" },
+    { "id": "safety_measures",    "label": "안전보건 조치",        "type": "text" },
+    { "id": "emergency_plan",     "label": "비상대응 계획",        "type": "text" },
+    { "id": "ppe_plan",           "label": "보호구 지급",          "type": "text" },
+    { "id": "edu_plan",           "label": "안전보건교육",         "type": "text" },
+    { "id": "create_year",        "label": "작성일 연도",          "type": "text", "placeholder": "2024" },
+    { "id": "create_month",       "label": "작성일 월",            "type": "text", "placeholder": "01" },
+    { "id": "create_day",         "label": "작성일 일",            "type": "text", "placeholder": "01" }
+  ],
+  "layout": {
+    "type": "page",
+    "children": [
+      {
+        "type": "block",
+        "style": { "padding": [8,4,8,4] },
+        "children": [
+          { "type": "text", "value": "건설공사 안전보건대장", "style": { "fontSize": 18, "fontWeight": 900, "textAlign": "center" } },
+          { "type": "text", "value": "산업안전보건법 제67조", "style": { "fontSize": 10, "textAlign": "center", "color": "#555" } }
+        ]
+      },
+      {
+        "type": "section",
+        "title": { "text": "공사 개요" },
+        "children": [
+          {
+            "type": "table",
+            "cols": [{ "w": "25%" }, { "w": "75%" }],
+            "style": { "borderColor": "#c0c0c0" },
+            "rows": [
+              { "cells": [
+                { "type": "label", "text": "공 사 명", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "project_name" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "공사 장소", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "project_location" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "총 공사금액", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "composite", "children": [
+                  { "type": "field", "fieldId": "project_amount" }, { "type": "text", "value": " 원" }
+                ]}
+              ]},
+              { "cells": [
+                { "type": "label", "text": "공사 기간", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "composite", "children": [
+                  { "type": "field", "fieldId": "start_year" }, { "type": "text", "value": "년 " },
+                  { "type": "field", "fieldId": "start_month" }, { "type": "text", "value": "월 " },
+                  { "type": "field", "fieldId": "start_day" }, { "type": "text", "value": "일 ~ " },
+                  { "type": "field", "fieldId": "end_year" }, { "type": "text", "value": "년 " },
+                  { "type": "field", "fieldId": "end_month" }, { "type": "text", "value": "월 " },
+                  { "type": "field", "fieldId": "end_day" }, { "type": "text", "value": "일" }
+                ]}
+              ]}
+            ]
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "title": { "text": "발주자 정보" },
+        "children": [
+          {
+            "type": "table",
+            "cols": [{ "w": "25%" }, { "w": "75%" }],
+            "style": { "borderColor": "#c0c0c0" },
+            "rows": [
+              { "cells": [
+                { "type": "label", "text": "발 주 자 명", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "ordering_company" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "안전보건 담당자", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "ordering_manager" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "연 락 처", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "ordering_contact" }
+              ]}
+            ]
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "title": { "text": "원도급인 정보" },
+        "children": [
+          {
+            "type": "table",
+            "cols": [{ "w": "25%" }, { "w": "25%" }, { "w": "25%" }, { "w": "25%" }],
+            "style": { "borderColor": "#c0c0c0" },
+            "rows": [
+              { "cells": [
+                { "type": "label", "text": "건설업체명", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "prime_company" },
+                { "type": "label", "text": "대 표 자", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "prime_ceo" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "안전보건관리책임자", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "prime_safety_mgr" },
+                { "type": "label", "text": "안전관리자", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "prime_safety_person" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "보건관리자", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "prime_health_person" },
+                { "type": "label", "text": "", "colspan": 2 }
+              ]}
+            ]
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "title": { "text": "안전보건 관리 계획" },
+        "children": [
+          {
+            "type": "table",
+            "cols": [{ "w": "25%" }, { "w": "75%" }],
+            "style": { "borderColor": "#c0c0c0" },
+            "rows": [
+              { "cells": [
+                { "type": "label", "text": "유해·위험 요인", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "hazard_summary" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "안전보건 조치", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "safety_measures" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "비상대응 계획", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "emergency_plan" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "보호구 지급", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "ppe_plan" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "안전보건교육", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "edu_plan" }
+              ]}
+            ]
+          }
+        ]
+      },
+      {
+        "type": "block",
+        "style": { "padding": [12,4,4,4] },
+        "children": [
+          { "type": "composite", "children": [
+            { "type": "field", "fieldId": "create_year" }, { "type": "text", "value": " 년  " },
+            { "type": "field", "fieldId": "create_month" }, { "type": "text", "value": " 월  " },
+            { "type": "field", "fieldId": "create_day" }, { "type": "text", "value": " 일" }
+          ], "style": { "textAlign": "right" } }
+        ]
+      }
+    ]
+  }
+}

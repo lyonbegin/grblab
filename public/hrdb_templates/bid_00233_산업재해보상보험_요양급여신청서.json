@@ -1,0 +1,221 @@
+{
+  "template_id": "industrial_accident_care_benefit_application_v1",
+  "title": "산업재해보상보험 요양급여신청서",
+  "version": 1,
+  "source": {
+    "file_type": "hwp",
+    "filename": "bid_00233_16__출퇴근재해발생신고서__제3자재해발생신고서__확인서.hwp",
+    "issuer": "근로복지공단",
+    "legal_basis": "산업재해보상보험법 / [별지 제2호서식] (개정 2023. 7. 5.)",
+    "note": "복합 양식 파일: 요양급여신청서, 출퇴근재해발생신고서, 제3자재해발생신고서, 확인서 포함"
+  },
+  "meta": {
+    "paper": "A4",
+    "unit": "mm",
+    "page": { "width": 210, "height": 297, "margin": { "top": 20, "right": 15, "bottom": 20, "left": 15 } },
+    "fonts": { "base": "Noto Sans KR" }
+  },
+  "fields": [
+    { "id": "receipt_no",               "label": "접수번호",             "type": "text" },
+    { "id": "receipt_date",             "label": "접수일자",             "type": "text" },
+
+    { "id": "victim_name",              "label": "재해자 성명 (외국인은 영문 대문자)", "type": "text" },
+    { "id": "victim_rrn",               "label": "재해자 주민등록번호(외국인등록번호)", "type": "text" },
+    { "id": "victim_address",           "label": "재해자 주소",           "type": "text" },
+    { "id": "victim_mobile",            "label": "재해자 휴대전화",       "type": "text" },
+    { "id": "victim_phone",             "label": "재해자 전화번호",       "type": "text" },
+
+    { "id": "accident_year",            "label": "재해발생일시 연",       "type": "text" },
+    { "id": "accident_month",           "label": "재해발생일시 월",       "type": "text" },
+    { "id": "accident_day",             "label": "재해발생일시 일",       "type": "text" },
+    { "id": "accident_hour",            "label": "재해발생일시 시",       "type": "text" },
+    { "id": "accident_minute",          "label": "재해발생일시 분",       "type": "text" },
+
+    { "id": "hire_date",                "label": "채용일자",             "type": "text" },
+    { "id": "work_start_time",          "label": "출근시간",             "type": "text" },
+    { "id": "work_end_time",            "label": "퇴근시간",             "type": "text" },
+    { "id": "job_type",                 "label": "직종",                 "type": "text" },
+
+    { "id": "employer_relation_none",   "label": "사업주여부 - 해당없음", "type": "checkbox" },
+    { "id": "employer_actual",          "label": "사업주여부 - 실제사업주(동업자포함)", "type": "checkbox" },
+    { "id": "employer_sub",             "label": "사업주여부 - 하수급사업주", "type": "checkbox" },
+
+    { "id": "relative_none",            "label": "친인척여부 - 해당없음", "type": "checkbox" },
+    { "id": "relative_spouse",          "label": "친인척여부 - 배우자",   "type": "checkbox" },
+    { "id": "relative_parent",          "label": "친인척여부 - 부모",     "type": "checkbox" },
+    { "id": "relative_child",           "label": "친인척여부 - 자녀",     "type": "checkbox" },
+    { "id": "relative_sibling",         "label": "친인척여부 - 형제자매", "type": "checkbox" },
+    { "id": "relative_other",           "label": "친인척여부 - 기타 친인척", "type": "checkbox" },
+    { "id": "relative_other_detail",    "label": "기타 친인척 내용",      "type": "text" },
+
+    { "id": "worker_type_worker",       "label": "근로자유형 - 근로자",   "type": "checkbox" },
+    { "id": "worker_type_provider",     "label": "근로자유형 - 노무제공자", "type": "checkbox" },
+    { "id": "worker_type_sme_owner",    "label": "근로자유형 - 중소기업사업주", "type": "checkbox" },
+    { "id": "worker_type_sme_family",   "label": "근로자유형 - 중소기업사업주 가족종사자", "type": "checkbox" },
+    { "id": "worker_type_student",      "label": "근로자유형 - 학생연구자", "type": "checkbox" },
+    { "id": "worker_type_health",       "label": "근로자유형 - 건강손상자녀", "type": "checkbox" },
+    { "id": "worker_type_special",      "label": "근로자유형 - 특수형태근로종사자", "type": "checkbox" },
+    { "id": "worker_type_intern",       "label": "근로자유형 - 현장실습생", "type": "checkbox" },
+
+    { "id": "claim_type_accident",      "label": "신청구분 - 업무상 사고",     "type": "checkbox" },
+    { "id": "claim_type_disease",       "label": "신청구분 - 업무상 질병",     "type": "checkbox" },
+    { "id": "claim_type_commute",       "label": "신청구분 - 출퇴근 재해",     "type": "checkbox" },
+
+    { "id": "workplace_name",           "label": "사업장명",             "type": "text" },
+    { "id": "employer_name",            "label": "사업주명",             "type": "text" },
+    { "id": "workplace_contact",        "label": "사업장 연락처",        "type": "text" },
+    { "id": "workplace_mgmt_no",        "label": "사업장관리번호",       "type": "text" },
+    { "id": "workplace_address",        "label": "사업장 주소",          "type": "text" },
+    { "id": "accident_description",     "label": "재해 발생 경위",       "type": "textarea" }
+  ],
+  "layout": {
+    "type": "page",
+    "children": [
+      {
+        "type": "block",
+        "style": { "marginBottom": 4 },
+        "children": [
+          { "type": "text", "value": "[별지 제2호서식] (개정 2023. 7. 5.)", "style": { "fontSize": 9 } }
+        ]
+      },
+      {
+        "type": "block",
+        "style": { "padding": [8, 6, 8, 6] },
+        "children": [
+          { "type": "text", "value": "산업재해보상보험 요양급여신청서", "style": { "fontSize": 16, "fontWeight": 900, "textAlign": "center" } },
+          { "type": "text", "value": "※ 굵은 선 안은 필수 기재사항이므로 반드시 기재해 주시기 바랍니다. (앞 면)", "style": { "fontSize": 9, "textAlign": "right" } }
+        ]
+      },
+      {
+        "type": "section", "id": "section_receipt",
+        "children": [{
+          "type": "table",
+          "cols": [{ "w": "20%" }, { "w": "25%" }, { "w": "20%" }, { "w": "15%" }, { "w": "20%" }],
+          "rows": [
+            { "cells": [
+              { "type": "label", "text": "접수번호", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "receipt_no" },
+              { "type": "label", "text": "접수일자", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "receipt_date" },
+              { "type": "label", "text": "처리기간: 7일", "style": { "bg": "#eef0f3" } }
+            ]}
+          ]
+        }]
+      },
+      {
+        "type": "section", "id": "section_victim",
+        "children": [{
+          "type": "table",
+          "cols": [{ "w": "10%" }, { "w": "20%" }, { "w": "70%" }],
+          "rows": [
+            { "cells": [
+              { "type": "label", "text": "재해자", "style": { "bg": "#eef0f3", "fontWeight": 700 }, "rowspan": 6 },
+              { "type": "label", "text": "성명", "style": { "bg": "#f7f7f7" } },
+              { "type": "field", "fieldId": "victim_name" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "주민등록번호", "style": { "bg": "#f7f7f7" } },
+              { "type": "field", "fieldId": "victim_rrn" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "주소", "style": { "bg": "#f7f7f7" } },
+              { "type": "composite", "children": [
+                { "type": "field", "fieldId": "victim_address" },
+                { "type": "text", "value": "  휴대전화: " }, { "type": "field", "fieldId": "victim_mobile" },
+                { "type": "text", "value": "  전화번호: " }, { "type": "field", "fieldId": "victim_phone" }
+              ]}
+            ]},
+            { "cells": [
+              { "type": "label", "text": "재해발생일시", "style": { "bg": "#f7f7f7" } },
+              { "type": "composite", "children": [
+                { "type": "field", "fieldId": "accident_year" }, { "type": "text", "value": "년 " },
+                { "type": "field", "fieldId": "accident_month" }, { "type": "text", "value": "월 " },
+                { "type": "field", "fieldId": "accident_day" }, { "type": "text", "value": "일 " },
+                { "type": "field", "fieldId": "accident_hour" }, { "type": "text", "value": "시 " },
+                { "type": "field", "fieldId": "accident_minute" }, { "type": "text", "value": "분" }
+              ]}
+            ]},
+            { "cells": [
+              { "type": "label", "text": "채용/출퇴근", "style": { "bg": "#f7f7f7" } },
+              { "type": "composite", "children": [
+                { "type": "text", "value": "채용일자: " }, { "type": "field", "fieldId": "hire_date" },
+                { "type": "text", "value": "  출근시간: " }, { "type": "field", "fieldId": "work_start_time" },
+                { "type": "text", "value": "  퇴근시간: " }, { "type": "field", "fieldId": "work_end_time" },
+                { "type": "text", "value": "  직종: " }, { "type": "field", "fieldId": "job_type" }
+              ]}
+            ]},
+            { "cells": [
+              { "type": "label", "text": "사업주여부", "style": { "bg": "#f7f7f7" } },
+              { "type": "composite", "children": [
+                { "type": "field", "fieldId": "employer_relation_none" }, { "type": "text", "value": " 해당없음   " },
+                { "type": "field", "fieldId": "employer_actual" }, { "type": "text", "value": " 실제사업주(동업자포함)   " },
+                { "type": "field", "fieldId": "employer_sub" }, { "type": "text", "value": " 하수급사업주" }
+              ]}
+            ]},
+            { "cells": [
+              { "type": "label", "text": "친인척여부", "style": { "bg": "#f7f7f7" } },
+              { "type": "composite", "children": [
+                { "type": "field", "fieldId": "relative_none" }, { "type": "text", "value": " 해당없음   " },
+                { "type": "field", "fieldId": "relative_spouse" }, { "type": "text", "value": " 배우자   " },
+                { "type": "field", "fieldId": "relative_parent" }, { "type": "text", "value": " 부모   " },
+                { "type": "field", "fieldId": "relative_child" }, { "type": "text", "value": " 자녀   " },
+                { "type": "field", "fieldId": "relative_sibling" }, { "type": "text", "value": " 형제자매   " },
+                { "type": "field", "fieldId": "relative_other" }, { "type": "text", "value": " 기타 친인척(" },
+                { "type": "field", "fieldId": "relative_other_detail", "style": { "inputWidth": "5em" } }, { "type": "text", "value": ")" }
+              ]}
+            ]},
+            { "cells": [
+              { "type": "label", "text": "근로자유형", "style": { "bg": "#f7f7f7" } },
+              { "type": "composite", "children": [
+                { "type": "field", "fieldId": "worker_type_worker" }, { "type": "text", "value": " 근로자   " },
+                { "type": "field", "fieldId": "worker_type_provider" }, { "type": "text", "value": " 노무제공자   " },
+                { "type": "field", "fieldId": "worker_type_sme_owner" }, { "type": "text", "value": " 중소기업사업주   " },
+                { "type": "field", "fieldId": "worker_type_sme_family" }, { "type": "text", "value": " 중소기업사업주 가족종사자   " },
+                { "type": "field", "fieldId": "worker_type_student" }, { "type": "text", "value": " 학생연구자\n" },
+                { "type": "field", "fieldId": "worker_type_health" }, { "type": "text", "value": " 건강손상자녀   " },
+                { "type": "field", "fieldId": "worker_type_special" }, { "type": "text", "value": " 특수형태근로종사자('23.6.30. 이전 재해)   " },
+                { "type": "field", "fieldId": "worker_type_intern" }, { "type": "text", "value": " 현장실습생" }
+              ]}
+            ]}
+          ]
+        }]
+      },
+      {
+        "type": "section", "id": "section_workplace",
+        "children": [{
+          "type": "table",
+          "cols": [{ "w": "15%" }, { "w": "20%" }, { "w": "65%" }],
+          "rows": [
+            { "cells": [
+              { "type": "label", "text": "사업장 및 재해 관련 내용", "style": { "bg": "#eef0f3", "fontWeight": 700 }, "rowspan": 6 },
+              { "type": "label", "text": "신청구분", "style": { "bg": "#f7f7f7" } },
+              { "type": "composite", "children": [
+                { "type": "field", "fieldId": "claim_type_accident" }, { "type": "text", "value": " 업무상 사고   " },
+                { "type": "field", "fieldId": "claim_type_disease" }, { "type": "text", "value": " 업무상 질병(진폐·CS2 포함)   " },
+                { "type": "field", "fieldId": "claim_type_commute" }, { "type": "text", "value": " 출퇴근 재해" }
+              ]}
+            ]},
+            { "cells": [
+              { "type": "label", "text": "사업장명", "style": { "bg": "#f7f7f7" } }, { "type": "field", "fieldId": "workplace_name" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "사업주명", "style": { "bg": "#f7f7f7" } }, { "type": "field", "fieldId": "employer_name" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "연락처", "style": { "bg": "#f7f7f7" } }, { "type": "field", "fieldId": "workplace_contact" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "사업장관리번호", "style": { "bg": "#f7f7f7" } }, { "type": "field", "fieldId": "workplace_mgmt_no" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "사업장 주소", "style": { "bg": "#f7f7f7" } }, { "type": "field", "fieldId": "workplace_address" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "재해 발생 경위", "style": { "bg": "#f7f7f7" } }, { "type": "field", "fieldId": "accident_description" }
+            ]}
+          ]
+        }]
+      }
+    ]
+  }
+}

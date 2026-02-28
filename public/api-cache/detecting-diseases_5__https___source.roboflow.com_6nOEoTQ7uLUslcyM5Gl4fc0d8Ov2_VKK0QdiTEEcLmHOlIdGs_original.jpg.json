@@ -1,0 +1,32 @@
+[
+  {
+    "x": 110,
+    "y": 228,
+    "width": 206,
+    "height": 198,
+    "confidence": 0.998855710029602,
+    "class": "Strawberry Powdery Mildew Leaf",
+    "class_id": 8,
+    "detection_id": "0f55d9d1-b585-4ed7-a507-aaafc6f2cdc1"
+  },
+  {
+    "x": 269,
+    "y": 195.5,
+    "width": 176,
+    "height": 283,
+    "confidence": 0.9018740057945251,
+    "class": "Strawberry Powdery Mildew Leaf",
+    "class_id": 8,
+    "detection_id": "063b044e-45fa-4526-86f3-fabc3dac5137"
+  },
+  {
+    "x": 267.5,
+    "y": 188,
+    "width": 179,
+    "height": 278,
+    "confidence": 0.5348014235496521,
+    "class": "Strawberry Leaf Spot",
+    "class_id": 6,
+    "detection_id": "8530c3d7-8437-494f-bff5-1f7bd9c88f6c"
+  }
+]

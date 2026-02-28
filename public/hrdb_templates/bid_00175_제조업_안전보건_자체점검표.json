@@ -1,0 +1,174 @@
+{
+  "template_id": "manufacturing_safety_self_check_v1",
+  "title": "제조업 안전보건 자체점검표",
+  "version": 1,
+  "source": {
+    "file_type": "hwp",
+    "filename": "bid_00175_제조업_안전보건_자체점검표수정.hwp",
+    "issuer": "고용노동부",
+    "legal_basis": "산업안전보건법 제36조"
+  },
+  "meta": {
+    "paper": "A4",
+    "unit": "mm",
+    "page": { "width": 210, "height": 297, "margin": { "top": 20, "right": 15, "bottom": 20, "left": 15 } },
+    "fonts": { "base": "Noto Sans KR", "mono": "monospace" }
+  },
+  "fields": [
+    { "id": "site_name",         "label": "사업장명",        "type": "text", "placeholder": "사업장명" },
+    { "id": "check_start_year",  "label": "점검 시작 연도",  "type": "text", "placeholder": "2024" },
+    { "id": "check_start_month", "label": "점검 시작 월",    "type": "text", "placeholder": "01" },
+    { "id": "check_start_day",   "label": "점검 시작 일",    "type": "text", "placeholder": "01" },
+    { "id": "check_end_month",   "label": "점검 종료 월",    "type": "text", "placeholder": "01" },
+    { "id": "check_end_day",     "label": "점검 종료 일",    "type": "text", "placeholder": "01" },
+    { "id": "check_days",        "label": "점검 일수",       "type": "text", "placeholder": "0" },
+    { "id": "checker1_title",    "label": "점검자1 직책",    "type": "text", "placeholder": "안전보건관리책임자" },
+    { "id": "checker1_name",     "label": "점검자1 성명",    "type": "text", "placeholder": "성명" },
+    { "id": "checker2_title",    "label": "점검자2 직책",    "type": "text", "placeholder": "관리감독자" },
+    { "id": "checker2_name",     "label": "점검자2 성명",    "type": "text", "placeholder": "성명" },
+    { "id": "checker3_title",    "label": "점검자3 직책",    "type": "text", "placeholder": "안전관리자" },
+    { "id": "checker3_name",     "label": "점검자3 성명",    "type": "text", "placeholder": "성명" },
+    { "id": "checker4_title",    "label": "점검자4 직책",    "type": "text", "placeholder": "보건관리자" },
+    { "id": "checker4_name",     "label": "점검자4 성명",    "type": "text", "placeholder": "성명" },
+    { "id": "checker5_title",    "label": "점검자5 직책",    "type": "text", "placeholder": "안전보건관리담당자" },
+    { "id": "checker5_name",     "label": "점검자5 성명",    "type": "text", "placeholder": "성명" },
+    { "id": "owner_name",        "label": "사업주 성명",     "type": "text", "placeholder": "성명" },
+    { "id": "worker_rep_name",   "label": "근로자대표 성명", "type": "text", "placeholder": "성명" },
+    { "id": "biz_name",          "label": "사업장명",        "type": "text" },
+    { "id": "ceo_name",          "label": "대표자",          "type": "text" },
+    { "id": "address",           "label": "소재지",          "type": "text" },
+    { "id": "phone",             "label": "전화번호",        "type": "text", "placeholder": "000-0000-0000" },
+    { "id": "biz_type",          "label": "업종",            "type": "text" },
+    { "id": "workers_total",     "label": "근로자 수 (계)",  "type": "text", "placeholder": "0" },
+    { "id": "workers_male",      "label": "남",              "type": "text", "placeholder": "0" },
+    { "id": "workers_female",    "label": "여",              "type": "text", "placeholder": "0" }
+  ],
+  "layout": {
+    "type": "page",
+    "children": [
+      {
+        "type": "block",
+        "style": { "padding": [8,4,8,4] },
+        "children": [
+          { "type": "text", "value": "제조업 안전보건 자체점검표", "style": { "fontSize": 18, "fontWeight": 900, "textAlign": "center" } }
+        ]
+      },
+      {
+        "type": "section",
+        "title": { "text": "기본 정보" },
+        "children": [
+          {
+            "type": "table",
+            "cols": [{ "w": "25%" }, { "w": "75%" }],
+            "style": { "borderColor": "#c0c0c0" },
+            "rows": [
+              { "cells": [
+                { "type": "label", "text": "사업장명", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "site_name" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "점검일자", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "composite", "children": [
+                  { "type": "field", "fieldId": "check_start_year" }, { "type": "text", "value": "년 " },
+                  { "type": "field", "fieldId": "check_start_month" }, { "type": "text", "value": "월 " },
+                  { "type": "field", "fieldId": "check_start_day" }, { "type": "text", "value": "일 ~ " },
+                  { "type": "field", "fieldId": "check_end_month" }, { "type": "text", "value": "월 " },
+                  { "type": "field", "fieldId": "check_end_day" }, { "type": "text", "value": "일 (" },
+                  { "type": "field", "fieldId": "check_days" }, { "type": "text", "value": "일간)" }
+                ]}
+              ]}
+            ]
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "title": { "text": "점 검 자" },
+        "children": [
+          {
+            "type": "table",
+            "cols": [{ "w": "15%" }, { "w": "35%" }, { "w": "35%" }, { "w": "15%" }],
+            "style": { "borderColor": "#c0c0c0" },
+            "rows": [
+              { "cells": [
+                { "type": "label", "text": "점검자", "style": { "bg": "#eef0f3", "fontWeight": 700 }, "rowspan": 5 },
+                { "type": "label", "text": "직책", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "label", "text": "성명", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "label", "text": "서명", "style": { "bg": "#eef0f3", "fontWeight": 700 } }
+              ]},
+              { "cells": [
+                { "type": "field", "fieldId": "checker1_title" },
+                { "type": "field", "fieldId": "checker1_name" },
+                { "type": "label", "text": "" }
+              ]},
+              { "cells": [
+                { "type": "field", "fieldId": "checker2_title" },
+                { "type": "field", "fieldId": "checker2_name" },
+                { "type": "label", "text": "" }
+              ]},
+              { "cells": [
+                { "type": "field", "fieldId": "checker3_title" },
+                { "type": "field", "fieldId": "checker3_name" },
+                { "type": "label", "text": "" }
+              ]},
+              { "cells": [
+                { "type": "field", "fieldId": "checker4_title" },
+                { "type": "field", "fieldId": "checker4_name" },
+                { "type": "label", "text": "" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "사업주 확인", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "owner_name" },
+                { "type": "label", "text": "(서명)" },
+                { "type": "label", "text": "" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "근로자대표 확인", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "worker_rep_name" },
+                { "type": "label", "text": "(서명)" },
+                { "type": "label", "text": "" }
+              ]}
+            ]
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "title": { "text": "1. 사업장 개요" },
+        "children": [
+          {
+            "type": "table",
+            "cols": [{ "w": "20%" }, { "w": "30%" }, { "w": "20%" }, { "w": "30%" }],
+            "style": { "borderColor": "#c0c0c0" },
+            "rows": [
+              { "cells": [
+                { "type": "label", "text": "사 업 장 명", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "biz_name" },
+                { "type": "label", "text": "대  표  자", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "ceo_name" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "소  재  지", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "address", "colspan": 3 }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "전 화 번 호", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "phone" },
+                { "type": "label", "text": "업    종", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "field", "fieldId": "biz_type" }
+              ]},
+              { "cells": [
+                { "type": "label", "text": "근 로 자 수", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+                { "type": "composite", "colspan": 3, "children": [
+                  { "type": "field", "fieldId": "workers_total" }, { "type": "text", "value": " 명 (남 " },
+                  { "type": "field", "fieldId": "workers_male" }, { "type": "text", "value": " 명, 여 " },
+                  { "type": "field", "fieldId": "workers_female" }, { "type": "text", "value": " 명)" }
+                ]}
+              ]}
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

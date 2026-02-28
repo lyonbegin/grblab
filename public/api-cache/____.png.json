@@ -1,0 +1,204 @@
+{
+  "summary": {
+    "processName": "굴착기 작업 중",
+    "workContent": "굴착",
+    "equipment": "건설 토목 공사",
+    "basis": "이미지 분석 기반 위험성 평가"
+  },
+  "hazards": [
+    {
+      "name": "중장비에 의한 충돌 위험",
+      "category": "충돌"
+    },
+    {
+      "name": "붕괴 위험",
+      "category": "붕괴"
+    },
+    {
+      "name": "낙하물 위험",
+      "category": "낙하물"
+    }
+  ],
+  "overallLevel": {
+    "label": "고위험",
+    "immediateAction": false,
+    "topHazard": "중장비에 의한 충돌 위험",
+    "score": 12
+  },
+  "raw": {
+    "site_analysis": {
+      "industry": "건설 토목 공사",
+      "detailed_process": "굴착기 작업 중",
+      "work_stage": "굴착",
+      "analysis_basis": "이미지 분석 기반 위험성 평가"
+    },
+    "hazards": [
+      {
+        "id": 1,
+        "hazard_name": "중장비에 의한 충돌 위험",
+        "hazard_category": "충돌",
+        "accident_scenario": "작업자가 굴착기 주변에서 작업하는 과정에서 충돌로 인해 중상 사고 발생",
+        "direct_cause": "굴착기와의 거리 미확보",
+        "expected_injury": "중상",
+        "probability": 4,
+        "severity": 3,
+        "risk_score": 12,
+        "risk_level": "고위험",
+        "improvement_measure": "굴착기 접근 금지구역 설정 및 철제 펜스 설치, 산업안전보건기준에 관한 규칙 제26조",
+        "ocr": null,
+        "bbox": [
+          440,
+          350,
+          600,
+          700
+        ]
+      },
+      {
+        "id": 2,
+        "hazard_name": "붕괴 위험",
+        "hazard_category": "붕괴",
+        "accident_scenario": "작업자가 굴착 현장 가장자리에서 작업하는 과정에서 지반 붕괴로 인해 추락 사고 발생",
+        "direct_cause": "지반 지지력 부족",
+        "expected_injury": "중상",
+        "probability": 3,
+        "severity": 4,
+        "risk_score": 12,
+        "risk_level": "고위험",
+        "improvement_measure": "지반 보강 및 충분한 흙막이 설치, 건설기준 및 강구조물 설계 규정 제12조",
+        "ocr": null,
+        "bbox": [
+          200,
+          150,
+          500,
+          800
+        ]
+      },
+      {
+        "id": 3,
+        "hazard_name": "낙하물 위험",
+        "hazard_category": "낙하물",
+        "accident_scenario": "작업자가 굴착기 작업 구역에서 작업하는 과정에서 상부 구조물 낙하로 인한 사고 발생",
+        "direct_cause": "작업 구역 위 부재의 고정 불안정",
+        "expected_injury": "경상",
+        "probability": 2,
+        "severity": 2,
+        "risk_score": 4,
+        "risk_level": "저위험",
+        "improvement_measure": "상부 구조물 고정 상태 점검 및 추가 고정 조치, 산업안전보건기준에 관한 규칙 제28조",
+        "ocr": null,
+        "bbox": [
+          100,
+          100,
+          400,
+          600
+        ]
+      }
+    ],
+    "overall_risk_summary": {
+      "highest_risk_item": "중장비에 의한 충돌 위험",
+      "highest_risk_score": 12,
+      "immediate_action_required": false,
+      "recommended_action": "충돌 위험 관련 조치 및 작업자 교육 실시"
+    }
+  },
+  "frequencySeverity": [
+    {
+      "factor": "중장비에 의한 충돌 위험",
+      "category": "충돌",
+      "probability": 4,
+      "severity": 3,
+      "score": 12,
+      "level": "고위험"
+    },
+    {
+      "factor": "붕괴 위험",
+      "category": "붕괴",
+      "probability": 3,
+      "severity": 4,
+      "score": 12,
+      "level": "고위험"
+    },
+    {
+      "factor": "낙하물 위험",
+      "category": "낙하물",
+      "probability": 2,
+      "severity": 2,
+      "score": 4,
+      "level": "저위험"
+    }
+  ],
+  "checklist": [
+    {
+      "factor": "중장비에 의한 충돌 위험",
+      "category": "충돌",
+      "directCause": "굴착기와의 거리 미확보",
+      "judgment": "고위험"
+    },
+    {
+      "factor": "붕괴 위험",
+      "category": "붕괴",
+      "directCause": "지반 지지력 부족",
+      "judgment": "고위험"
+    },
+    {
+      "factor": "낙하물 위험",
+      "category": "낙하물",
+      "directCause": "작업 구역 위 부재의 고정 불안정",
+      "judgment": "저위험"
+    }
+  ],
+  "coreFactors": [
+    {
+      "factor": "중장비에 의한 충돌 위험",
+      "riskLevel": "고위험",
+      "scenario": "작업자가 굴착기 주변에서 작업하는 과정에서 충돌로 인해 중상 사고 발생",
+      "directCause": "굴착기와의 거리 미확보",
+      "expectedInjury": "중상",
+      "improvementMeasure": "굴착기 접근 금지구역 설정 및 철제 펜스 설치, 산업안전보건기준에 관한 규칙 제26조"
+    },
+    {
+      "factor": "붕괴 위험",
+      "riskLevel": "고위험",
+      "scenario": "작업자가 굴착 현장 가장자리에서 작업하는 과정에서 지반 붕괴로 인해 추락 사고 발생",
+      "directCause": "지반 지지력 부족",
+      "expectedInjury": "중상",
+      "improvementMeasure": "지반 보강 및 충분한 흙막이 설치, 건설기준 및 강구조물 설계 규정 제12조"
+    },
+    {
+      "factor": "낙하물 위험",
+      "riskLevel": "저위험",
+      "scenario": "작업자가 굴착기 작업 구역에서 작업하는 과정에서 상부 구조물 낙하로 인한 사고 발생",
+      "directCause": "작업 구역 위 부재의 고정 불안정",
+      "expectedInjury": "경상",
+      "improvementMeasure": "상부 구조물 고정 상태 점검 및 추가 고정 조치, 산업안전보건기준에 관한 규칙 제28조"
+    }
+  ],
+  "threeLevel": [
+    {
+      "factor": "중장비에 의한 충돌 위험",
+      "judgment": "허용불가능",
+      "measure": "굴착기 접근 금지구역 설정 및 철제 펜스 설치, 산업안전보건기준에 관한 규칙 제26조"
+    },
+    {
+      "factor": "붕괴 위험",
+      "judgment": "허용불가능",
+      "measure": "지반 보강 및 충분한 흙막이 설치, 건설기준 및 강구조물 설계 규정 제12조"
+    },
+    {
+      "factor": "낙하물 위험",
+      "judgment": "허용가능",
+      "measure": "상부 구조물 고정 상태 점검 및 추가 고정 조치, 산업안전보건기준에 관한 규칙 제28조"
+    }
+  ],
+  "health": {
+    "applicable": false,
+    "summary": "현재 빈도×강도법 평가 모드에서는 건강장해 분석이 포함되지 않습니다.",
+    "items": []
+  },
+  "overallSummary": {
+    "highest_risk_item": "중장비에 의한 충돌 위험",
+    "highest_risk_score": 12,
+    "immediate_action_required": false,
+    "recommended_action": "충돌 위험 관련 조치 및 작업자 교육 실시"
+  }
+}

@@ -1,0 +1,230 @@
+{
+  "template_id": "industrial_accident_reexamination_request_v1",
+  "title": "산업재해보상보험 재심사청구서",
+  "version": 1,
+  "source": {
+    "file_type": "hwp",
+    "filename": "bid_00232_15__산업재해보상보험_재심사청구서.hwp",
+    "issuer": "근로복지공단",
+    "legal_basis": "산업재해보상보험법 제106조, 같은 법 시행령 제105조 / [별지 제1호서식]"
+  },
+  "meta": {
+    "paper": "A4",
+    "unit": "mm",
+    "page": { "width": 210, "height": 297, "margin": { "top": 20, "right": 15, "bottom": 20, "left": 15 } },
+    "fonts": { "base": "Noto Sans KR" }
+  },
+  "fields": [
+    { "id": "claimant_name",         "label": "①청구인 성명",             "type": "text" },
+    { "id": "claimant_rrn",          "label": "②청구인 주민등록번호",     "type": "text" },
+    { "id": "claimant_relation",     "label": "③근로자와의 관계",         "type": "text" },
+    { "id": "claimant_address",      "label": "④청구인 주소",             "type": "text" },
+    { "id": "claimant_phone",        "label": "청구인 전화번호",           "type": "text" },
+
+    { "id": "agent_name",            "label": "⑤대리인 성명",             "type": "text" },
+    { "id": "agent_rrn",             "label": "⑥대리인 주민등록번호",     "type": "text" },
+    { "id": "agent_relation",        "label": "⑦근로자와의 관계",         "type": "text" },
+    { "id": "agent_address",         "label": "⑧대리인 주소",             "type": "text" },
+    { "id": "agent_phone",           "label": "대리인 전화번호",           "type": "text" },
+
+    { "id": "victim_name",           "label": "⑨재해자 성명",             "type": "text" },
+    { "id": "victim_rrn",            "label": "⑩재해자 주민등록번호",     "type": "text" },
+    { "id": "victim_address",        "label": "⑪재해자 주소",             "type": "text" },
+    { "id": "workplace_name",        "label": "⑫사업장명",                "type": "text" },
+    { "id": "workplace_address",     "label": "⑬사업장소재지",            "type": "text" },
+
+    { "id": "original_agency",       "label": "⑭원처분기관",              "type": "text", "placeholder": "근로복지공단 ○○지역본부(지사)장" },
+    { "id": "original_decision_date","label": "⑮원처분일자",              "type": "text", "placeholder": "20__.__.__ " },
+    { "id": "original_notice_date",  "label": "원처분안날",                "type": "text", "placeholder": "20__.__.__ " },
+
+    { "id": "review_agency",         "label": "⑰심사결정기관명",          "type": "text", "placeholder": "근로복지공단" },
+    { "id": "review_received_date",  "label": "⑱심사결정서를 받은날",     "type": "text", "placeholder": "20__.__.__ " },
+    { "id": "review_notice_date",    "label": "⑲심사결정이 있음을 안날",  "type": "text", "placeholder": "20__.__.__ " },
+
+    { "id": "insurance_decision",    "label": "⑳보험급여 등의 결정(조치)내용", "type": "textarea" },
+    { "id": "notification_content",  "label": "심사결정기관의 고지유무 및 그 내용", "type": "textarea" },
+    { "id": "claim_reason",          "label": "재심사청구 취지 및 이유",   "type": "textarea", "placeholder": "(별지 기재와 같음)" },
+
+    { "id": "consent_agree",         "label": "개인정보 수집·이용 동의함",        "type": "checkbox" },
+    { "id": "consent_disagree",      "label": "개인정보 수집·이용 동의하지 않음", "type": "checkbox" },
+
+    { "id": "submit_year",           "label": "제출일 연도", "type": "text" },
+    { "id": "submit_month",          "label": "제출일 월",   "type": "text" },
+    { "id": "submit_day",            "label": "제출일 일",   "type": "text" },
+    { "id": "claimant_sign",         "label": "청구인 서명", "type": "text" }
+  ],
+  "layout": {
+    "type": "page",
+    "children": [
+      {
+        "type": "block",
+        "style": { "padding": [8, 6, 8, 6] },
+        "children": [
+          { "type": "text", "value": "산업재해보상보험 재심사청구서", "style": { "fontSize": 16, "fontWeight": 900, "textAlign": "center" } },
+          { "type": "text", "value": "처리기간: 60일", "style": { "fontSize": 10, "textAlign": "right" } }
+        ]
+      },
+      {
+        "type": "section", "id": "section_claimant",
+        "children": [{
+          "type": "table",
+          "cols": [{ "w": "10%" }, { "w": "22%" }, { "w": "18%" }, { "w": "22%" }, { "w": "28%" }],
+          "rows": [
+            { "cells": [
+              { "type": "label", "text": "청구인", "style": { "bg": "#eef0f3", "fontWeight": 700 }, "rowspan": 4 },
+              { "type": "label", "text": "①성  명", "style": { "bg": "#f7f7f7" } }, { "type": "field", "fieldId": "claimant_name" },
+              { "type": "label", "text": "②주민등록번호", "style": { "bg": "#f7f7f7" } }, { "type": "field", "fieldId": "claimant_rrn" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "③근로자와의 관계", "style": { "bg": "#f7f7f7" } },
+              { "type": "field", "fieldId": "claimant_relation", "colspan": 3 }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "④주  소", "style": { "bg": "#f7f7f7" } },
+              { "type": "field", "fieldId": "claimant_address", "colspan": 3 }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "전화번호", "style": { "bg": "#f7f7f7" } },
+              { "type": "field", "fieldId": "claimant_phone", "colspan": 3 }
+            ]}
+          ]
+        }]
+      },
+      {
+        "type": "section", "id": "section_agent",
+        "children": [{
+          "type": "table",
+          "cols": [{ "w": "10%" }, { "w": "22%" }, { "w": "18%" }, { "w": "22%" }, { "w": "28%" }],
+          "rows": [
+            { "cells": [
+              { "type": "label", "text": "대리인", "style": { "bg": "#eef0f3", "fontWeight": 700 }, "rowspan": 4 },
+              { "type": "label", "text": "⑤성  명", "style": { "bg": "#f7f7f7" } }, { "type": "field", "fieldId": "agent_name" },
+              { "type": "label", "text": "⑥주민등록번호", "style": { "bg": "#f7f7f7" } }, { "type": "field", "fieldId": "agent_rrn" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "⑦근로자와의 관계", "style": { "bg": "#f7f7f7" } },
+              { "type": "field", "fieldId": "agent_relation", "colspan": 3 }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "⑧주  소", "style": { "bg": "#f7f7f7" } },
+              { "type": "field", "fieldId": "agent_address", "colspan": 3 }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "전화번호", "style": { "bg": "#f7f7f7" } },
+              { "type": "field", "fieldId": "agent_phone", "colspan": 3 }
+            ]}
+          ]
+        }]
+      },
+      {
+        "type": "section", "id": "section_victim",
+        "children": [{
+          "type": "table",
+          "cols": [{ "w": "15%" }, { "w": "20%" }, { "w": "15%" }, { "w": "50%" }],
+          "rows": [
+            { "cells": [
+              { "type": "label", "text": "재해를 입은 근로자", "style": { "bg": "#eef0f3", "fontWeight": 700 }, "rowspan": 4 },
+              { "type": "label", "text": "⑨성  명", "style": { "bg": "#f7f7f7" } }, { "type": "field", "fieldId": "victim_name" },
+              { "type": "composite", "children": [{ "type": "label", "text": "⑩주민등록번호: " }, { "type": "field", "fieldId": "victim_rrn" }] }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "⑪주  소", "style": { "bg": "#f7f7f7" } }, { "type": "field", "fieldId": "victim_address", "colspan": 2 }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "⑫사업장명", "style": { "bg": "#f7f7f7" } }, { "type": "field", "fieldId": "workplace_name", "colspan": 2 }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "⑬사업장소재지", "style": { "bg": "#f7f7f7" } }, { "type": "field", "fieldId": "workplace_address", "colspan": 2 }
+            ]}
+          ]
+        }]
+      },
+      {
+        "type": "section", "id": "section_decisions",
+        "children": [{
+          "type": "table",
+          "cols": [{ "w": "18%" }, { "w": "32%" }, { "w": "18%" }, { "w": "32%" }],
+          "rows": [
+            { "cells": [
+              { "type": "label", "text": "⑭원처분기관", "style": { "bg": "#f7f7f7" } }, { "type": "field", "fieldId": "original_agency" },
+              { "type": "label", "text": "⑮원처분일자", "style": { "bg": "#f7f7f7" } }, { "type": "field", "fieldId": "original_decision_date" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "원처분안날", "style": { "bg": "#f7f7f7" } }, { "type": "field", "fieldId": "original_notice_date", "colspan": 3 }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "⑰심사결정기관명", "style": { "bg": "#f7f7f7" } }, { "type": "field", "fieldId": "review_agency" },
+              { "type": "label", "text": "⑱심사결정서를 받은날", "style": { "bg": "#f7f7f7" } }, { "type": "field", "fieldId": "review_received_date" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "⑲심사결정이 있음을 안날", "style": { "bg": "#f7f7f7" } }, { "type": "field", "fieldId": "review_notice_date", "colspan": 3 }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "⑳보험급여 등의 결정(조치)내용", "style": { "bg": "#f7f7f7" } }, { "type": "field", "fieldId": "insurance_decision", "colspan": 3 }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "심사결정기관의 고지유무 및 그 내용", "style": { "bg": "#f7f7f7" } }, { "type": "field", "fieldId": "notification_content", "colspan": 3 }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "재심사청구 취지 및 이유", "style": { "bg": "#f7f7f7" } }, { "type": "field", "fieldId": "claim_reason", "colspan": 3 }
+            ]}
+          ]
+        }]
+      },
+      {
+        "type": "section", "id": "section_consent",
+        "style": { "marginTop": 10 },
+        "children": [{
+          "type": "table",
+          "cols": [{ "w": "40%" }, { "w": "60%" }],
+          "rows": [
+            { "cells": [
+              { "type": "label", "text": "[필수] 재심사 청구를 위한 개인정보 수집·이용 동의", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "composite", "children": [
+                { "type": "field", "fieldId": "consent_agree" }, { "type": "text", "value": " 동의함   " },
+                { "type": "field", "fieldId": "consent_disagree" }, { "type": "text", "value": " 동의하지 않음" }
+              ]}
+            ]},
+            { "cells": [
+              { "type": "label", "text": "이용 목적", "style": { "bg": "#f7f7f7" } },
+              { "type": "label", "text": "재심사청구서 심의" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "이용 항목", "style": { "bg": "#f7f7f7" } },
+              { "type": "label", "text": "청구인 제출 자료 및 근로복지공단 내 보관 중인 관련 자료 등 심의 내용을 뒷받침할 수 있는 모든 형태의 증빙 자료 (의무기록, 검사결과, 과거병력 자료 등)" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "보존기간", "style": { "bg": "#f7f7f7" } },
+              { "type": "label", "text": "5년" }
+            ]}
+          ]
+        }]
+      },
+      {
+        "type": "block",
+        "style": { "marginTop": 16 },
+        "children": [
+          { "type": "text", "value": "산업재해보상보험법 제106조 및 같은 법 시행령 제105조의 규정에 따라 위와 같이 재심사를 청구합니다.", "style": { "fontSize": 10 } },
+          {
+            "type": "composite",
+            "style": { "marginTop": 12 },
+            "children": [
+              { "type": "field", "fieldId": "submit_year" }, { "type": "text", "value": " 년   " },
+              { "type": "field", "fieldId": "submit_month" }, { "type": "text", "value": " 월   " },
+              { "type": "field", "fieldId": "submit_day" }, { "type": "text", "value": " 일" }
+            ]
+          },
+          {
+            "type": "composite",
+            "style": { "marginTop": 8, "textAlign": "right" },
+            "children": [
+              { "type": "text", "value": "성명: " },
+              { "type": "field", "fieldId": "claimant_sign" },
+              { "type": "text", "value": " (서명 또는 인)" }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

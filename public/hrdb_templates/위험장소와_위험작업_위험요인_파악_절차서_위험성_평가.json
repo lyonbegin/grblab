@@ -1,0 +1,113 @@
+{
+  "template_id": "hazard_identification_risk_assessment_v1",
+  "title": "위험장소·위험작업 위험요인 파악 절차서 (위험성평가 실시규정)",
+  "version": 1,
+  "source": { "file_type": "hwp", "filename": "위험장소와_위험작업_위험요인_파악_절차서_위험성_평가_.hwp" },
+  "meta": { "paper": "A4", "unit": "mm", "page": { "width": 210, "height": 297, "margin": { "top": 20, "right": 15, "bottom": 20, "left": 15 } } },
+  "fields": [
+    { "id": "company_name",    "label": "사업장명",          "type": "text", "placeholder": "㈜OOOO" },
+    { "id": "doc_no",          "label": "문서번호",          "type": "text" },
+    { "id": "revision",        "label": "개정번호",          "type": "text", "placeholder": "0" },
+    { "id": "create_year",     "label": "작성일 연도",       "type": "text", "placeholder": "2024" },
+    { "id": "create_month",    "label": "작성일 월",         "type": "text", "placeholder": "01" },
+    { "id": "create_day",      "label": "작성일 일",         "type": "text", "placeholder": "01" },
+    { "id": "drafter_name",    "label": "작성자",            "type": "text" },
+    { "id": "reviewer_name",   "label": "검토자",            "type": "text" },
+    { "id": "approver_name",   "label": "결재자",            "type": "text" },
+    { "id": "dept",            "label": "해당 부서",         "type": "text" },
+    { "id": "work_area",       "label": "평가 장소·작업",    "type": "text" },
+    { "id": "eval_year",       "label": "평가 연도",         "type": "text", "placeholder": "2024" },
+    { "id": "eval_month",      "label": "평가 월",           "type": "text", "placeholder": "01" },
+    { "id": "h1_location",  "label": "위험요인1 장소·공정", "type": "text" }, { "id": "h1_hazard",   "label": "위험요인1 유해위험요인", "type": "text" }, { "id": "h1_risk_freq","label": "위험요인1 빈도", "type": "text", "placeholder": "1-5" }, { "id": "h1_risk_sev", "label": "위험요인1 강도", "type": "text", "placeholder": "1-5" }, { "id": "h1_risk_lvl", "label": "위험요인1 위험도", "type": "text", "placeholder": "상/중/하" }, { "id": "h1_control",  "label": "위험요인1 감소대책", "type": "text" }, { "id": "h1_after",    "label": "위험요인1 조치후 위험도", "type": "text" }, { "id": "h1_person",   "label": "위험요인1 담당자", "type": "text" }, { "id": "h1_deadline", "label": "위험요인1 기한", "type": "text" },
+    { "id": "h2_location",  "label": "위험요인2 장소·공정", "type": "text" }, { "id": "h2_hazard",   "label": "위험요인2 유해위험요인", "type": "text" }, { "id": "h2_risk_freq","label": "위험요인2 빈도", "type": "text", "placeholder": "1-5" }, { "id": "h2_risk_sev", "label": "위험요인2 강도", "type": "text", "placeholder": "1-5" }, { "id": "h2_risk_lvl", "label": "위험요인2 위험도", "type": "text", "placeholder": "상/중/하" }, { "id": "h2_control",  "label": "위험요인2 감소대책", "type": "text" }, { "id": "h2_after",    "label": "위험요인2 조치후 위험도", "type": "text" }, { "id": "h2_person",   "label": "위험요인2 담당자", "type": "text" }, { "id": "h2_deadline", "label": "위험요인2 기한", "type": "text" },
+    { "id": "h3_location",  "label": "위험요인3 장소·공정", "type": "text" }, { "id": "h3_hazard",   "label": "위험요인3 유해위험요인", "type": "text" }, { "id": "h3_risk_freq","label": "위험요인3 빈도", "type": "text", "placeholder": "1-5" }, { "id": "h3_risk_sev", "label": "위험요인3 강도", "type": "text", "placeholder": "1-5" }, { "id": "h3_risk_lvl", "label": "위험요인3 위험도", "type": "text", "placeholder": "상/중/하" }, { "id": "h3_control",  "label": "위험요인3 감소대책", "type": "text" }, { "id": "h3_after",    "label": "위험요인3 조치후 위험도", "type": "text" }, { "id": "h3_person",   "label": "위험요인3 담당자", "type": "text" }, { "id": "h3_deadline", "label": "위험요인3 기한", "type": "text" },
+    { "id": "h4_location",  "label": "위험요인4 장소·공정", "type": "text" }, { "id": "h4_hazard",   "label": "위험요인4 유해위험요인", "type": "text" }, { "id": "h4_risk_freq","label": "위험요인4 빈도", "type": "text", "placeholder": "1-5" }, { "id": "h4_risk_sev", "label": "위험요인4 강도", "type": "text", "placeholder": "1-5" }, { "id": "h4_risk_lvl", "label": "위험요인4 위험도", "type": "text", "placeholder": "상/중/하" }, { "id": "h4_control",  "label": "위험요인4 감소대책", "type": "text" }, { "id": "h4_after",    "label": "위험요인4 조치후 위험도", "type": "text" }, { "id": "h4_person",   "label": "위험요인4 담당자", "type": "text" }, { "id": "h4_deadline", "label": "위험요인4 기한", "type": "text" },
+    { "id": "h5_location",  "label": "위험요인5 장소·공정", "type": "text" }, { "id": "h5_hazard",   "label": "위험요인5 유해위험요인", "type": "text" }, { "id": "h5_risk_freq","label": "위험요인5 빈도", "type": "text", "placeholder": "1-5" }, { "id": "h5_risk_sev", "label": "위험요인5 강도", "type": "text", "placeholder": "1-5" }, { "id": "h5_risk_lvl", "label": "위험요인5 위험도", "type": "text", "placeholder": "상/중/하" }, { "id": "h5_control",  "label": "위험요인5 감소대책", "type": "text" }, { "id": "h5_after",    "label": "위험요인5 조치후 위험도", "type": "text" }, { "id": "h5_person",   "label": "위험요인5 담당자", "type": "text" }, { "id": "h5_deadline", "label": "위험요인5 기한", "type": "text" }
+  ],
+  "layout": {
+    "type": "page",
+    "children": [
+      { "type": "block", "style": { "padding": [8,4,8,4] }, "children": [
+        { "type": "text", "value": "위험장소·위험작업 위험요인 파악 절차서", "style": { "fontSize": 15, "fontWeight": 900, "textAlign": "center" } },
+        { "type": "text", "value": "위험성평가 실시규정", "style": { "fontSize": 11, "textAlign": "center", "color": "#444" } }
+      ]},
+      { "type": "section", "title": { "text": "결재 및 문서 정보" }, "children": [
+        { "type": "table", "cols": [{"w":"20%"},{"w":"20%"},{"w":"20%"},{"w":"20%"},{"w":"20%"}], "style": { "borderColor": "#c0c0c0" },
+          "rows": [
+            { "cells": [
+              { "type": "label", "text": "결  재", "rowspan": 2, "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "label", "text": "작  성",  "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "label", "text": "검  토",  "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "label", "text": "결  재",  "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "label", "text": "비  고",  "style": { "bg": "#eef0f3", "fontWeight": 700 } }
+            ]},
+            { "cells": [
+              { "type": "field", "fieldId": "drafter_name" },
+              { "type": "field", "fieldId": "reviewer_name" },
+              { "type": "field", "fieldId": "approver_name" },
+              { "type": "label", "text": "" }
+            ]}
+          ]
+        },
+        { "type": "table", "cols": [{"w":"20%"},{"w":"30%"},{"w":"20%"},{"w":"30%"}], "style": { "borderColor": "#c0c0c0" },
+          "rows": [
+            { "cells": [
+              { "type": "label", "text": "사 업 장 명", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "company_name" },
+              { "type": "label", "text": "문 서 번 호", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "doc_no" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "개 정 번 호", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "revision" },
+              { "type": "label", "text": "작  성  일",  "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "composite", "children": [
+                { "type": "field", "fieldId": "create_year" }, { "type": "text", "value": "년 " },
+                { "type": "field", "fieldId": "create_month" }, { "type": "text", "value": "월 " },
+                { "type": "field", "fieldId": "create_day" }, { "type": "text", "value": "일" }
+              ]}
+            ]},
+            { "cells": [
+              { "type": "label", "text": "해 당 부 서", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "dept" },
+              { "type": "label", "text": "평 가 기 간", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "composite", "children": [
+                { "type": "field", "fieldId": "eval_year" }, { "type": "text", "value": "년 " },
+                { "type": "field", "fieldId": "eval_month" }, { "type": "text", "value": "월" }
+              ]}
+            ]},
+            { "cells": [
+              { "type": "label", "text": "평가 장소·작업", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "work_area", "colspan": 3 }
+            ]}
+          ]
+        }
+      ]},
+      { "type": "section", "title": { "text": "위험성평가표" }, "children": [
+        { "type": "table", "cols": [{"w":"12%"},{"w":"18%"},{"w":"7%"},{"w":"7%"},{"w":"8%"},{"w":"22%"},{"w":"9%"},{"w":"10%"},{"w":"7%"}], "style": { "borderColor": "#c0c0c0" },
+          "rows": [
+            { "cells": [
+              { "type": "label", "text": "장소·공정",   "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "label", "text": "유해위험요인", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "label", "text": "빈도",         "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "label", "text": "강도",         "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "label", "text": "위험도",       "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "label", "text": "감소대책",     "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "label", "text": "조치후 위험도","style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "label", "text": "담당자",       "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "label", "text": "기한",         "style": { "bg": "#eef0f3", "fontWeight": 700 } }
+            ]},
+            { "cells": [{"type":"field","fieldId":"h1_location"},{"type":"field","fieldId":"h1_hazard"},{"type":"field","fieldId":"h1_risk_freq"},{"type":"field","fieldId":"h1_risk_sev"},{"type":"field","fieldId":"h1_risk_lvl"},{"type":"field","fieldId":"h1_control"},{"type":"field","fieldId":"h1_after"},{"type":"field","fieldId":"h1_person"},{"type":"field","fieldId":"h1_deadline"}] },
+            { "cells": [{"type":"field","fieldId":"h2_location"},{"type":"field","fieldId":"h2_hazard"},{"type":"field","fieldId":"h2_risk_freq"},{"type":"field","fieldId":"h2_risk_sev"},{"type":"field","fieldId":"h2_risk_lvl"},{"type":"field","fieldId":"h2_control"},{"type":"field","fieldId":"h2_after"},{"type":"field","fieldId":"h2_person"},{"type":"field","fieldId":"h2_deadline"}] },
+            { "cells": [{"type":"field","fieldId":"h3_location"},{"type":"field","fieldId":"h3_hazard"},{"type":"field","fieldId":"h3_risk_freq"},{"type":"field","fieldId":"h3_risk_sev"},{"type":"field","fieldId":"h3_risk_lvl"},{"type":"field","fieldId":"h3_control"},{"type":"field","fieldId":"h3_after"},{"type":"field","fieldId":"h3_person"},{"type":"field","fieldId":"h3_deadline"}] },
+            { "cells": [{"type":"field","fieldId":"h4_location"},{"type":"field","fieldId":"h4_hazard"},{"type":"field","fieldId":"h4_risk_freq"},{"type":"field","fieldId":"h4_risk_sev"},{"type":"field","fieldId":"h4_risk_lvl"},{"type":"field","fieldId":"h4_control"},{"type":"field","fieldId":"h4_after"},{"type":"field","fieldId":"h4_person"},{"type":"field","fieldId":"h4_deadline"}] },
+            { "cells": [{"type":"field","fieldId":"h5_location"},{"type":"field","fieldId":"h5_hazard"},{"type":"field","fieldId":"h5_risk_freq"},{"type":"field","fieldId":"h5_risk_sev"},{"type":"field","fieldId":"h5_risk_lvl"},{"type":"field","fieldId":"h5_control"},{"type":"field","fieldId":"h5_after"},{"type":"field","fieldId":"h5_person"},{"type":"field","fieldId":"h5_deadline"}] }
+          ]
+        },
+        { "type": "block", "style": { "padding": [6,0,2,0] }, "children": [
+          { "type": "text", "value": "※ 위험도 판정기준 : 빈도×강도 → 상(15↑) / 중(8~14) / 하(7↓)  |  빈도·강도 : 1(매우낮음)~5(매우높음)", "style": { "fontSize": 8, "color": "#555" } }
+        ]}
+      ]}
+    ]
+  }
+}

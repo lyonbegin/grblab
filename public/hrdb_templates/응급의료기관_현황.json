@@ -1,0 +1,72 @@
+{
+  "template_id": "emergency_medical_facility_v2",
+  "title": "응급의료기관 현황",
+  "subtitle": "산업안전보건법 제17조 | 사업장 인근 응급의료기관 현황 관리",
+  "version": 2,
+  "source": { "file_type": "hwp", "filename": "응급의료기관_현황.hwp" },
+  "meta": { "paper": "A4", "unit": "mm", "page": { "width": 210, "height": 297, "margin": { "top": 20, "right": 15, "bottom": 20, "left": 15 } } },
+  "fields": [
+    { "id": "company_name",   "label": "사업장명",       "type": "text" },
+    { "id": "region",         "label": "소재지",         "type": "text" },
+    { "id": "update_year",    "label": "최신화 연도",    "type": "text", "placeholder": "2024" },
+    { "id": "update_month",   "label": "최신화 월",      "type": "text", "placeholder": "01" },
+    { "id": "update_day",     "label": "최신화 일",      "type": "text", "placeholder": "01" },
+    { "id": "h1_name",     "label": "기관1 명칭",     "type": "text" }, { "id": "h1_grade",   "label": "기관1 등급",     "type": "text", "placeholder": "권역/지역/응급의료기관" }, { "id": "h1_address", "label": "기관1 주소",     "type": "text" }, { "id": "h1_dist",    "label": "기관1 거리",     "type": "text", "placeholder": "약 0km" }, { "id": "h1_time",    "label": "기관1 소요시간", "type": "text", "placeholder": "약 0분" }, { "id": "h1_phone",   "label": "기관1 전화",     "type": "text" }, { "id": "h1_dept",    "label": "기관1 전문과",   "type": "text" }, { "id": "h1_note",    "label": "기관1 비고",     "type": "text" },
+    { "id": "h2_name",     "label": "기관2 명칭",     "type": "text" }, { "id": "h2_grade",   "label": "기관2 등급",     "type": "text", "placeholder": "권역/지역/응급의료기관" }, { "id": "h2_address", "label": "기관2 주소",     "type": "text" }, { "id": "h2_dist",    "label": "기관2 거리",     "type": "text", "placeholder": "약 0km" }, { "id": "h2_time",    "label": "기관2 소요시간", "type": "text", "placeholder": "약 0분" }, { "id": "h2_phone",   "label": "기관2 전화",     "type": "text" }, { "id": "h2_dept",    "label": "기관2 전문과",   "type": "text" }, { "id": "h2_note",    "label": "기관2 비고",     "type": "text" },
+    { "id": "h3_name",     "label": "기관3 명칭",     "type": "text" }, { "id": "h3_grade",   "label": "기관3 등급",     "type": "text", "placeholder": "권역/지역/응급의료기관" }, { "id": "h3_address", "label": "기관3 주소",     "type": "text" }, { "id": "h3_dist",    "label": "기관3 거리",     "type": "text", "placeholder": "약 0km" }, { "id": "h3_time",    "label": "기관3 소요시간", "type": "text", "placeholder": "약 0분" }, { "id": "h3_phone",   "label": "기관3 전화",     "type": "text" }, { "id": "h3_dept",    "label": "기관3 전문과",   "type": "text" }, { "id": "h3_note",    "label": "기관3 비고",     "type": "text" },
+    { "id": "h4_name",     "label": "기관4 명칭",     "type": "text" }, { "id": "h4_grade",   "label": "기관4 등급",     "type": "text", "placeholder": "권역/지역/응급의료기관" }, { "id": "h4_address", "label": "기관4 주소",     "type": "text" }, { "id": "h4_dist",    "label": "기관4 거리",     "type": "text", "placeholder": "약 0km" }, { "id": "h4_time",    "label": "기관4 소요시간", "type": "text", "placeholder": "약 0분" }, { "id": "h4_phone",   "label": "기관4 전화",     "type": "text" }, { "id": "h4_dept",    "label": "기관4 전문과",   "type": "text" }, { "id": "h4_note",    "label": "기관4 비고",     "type": "text" },
+    { "id": "h5_name",     "label": "기관5 명칭",     "type": "text" }, { "id": "h5_grade",   "label": "기관5 등급",     "type": "text", "placeholder": "권역/지역/응급의료기관" }, { "id": "h5_address", "label": "기관5 주소",     "type": "text" }, { "id": "h5_dist",    "label": "기관5 거리",     "type": "text", "placeholder": "약 0km" }, { "id": "h5_time",    "label": "기관5 소요시간", "type": "text", "placeholder": "약 0분" }, { "id": "h5_phone",   "label": "기관5 전화",     "type": "text" }, { "id": "h5_dept",    "label": "기관5 전문과",   "type": "text" }, { "id": "h5_note",    "label": "기관5 비고",     "type": "text" },
+    { "id": "route_note",   "label": "이송 경로 메모", "type": "text" }
+  ],
+  "layout": {
+    "type": "page",
+    "children": [
+      { "type": "block", "style": { "padding": [8,4,8,4] }, "children": [
+        { "type": "text", "value": "응급의료기관 현황", "style": { "fontSize": 18, "fontWeight": 900, "textAlign": "center" } }
+      ]},
+      { "type": "section", "title": { "text": "사업장 정보" }, "children": [{
+        "type": "table", "cols": [{"w":"15%"},{"w":"25%"},{"w":"15%"},{"w":"25%"},{"w":"10%"},{"w":"10%"}],
+        "style": { "borderColor": "#c0c0c0" },
+        "rows": [
+          { "cells": [
+            { "type": "label", "text": "사 업 장 명", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+            { "type": "field", "fieldId": "company_name" },
+            { "type": "label", "text": "소  재  지",  "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+            { "type": "field", "fieldId": "region" },
+            { "type": "label", "text": "최신화일",     "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+            { "type": "composite", "children": [
+              { "type": "field", "fieldId": "update_year" }, { "type": "text", "value": "." },
+              { "type": "field", "fieldId": "update_month" }, { "type": "text", "value": "." },
+              { "type": "field", "fieldId": "update_day" }
+            ]}
+          ]}
+        ]
+      }]},
+      { "type": "section", "title": { "text": "응급의료기관 목록" }, "children": [{
+        "type": "table", "cols": [{"w":"16%"},{"w":"12%"},{"w":"20%"},{"w":"8%"},{"w":"8%"},{"w":"13%"},{"w":"12%"},{"w":"11%"}],
+        "style": { "borderColor": "#c0c0c0" },
+        "rows": [
+          { "cells": [
+            { "type": "label", "text": "기  관  명",   "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+            { "type": "label", "text": "응급지정등급",  "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+            { "type": "label", "text": "주  소",        "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+            { "type": "label", "text": "거  리",        "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+            { "type": "label", "text": "소요시간",      "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+            { "type": "label", "text": "전화번호",      "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+            { "type": "label", "text": "주요 전문과",   "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+            { "type": "label", "text": "비  고",        "style": { "bg": "#eef0f3", "fontWeight": 700 } }
+          ]},
+          { "cells": [{"type":"field","fieldId":"h1_name"},{"type":"field","fieldId":"h1_grade"},{"type":"field","fieldId":"h1_address"},{"type":"field","fieldId":"h1_dist"},{"type":"field","fieldId":"h1_time"},{"type":"field","fieldId":"h1_phone"},{"type":"field","fieldId":"h1_dept"},{"type":"field","fieldId":"h1_note"}] },
+          { "cells": [{"type":"field","fieldId":"h2_name"},{"type":"field","fieldId":"h2_grade"},{"type":"field","fieldId":"h2_address"},{"type":"field","fieldId":"h2_dist"},{"type":"field","fieldId":"h2_time"},{"type":"field","fieldId":"h2_phone"},{"type":"field","fieldId":"h2_dept"},{"type":"field","fieldId":"h2_note"}] },
+          { "cells": [{"type":"field","fieldId":"h3_name"},{"type":"field","fieldId":"h3_grade"},{"type":"field","fieldId":"h3_address"},{"type":"field","fieldId":"h3_dist"},{"type":"field","fieldId":"h3_time"},{"type":"field","fieldId":"h3_phone"},{"type":"field","fieldId":"h3_dept"},{"type":"field","fieldId":"h3_note"}] },
+          { "cells": [{"type":"field","fieldId":"h4_name"},{"type":"field","fieldId":"h4_grade"},{"type":"field","fieldId":"h4_address"},{"type":"field","fieldId":"h4_dist"},{"type":"field","fieldId":"h4_time"},{"type":"field","fieldId":"h4_phone"},{"type":"field","fieldId":"h4_dept"},{"type":"field","fieldId":"h4_note"}] },
+          { "cells": [{"type":"field","fieldId":"h5_name"},{"type":"field","fieldId":"h5_grade"},{"type":"field","fieldId":"h5_address"},{"type":"field","fieldId":"h5_dist"},{"type":"field","fieldId":"h5_time"},{"type":"field","fieldId":"h5_phone"},{"type":"field","fieldId":"h5_dept"},{"type":"field","fieldId":"h5_note"}] },
+          { "cells": [
+            { "type": "label", "text": "이송 경로 메모", "colspan": 7, "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+            { "type": "field", "fieldId": "route_note" }
+          ]}
+        ]
+      }]}
+    ]
+  }
+}

@@ -1,0 +1,68 @@
+{
+  "template_id": "hazardous_machinery_list_v1",
+  "title": "위험기계·기구 목록",
+  "version": 1,
+  "source": { "file_type": "hwp", "filename": "위험기계기구_목록.hwp" },
+  "meta": { "paper": "A4", "unit": "mm", "page": { "width": 210, "height": 297, "margin": { "top": 20, "right": 15, "bottom": 20, "left": 15 } } },
+  "fields": [
+    { "id": "company_name",   "label": "사업장명",       "type": "text" },
+    { "id": "update_year",    "label": "작성 연도",      "type": "text", "placeholder": "2024" },
+    { "id": "update_month",   "label": "작성 월",        "type": "text", "placeholder": "01" },
+    { "id": "update_day",     "label": "작성 일",        "type": "text", "placeholder": "01" },
+    { "id": "m1_no",    "label": "No.1",       "type": "text", "placeholder": "1" }, { "id": "m1_name",  "label": "기계1 명칭",  "type": "text" }, { "id": "m1_model", "label": "기계1 모델",  "type": "text" }, { "id": "m1_loc",   "label": "기계1 위치",  "type": "text" }, { "id": "m1_qty",   "label": "기계1 수량",  "type": "text", "placeholder": "1" }, { "id": "m1_legal", "label": "기계1 법정검사","type": "text", "placeholder": "해당/미해당" }, { "id": "m1_last",  "label": "기계1 최근검사일","type": "text" }, { "id": "m1_next",  "label": "기계1 차기검사일","type": "text" }, { "id": "m1_note",  "label": "기계1 비고",  "type": "text" },
+    { "id": "m2_no",    "label": "No.2",       "type": "text", "placeholder": "2" }, { "id": "m2_name",  "label": "기계2 명칭",  "type": "text" }, { "id": "m2_model", "label": "기계2 모델",  "type": "text" }, { "id": "m2_loc",   "label": "기계2 위치",  "type": "text" }, { "id": "m2_qty",   "label": "기계2 수량",  "type": "text", "placeholder": "1" }, { "id": "m2_legal", "label": "기계2 법정검사","type": "text", "placeholder": "해당/미해당" }, { "id": "m2_last",  "label": "기계2 최근검사일","type": "text" }, { "id": "m2_next",  "label": "기계2 차기검사일","type": "text" }, { "id": "m2_note",  "label": "기계2 비고",  "type": "text" },
+    { "id": "m3_no",    "label": "No.3",       "type": "text", "placeholder": "3" }, { "id": "m3_name",  "label": "기계3 명칭",  "type": "text" }, { "id": "m3_model", "label": "기계3 모델",  "type": "text" }, { "id": "m3_loc",   "label": "기계3 위치",  "type": "text" }, { "id": "m3_qty",   "label": "기계3 수량",  "type": "text", "placeholder": "1" }, { "id": "m3_legal", "label": "기계3 법정검사","type": "text", "placeholder": "해당/미해당" }, { "id": "m3_last",  "label": "기계3 최근검사일","type": "text" }, { "id": "m3_next",  "label": "기계3 차기검사일","type": "text" }, { "id": "m3_note",  "label": "기계3 비고",  "type": "text" },
+    { "id": "m4_no",    "label": "No.4",       "type": "text", "placeholder": "4" }, { "id": "m4_name",  "label": "기계4 명칭",  "type": "text" }, { "id": "m4_model", "label": "기계4 모델",  "type": "text" }, { "id": "m4_loc",   "label": "기계4 위치",  "type": "text" }, { "id": "m4_qty",   "label": "기계4 수량",  "type": "text", "placeholder": "1" }, { "id": "m4_legal", "label": "기계4 법정검사","type": "text", "placeholder": "해당/미해당" }, { "id": "m4_last",  "label": "기계4 최근검사일","type": "text" }, { "id": "m4_next",  "label": "기계4 차기검사일","type": "text" }, { "id": "m4_note",  "label": "기계4 비고",  "type": "text" },
+    { "id": "m5_no",    "label": "No.5",       "type": "text", "placeholder": "5" }, { "id": "m5_name",  "label": "기계5 명칭",  "type": "text" }, { "id": "m5_model", "label": "기계5 모델",  "type": "text" }, { "id": "m5_loc",   "label": "기계5 위치",  "type": "text" }, { "id": "m5_qty",   "label": "기계5 수량",  "type": "text", "placeholder": "1" }, { "id": "m5_legal", "label": "기계5 법정검사","type": "text", "placeholder": "해당/미해당" }, { "id": "m5_last",  "label": "기계5 최근검사일","type": "text" }, { "id": "m5_next",  "label": "기계5 차기검사일","type": "text" }, { "id": "m5_note",  "label": "기계5 비고",  "type": "text" },
+    { "id": "m6_no",    "label": "No.6",       "type": "text", "placeholder": "6" }, { "id": "m6_name",  "label": "기계6 명칭",  "type": "text" }, { "id": "m6_model", "label": "기계6 모델",  "type": "text" }, { "id": "m6_loc",   "label": "기계6 위치",  "type": "text" }, { "id": "m6_qty",   "label": "기계6 수량",  "type": "text", "placeholder": "1" }, { "id": "m6_legal", "label": "기계6 법정검사","type": "text", "placeholder": "해당/미해당" }, { "id": "m6_last",  "label": "기계6 최근검사일","type": "text" }, { "id": "m6_next",  "label": "기계6 차기검사일","type": "text" }, { "id": "m6_note",  "label": "기계6 비고",  "type": "text" },
+    { "id": "m7_no",    "label": "No.7",       "type": "text", "placeholder": "7" }, { "id": "m7_name",  "label": "기계7 명칭",  "type": "text" }, { "id": "m7_model", "label": "기계7 모델",  "type": "text" }, { "id": "m7_loc",   "label": "기계7 위치",  "type": "text" }, { "id": "m7_qty",   "label": "기계7 수량",  "type": "text", "placeholder": "1" }, { "id": "m7_legal", "label": "기계7 법정검사","type": "text", "placeholder": "해당/미해당" }, { "id": "m7_last",  "label": "기계7 최근검사일","type": "text" }, { "id": "m7_next",  "label": "기계7 차기검사일","type": "text" }, { "id": "m7_note",  "label": "기계7 비고",  "type": "text" }
+  ],
+  "layout": {
+    "type": "page",
+    "children": [
+      { "type": "block", "style": { "padding": [8,4,8,4] }, "children": [
+        { "type": "text", "value": "위험기계·기구 목록", "style": { "fontSize": 18, "fontWeight": 900, "textAlign": "center" } }
+      ]},
+      { "type": "section", "title": { "text": "기본 정보" }, "children": [
+        { "type": "table", "cols": [{"w":"20%"},{"w":"30%"},{"w":"20%"},{"w":"30%"}], "style": { "borderColor": "#c0c0c0" },
+          "rows": [
+            { "cells": [
+              { "type": "label", "text": "사 업 장 명", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "company_name" },
+              { "type": "label", "text": "작  성  일",  "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "composite", "children": [
+                { "type": "field", "fieldId": "update_year" }, { "type": "text", "value": "년 " },
+                { "type": "field", "fieldId": "update_month" }, { "type": "text", "value": "월 " },
+                { "type": "field", "fieldId": "update_day" }, { "type": "text", "value": "일" }
+              ]}
+            ]}
+          ]
+        }
+      ]},
+      { "type": "section", "title": { "text": "위험기계·기구 현황" }, "children": [
+        { "type": "table", "cols": [{"w":"5%"},{"w":"15%"},{"w":"12%"},{"w":"12%"},{"w":"6%"},{"w":"10%"},{"w":"13%"},{"w":"13%"},{"w":"14%"}], "style": { "borderColor": "#c0c0c0" },
+          "rows": [
+            { "cells": [
+              { "type": "label", "text": "No",          "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "label", "text": "기 계 명",    "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "label", "text": "모델/형식",   "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "label", "text": "설치 위치",   "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "label", "text": "수량",        "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "label", "text": "법정검사",    "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "label", "text": "최근 검사일", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "label", "text": "차기 검사일", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "label", "text": "비  고",      "style": { "bg": "#eef0f3", "fontWeight": 700 } }
+            ]},
+            { "cells": [{"type":"field","fieldId":"m1_no"},{"type":"field","fieldId":"m1_name"},{"type":"field","fieldId":"m1_model"},{"type":"field","fieldId":"m1_loc"},{"type":"field","fieldId":"m1_qty"},{"type":"field","fieldId":"m1_legal"},{"type":"field","fieldId":"m1_last"},{"type":"field","fieldId":"m1_next"},{"type":"field","fieldId":"m1_note"}] },
+            { "cells": [{"type":"field","fieldId":"m2_no"},{"type":"field","fieldId":"m2_name"},{"type":"field","fieldId":"m2_model"},{"type":"field","fieldId":"m2_loc"},{"type":"field","fieldId":"m2_qty"},{"type":"field","fieldId":"m2_legal"},{"type":"field","fieldId":"m2_last"},{"type":"field","fieldId":"m2_next"},{"type":"field","fieldId":"m2_note"}] },
+            { "cells": [{"type":"field","fieldId":"m3_no"},{"type":"field","fieldId":"m3_name"},{"type":"field","fieldId":"m3_model"},{"type":"field","fieldId":"m3_loc"},{"type":"field","fieldId":"m3_qty"},{"type":"field","fieldId":"m3_legal"},{"type":"field","fieldId":"m3_last"},{"type":"field","fieldId":"m3_next"},{"type":"field","fieldId":"m3_note"}] },
+            { "cells": [{"type":"field","fieldId":"m4_no"},{"type":"field","fieldId":"m4_name"},{"type":"field","fieldId":"m4_model"},{"type":"field","fieldId":"m4_loc"},{"type":"field","fieldId":"m4_qty"},{"type":"field","fieldId":"m4_legal"},{"type":"field","fieldId":"m4_last"},{"type":"field","fieldId":"m4_next"},{"type":"field","fieldId":"m4_note"}] },
+            { "cells": [{"type":"field","fieldId":"m5_no"},{"type":"field","fieldId":"m5_name"},{"type":"field","fieldId":"m5_model"},{"type":"field","fieldId":"m5_loc"},{"type":"field","fieldId":"m5_qty"},{"type":"field","fieldId":"m5_legal"},{"type":"field","fieldId":"m5_last"},{"type":"field","fieldId":"m5_next"},{"type":"field","fieldId":"m5_note"}] },
+            { "cells": [{"type":"field","fieldId":"m6_no"},{"type":"field","fieldId":"m6_name"},{"type":"field","fieldId":"m6_model"},{"type":"field","fieldId":"m6_loc"},{"type":"field","fieldId":"m6_qty"},{"type":"field","fieldId":"m6_legal"},{"type":"field","fieldId":"m6_last"},{"type":"field","fieldId":"m6_next"},{"type":"field","fieldId":"m6_note"}] },
+            { "cells": [{"type":"field","fieldId":"m7_no"},{"type":"field","fieldId":"m7_name"},{"type":"field","fieldId":"m7_model"},{"type":"field","fieldId":"m7_loc"},{"type":"field","fieldId":"m7_qty"},{"type":"field","fieldId":"m7_legal"},{"type":"field","fieldId":"m7_last"},{"type":"field","fieldId":"m7_next"},{"type":"field","fieldId":"m7_note"}] }
+          ]
+        }
+      ]}
+    ]
+  }
+}

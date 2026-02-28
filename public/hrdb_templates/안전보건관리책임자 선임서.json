@@ -1,0 +1,225 @@
+{
+  "template_id": "kras_safety_manager_appointment_v1",
+  "title": "안전보건관리책임자 선임서",
+  "version": 1,
+  "source": {
+    "file_type": "hwp",
+    "filename": "bid_00138_안전보건관리책임자_선임서_서식.hwp",
+    "issuer": "고용노동부",
+    "legal_basis": "산업안전보건법 제15조"
+  },
+  "meta": {
+    "paper": "A4",
+    "unit": "mm",
+    "page": {
+      "width": 210,
+      "height": 297,
+      "margin": { "top": 20, "right": 20, "bottom": 20, "left": 20 }
+    },
+    "fonts": { "base": "Noto Sans KR", "mono": "monospace" }
+  },
+  "schema": {
+    "record": { "record_id": "string", "created_at": "string", "values": "object" }
+  },
+  "fields": [
+    { "id": "site_name",      "label": "① 사업장명",       "type": "text",   "placeholder": "예) ○○사업장" },
+    { "id": "industry_type",  "label": "② 업종",           "type": "text",   "placeholder": "예) 제조업" },
+    { "id": "site_mgmt_no",   "label": "② 사업장관리번호", "type": "text",   "placeholder": "예) 12-34-56789-00" },
+    { "id": "phone",          "label": "③ 전화번호",       "type": "text",   "placeholder": "예) 02-1234-5678" },
+    { "id": "workers_total",  "label": "④ 근로자 수 (총)", "type": "text",   "placeholder": "00" },
+    { "id": "workers_male",   "label": "④ 근로자 수 (남)", "type": "text",   "placeholder": "00" },
+    { "id": "workers_female", "label": "④ 근로자 수 (여)", "type": "text",   "placeholder": "00" },
+    { "id": "address",        "label": "⑤ 소재지",         "type": "text",   "placeholder": "예) 서울특별시 ○○구 ○○로 123" },
+    { "id": "manager_name",   "label": "⑥ 성명",           "type": "text",   "placeholder": "예) 홍길동" },
+    { "id": "dept_position",  "label": "⑦ 부서 / 직책",   "type": "text",   "placeholder": "예) 안전관리팀 / 팀장" },
+    { "id": "appointed_date", "label": "⑧ 선임 등 연월일", "type": "date",   "placeholder": "예) 2025-01-01" },
+    { "id": "duty_type",      "label": "⑨ 전담·겸임",     "type": "select", "options": ["전담", "겸임"] },
+    { "id": "submit_year",    "label": "제출 연도",         "type": "text",   "placeholder": "2025" },
+    { "id": "submit_month",   "label": "제출 월",           "type": "text",   "placeholder": "01" },
+    { "id": "submit_day",     "label": "제출 일",           "type": "text",   "placeholder": "01" },
+    { "id": "representative", "label": "대표자",             "type": "text",   "placeholder": "성명" }
+  ],
+  "layout": {
+    "type": "page",
+    "children": [
+      {
+        "type": "block",
+        "id": "header",
+        "style": { "padding": [10, 6, 10, 6] },
+        "children": [
+          {
+            "type": "text",
+            "value": "안전보건관리책임자 선임서",
+            "style": { "fontSize": 20, "fontWeight": 900, "textAlign": "center", "color": "#1a1a2e" }
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "id": "section_site",
+        "title": { "text": "사업장 정보" },
+        "children": [
+          {
+            "type": "table",
+            "id": "site_info",
+            "cols": [
+              { "w": "20%" }, { "w": "30%" }, { "w": "20%" }, { "w": "30%" }
+            ],
+            "rows": [
+              {
+                "cells": [
+                  { "type": "label", "text": "① 사업장명", "style": { "bg": "#eef0f3", "fontWeight": 800, "align": "center" } },
+                  { "type": "field", "fieldId": "site_name", "colspan": 3 }
+                ]
+              },
+              {
+                "cells": [
+                  { "type": "label", "text": "② 업종", "style": { "bg": "#eef0f3", "fontWeight": 800, "align": "center" } },
+                  { "type": "field", "fieldId": "industry_type" },
+                  { "type": "label", "text": "② 사업장관리번호", "style": { "bg": "#eef0f3", "fontWeight": 800, "align": "center" } },
+                  { "type": "field", "fieldId": "site_mgmt_no" }
+                ]
+              },
+              {
+                "cells": [
+                  { "type": "label", "text": "③ 전화번호", "style": { "bg": "#eef0f3", "fontWeight": 800, "align": "center" } },
+                  { "type": "field", "fieldId": "phone" },
+                  { "type": "label", "text": "④ 근로자 수", "style": { "bg": "#eef0f3", "fontWeight": 800, "align": "center" } },
+                  {
+                    "type": "composite",
+                    "children": [
+                      { "type": "text", "value": "총 " },
+                      { "type": "field", "fieldId": "workers_total", "style": { "inputWidth": "3em" } },
+                      { "type": "text", "value": " 남 " },
+                      { "type": "field", "fieldId": "workers_male", "style": { "inputWidth": "3em" } },
+                      { "type": "text", "value": " 여 " },
+                      { "type": "field", "fieldId": "workers_female", "style": { "inputWidth": "3em" } }
+                    ]
+                  }
+                ]
+              },
+              {
+                "cells": [
+                  { "type": "label", "text": "⑤ 소재지", "style": { "bg": "#eef0f3", "fontWeight": 800, "align": "center" } },
+                  { "type": "field", "fieldId": "address", "colspan": 3 }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "id": "section_manager",
+        "title": { "text": "선임 정보" },
+        "children": [
+          {
+            "type": "table",
+            "id": "manager_info",
+            "cols": [
+              { "w": "28%" }, { "w": "18%" }, { "w": "22%" }, { "w": "18%" }, { "w": "14%" }
+            ],
+            "rows": [
+              {
+                "cells": [
+                  { "type": "label", "text": "내용 구분",       "style": { "bg": "#eef0f3", "fontWeight": 800, "align": "center" } },
+                  { "type": "label", "text": "⑥ 성 명",        "style": { "bg": "#eef0f3", "fontWeight": 800, "align": "center" } },
+                  { "type": "label", "text": "⑦ 부서 / 직책",  "style": { "bg": "#eef0f3", "fontWeight": 800, "align": "center" } },
+                  { "type": "label", "text": "⑧ 선임 연월일",  "style": { "bg": "#eef0f3", "fontWeight": 800, "align": "center" } },
+                  { "type": "label", "text": "⑨ 전담·겸임",    "style": { "bg": "#eef0f3", "fontWeight": 800, "align": "center" } }
+                ]
+              },
+              {
+                "cells": [
+                  { "type": "label", "text": "⑩ 안전보건관리책임자", "style": { "bg": "#f5f7fa", "align": "center" } },
+                  { "type": "field", "fieldId": "manager_name" },
+                  { "type": "field", "fieldId": "dept_position" },
+                  { "type": "field", "fieldId": "appointed_date" },
+                  { "type": "field", "fieldId": "duty_type" }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "block",
+        "id": "declaration",
+        "style": { "marginTop": 20, "padding": [10, 10, 10, 10] },
+        "children": [
+          {
+            "type": "text",
+            "value": "「산업안전보건법」제15조에 의거하여 안전보건관리책임자를 위와 같이 선임합니다.",
+            "style": { "fontSize": 11, "textAlign": "center" }
+          },
+          {
+            "type": "table",
+            "id": "date_sign",
+            "style": { "marginTop": 16 },
+            "cols": [ { "w": "50%" }, { "w": "50%" } ],
+            "rows": [
+              {
+                "cells": [
+                  {
+                    "type": "composite",
+                    "style": { "align": "center" },
+                    "children": [
+                      { "type": "field", "fieldId": "submit_year",  "style": { "inputWidth": "4em" } },
+                      { "type": "text",  "value": " 년 " },
+                      { "type": "field", "fieldId": "submit_month", "style": { "inputWidth": "2.5em" } },
+                      { "type": "text",  "value": " 월 " },
+                      { "type": "field", "fieldId": "submit_day",   "style": { "inputWidth": "2.5em" } },
+                      { "type": "text",  "value": " 일" }
+                    ]
+                  },
+                  {
+                    "type": "composite",
+                    "style": { "align": "center" },
+                    "children": [
+                      { "type": "text",  "value": "대표자  " },
+                      { "type": "field", "fieldId": "representative", "style": { "inputWidth": "6em" } },
+                      { "type": "text",  "value": "  (인)" }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "section",
+        "id": "section_law",
+        "title": { "text": "관련법 조항" },
+        "style": { "marginTop": 20, "padding": [10, 14, 10, 14] },
+        "children": [
+          {
+            "type": "static_text",
+            "value": "1. 법 제15조: 【안전보건관리책임자】",
+            "style": { "fontWeight": 700, "fontSize": 11 }
+          },
+          {
+            "type": "static_list",
+            "items": [
+              "① 사업장의 산업재해 예방계획의 수립에 관한 사항",
+              "② 제25조 및 제26조에 따른 안전보건관리규정의 작성 및 변경에 관한 사항",
+              "③ 제29조에 따른 안전보건교육에 관한 사항",
+              "④ 작업환경측정 등 작업환경의 점검 및 개선에 관한 사항",
+              "⑤ 제129조부터 제132조까지에 따른 근로자의 건강진단 등 건강관리에 관한 사항",
+              "⑥ 산업재해의 원인조사 및 재발방지대책 수립에 관한 사항",
+              "⑦ 산업재해에 관한 통계의 기록 및 유지에 관한 사항",
+              "⑧ 안전장치 및 보호구 구입 시 적격품 여부 확인에 관한 사항",
+              "⑨ 그 밖에 근로자의 유해·위험 방지조치에 관한 사항으로서 고용노동부령으로 정하는 사항"
+            ],
+            "style": { "fontSize": 10, "lineHeight": 1.8 }
+          },
+          {
+            "type": "static_text",
+            "value": "첨부 : 재직증명서",
+            "style": { "fontWeight": 700, "fontSize": 11, "marginTop": 8 }
+          }
+        ]
+      }
+    ]
+  }
+}

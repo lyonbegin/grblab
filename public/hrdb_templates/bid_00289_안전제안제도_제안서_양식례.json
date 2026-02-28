@@ -1,0 +1,220 @@
+{
+  "template_id": "safety_suggestion_form_v1",
+  "title": "안전 제안제도 제안서",
+  "version": 1,
+  "source": {
+    "file_type": "hwp",
+    "filename": "bid_00289_안전제안제도_제안서_양식례.hwp",
+    "issuer": "",
+    "legal_basis": ""
+  },
+  "meta": {
+    "paper": "A4",
+    "unit": "mm",
+    "page": { "width": 210, "height": 297, "margin": { "top": 20, "right": 20, "bottom": 20, "left": 20 } },
+    "fonts": { "base": "Noto Sans KR" }
+  },
+  "fields": [
+    { "id": "receipt_no",         "label": "접수번호",              "type": "text" },
+    { "id": "proposer_name",      "label": "제안자 성명",           "type": "text" },
+    { "id": "proposer_contact",   "label": "제안자 연락처",         "type": "text" },
+    { "id": "proposer_dept",      "label": "제안자 소속(현장명)",   "type": "text" },
+
+    { "id": "field_env",          "label": "제안분야 - 환경개선",   "type": "checkbox" },
+    { "id": "field_system",       "label": "제안분야 - 제도개선",   "type": "checkbox" },
+    { "id": "field_culture",      "label": "제안분야 - 문화확산",   "type": "checkbox" },
+    { "id": "field_other",        "label": "제안분야 - 기타",       "type": "checkbox" },
+    { "id": "suggestion_title",   "label": "제안명",                "type": "text" },
+
+    { "id": "content_main",       "label": "제안내용 - 주요내용",   "type": "textarea" },
+    { "id": "content_before",     "label": "개선 전",               "type": "textarea" },
+    { "id": "content_after",      "label": "개선 후",               "type": "textarea" },
+    { "id": "content_effect",     "label": "제안효과",              "type": "textarea" },
+
+    { "id": "sign_year",          "label": "작성일 연도",           "type": "text" },
+    { "id": "sign_month",         "label": "작성일 월",             "type": "text" },
+    { "id": "sign_day",           "label": "작성일 일",             "type": "text" },
+    { "id": "proposer_sign",      "label": "제안자 서명",           "type": "text" },
+    { "id": "attachment_desc",    "label": "붙임자료",              "type": "text", "placeholder": "참고자료" },
+
+    { "id": "consent_agree",      "label": "개인정보 수집·이용 동의", "type": "checkbox" },
+    { "id": "consent_disagree",   "label": "개인정보 수집·이용 미동의", "type": "checkbox" },
+    { "id": "consent_sign_year",  "label": "동의일 연도",           "type": "text" },
+    { "id": "consent_sign_month", "label": "동의일 월",             "type": "text" },
+    { "id": "consent_sign_day",   "label": "동의일 일",             "type": "text" },
+    { "id": "consent_name",       "label": "동의자 성명",           "type": "text" },
+    { "id": "consent_sign",       "label": "동의자 서명",           "type": "text" }
+  ],
+  "layout": {
+    "type": "page",
+    "children": [
+      {
+        "type": "block",
+        "style": { "padding": [8, 6, 12, 6] },
+        "children": [
+          { "type": "text", "value": "안전 제안제도 제안서", "style": { "fontSize": 18, "fontWeight": 900, "textAlign": "center" } }
+        ]
+      },
+      {
+        "type": "section", "id": "section_proposer",
+        "children": [{
+          "type": "table",
+          "cols": [{ "w": "15%" }, { "w": "35%" }, { "w": "15%" }, { "w": "35%" }],
+          "rows": [
+            { "cells": [
+              { "type": "label", "text": "접수번호", "style": { "bg": "#eef0f3", "fontWeight": 700 } }, { "type": "field", "fieldId": "receipt_no" },
+              { "type": "label", "text": "", "colspan": 2 }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "성    명", "style": { "bg": "#eef0f3", "fontWeight": 700 } }, { "type": "field", "fieldId": "proposer_name" },
+              { "type": "label", "text": "연락처", "style": { "bg": "#eef0f3", "fontWeight": 700 } }, { "type": "field", "fieldId": "proposer_contact" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "소속(현장명)", "style": { "bg": "#eef0f3", "fontWeight": 700 } }, { "type": "field", "fieldId": "proposer_dept", "colspan": 3 }
+            ]}
+          ]
+        }]
+      },
+      {
+        "type": "section", "id": "section_proposal",
+        "style": { "marginTop": 10 },
+        "children": [{
+          "type": "table",
+          "cols": [{ "w": "15%" }, { "w": "85%" }],
+          "rows": [
+            { "cells": [
+              { "type": "label", "text": "제안분야", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "composite", "children": [
+                { "type": "field", "fieldId": "field_env" }, { "type": "text", "value": " 환경개선   " },
+                { "type": "field", "fieldId": "field_system" }, { "type": "text", "value": " 제도개선   " },
+                { "type": "field", "fieldId": "field_culture" }, { "type": "text", "value": " 문화확산   " },
+                { "type": "field", "fieldId": "field_other" }, { "type": "text", "value": " 기타" }
+              ]}
+            ]},
+            { "cells": [
+              { "type": "label", "text": "제 안 명", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "suggestion_title" }
+            ]}
+          ]
+        }]
+      },
+      {
+        "type": "section", "id": "section_content",
+        "style": { "marginTop": 10 },
+        "children": [{
+          "type": "table",
+          "cols": [{ "w": "15%" }, { "w": "85%" }],
+          "rows": [
+            { "cells": [
+              { "type": "label", "text": "주요내용", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "content_main" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "개 선 전", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "content_before" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "개 선 후", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "content_after" }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "제안효과", "style": { "bg": "#eef0f3", "fontWeight": 700 } },
+              { "type": "field", "fieldId": "content_effect" }
+            ]}
+          ]
+        }]
+      },
+      {
+        "type": "block", "style": { "marginTop": 16 },
+        "children": [{
+          "type": "composite",
+          "children": [
+            { "type": "field", "fieldId": "sign_year" }, { "type": "text", "value": " 년  " },
+            { "type": "field", "fieldId": "sign_month" }, { "type": "text", "value": " 월  " },
+            { "type": "field", "fieldId": "sign_day" }, { "type": "text", "value": " 일" }
+          ]
+        }]
+      },
+      {
+        "type": "block", "style": { "marginTop": 6 },
+        "children": [{
+          "type": "composite",
+          "children": [
+            { "type": "text", "value": "제안자 :  " },
+            { "type": "field", "fieldId": "proposer_sign" },
+            { "type": "text", "value": " (서명)   붙임자료: " },
+            { "type": "field", "fieldId": "attachment_desc" }
+          ]
+        }]
+      },
+      {
+        "type": "block",
+        "style": { "marginTop": 20, "padding": [10, 10, 10, 10], "border": "1px solid #ccc" },
+        "children": [
+          { "type": "text", "value": "개인정보 수집·이용 제공 동의서", "style": { "fontWeight": 700, "marginBottom": 8 } },
+          { "type": "text", "value": "개인정보보호법에 의거하여 귀하의 개인정보를 다음과 같은 목적으로 수집·이용하기 위하여 동의를 받고자 합니다.", "style": { "fontSize": 9, "lineHeight": 1.7 } }
+        ]
+      },
+      {
+        "type": "section", "id": "section_consent_table",
+        "children": [{
+          "type": "table",
+          "cols": [{ "w": "30%" }, { "w": "40%" }, { "w": "30%" }],
+          "rows": [
+            { "cells": [
+              { "type": "label", "text": "수집·이용 항목", "style": { "bg": "#eef0f3", "fontWeight": 700, "align": "center" } },
+              { "type": "label", "text": "수집·이용 목적", "style": { "bg": "#eef0f3", "fontWeight": 700, "align": "center" } },
+              { "type": "label", "text": "보유기간", "style": { "bg": "#eef0f3", "fontWeight": 700, "align": "center" } }
+            ]},
+            { "cells": [
+              { "type": "label", "text": "이름, 소속, 연락처" },
+              { "type": "label", "text": "안전 제안제도" },
+              { "type": "label", "text": "운영완료 후 폐기" }
+            ]}
+          ]
+        }]
+      },
+      {
+        "type": "block", "style": { "marginTop": 8, "fontSize": 9, "color": "#555" },
+        "children": [
+          { "type": "text", "value": "※ 위의 개인정보 수집·이용에 대한 동의를 거부할 권리가 있습니다. 그러나 동의를 거부할 경우 안전 제안제도 참여에 제한될 수 있습니다." }
+        ]
+      },
+      {
+        "type": "block", "style": { "marginTop": 8 },
+        "children": [{
+          "type": "composite",
+          "children": [
+            { "type": "text", "value": "☞ 위와 같이 개인정보를 수집·이용하는데 동의하십니까?   " },
+            { "type": "field", "fieldId": "consent_agree" }, { "type": "text", "value": " 동의   " },
+            { "type": "field", "fieldId": "consent_disagree" }, { "type": "text", "value": " 미동의" }
+          ]
+        }]
+      },
+      {
+        "type": "block", "style": { "marginTop": 10 },
+        "children": [{
+          "type": "composite",
+          "children": [
+            { "type": "field", "fieldId": "consent_sign_year" }, { "type": "text", "value": " 년  " },
+            { "type": "field", "fieldId": "consent_sign_month" }, { "type": "text", "value": " 월  " },
+            { "type": "field", "fieldId": "consent_sign_day" }, { "type": "text", "value": " 일" }
+          ]
+        }]
+      },
+      {
+        "type": "block", "style": { "marginTop": 6 },
+        "children": [{
+          "type": "composite",
+          "children": [
+            { "type": "text", "value": "본인 성명  " },
+            { "type": "field", "fieldId": "consent_name" },
+            { "type": "text", "value": "  " },
+            { "type": "field", "fieldId": "consent_sign" },
+            { "type": "text", "value": " (서명 또는 인)   귀하" }
+          ]
+        }]
+      }
+    ]
+  }
+}
