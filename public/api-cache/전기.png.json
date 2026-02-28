@@ -1,0 +1,204 @@
+{
+  "summary": {
+    "processName": "전기 패널 업그레이드 작업",
+    "workContent": "설치",
+    "equipment": "전기 패널 설치",
+    "basis": "전기 패널 업그레이드 현장 사진 분석"
+  },
+  "hazards": [
+    {
+      "name": "전기 감전 위험",
+      "category": "감전"
+    },
+    {
+      "name": "패널 낙하물 위험",
+      "category": "낙하물"
+    },
+    {
+      "name": "충돌로 인한 상해 위험",
+      "category": "충돌"
+    }
+  ],
+  "overallLevel": {
+    "label": "고위험",
+    "immediateAction": false,
+    "topHazard": "전기 감전 위험",
+    "score": 12
+  },
+  "raw": {
+    "site_analysis": {
+      "industry": "전기 패널 설치",
+      "detailed_process": "전기 패널 업그레이드 작업",
+      "work_stage": "설치",
+      "analysis_basis": "전기 패널 업그레이드 현장 사진 분석"
+    },
+    "hazards": [
+      {
+        "id": 1,
+        "hazard_name": "전기 감전 위험",
+        "hazard_category": "감전",
+        "accident_scenario": "작업자가 패널 내부에서 작업하는 과정에서 전기 통전으로 인해 감전 사고 발생",
+        "direct_cause": "전기 흐름 차단 없이 작업",
+        "expected_injury": "중상",
+        "probability": 4,
+        "severity": 3,
+        "risk_score": 12,
+        "risk_level": "고위험",
+        "improvement_measure": "전기 절연 장갑 사용 의무화, 안전 차단기 설치 (산업안전보건기준)",
+        "ocr": null,
+        "bbox": [
+          100,
+          200,
+          400,
+          600
+        ]
+      },
+      {
+        "id": 2,
+        "hazard_name": "패널 낙하물 위험",
+        "hazard_category": "낙하물",
+        "accident_scenario": "작업자가 패널 도어를 열어난 상태에서 부주의로 인해 패널 부품 낙하 사고 발생",
+        "direct_cause": "부적절한 패널 도어 고정",
+        "expected_injury": "경상",
+        "probability": 3,
+        "severity": 2,
+        "risk_score": 6,
+        "risk_level": "중위험",
+        "improvement_measure": "도어 고정 장치 강화, 안전관리 절차 교육 (산업안전보건기준)",
+        "ocr": null,
+        "bbox": [
+          150,
+          250,
+          350,
+          500
+        ]
+      },
+      {
+        "id": 3,
+        "hazard_name": "충돌로 인한 상해 위험",
+        "hazard_category": "충돌",
+        "accident_scenario": "작업자가 작업 중 뒤로 넘어져 패널 구조물과 충돌하여 상해 사고 발생",
+        "direct_cause": "작업 환경 내 불필요한 물체 방치",
+        "expected_injury": "경상",
+        "probability": 2,
+        "severity": 2,
+        "risk_score": 4,
+        "risk_level": "저위험",
+        "improvement_measure": "작업장 내 장애물 제거 및 정리정돈 (산업안전보건기준)",
+        "ocr": null,
+        "bbox": [
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    ],
+    "overall_risk_summary": {
+      "highest_risk_item": "전기 감전 위험",
+      "highest_risk_score": 12,
+      "immediate_action_required": false,
+      "recommended_action": "전기 절연 장갑 사용 의무화 및 안전 차단기 설치 필요"
+    }
+  },
+  "frequencySeverity": [
+    {
+      "factor": "전기 감전 위험",
+      "category": "감전",
+      "probability": 4,
+      "severity": 3,
+      "score": 12,
+      "level": "고위험"
+    },
+    {
+      "factor": "패널 낙하물 위험",
+      "category": "낙하물",
+      "probability": 3,
+      "severity": 2,
+      "score": 6,
+      "level": "중위험"
+    },
+    {
+      "factor": "충돌로 인한 상해 위험",
+      "category": "충돌",
+      "probability": 2,
+      "severity": 2,
+      "score": 4,
+      "level": "저위험"
+    }
+  ],
+  "checklist": [
+    {
+      "factor": "전기 감전 위험",
+      "category": "감전",
+      "directCause": "전기 흐름 차단 없이 작업",
+      "judgment": "고위험"
+    },
+    {
+      "factor": "패널 낙하물 위험",
+      "category": "낙하물",
+      "directCause": "부적절한 패널 도어 고정",
+      "judgment": "중위험"
+    },
+    {
+      "factor": "충돌로 인한 상해 위험",
+      "category": "충돌",
+      "directCause": "작업 환경 내 불필요한 물체 방치",
+      "judgment": "저위험"
+    }
+  ],
+  "coreFactors": [
+    {
+      "factor": "전기 감전 위험",
+      "riskLevel": "고위험",
+      "scenario": "작업자가 패널 내부에서 작업하는 과정에서 전기 통전으로 인해 감전 사고 발생",
+      "directCause": "전기 흐름 차단 없이 작업",
+      "expectedInjury": "중상",
+      "improvementMeasure": "전기 절연 장갑 사용 의무화, 안전 차단기 설치 (산업안전보건기준)"
+    },
+    {
+      "factor": "패널 낙하물 위험",
+      "riskLevel": "중위험",
+      "scenario": "작업자가 패널 도어를 열어난 상태에서 부주의로 인해 패널 부품 낙하 사고 발생",
+      "directCause": "부적절한 패널 도어 고정",
+      "expectedInjury": "경상",
+      "improvementMeasure": "도어 고정 장치 강화, 안전관리 절차 교육 (산업안전보건기준)"
+    },
+    {
+      "factor": "충돌로 인한 상해 위험",
+      "riskLevel": "저위험",
+      "scenario": "작업자가 작업 중 뒤로 넘어져 패널 구조물과 충돌하여 상해 사고 발생",
+      "directCause": "작업 환경 내 불필요한 물체 방치",
+      "expectedInjury": "경상",
+      "improvementMeasure": "작업장 내 장애물 제거 및 정리정돈 (산업안전보건기준)"
+    }
+  ],
+  "threeLevel": [
+    {
+      "factor": "전기 감전 위험",
+      "judgment": "허용불가능",
+      "measure": "전기 절연 장갑 사용 의무화, 안전 차단기 설치 (산업안전보건기준)"
+    },
+    {
+      "factor": "패널 낙하물 위험",
+      "judgment": "개선필요",
+      "measure": "도어 고정 장치 강화, 안전관리 절차 교육 (산업안전보건기준)"
+    },
+    {
+      "factor": "충돌로 인한 상해 위험",
+      "judgment": "허용가능",
+      "measure": "작업장 내 장애물 제거 및 정리정돈 (산업안전보건기준)"
+    }
+  ],
+  "health": {
+    "applicable": false,
+    "summary": "현재 빈도×강도법 평가 모드에서는 건강장해 분석이 포함되지 않습니다.",
+    "items": []
+  },
+  "overallSummary": {
+    "highest_risk_item": "전기 감전 위험",
+    "highest_risk_score": 12,
+    "immediate_action_required": false,
+    "recommended_action": "전기 절연 장갑 사용 의무화 및 안전 차단기 설치 필요"
+  }
+}

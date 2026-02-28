@@ -1,0 +1,32 @@
+[
+  {
+    "x": 447,
+    "y": 219,
+    "width": 12,
+    "height": 28,
+    "confidence": 0.9999983310699463,
+    "class": "person",
+    "class_id": 0,
+    "detection_id": "4dab57ee-495a-4b90-949c-227876a66535"
+  },
+  {
+    "x": 462,
+    "y": 218.5,
+    "width": 12,
+    "height": 31,
+    "confidence": 0.9999983310699463,
+    "class": "person",
+    "class_id": 0,
+    "detection_id": "989034a0-04c1-4c3a-975c-35f28fc2a402"
+  },
+  {
+    "x": 491.5,
+    "y": 218.5,
+    "width": 21,
+    "height": 47,
+    "confidence": 0.9999983310699463,
+    "class": "person",
+    "class_id": 0,
+    "detection_id": "df2f955c-515d-4c31-8c12-999b8f2fa42d"
+  }
+]

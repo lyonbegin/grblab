@@ -1,0 +1,82 @@
+[
+  {
+    "x": 510.5,
+    "y": 116,
+    "width": 121,
+    "height": 82,
+    "confidence": 0.9348868727684021,
+    "class": "Hardhat",
+    "class_id": 0,
+    "detection_id": "ab4d1f43-9d8b-413a-ac52-3c490907a9ba"
+  },
+  {
+    "x": 249.5,
+    "y": 197.5,
+    "width": 115,
+    "height": 83,
+    "confidence": 0.9303264021873474,
+    "class": "Hardhat",
+    "class_id": 0,
+    "detection_id": "e3eb7b47-6997-419e-b0f9-35e1c657709d"
+  },
+  {
+    "x": 284,
+    "y": 378.5,
+    "width": 252,
+    "height": 453,
+    "confidence": 0.9191663265228271,
+    "class": "Person",
+    "class_id": 5,
+    "detection_id": "437fee8a-7231-4ec0-bd58-e39cd4187cf9"
+  },
+  {
+    "x": 496,
+    "y": 368,
+    "width": 144,
+    "height": 306,
+    "confidence": 0.911930501461029,
+    "class": "NO-Safety Vest",
+    "class_id": 4,
+    "detection_id": "7520d2ad-dfca-4fee-9cac-a5f34e18af63"
+  },
+  {
+    "x": 261,
+    "y": 388.5,
+    "width": 164,
+    "height": 249,
+    "confidence": 0.9106859564781189,
+    "class": "NO-Safety Vest",
+    "class_id": 4,
+    "detection_id": "a1bae056-1892-4cd0-9a3d-305bc52119b2"
+  },
+  {
+    "x": 530.5,
+    "y": 198,
+    "width": 49,
+    "height": 40,
+    "confidence": 0.8975606560707092,
+    "class": "NO-Mask",
+    "class_id": 3,
+    "detection_id": "4f3efb66-7c54-4489-a678-6608b575ac88"
+  },
+  {
+    "x": 487.5,
+    "y": 334.5,
+    "width": 199,
+    "height": 529,
+    "confidence": 0.8885263800621033,
+    "class": "Person",
+    "class_id": 5,
+    "detection_id": "0680bb74-c177-48b5-8415-9ab5e02a32b0"
+  },
+  {
+    "x": 258.5,
+    "y": 266.5,
+    "width": 37,
+    "height": 23,
+    "confidence": 0.8403877019882202,
+    "class": "NO-Mask",
+    "class_id": 3,
+    "detection_id": "ead705be-6473-40d4-85a1-4fdb7b73acde"
+  }
+]

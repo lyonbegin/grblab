@@ -1,0 +1,142 @@
+[
+  {
+    "x": 561.5,
+    "y": 974.5,
+    "width": 235,
+    "height": 393,
+    "confidence": 0.8707382678985596,
+    "class": "occupied",
+    "class_id": 1,
+    "detection_id": "2acac650-e49b-44e7-b5cf-64e69300a740"
+  },
+  {
+    "x": 367.5,
+    "y": 936.5,
+    "width": 229,
+    "height": 361,
+    "confidence": 0.8694149851799011,
+    "class": "occupied",
+    "class_id": 1,
+    "detection_id": "f0c94760-be0d-4619-b22d-96200a36105d"
+  },
+  {
+    "x": 176.5,
+    "y": 908,
+    "width": 221,
+    "height": 368,
+    "confidence": 0.8618817329406738,
+    "class": "occupied",
+    "class_id": 1,
+    "detection_id": "02a6126c-96c4-4d00-9163-831c29838d39"
+  },
+  {
+    "x": 757.5,
+    "y": 991,
+    "width": 209,
+    "height": 386,
+    "confidence": 0.8617440462112427,
+    "class": "occupied",
+    "class_id": 1,
+    "detection_id": "c110e2ab-959a-457a-a9fd-62abb342615b"
+  },
+  {
+    "x": 834,
+    "y": 299,
+    "width": 182,
+    "height": 328,
+    "confidence": 0.8591905236244202,
+    "class": "occupied",
+    "class_id": 1,
+    "detection_id": "4617563c-cc51-4283-9c1d-125e762ec647"
+  },
+  {
+    "x": 656.5,
+    "y": 264,
+    "width": 185,
+    "height": 358,
+    "confidence": 0.8577072024345398,
+    "class": "occupied",
+    "class_id": 1,
+    "detection_id": "d22559e7-2cd0-49ae-ad62-5314f06f89d2"
+  },
+  {
+    "x": 471,
+    "y": 244,
+    "width": 188,
+    "height": 346,
+    "confidence": 0.8573312163352966,
+    "class": "occupied",
+    "class_id": 1,
+    "detection_id": "6ace740b-1d14-4ce5-92a2-434b9eb51d35"
+  },
+  {
+    "x": 1019.5,
+    "y": 319.5,
+    "width": 179,
+    "height": 337,
+    "confidence": 0.8520261645317078,
+    "class": "occupied",
+    "class_id": 1,
+    "detection_id": "27426d03-12ee-4ebf-b645-f7af864efacc"
+  },
+  {
+    "x": 1172.5,
+    "y": 1051,
+    "width": 213,
+    "height": 450,
+    "confidence": 0.847079336643219,
+    "class": "occupied",
+    "class_id": 1,
+    "detection_id": "480312a8-1300-420c-9af7-74c6a3f6c330"
+  },
+  {
+    "x": 968,
+    "y": 1022,
+    "width": 224,
+    "height": 382,
+    "confidence": 0.8277652859687805,
+    "class": "occupied",
+    "class_id": 1,
+    "detection_id": "59f4125b-d859-414d-af4f-4a7d4ac6e192"
+  },
+  {
+    "x": 1192.5,
+    "y": 316,
+    "width": 173,
+    "height": 380,
+    "confidence": 0.8201414942741394,
+    "class": "occupied",
+    "class_id": 1,
+    "detection_id": "11015b1a-928f-4b67-b184-6861829a43bc"
+  },
+  {
+    "x": 112,
+    "y": 194.5,
+    "width": 204,
+    "height": 333,
+    "confidence": 0.8118269443511963,
+    "class": "occupied",
+    "class_id": 1,
+    "detection_id": "40d44584-68a8-439b-8559-0c59ce51d558"
+  },
+  {
+    "x": 296,
+    "y": 219.5,
+    "width": 186,
+    "height": 335,
+    "confidence": 0.8062407970428467,
+    "class": "occupied",
+    "class_id": 1,
+    "detection_id": "40c6bc28-a60c-4871-a2e5-26df70629f2a"
+  },
+  {
+    "x": 46,
+    "y": 867,
+    "width": 92,
+    "height": 372,
+    "confidence": 0.6921787858009338,
+    "class": "occupied",
+    "class_id": 1,
+    "detection_id": "16183d7e-ad97-4da1-8811-3cbfe78508b2"
+  }
+]

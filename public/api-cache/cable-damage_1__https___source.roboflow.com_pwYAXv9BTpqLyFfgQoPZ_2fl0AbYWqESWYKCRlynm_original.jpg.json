@@ -1,0 +1,12 @@
+[
+  {
+    "x": 1020,
+    "y": 574,
+    "width": 134,
+    "height": 136,
+    "confidence": 0.9966889023780823,
+    "class": "thunderbolt",
+    "class_id": 1,
+    "detection_id": "f6df7953-8f81-4d45-8e58-33138d338f42"
+  }
+]

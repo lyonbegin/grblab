@@ -1,0 +1,204 @@
+{
+  "summary": {
+    "processName": "정리 및 청소 작업",
+    "workContent": "점검",
+    "equipment": "식품 가공",
+    "basis": "작업 공간 내 정리되지 않은 도구와 유체의 누출"
+  },
+  "hazards": [
+    {
+      "name": "바닥 미끄러짐",
+      "category": "낙하물"
+    },
+    {
+      "name": "날카로운 도구 노출",
+      "category": "PPE미착용"
+    },
+    {
+      "name": "전기 기기 노출",
+      "category": "감전"
+    }
+  ],
+  "overallLevel": {
+    "label": "고위험",
+    "immediateAction": true,
+    "topHazard": "바닥 미끄러짐",
+    "score": 12
+  },
+  "raw": {
+    "site_analysis": {
+      "industry": "식품 가공",
+      "detailed_process": "정리 및 청소 작업",
+      "work_stage": "점검",
+      "analysis_basis": "작업 공간 내 정리되지 않은 도구와 유체의 누출"
+    },
+    "hazards": [
+      {
+        "id": 1,
+        "hazard_name": "바닥 미끄러짐",
+        "hazard_category": "낙하물",
+        "accident_scenario": "작업자가 바닥에 유출된 액체로 인해 미끄러질 수 있음",
+        "direct_cause": "액체 누출",
+        "expected_injury": "골절",
+        "probability": 4,
+        "severity": 3,
+        "risk_score": 12,
+        "risk_level": "고위험",
+        "improvement_measure": "기름 및 액체 누출 방지 매트 설치, 산업안전보건법 제49조 준수",
+        "ocr": null,
+        "bbox": [
+          300,
+          100,
+          700,
+          400
+        ]
+      },
+      {
+        "id": 2,
+        "hazard_name": "날카로운 도구 노출",
+        "hazard_category": "PPE미착용",
+        "accident_scenario": "작업자가 날카로운 도구와의 접촉으로 부상을 입을 수 있음",
+        "direct_cause": "보호장비 미착용",
+        "expected_injury": "절상",
+        "probability": 3,
+        "severity": 2,
+        "risk_score": 6,
+        "risk_level": "중위험",
+        "improvement_measure": "보호장갑 착용 의무화, 산업안전보건법 제23조 준수",
+        "ocr": null,
+        "bbox": [
+          50,
+          500,
+          250,
+          700
+        ]
+      },
+      {
+        "id": 3,
+        "hazard_name": "전기 기기 노출",
+        "hazard_category": "감전",
+        "accident_scenario": "작업자가 젖은 손으로 전기 기기에 접촉하여 감전될 수 있음",
+        "direct_cause": "물 근처 전기 기기 비치",
+        "expected_injury": "감전",
+        "probability": 2,
+        "severity": 4,
+        "risk_score": 8,
+        "risk_level": "중위험",
+        "improvement_measure": "절연 보호장치 설치, 산업안전보건법 제45조 준수",
+        "ocr": null,
+        "bbox": [
+          600,
+          200,
+          800,
+          500
+        ]
+      }
+    ],
+    "overall_risk_summary": {
+      "highest_risk_item": "바닥 미끄러짐",
+      "highest_risk_score": 12,
+      "immediate_action_required": true,
+      "recommended_action": "유체 누출 신속 조치 및 미끄럼 방지 설치"
+    }
+  },
+  "frequencySeverity": [
+    {
+      "factor": "바닥 미끄러짐",
+      "category": "낙하물",
+      "probability": 4,
+      "severity": 3,
+      "score": 12,
+      "level": "고위험"
+    },
+    {
+      "factor": "날카로운 도구 노출",
+      "category": "PPE미착용",
+      "probability": 3,
+      "severity": 2,
+      "score": 6,
+      "level": "중위험"
+    },
+    {
+      "factor": "전기 기기 노출",
+      "category": "감전",
+      "probability": 2,
+      "severity": 4,
+      "score": 8,
+      "level": "중위험"
+    }
+  ],
+  "checklist": [
+    {
+      "factor": "바닥 미끄러짐",
+      "category": "낙하물",
+      "directCause": "액체 누출",
+      "judgment": "고위험"
+    },
+    {
+      "factor": "날카로운 도구 노출",
+      "category": "PPE미착용",
+      "directCause": "보호장비 미착용",
+      "judgment": "중위험"
+    },
+    {
+      "factor": "전기 기기 노출",
+      "category": "감전",
+      "directCause": "물 근처 전기 기기 비치",
+      "judgment": "중위험"
+    }
+  ],
+  "coreFactors": [
+    {
+      "factor": "바닥 미끄러짐",
+      "riskLevel": "고위험",
+      "scenario": "작업자가 바닥에 유출된 액체로 인해 미끄러질 수 있음",
+      "directCause": "액체 누출",
+      "expectedInjury": "골절",
+      "improvementMeasure": "기름 및 액체 누출 방지 매트 설치, 산업안전보건법 제49조 준수"
+    },
+    {
+      "factor": "날카로운 도구 노출",
+      "riskLevel": "중위험",
+      "scenario": "작업자가 날카로운 도구와의 접촉으로 부상을 입을 수 있음",
+      "directCause": "보호장비 미착용",
+      "expectedInjury": "절상",
+      "improvementMeasure": "보호장갑 착용 의무화, 산업안전보건법 제23조 준수"
+    },
+    {
+      "factor": "전기 기기 노출",
+      "riskLevel": "중위험",
+      "scenario": "작업자가 젖은 손으로 전기 기기에 접촉하여 감전될 수 있음",
+      "directCause": "물 근처 전기 기기 비치",
+      "expectedInjury": "감전",
+      "improvementMeasure": "절연 보호장치 설치, 산업안전보건법 제45조 준수"
+    }
+  ],
+  "threeLevel": [
+    {
+      "factor": "바닥 미끄러짐",
+      "judgment": "허용불가능",
+      "measure": "기름 및 액체 누출 방지 매트 설치, 산업안전보건법 제49조 준수"
+    },
+    {
+      "factor": "날카로운 도구 노출",
+      "judgment": "개선필요",
+      "measure": "보호장갑 착용 의무화, 산업안전보건법 제23조 준수"
+    },
+    {
+      "factor": "전기 기기 노출",
+      "judgment": "개선필요",
+      "measure": "절연 보호장치 설치, 산업안전보건법 제45조 준수"
+    }
+  ],
+  "health": {
+    "applicable": false,
+    "summary": "현재 빈도×강도법 평가 모드에서는 건강장해 분석이 포함되지 않습니다.",
+    "items": []
+  },
+  "overallSummary": {
+    "highest_risk_item": "바닥 미끄러짐",
+    "highest_risk_score": 12,
+    "immediate_action_required": true,
+    "recommended_action": "유체 누출 신속 조치 및 미끄럼 방지 설치"
+  }
+}

@@ -1,0 +1,12 @@
+[
+  {
+    "x": 200,
+    "y": 234.5,
+    "width": 228,
+    "height": 233,
+    "confidence": 0.9966616630554199,
+    "class": "Strawberry Angular LeafSpot",
+    "class_id": 2,
+    "detection_id": "a0ca84f4-d200-4d3d-88d4-ba20e273c09e"
+  }
+]

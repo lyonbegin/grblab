@@ -1,0 +1,52 @@
+[
+  {
+    "x": 252,
+    "y": 170,
+    "width": 98,
+    "height": 114,
+    "confidence": 0.9035208225250244,
+    "class": "occupied",
+    "class_id": 1,
+    "detection_id": "abd083f2-3b9d-45a3-a537-21e81adbf436"
+  },
+  {
+    "x": 164.5,
+    "y": 208.5,
+    "width": 105,
+    "height": 103,
+    "confidence": 0.8856441378593445,
+    "class": "empty",
+    "class_id": 0,
+    "detection_id": "92ce4eb8-dd31-413a-b698-a5e3748b76e5"
+  },
+  {
+    "x": 346.5,
+    "y": 139.5,
+    "width": 109,
+    "height": 113,
+    "confidence": 0.8755941390991211,
+    "class": "occupied",
+    "class_id": 1,
+    "detection_id": "46402fd1-8663-4a22-a757-d23b217e3bd3"
+  },
+  {
+    "x": 68,
+    "y": 231,
+    "width": 114,
+    "height": 114,
+    "confidence": 0.8676084876060486,
+    "class": "empty",
+    "class_id": 0,
+    "detection_id": "ddf46c0f-2ec2-4342-84cc-7c46c1f2045c"
+  },
+  {
+    "x": 13,
+    "y": 257,
+    "width": 26,
+    "height": 106,
+    "confidence": 0.5348737239837646,
+    "class": "empty",
+    "class_id": 0,
+    "detection_id": "9d02c5c8-3a52-4075-8489-4074fc86d1b7"
+  }
+]

@@ -1,0 +1,204 @@
+{
+  "summary": {
+    "processName": "기계 점검 작업",
+    "workContent": "점검",
+    "equipment": "식품 가공",
+    "basis": "작업자가 혼합기 점검 중"
+  },
+  "hazards": [
+    {
+      "name": "기계에 의한 협착",
+      "category": "협착"
+    },
+    {
+      "name": "전기 감전",
+      "category": "감전"
+    },
+    {
+      "name": "낙상 위험",
+      "category": "추락"
+    }
+  ],
+  "overallLevel": {
+    "label": "고위험",
+    "immediateAction": false,
+    "topHazard": "기계에 의한 협착",
+    "score": 12
+  },
+  "raw": {
+    "site_analysis": {
+      "industry": "식품 가공",
+      "detailed_process": "기계 점검 작업",
+      "work_stage": "점검",
+      "analysis_basis": "작업자가 혼합기 점검 중"
+    },
+    "hazards": [
+      {
+        "id": 1,
+        "hazard_name": "기계에 의한 협착",
+        "hazard_category": "협착",
+        "accident_scenario": "작업자가 기계를 점검하는 과정에서 전원이 꺼지지 않아 협착 사고 발생",
+        "direct_cause": "전원 미차단",
+        "expected_injury": "골절",
+        "probability": 4,
+        "severity": 3,
+        "risk_score": 12,
+        "risk_level": "고위험",
+        "improvement_measure": "잠금 장치 설치 필수, 산업안전보건법 제34조",
+        "ocr": null,
+        "bbox": [
+          300,
+          400,
+          600,
+          800
+        ]
+      },
+      {
+        "id": 2,
+        "hazard_name": "전기 감전",
+        "hazard_category": "감전",
+        "accident_scenario": "작업자가 전기 장치 점검 중 전기가 흘러 감전 사고 발생",
+        "direct_cause": "전기 누전",
+        "expected_injury": "화상",
+        "probability": 3,
+        "severity": 4,
+        "risk_score": 12,
+        "risk_level": "고위험",
+        "improvement_measure": "차단기 설치 및 절연 장치 강화, 산업안전보건법 제35조",
+        "ocr": null,
+        "bbox": [
+          400,
+          200,
+          700,
+          500
+        ]
+      },
+      {
+        "id": 3,
+        "hazard_name": "낙상 위험",
+        "hazard_category": "추락",
+        "accident_scenario": "작업자가 장비 주변 이동 중 미끄러져 추락 사고 발생",
+        "direct_cause": "바닥 미끄러움",
+        "expected_injury": "타박상",
+        "probability": 2,
+        "severity": 2,
+        "risk_score": 4,
+        "risk_level": "저위험",
+        "improvement_measure": "논슬립 매트 설치, 산업안전보건기준 제12조",
+        "ocr": null,
+        "bbox": [
+          100,
+          100,
+          400,
+          400
+        ]
+      }
+    ],
+    "overall_risk_summary": {
+      "highest_risk_item": "기계에 의한 협착",
+      "highest_risk_score": 12,
+      "immediate_action_required": false,
+      "recommended_action": "협착 및 감전 방지를 위한 장비 개선 필요"
+    }
+  },
+  "frequencySeverity": [
+    {
+      "factor": "기계에 의한 협착",
+      "category": "협착",
+      "probability": 4,
+      "severity": 3,
+      "score": 12,
+      "level": "고위험"
+    },
+    {
+      "factor": "전기 감전",
+      "category": "감전",
+      "probability": 3,
+      "severity": 4,
+      "score": 12,
+      "level": "고위험"
+    },
+    {
+      "factor": "낙상 위험",
+      "category": "추락",
+      "probability": 2,
+      "severity": 2,
+      "score": 4,
+      "level": "저위험"
+    }
+  ],
+  "checklist": [
+    {
+      "factor": "기계에 의한 협착",
+      "category": "협착",
+      "directCause": "전원 미차단",
+      "judgment": "고위험"
+    },
+    {
+      "factor": "전기 감전",
+      "category": "감전",
+      "directCause": "전기 누전",
+      "judgment": "고위험"
+    },
+    {
+      "factor": "낙상 위험",
+      "category": "추락",
+      "directCause": "바닥 미끄러움",
+      "judgment": "저위험"
+    }
+  ],
+  "coreFactors": [
+    {
+      "factor": "기계에 의한 협착",
+      "riskLevel": "고위험",
+      "scenario": "작업자가 기계를 점검하는 과정에서 전원이 꺼지지 않아 협착 사고 발생",
+      "directCause": "전원 미차단",
+      "expectedInjury": "골절",
+      "improvementMeasure": "잠금 장치 설치 필수, 산업안전보건법 제34조"
+    },
+    {
+      "factor": "전기 감전",
+      "riskLevel": "고위험",
+      "scenario": "작업자가 전기 장치 점검 중 전기가 흘러 감전 사고 발생",
+      "directCause": "전기 누전",
+      "expectedInjury": "화상",
+      "improvementMeasure": "차단기 설치 및 절연 장치 강화, 산업안전보건법 제35조"
+    },
+    {
+      "factor": "낙상 위험",
+      "riskLevel": "저위험",
+      "scenario": "작업자가 장비 주변 이동 중 미끄러져 추락 사고 발생",
+      "directCause": "바닥 미끄러움",
+      "expectedInjury": "타박상",
+      "improvementMeasure": "논슬립 매트 설치, 산업안전보건기준 제12조"
+    }
+  ],
+  "threeLevel": [
+    {
+      "factor": "기계에 의한 협착",
+      "judgment": "허용불가능",
+      "measure": "잠금 장치 설치 필수, 산업안전보건법 제34조"
+    },
+    {
+      "factor": "전기 감전",
+      "judgment": "허용불가능",
+      "measure": "차단기 설치 및 절연 장치 강화, 산업안전보건법 제35조"
+    },
+    {
+      "factor": "낙상 위험",
+      "judgment": "허용가능",
+      "measure": "논슬립 매트 설치, 산업안전보건기준 제12조"
+    }
+  ],
+  "health": {
+    "applicable": false,
+    "summary": "현재 빈도×강도법 평가 모드에서는 건강장해 분석이 포함되지 않습니다.",
+    "items": []
+  },
+  "overallSummary": {
+    "highest_risk_item": "기계에 의한 협착",
+    "highest_risk_score": 12,
+    "immediate_action_required": false,
+    "recommended_action": "협착 및 감전 방지를 위한 장비 개선 필요"
+  }
+}

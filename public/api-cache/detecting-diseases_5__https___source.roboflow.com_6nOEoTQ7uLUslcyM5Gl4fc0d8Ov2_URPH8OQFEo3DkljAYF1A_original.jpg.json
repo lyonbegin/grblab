@@ -1,0 +1,42 @@
+[
+  {
+    "x": 218.5,
+    "y": 150.5,
+    "width": 191,
+    "height": 301,
+    "confidence": 0.999517560005188,
+    "class": "Strawberry Leaf Spot",
+    "class_id": 6,
+    "detection_id": "ff8542c3-f295-408e-9db9-47ccfaeccb9e"
+  },
+  {
+    "x": 109,
+    "y": 285.5,
+    "width": 208,
+    "height": 145,
+    "confidence": 0.9982503056526184,
+    "class": "Strawberry Leaf Spot",
+    "class_id": 6,
+    "detection_id": "d0fd44f5-12a2-4a05-99fa-4df6082b0b5d"
+  },
+  {
+    "x": 312.5,
+    "y": 309,
+    "width": 191,
+    "height": 206,
+    "confidence": 0.9980148077011108,
+    "class": "Strawberry Leaf Spot",
+    "class_id": 6,
+    "detection_id": "e2a2a951-8743-4eba-9c01-c125e2efc7d6"
+  },
+  {
+    "x": 335.5,
+    "y": 16.5,
+    "width": 159,
+    "height": 33,
+    "confidence": 0.9905019998550415,
+    "class": "Strawberry Leaf Spot",
+    "class_id": 6,
+    "detection_id": "a11fb23e-cc2f-4f74-8156-486a0daecc61"
+  }
+]

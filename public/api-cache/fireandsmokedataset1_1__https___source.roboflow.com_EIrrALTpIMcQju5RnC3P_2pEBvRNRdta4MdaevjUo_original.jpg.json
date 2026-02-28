@@ -1,0 +1,32 @@
+[
+  {
+    "x": 1140.5,
+    "y": 301,
+    "width": 109,
+    "height": 46,
+    "confidence": 0.8230541944503784,
+    "class": "other",
+    "class_id": 1,
+    "detection_id": "cd6c1479-6c24-4611-9125-37ad547146e4"
+  },
+  {
+    "x": 478,
+    "y": 197.5,
+    "width": 454,
+    "height": 395,
+    "confidence": 0.730116069316864,
+    "class": "smoke",
+    "class_id": 2,
+    "detection_id": "333bb81e-ec91-4d5e-919a-9bc1945f35a6"
+  },
+  {
+    "x": 714.5,
+    "y": 215,
+    "width": 81,
+    "height": 54,
+    "confidence": 0.6930223107337952,
+    "class": "other",
+    "class_id": 1,
+    "detection_id": "4cdd9ea2-2210-43e2-ad9d-d2045b7937b5"
+  }
+]

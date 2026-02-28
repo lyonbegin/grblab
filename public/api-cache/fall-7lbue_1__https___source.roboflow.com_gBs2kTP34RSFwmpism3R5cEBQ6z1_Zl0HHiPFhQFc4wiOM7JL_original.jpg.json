@@ -1,0 +1,12 @@
+[
+  {
+    "x": 160.5,
+    "y": 266,
+    "width": 285,
+    "height": 276,
+    "confidence": 0.9999985694885254,
+    "class": "fall",
+    "class_id": 0,
+    "detection_id": "890a4795-cafa-4bc0-b74b-94ca303b3f8a"
+  }
+]

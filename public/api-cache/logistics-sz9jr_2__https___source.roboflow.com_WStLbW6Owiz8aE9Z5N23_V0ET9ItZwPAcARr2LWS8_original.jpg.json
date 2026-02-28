@@ -1,0 +1,12 @@
+[
+  {
+    "x": 375.5,
+    "y": 317.5,
+    "width": 347,
+    "height": 513,
+    "confidence": 0.9107633829116821,
+    "class": "van",
+    "class_id": 18,
+    "detection_id": "da85b938-5522-40db-96b6-d3cf691e00f6"
+  }
+]

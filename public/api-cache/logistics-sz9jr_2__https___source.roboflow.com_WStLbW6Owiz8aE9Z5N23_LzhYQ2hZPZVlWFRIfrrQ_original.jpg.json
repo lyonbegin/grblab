@@ -1,0 +1,12 @@
+[
+  {
+    "x": 252,
+    "y": 287.5,
+    "width": 276,
+    "height": 447,
+    "confidence": 0.8967722058296204,
+    "class": "forklift",
+    "class_id": 4,
+    "detection_id": "70703cf4-3900-4b62-a031-fc91d58e4875"
+  }
+]

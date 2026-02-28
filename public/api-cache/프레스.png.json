@@ -1,0 +1,204 @@
+{
+  "summary": {
+    "processName": "프레스 기계 조작 작업",
+    "workContent": "운반",
+    "equipment": "금속 프레스 작업",
+    "basis": "이미지 내 관찰된 프레스 기계 및 작업자 활동"
+  },
+  "hazards": [
+    {
+      "name": "손 끼임 위험",
+      "category": "협착"
+    },
+    {
+      "name": "작업자 충돌 위험",
+      "category": "충돌"
+    },
+    {
+      "name": "소음으로 인한 청력 손상",
+      "category": "PPE미착용"
+    }
+  ],
+  "overallLevel": {
+    "label": "고위험",
+    "immediateAction": false,
+    "topHazard": "손 끼임 위험",
+    "score": 12
+  },
+  "raw": {
+    "site_analysis": {
+      "industry": "금속 프레스 작업",
+      "detailed_process": "프레스 기계 조작 작업",
+      "work_stage": "운반",
+      "analysis_basis": "이미지 내 관찰된 프레스 기계 및 작업자 활동"
+    },
+    "hazards": [
+      {
+        "id": 1,
+        "hazard_name": "손 끼임 위험",
+        "hazard_category": "협착",
+        "accident_scenario": "작업자가 프레스 기계를 조작하는 과정에서 손이 끼어 부상 사고 발생",
+        "direct_cause": "기계 가동 중 부주의로 접근",
+        "expected_injury": "손 및 팔의 중상",
+        "probability": 4,
+        "severity": 3,
+        "risk_score": 12,
+        "risk_level": "고위험",
+        "improvement_measure": "프레스 기계에 안전 가드를 설치하고 정기 점검 실시 (산업안전보건법 제34조)",
+        "ocr": null,
+        "bbox": [
+          100,
+          200,
+          300,
+          400
+        ]
+      },
+      {
+        "id": 2,
+        "hazard_name": "작업자 충돌 위험",
+        "hazard_category": "충돌",
+        "accident_scenario": "작업자가 좁은 공간에서 이동하는 과정에서 다른 작업자와 충돌",
+        "direct_cause": "작업 공간 부족",
+        "expected_injury": "타박상",
+        "probability": 3,
+        "severity": 2,
+        "risk_score": 6,
+        "risk_level": "중위험",
+        "improvement_measure": "작업 공간 확보 및 안전 통로 설치 (산업안전보건법 제29조)",
+        "ocr": null,
+        "bbox": [
+          400,
+          100,
+          600,
+          300
+        ]
+      },
+      {
+        "id": 3,
+        "hazard_name": "소음으로 인한 청력 손상",
+        "hazard_category": "PPE미착용",
+        "accident_scenario": "작업자가 보호 장비 없이 프레스 기계 소음에 반복적으로 노출되어 청력 손상 발생",
+        "direct_cause": "귀마개 미착용",
+        "expected_injury": "청력 손실",
+        "probability": 3,
+        "severity": 3,
+        "risk_score": 9,
+        "risk_level": "중위험",
+        "improvement_measure": "청력 보호구 착용 및 소음 감소 조치 (산업안전보건법 제37조)",
+        "ocr": null,
+        "bbox": [
+          200,
+          300,
+          400,
+          500
+        ]
+      }
+    ],
+    "overall_risk_summary": {
+      "highest_risk_item": "손 끼임 위험",
+      "highest_risk_score": 12,
+      "immediate_action_required": false,
+      "recommended_action": "리스크 평가를 통한 작업 절차 개선 및 교육 제공"
+    }
+  },
+  "frequencySeverity": [
+    {
+      "factor": "손 끼임 위험",
+      "category": "협착",
+      "probability": 4,
+      "severity": 3,
+      "score": 12,
+      "level": "고위험"
+    },
+    {
+      "factor": "작업자 충돌 위험",
+      "category": "충돌",
+      "probability": 3,
+      "severity": 2,
+      "score": 6,
+      "level": "중위험"
+    },
+    {
+      "factor": "소음으로 인한 청력 손상",
+      "category": "PPE미착용",
+      "probability": 3,
+      "severity": 3,
+      "score": 9,
+      "level": "중위험"
+    }
+  ],
+  "checklist": [
+    {
+      "factor": "손 끼임 위험",
+      "category": "협착",
+      "directCause": "기계 가동 중 부주의로 접근",
+      "judgment": "고위험"
+    },
+    {
+      "factor": "작업자 충돌 위험",
+      "category": "충돌",
+      "directCause": "작업 공간 부족",
+      "judgment": "중위험"
+    },
+    {
+      "factor": "소음으로 인한 청력 손상",
+      "category": "PPE미착용",
+      "directCause": "귀마개 미착용",
+      "judgment": "중위험"
+    }
+  ],
+  "coreFactors": [
+    {
+      "factor": "손 끼임 위험",
+      "riskLevel": "고위험",
+      "scenario": "작업자가 프레스 기계를 조작하는 과정에서 손이 끼어 부상 사고 발생",
+      "directCause": "기계 가동 중 부주의로 접근",
+      "expectedInjury": "손 및 팔의 중상",
+      "improvementMeasure": "프레스 기계에 안전 가드를 설치하고 정기 점검 실시 (산업안전보건법 제34조)"
+    },
+    {
+      "factor": "작업자 충돌 위험",
+      "riskLevel": "중위험",
+      "scenario": "작업자가 좁은 공간에서 이동하는 과정에서 다른 작업자와 충돌",
+      "directCause": "작업 공간 부족",
+      "expectedInjury": "타박상",
+      "improvementMeasure": "작업 공간 확보 및 안전 통로 설치 (산업안전보건법 제29조)"
+    },
+    {
+      "factor": "소음으로 인한 청력 손상",
+      "riskLevel": "중위험",
+      "scenario": "작업자가 보호 장비 없이 프레스 기계 소음에 반복적으로 노출되어 청력 손상 발생",
+      "directCause": "귀마개 미착용",
+      "expectedInjury": "청력 손실",
+      "improvementMeasure": "청력 보호구 착용 및 소음 감소 조치 (산업안전보건법 제37조)"
+    }
+  ],
+  "threeLevel": [
+    {
+      "factor": "손 끼임 위험",
+      "judgment": "허용불가능",
+      "measure": "프레스 기계에 안전 가드를 설치하고 정기 점검 실시 (산업안전보건법 제34조)"
+    },
+    {
+      "factor": "작업자 충돌 위험",
+      "judgment": "개선필요",
+      "measure": "작업 공간 확보 및 안전 통로 설치 (산업안전보건법 제29조)"
+    },
+    {
+      "factor": "소음으로 인한 청력 손상",
+      "judgment": "개선필요",
+      "measure": "청력 보호구 착용 및 소음 감소 조치 (산업안전보건법 제37조)"
+    }
+  ],
+  "health": {
+    "applicable": false,
+    "summary": "현재 빈도×강도법 평가 모드에서는 건강장해 분석이 포함되지 않습니다.",
+    "items": []
+  },
+  "overallSummary": {
+    "highest_risk_item": "손 끼임 위험",
+    "highest_risk_score": 12,
+    "immediate_action_required": false,
+    "recommended_action": "리스크 평가를 통한 작업 절차 개선 및 교육 제공"
+  }
+}

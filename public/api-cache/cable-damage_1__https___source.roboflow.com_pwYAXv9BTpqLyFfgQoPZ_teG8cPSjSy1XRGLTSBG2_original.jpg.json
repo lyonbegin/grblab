@@ -1,0 +1,12 @@
+[
+  {
+    "x": 500,
+    "y": 216.5,
+    "width": 82,
+    "height": 69,
+    "confidence": 0.9954705238342285,
+    "class": "break",
+    "class_id": 0,
+    "detection_id": "52b146ae-0da4-47b5-9ce8-93ac53854413"
+  }
+]

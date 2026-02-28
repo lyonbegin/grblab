@@ -1,0 +1,12 @@
+[
+  {
+    "x": 327.5,
+    "y": 298.5,
+    "width": 451,
+    "height": 469,
+    "confidence": 0.9961259961128235,
+    "class": "Tomato Leaf Mold",
+    "class_id": 10,
+    "detection_id": "3c678b64-60c1-4ab8-b08a-35b7353cd257"
+  }
+]

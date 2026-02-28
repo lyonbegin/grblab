@@ -1,0 +1,52 @@
+[
+  {
+    "x": 206.5,
+    "y": 257.5,
+    "width": 149,
+    "height": 137,
+    "confidence": 0.8634892106056213,
+    "class": "forklift",
+    "class_id": 4,
+    "detection_id": "7137c61d-c7cd-4266-8b25-2507233014b3"
+  },
+  {
+    "x": 486,
+    "y": 418,
+    "width": 88,
+    "height": 78,
+    "confidence": 0.8542789220809937,
+    "class": "traffic cone",
+    "class_id": 15,
+    "detection_id": "c46d8bbc-765a-4e03-a6b6-b427705ca64c"
+  },
+  {
+    "x": 387.5,
+    "y": 322,
+    "width": 51,
+    "height": 40,
+    "confidence": 0.809940755367279,
+    "class": "traffic cone",
+    "class_id": 15,
+    "detection_id": "986b6151-ae1d-4efc-9581-28bb8b223e76"
+  },
+  {
+    "x": 509.5,
+    "y": 261.5,
+    "width": 47,
+    "height": 63,
+    "confidence": 0.6969029307365417,
+    "class": "person",
+    "class_id": 10,
+    "detection_id": "a0d2d023-d39c-491b-bc9f-01e861c2231a"
+  },
+  {
+    "x": 201.5,
+    "y": 233,
+    "width": 43,
+    "height": 62,
+    "confidence": 0.5927782654762268,
+    "class": "person",
+    "class_id": 10,
+    "detection_id": "c2d17f25-6ca0-4ebd-96c6-d0e025b9e348"
+  }
+]

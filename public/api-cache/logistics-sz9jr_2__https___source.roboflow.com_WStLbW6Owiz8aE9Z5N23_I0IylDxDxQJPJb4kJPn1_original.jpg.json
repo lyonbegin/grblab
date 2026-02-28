@@ -1,0 +1,12 @@
+[
+  {
+    "x": 421.5,
+    "y": 332,
+    "width": 347,
+    "height": 532,
+    "confidence": 0.6732837557792664,
+    "class": "person",
+    "class_id": 10,
+    "detection_id": "57d6ba45-ceaf-49b7-a108-23922ebbf96f"
+  }
+]
