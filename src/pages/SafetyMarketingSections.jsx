@@ -367,7 +367,7 @@ export default function SafetyMarketingSections({ isMobile }) {
       <div style={ag.sectionLabel}>대법원 양형위원회 논의</div>
    <h2 style={{ ...ag.sectionTitle, fontSize: isMobile ? 26 : 42, marginTop: isMobile ? 16 : 24, marginBottom: isMobile ? 16 : 24 }}>
         <span style={{ display: 'block', marginBottom: isMobile ? 10 : 16 }}>양형기준이 생기면</span>
-        <span style={{ fontWeight: 400, color: '#888' }}>무엇이 달라지는가</span>
+        <span style={{ fontWeight: 400, color: '#888' }}>무엇이 달라지나요</span>
       </h2>
       <p style={{ ...ag.sectionSub, maxWidth: 520 }}>
         대법원 양형위원회가 중대재해처벌법 전담 양형기준 논의를 본격화하고 있습니다.
@@ -421,7 +421,7 @@ export default function SafetyMarketingSections({ isMobile }) {
               justifyContent: 'center',
               fontSize: 11,
               fontWeight: 800,
-              color: '#FAE100',
+              color: '#fff',
               flexShrink: 0,
             }}>{item.num}</div>
             <div style={{ flex: 1 }}>
