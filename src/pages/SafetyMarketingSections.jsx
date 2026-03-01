@@ -44,7 +44,7 @@ const HERO_SLIDES = [
     img: '/riskimage/끼임.png' },
 
   { question: '추천받은 사업장은 얼마를 내나요?',
-    line1: '3천만원짜리 시스템이, 아는 사람한테만 이 가격입니다.',
+    line1: '50이상 사업체에 평균 공급가 4천5백만원대 시스템이, 월 1만 9천원대 가격입니다.',
     line2: '커피 두 잔 값으로, 중견기업 수준의 안전관리 체계를 운영합니다.',
     img: '/riskimage/밧데리.png' },
 
@@ -315,7 +315,7 @@ export default function SafetyMarketingSections({ isMobile }) {
     <FadeIn>
       <div style={{ ...ag.eyebrow, fontSize: isMobile ? 11 : 12 }}>산업 안전 · 중대재해처벌법 대응</div>
 
-      <h2 style={{ ...ag.heroTitle, fontSize: isMobile ? 30 : 52, letterSpacing: isMobile ? '-0.5px' : '-1.5px', lineHeight: 0.85, marginBottom: isMobile ? 24 : 32 }}>
+      <h2 style={{ ...ag.heroTitle, fontSize: isMobile ? 26 : 40, letterSpacing: isMobile ? '-0.5px' : '-1.5px', lineHeight: 0.85, marginBottom: isMobile ? 24 : 32 }}>
         <span style={{ fontWeight: 900, display: 'block', marginBottom: isMobile ? 12 : 18 }}>
           50인 미만 사업장도
         </span>
@@ -356,47 +356,123 @@ export default function SafetyMarketingSections({ isMobile }) {
         </div>
       </section>
 
- 
-      {/* ── SECTION 4 · 파이프라인 3개 ── */}
+ {/* ── SECTION 3 · 중대재해처벌법 양형기준 대법원 논의 ── */}
+{/* 위치: SECTION 2 (통계 바) 바로 아래에 삽입 */}
 
-{/* <section style={{ width: '100%', padding: isMobile ? '52px 20px' : '80px 40px', borderBottom: '1px solid #f0f0f0' }}>
+<section style={{ width: '100%', padding: isMobile ? '52px 20px' : '80px 40px', background: '#fafafa', borderBottom: '1px solid #f0f0f0' }}>
   <div style={ag.inner}>
+
+    {/* 상단 헤더 */}
     <FadeIn>
-      <div style={ag.sectionLabel}>하나씩 확인하세요</div>
-      <h2 style={{ ...ag.sectionTitle, fontSize: isMobile ? 20 : 32, fontWeight: 600, color: '#333333ff', lineHeight: 1.55 }}>
-        <span style={{ fontWeight: 900, color: '#888' }}>AI </span>안전관리시스템을<br/>
-        50인 미만 사업장에 무상 공급합니다
+      <div style={ag.sectionLabel}>대법원 양형위원회 논의</div>
+   <h2 style={{ ...ag.sectionTitle, fontSize: isMobile ? 26 : 42, marginTop: isMobile ? 16 : 24, marginBottom: isMobile ? 16 : 24 }}>
+        <span style={{ display: 'block', marginBottom: isMobile ? 10 : 16 }}>양형기준이 생기면</span>
+        <span style={{ fontWeight: 400, color: '#888' }}>무엇이 달라지는가</span>
       </h2>
-      <p style={{ ...ag.sectionSub, maxWidth: 500 }}>추천인 사업장 무료 도입, 추천 받아 등록한 사업장 월 1만원대</p>
+      <p style={{ ...ag.sectionSub, maxWidth: 520 }}>
+        대법원 양형위원회가 중대재해처벌법 전담 양형기준 논의를 본격화하고 있습니다.
+        지금까지는 법관 재량이었던 형량이, 기준이 생기는 순간 예측 가능하고
+        더 엄격해집니다.
+      </p>
     </FadeIn>
-    <div style={{ display: 'flex', flexDirection: 'column', gap: isMobile ? 48 : 72, marginTop: isMobile ? 36 : 60 }}>
-      {HERO_SLIDES.map((item, i) => (
-        <FadeIn key={i} delay={0.05}>
-          <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : (i % 2 === 0 ? 'row' : 'row-reverse'), gap: isMobile ? 20 : 60, alignItems: 'center' }}>
-            <div style={{ flex: '0 0 auto', width: isMobile ? '100%' : '48%' }}>
-              <div style={{ borderRadius: 14, overflow: 'hidden', aspectRatio: '16/10', position: 'relative' }}>
-                <img src={item.img} alt={item.line1} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}/>
-                <div style={{ position: 'absolute', top: 14, left: 14, background: 'rgba(0,0,0,0.55)', backdropFilter: 'blur(6px)', color: '#fff', fontSize: 11, fontWeight: 800, padding: '5px 11px', borderRadius: 20 }}>
-                  {item.num}
-                </div>
-              </div>
-            </div>
+
+    {/* 컨텍스트 카드 3종 */}
+
+
+    {/* 구분선 */}
+    <FadeIn delay={0.15}>
+      <div style={{ borderTop: '1px solid #e8e8e8', margin: isMobile ? '44px 0 36px' : '64px 0 52px' }} />
+    </FadeIn>
+
+    {/* 실무 체크포인트 */}
+    <FadeIn delay={0.1}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 28 }}>
+        <div style={{ fontSize: isMobile ? 18 : 20, fontWeight: 800, color: '#1a1a1a' }}>실무 체크포인트</div>
+        <div style={{ fontSize: 18 }}>✅</div>
+        <div style={{ marginLeft: 'auto', fontSize: 11, color: '#bbb', fontWeight: 600 }}>감경 사유로 논의 중인 항목</div>
+      </div>
+    </FadeIn>
+
+    <div style={{ display: 'flex', flexDirection: 'column', gap: isMobile ? 10 : 12 }}>
+      {[
+        { num: '01', text: '안전보건관리체계가 실제로 작동했는지', sub: '형식적 서류가 아닌 실제 운영 증거가 필요합니다' },
+        { num: '02', text: '교육·점검·개선 기록이 남아 있는지', sub: '날짜·서명·결과가 남은 기록이 법정 증거가 됩니다' },
+        { num: '03', text: '사고 후 재발방지 조치가 이행됐는지', sub: '조치 완료와 후속 확인까지 기록되어야 합니다' },
+        { num: '04', text: '현장 위험요인 보고→조치→확인 프로세스가 있는지', sub: '흐름이 끊기지 않고 전 단계가 추적 가능해야 합니다' },
+      ].map((item, i) => (
+        <FadeIn key={i} delay={i * 0.07}>
+          <div style={{
+            display: 'flex',
+            alignItems: isMobile ? 'flex-start' : 'center',
+            gap: isMobile ? 14 : 20,
+            padding: isMobile ? '18px 20px' : '20px 28px',
+            background: '#fff',
+            borderRadius: 12,
+            border: '1px solid #ebebeb',
+            transition: 'box-shadow 0.2s',
+          }}>
+            <div style={{
+              width: isMobile ? 32 : 36,
+              height: isMobile ? 32 : 36,
+              borderRadius: '50%',
+              background: '#1a1a1a',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: 11,
+              fontWeight: 800,
+              color: '#FAE100',
+              flexShrink: 0,
+            }}>{item.num}</div>
             <div style={{ flex: 1 }}>
-              <div style={{ fontSize: 11, color: '#ccc', fontWeight: 700, letterSpacing: '0.08em', marginBottom: 10 }}>POINT {String(i + 1).padStart(2, '0')}</div>
-              <h3 style={{ fontSize: isMobile ? 20 : 28, fontWeight: 800, color: '#1a1a1a', letterSpacing: '-0.8px', lineHeight: 1.25, marginBottom: 14 }}>{item.line1}</h3>
-              <p style={{ fontSize: isMobile ? 14 : 15, color: '#666', lineHeight: 1.85, whiteSpace: 'pre-line' }}>{item.line2}</p>
+              <div style={{ fontSize: isMobile ? 15 : 16, fontWeight: 700, color: '#1a1a1a', lineHeight: 1.4 }}>{item.text}</div>
+              <div style={{ fontSize: 12, color: '#999', marginTop: 4, lineHeight: 1.5 }}>{item.sub}</div>
             </div>
+            {/* 체크 아이콘 */}
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" style={{ flexShrink: 0, opacity: 0.25 }}>
+              <circle cx="9" cy="9" r="8" stroke="#1a1a1a" strokeWidth="1.5"/>
+              <path d="M5.5 9l2.5 2.5 4.5-4.5" stroke="#1a1a1a" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
           </div>
         </FadeIn>
       ))}
     </div>
+
+    {/* 한 줄 정리 */}
+    <FadeIn delay={0.2}>
+      <div style={{
+        marginTop: isMobile ? 36 : 52,
+        background: '#1a1a1a',
+        borderRadius: 16,
+        padding: isMobile ? '28px 24px' : '36px 40px',
+        display: 'flex',
+        flexDirection: isMobile ? 'column' : 'row',
+        alignItems: isMobile ? 'flex-start' : 'center',
+        gap: isMobile ? 14 : 28,
+      }}>
+        <div style={{ flexShrink: 0 }}>
+          <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', fontWeight: 700, letterSpacing: '0.1em', marginBottom: 6 }}>한 줄 정리</div>
+          <div style={{ width: 36, height: 2, background: '#FAE100', borderRadius: 2 }} />
+        </div>
+        <p style={{
+          fontSize: isMobile ? 16 : 20,
+          fontWeight: 700,
+          color: '#fff',
+          lineHeight: 1.65,
+          margin: 0,
+          letterSpacing: '-0.3px',
+        }}>
+          양형기준 논의가 본격화됩니다.
+          결국 승부는{' '}
+          <span style={{ color: '#FAE100', fontWeight: 900 }}>'안전보건 체계와 기록'</span>
+          에서 갈립니다.
+        </p>
+      </div>
+    </FadeIn>
+
   </div>
 </section>
- */}
 
-{/* ── SECTION 4-B ── */}
-{/* ── SECTION 4-B ── */}
-{/* ── SECTION 4-B ── */}
 <section style={{ width: '100%', padding: isMobile ? '52px 20px' : '80px 40px', borderBottom: '1px solid #f0f0f0' }}>
   <div style={ag.inner}>
     <FadeIn>
