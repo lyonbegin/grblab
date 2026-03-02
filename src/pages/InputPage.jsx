@@ -1130,7 +1130,7 @@ const HERO_SLIDES = [
 
   { question: '어떻게 무료 공급이 가능한가요?',
     line1: '셰어웨어 모델은 공공기관·기업 등 특정 소비자 구간과 무료 구간이 다르게 시장가를 형성합니다.',
-    line2: '대기업은 안전에 연간 10억을 투자합니다. 법 기준은 동일합니다. GRB AI도 50인 미만 사업장은, 무료 보급 구간입니다.',
+    line2: '대기업은 안전에 연간 10억을 투자합니다.  법 기준은 동일합니다.  이에 GRBlab이  50인 미만 사업장은, 무료로  보급 하고 있습니다 .',
     img: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&q=80&fit=crop' },
 
   { question: '추천하면 저는 뭐가 좋아지나요?',
@@ -1140,8 +1140,8 @@ const HERO_SLIDES = [
 
 
   { question: '추천받은 사업장은 얼마를 내나요?',
-    line1: '50이상 사업체에 평균 공급가 4천5백만원대 시스템이, 월 1만 9천원대 가격입니다.',
-    line2: '커피 두 잔 값으로, 중견기업 수준의 안전관리 체계를 운영합니다.',
+    line1: '50이 미만 사업체는 무료 입니다.',
+    line2: '스마트안전 장비를 추가 선택하실 경우 월 1만 9천원대 가격, 평균 공급가 4천5백만원대 시스템으로 중견기업 수준의 안전관리 체계를 운영합니다.',
     img: '/riskimage/밧데리.png' },
 
 
@@ -1504,7 +1504,7 @@ useEffect(() => {
       >
         <div style={{ marginBottom: 6 }}>
           <span
-            onClick={() => window.open('https://your-link.com', '_blank')}
+            // onClick={() => window.open('https://your-link.com', '_blank')}
             style={{
               fontSize: 12,
               fontWeight: 700,
@@ -1722,7 +1722,7 @@ useEffect(() => {
     {/* 🔹 제목을 링크형으로 변경 */}
     <div style={{ marginBottom: 10 }}>
       <span
-        onClick={() => window.open('https://your-link.com', '_blank')}
+        // onClick={() => window.open('https://your-link.com', '_blank')}
         style={{
           fontSize: 13,
           fontWeight: 800,
