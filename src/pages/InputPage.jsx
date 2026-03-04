@@ -1308,6 +1308,9 @@ if (activeSubTab !== 'all') return null
         alignItems: isMobile ? 'flex-start' : 'center'
       }}
     >
+
+
+
       {/* ── 왼쪽 텍스트 영역 ── */}
       <div style={{ flex: isMobile ? 'none' : '0 0 460px', maxWidth: isMobile ? '100%' : 460, width: '100%' }}>
         <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
@@ -1622,7 +1625,7 @@ const cacheKey = hasWorkSelected
   ? `tbm_${file.name.replace(/\s+/g, '_')}`
   : file.name
 
-  
+
   console.log('[CACHE] cacheKey:', cacheKey)
 
   let cachedResult = null
@@ -2122,11 +2125,13 @@ const hasWorkSelected = !!factors?.workName && factors?.mode !== 'risk'
           ) : activeTab === 'cmanage' ? (
             <motion.div key="cmanage-wrapper" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
 
-              {activeCmanageSubTab !== 'all' && (
-      <div style={{ padding: isMobile ? '12px 20px 0' : '20px 40px 0' }}>
-        <ReferralBox isMobile={isMobile} />
-      </div>
-    )}
+  {activeCmanageSubTab !== 'all' && (
+  <div style={{ padding: isMobile ? '12px 20px 0' : '12px 40px 0' }}>
+    <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+      <ReferralBox isMobile={isMobile} />
+    </div>
+  </div>
+)}
               <CmanagePage
                 isMobile={isMobile}
                 activeSubTab={activeCmanageSubTab}
