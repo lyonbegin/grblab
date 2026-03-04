@@ -1848,6 +1848,8 @@ const hasWorkSelected = !!factors?.workName && factors?.mode !== 'risk'
   const handleRiskImageSelect = useCallback(async (filename) => {
     try {
       const imageUrl = `/riskimage/${filename}`
+
+setRiskModalOpen(true)
       let cachedResult = null
       try {
         const cr = await fetch(`/api-cache/${filename}.json`, { cache: 'no-store' })
@@ -1860,7 +1862,7 @@ const hasWorkSelected = !!factors?.workName && factors?.mode !== 'risk'
       const file = new File([blob], filename, { type: blob.type || 'image/png' })
 
       setPendingRiskFile({ file, imageUrl, cachedResult })
-      setRiskModalOpen(true)
+      
     } catch (err) {
       console.error('Risk image load/analyze failed:', err)
     }
