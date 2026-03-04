@@ -1517,6 +1517,12 @@ export default function InputPage() {
   const pendingActionRef = useRef(null)
   const [selectedRiskFactors, setSelectedRiskFactors] = useState([])
 
+
+
+  const previewRef = useRef(null)
+
+
+
   const HERO_SLIDES = [
     { question: '대기업이랑 같은 시스템이라고요?',
       line1: '대기업 수억원. 중견기업 수천만원. 50인 미만 추천 사업장 0원.',
@@ -1617,7 +1623,12 @@ const handleRiskFactorConfirm = useCallback(async (factors) => {
 
   setPendingRiskFile(null)
   setPreview(imageUrl)
-
+setTimeout(() => {
+  if (!previewRef.current) return
+  const rect = previewRef.current.getBoundingClientRect()
+  const scrollTop = window.pageYOffset + rect.top - (window.innerHeight / 2) + (rect.height / 2)
+  window.scrollTo({ top: scrollTop, behavior: 'smooth' })
+}, 300)
 const hasWorkSelected = !!factors?.workName && factors?.mode !== 'risk'
   console.log('[BRANCH] hasWorkSelected:', hasWorkSelected, '/ workName:', factors?.workName, '/ detailName:', factors?.detailName)
 
@@ -1860,12 +1871,12 @@ const hasWorkSelected = !!factors?.workName && factors?.mode !== 'risk'
 
   const LoadingUI = (
     <motion.div key="loading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-      {preview && (
-        <div style={s.loadingPreview}>
-          <img src={preview} alt="" style={s.loadingImg}/>
-          <motion.div style={s.loadingScan} animate={{ top: ['0%', '100%', '0%'] }} transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}/>
-        </div>
-      )}
+     {preview && (
+  <div ref={previewRef} style={s.loadingPreview}>
+    <img src={preview} alt="" style={s.loadingImg}/>
+    <motion.div style={s.loadingScan} animate={{ top: ['0%', '100%', '0%'] }} transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}/>
+  </div>
+)}
       <div style={s.loadingSteps}>
         {['이미지 전처리 및 객체 인식', 'KRAS 위험등급 분류', '법적 기준 검토', '보고서 자동 생성'].map((step, i) => (
           <motion.div key={i} style={s.stepRow} initial={{ opacity: 0.2 }} animate={{ opacity: 1 }} transition={{ delay: i * 0.5 }}>
