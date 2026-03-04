@@ -1,0 +1,65 @@
+{
+  "tbm_info": {
+    "work_name": "",
+    "description": "",
+    "analysis_basis": "이미지에는 중장비 주변에 여러 작업자들이 모여 있는 상황이 보입니다. 장비 가동 중 안전 조치를 체크해야 합니다."
+  },
+  "tbm_checklist": [
+    {
+      "id": 1,
+      "checkpoint_question": "중장비가 이동하는 순간 작업자들이 안전거리를 유지하고 있는가?"
+    },
+    {
+      "id": 2,
+      "checkpoint_question": "작업 중 중장비와 인원의 동시 이동 순간에 신호수가 배치되어 있는가?"
+    },
+    {
+      "id": 3,
+      "checkpoint_question": "중장비 체결점 변경 순간 작업자가 안전장치로 보호받고 있는가?"
+    },
+    {
+      "id": 4,
+      "checkpoint_question": "야간 작업 시 작업 구역 조명이 충분한가?"
+    },
+    {
+      "id": 5,
+      "checkpoint_question": "작업 구역 내 다중 작업 중 충돌 위험이 없는가?"
+    },
+    {
+      "id": 6,
+      "checkpoint_question": "비상 상황 시 대피 경로가 확보되어 있는가?"
+    },
+    {
+      "id": 7,
+      "checkpoint_question": "작업자가 통신 장비를 통해 긴급 상황을 즉시 보고할 수 있는가?"
+    },
+    {
+      "id": 8,
+      "checkpoint_question": "장비 작동 중 주변에 불필요한 물체가 제거되었는가?"
+    },
+    {
+      "id": 9,
+      "checkpoint_question": "작업 시작 전 장비의 브레이크 및 조작 시스템이 정상적인가?"
+    },
+    {
+      "id": 10,
+      "checkpoint_question": "작업자가 혼자 장비에 접근하는 순간 안전 조치가 되어 있는가?"
+    },
+    {
+      "id": 11,
+      "checkpoint_question": "작업 중 낙하물 발생 시 즉각 대처할 수 있는 보호구가 마련되어 있는가?"
+    },
+    {
+      "id": 12,
+      "checkpoint_question": "작업 절차 중 장비의 갑작스러운 가동 정지에 대비한 조치가 준비되어 있는가?"
+    },
+    {
+      "id": 13,
+      "checkpoint_question": "작업자 모두 안전모를 정확히 착용하고 있는가?"
+    },
+    {
+      "id": 14,
+      "checkpoint_question": "중장비 작동 전 사전 점검 기록이 있는가?"
+    }
+  ]
+}

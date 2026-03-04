@@ -1,17 +1,12 @@
-:root {
-  /* --brand: #FF4D00; */
-  --brand-dim: rgba(255, 77, 0, 0.15);
-  --bg: #0a0e1a;
-  --bg2: #111827;
-  --bg3: #1a2235;
-  --border: rgba(255, 255, 255, 0.08);
-  --text: #ffffff;
-  --text2: rgba(255, 255, 255, 0.6);
-  --text3: rgba(255, 255, 255, 0.35);
-  --red: #FF4D4F;
-  --orange: #FF7A00;
-  --yellow: #FAAD14;
-  --green: #52C41A;
+:root{
+  --bg: hsl(217, 50%, 97%);
+  --bg2: #ffffff;
+  --bg3: #ffffff;
+  --border: rgba(0,0,0,0.08);
+  --text: #111827;
+  --text2: rgba(17,24,39,0.65);
+  --text3: rgba(17,24,39,0.4);
+  --brand: #2563eb;
 }
 
 * {
@@ -25,7 +20,7 @@ html, body, #root {
 }
 
 body {
-  background: var(--bg);
+  background: var(--bg2);
   color: var(--text);
   font-family: 'Noto Sans KR', sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -41,7 +36,15 @@ body {
   background: var(--brand);
   border-radius: 2px;
 }
-
+@media (max-width: 767px) {
+  ::-webkit-scrollbar {
+    display: none;
+  }
+  * {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+}
 .ant-btn-primary {
   background: var(--brand) !important;
   border-color: var(--brand) !important;
@@ -77,8 +80,122 @@ body {
 .fade-in-up {
   animation: fadeInUp 0.5s ease forwards;
 }
-
 .fade-in-up-delay-1 { animation-delay: 0.1s; opacity: 0; }
 .fade-in-up-delay-2 { animation-delay: 0.2s; opacity: 0; }
 .fade-in-up-delay-3 { animation-delay: 0.3s; opacity: 0; }
 .fade-in-up-delay-4 { animation-delay: 0.4s; opacity: 0; }
+
+/* =========================
+   Pagination
+========================= */
+.ant-pagination .ant-pagination-item a{
+  color: var(--text2) !important;
+  font-weight: 700;
+}
+.ant-pagination .ant-pagination-item{
+  border-color: rgba(0,0,0,0.08) !important;
+  background: #fff !important;
+  border-radius: 10px !important;
+}
+.ant-pagination .ant-pagination-item:hover{
+  border-color: color-mix(in srgb, var(--brand) 35%, transparent) !important;
+}
+.ant-pagination .ant-pagination-item:hover a{
+  color: var(--brand) !important;
+}
+.ant-pagination .ant-pagination-item-active{
+  background: color-mix(in srgb, var(--brand) 12%, #fff) !important;
+  border-color: color-mix(in srgb, var(--brand) 45%, transparent) !important;
+}
+.ant-pagination .ant-pagination-item-active a{
+  color: var(--brand) !important;
+  font-weight: 900 !important;
+}
+.ant-pagination .ant-pagination-prev button,
+.ant-pagination .ant-pagination-next button{
+  color: var(--text2) !important;
+}
+.ant-pagination .ant-pagination-prev:hover button,
+.ant-pagination .ant-pagination-next:hover button{
+  color: var(--brand) !important;
+}
+.ant-pagination .ant-pagination-disabled button{
+  color: rgba(17,24,39,0.25) !important;
+}
+.ant-pagination .ant-pagination-item,
+.ant-pagination .ant-pagination-prev,
+.ant-pagination .ant-pagination-next{
+  min-width: 34px !important;
+  height: 34px !important;
+  line-height: 34px !important;
+}
+
+/* =========================
+   Select 공통 톤
+========================= */
+.ant-select-outlined:not(.ant-select-customize-input) .ant-select-selector {
+  border: 1px solid rgba(0,0,0,0.08) !important;
+  background: #fff !important;
+  box-shadow: none !important;
+}
+.ant-select-outlined .ant-select-selection-item,
+.ant-select-outlined .ant-select-selection-placeholder {
+  color: #475569 !important;
+  font-weight: 800 !important;
+  font-size: 12px !important;
+}
+.ant-select .ant-select-arrow {
+  color: var(--text3) !important;
+}
+.ant-select-outlined:hover:not(.ant-select-disabled) .ant-select-selector {
+  border-color: color-mix(in srgb, var(--brand) 35%, transparent) !important;
+}
+.ant-select-focused.ant-select-outlined:not(.ant-select-disabled) .ant-select-selector {
+  border-color: color-mix(in srgb, var(--brand) 45%, transparent) !important;
+  box-shadow: 0 0 0 2px rgba(37,99,235,0.08) !important;
+}
+
+/* 드롭다운 옵션 */
+.ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
+  background: color-mix(in srgb, var(--brand) 10%, #fff) !important;
+  color: var(--brand) !important;
+  font-weight: 900 !important;
+}
+.ant-select-item-option:hover {
+  background: color-mix(in srgb, var(--brand) 6%, #fff) !important;
+}
+.ant-select-item-option-content {
+  font-size: 12px !important;
+  font-weight: 800 !important;
+  color: var(--text) !important;
+}
+
+/* =========================
+   모바일
+========================= */
+@media (max-width: 767px){
+  #root, body {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .board-wrap,
+  .board-card{
+    width: 100vw !important;
+    max-width: 100vw !important;
+    margin: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    border: 0 !important;
+  }
+
+  .m-list{
+    padding: 10px 0 12px !important;
+  }
+  .m-card{
+    width: auto !important;
+    margin: 0 12px 10px !important;
+  }
+}

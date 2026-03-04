@@ -1,0 +1,204 @@
+{
+  "summary": {
+    "processName": "고소 철골 볼트 체결 작업",
+    "workContent": "설치",
+    "equipment": "철골 골조 건설",
+    "basis": "이미지 분석을 통한 위험성 평가"
+  },
+  "hazards": [
+    {
+      "name": "작업자 추락",
+      "category": "추락"
+    },
+    {
+      "name": "낙하물 위험",
+      "category": "낙하물"
+    },
+    {
+      "name": "충돌 위험",
+      "category": "충돌"
+    }
+  ],
+  "overallLevel": {
+    "label": "고위험",
+    "immediateAction": false,
+    "topHazard": "작업자 추락",
+    "score": 16
+  },
+  "raw": {
+    "site_analysis": {
+      "industry": "철골 골조 건설",
+      "detailed_process": "고소 철골 볼트 체결 작업",
+      "work_stage": "설치",
+      "analysis_basis": "이미지 분석을 통한 위험성 평가"
+    },
+    "hazards": [
+      {
+        "id": 1,
+        "hazard_name": "작업자 추락",
+        "hazard_category": "추락",
+        "accident_scenario": "작업자가 높은 철골 구조물에서 작업하는 과정에서 보호 장비 미착용으로 인해 추락 사고 발생",
+        "direct_cause": "안전고리 미착용",
+        "expected_injury": "중상 혹은 사망",
+        "probability": 4,
+        "severity": 4,
+        "risk_score": 16,
+        "risk_level": "고위험",
+        "improvement_measure": "추락 방지망 설치, 고소작업 안전고리 의무화 (산업안전보건법 제34조)",
+        "ocr": null,
+        "bbox": [
+          250,
+          100,
+          750,
+          500
+        ]
+      },
+      {
+        "id": 2,
+        "hazard_name": "낙하물 위험",
+        "hazard_category": "낙하물",
+        "accident_scenario": "작업자가 철골 위에서 작업하는 과정에서 도구가 떨어져 아래 작업자에게 낙하물 사고 발생",
+        "direct_cause": "도구 고정 미흡",
+        "expected_injury": "경상 혹은 중상",
+        "probability": 3,
+        "severity": 3,
+        "risk_score": 9,
+        "risk_level": "중위험",
+        "improvement_measure": "공구 고정 장치 사용, 안전모 착용 의무화 (산업안전보건법 제36조)",
+        "ocr": null,
+        "bbox": [
+          300,
+          150,
+          700,
+          550
+        ]
+      },
+      {
+        "id": 3,
+        "hazard_name": "충돌 위험",
+        "hazard_category": "충돌",
+        "accident_scenario": "장비가 협소한 공간에서 이동하는 과정에서 운전자가 작업자를 인지 못해 충돌 사고 발생",
+        "direct_cause": "경고장치 미비",
+        "expected_injury": "중상",
+        "probability": 2,
+        "severity": 3,
+        "risk_score": 6,
+        "risk_level": "중위험",
+        "improvement_measure": "차단 울타리 설치 및 경고장치 사용 (산업안전보건법 제37조)",
+        "ocr": null,
+        "bbox": [
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    ],
+    "overall_risk_summary": {
+      "highest_risk_item": "작업자 추락",
+      "highest_risk_score": 16,
+      "immediate_action_required": false,
+      "recommended_action": "고소작업 시 철저한 안전 점검 실시 및 보호 장비 사용"
+    }
+  },
+  "frequencySeverity": [
+    {
+      "factor": "작업자 추락",
+      "category": "추락",
+      "probability": 4,
+      "severity": 4,
+      "score": 16,
+      "level": "고위험"
+    },
+    {
+      "factor": "낙하물 위험",
+      "category": "낙하물",
+      "probability": 3,
+      "severity": 3,
+      "score": 9,
+      "level": "중위험"
+    },
+    {
+      "factor": "충돌 위험",
+      "category": "충돌",
+      "probability": 2,
+      "severity": 3,
+      "score": 6,
+      "level": "중위험"
+    }
+  ],
+  "checklist": [
+    {
+      "factor": "작업자 추락",
+      "category": "추락",
+      "directCause": "안전고리 미착용",
+      "judgment": "고위험"
+    },
+    {
+      "factor": "낙하물 위험",
+      "category": "낙하물",
+      "directCause": "도구 고정 미흡",
+      "judgment": "중위험"
+    },
+    {
+      "factor": "충돌 위험",
+      "category": "충돌",
+      "directCause": "경고장치 미비",
+      "judgment": "중위험"
+    }
+  ],
+  "coreFactors": [
+    {
+      "factor": "작업자 추락",
+      "riskLevel": "고위험",
+      "scenario": "작업자가 높은 철골 구조물에서 작업하는 과정에서 보호 장비 미착용으로 인해 추락 사고 발생",
+      "directCause": "안전고리 미착용",
+      "expectedInjury": "중상 혹은 사망",
+      "improvementMeasure": "추락 방지망 설치, 고소작업 안전고리 의무화 (산업안전보건법 제34조)"
+    },
+    {
+      "factor": "낙하물 위험",
+      "riskLevel": "중위험",
+      "scenario": "작업자가 철골 위에서 작업하는 과정에서 도구가 떨어져 아래 작업자에게 낙하물 사고 발생",
+      "directCause": "도구 고정 미흡",
+      "expectedInjury": "경상 혹은 중상",
+      "improvementMeasure": "공구 고정 장치 사용, 안전모 착용 의무화 (산업안전보건법 제36조)"
+    },
+    {
+      "factor": "충돌 위험",
+      "riskLevel": "중위험",
+      "scenario": "장비가 협소한 공간에서 이동하는 과정에서 운전자가 작업자를 인지 못해 충돌 사고 발생",
+      "directCause": "경고장치 미비",
+      "expectedInjury": "중상",
+      "improvementMeasure": "차단 울타리 설치 및 경고장치 사용 (산업안전보건법 제37조)"
+    }
+  ],
+  "threeLevel": [
+    {
+      "factor": "작업자 추락",
+      "judgment": "허용불가능",
+      "measure": "추락 방지망 설치, 고소작업 안전고리 의무화 (산업안전보건법 제34조)"
+    },
+    {
+      "factor": "낙하물 위험",
+      "judgment": "개선필요",
+      "measure": "공구 고정 장치 사용, 안전모 착용 의무화 (산업안전보건법 제36조)"
+    },
+    {
+      "factor": "충돌 위험",
+      "judgment": "개선필요",
+      "measure": "차단 울타리 설치 및 경고장치 사용 (산업안전보건법 제37조)"
+    }
+  ],
+  "health": {
+    "applicable": false,
+    "summary": "현재 빈도×강도법 평가 모드에서는 건강장해 분석이 포함되지 않습니다.",
+    "items": []
+  },
+  "overallSummary": {
+    "highest_risk_item": "작업자 추락",
+    "highest_risk_score": 16,
+    "immediate_action_required": false,
+    "recommended_action": "고소작업 시 철저한 안전 점검 실시 및 보호 장비 사용"
+  }
+}

@@ -1,0 +1,204 @@
+{
+  "summary": {
+    "processName": "포크레인으로의 암반 굴착 작업",
+    "workContent": "굴착",
+    "equipment": "굴착 작업",
+    "basis": "이미지 분석을 통한 현장 구분"
+  },
+  "hazards": [
+    {
+      "name": "굴착기와의 충돌 위험",
+      "category": "충돌"
+    },
+    {
+      "name": "암반 낙하물 위험",
+      "category": "낙하물"
+    },
+    {
+      "name": "굴착면 붕괴 위험",
+      "category": "붕괴"
+    }
+  ],
+  "overallLevel": {
+    "label": "중위험",
+    "immediateAction": false,
+    "topHazard": "굴착기와의 충돌 위험",
+    "score": 9
+  },
+  "raw": {
+    "site_analysis": {
+      "industry": "굴착 작업",
+      "detailed_process": "포크레인으로의 암반 굴착 작업",
+      "work_stage": "굴착",
+      "analysis_basis": "이미지 분석을 통한 현장 구분"
+    },
+    "hazards": [
+      {
+        "id": 1,
+        "hazard_name": "굴착기와의 충돌 위험",
+        "hazard_category": "충돌",
+        "accident_scenario": "작업자가 굴착기와 가까운 곳에서 작업하는 과정에서 충돌로 인해 부상 사고 발생",
+        "direct_cause": "작업 공간 부족으로 인한 근접 작업",
+        "expected_injury": "중상(입원)",
+        "probability": 3,
+        "severity": 3,
+        "risk_score": 9,
+        "risk_level": "중위험",
+        "improvement_measure": "굴착기 작업 구역에 안전 울타리 설치 (산업안전보건기준에관한규칙 제37조)",
+        "ocr": null,
+        "bbox": [
+          100,
+          200,
+          600,
+          800
+        ]
+      },
+      {
+        "id": 2,
+        "hazard_name": "암반 낙하물 위험",
+        "hazard_category": "낙하물",
+        "accident_scenario": "작업자가 굴착 작업 중 암반이 떨어져 부상 사고 발생",
+        "direct_cause": "안정되지 않은 암반",
+        "expected_injury": "경상(통원치료)",
+        "probability": 2,
+        "severity": 2,
+        "risk_score": 4,
+        "risk_level": "저위험",
+        "improvement_measure": "낙하물 방지망 설치 (산업안전보건기준에관한규칙 제383조)",
+        "ocr": null,
+        "bbox": [
+          200,
+          150,
+          700,
+          850
+        ]
+      },
+      {
+        "id": 3,
+        "hazard_name": "굴착면 붕괴 위험",
+        "hazard_category": "붕괴",
+        "accident_scenario": "작업자가 굴착된 구역에 접근하는 과정에서 벽면이 붕괴되어 사고 발생",
+        "direct_cause": "지반 약화",
+        "expected_injury": "중대재해(영구장해/사망가능)",
+        "probability": 2,
+        "severity": 4,
+        "risk_score": 8,
+        "risk_level": "중위험",
+        "improvement_measure": "굴착면에 지지공 설치 및 안전 검사 (산업안전보건기준에관한규칙 제386조)",
+        "ocr": null,
+        "bbox": [
+          150,
+          100,
+          750,
+          900
+        ]
+      }
+    ],
+    "overall_risk_summary": {
+      "highest_risk_item": "굴착기와의 충돌 위험",
+      "highest_risk_score": 9,
+      "immediate_action_required": false,
+      "recommended_action": "지정된 구역에 대한 울타리 설치 및 근로자 교육 실시"
+    }
+  },
+  "frequencySeverity": [
+    {
+      "factor": "굴착기와의 충돌 위험",
+      "category": "충돌",
+      "probability": 3,
+      "severity": 3,
+      "score": 9,
+      "level": "중위험"
+    },
+    {
+      "factor": "암반 낙하물 위험",
+      "category": "낙하물",
+      "probability": 2,
+      "severity": 2,
+      "score": 4,
+      "level": "저위험"
+    },
+    {
+      "factor": "굴착면 붕괴 위험",
+      "category": "붕괴",
+      "probability": 2,
+      "severity": 4,
+      "score": 8,
+      "level": "중위험"
+    }
+  ],
+  "checklist": [
+    {
+      "factor": "굴착기와의 충돌 위험",
+      "category": "충돌",
+      "directCause": "작업 공간 부족으로 인한 근접 작업",
+      "judgment": "중위험"
+    },
+    {
+      "factor": "암반 낙하물 위험",
+      "category": "낙하물",
+      "directCause": "안정되지 않은 암반",
+      "judgment": "저위험"
+    },
+    {
+      "factor": "굴착면 붕괴 위험",
+      "category": "붕괴",
+      "directCause": "지반 약화",
+      "judgment": "중위험"
+    }
+  ],
+  "coreFactors": [
+    {
+      "factor": "굴착기와의 충돌 위험",
+      "riskLevel": "중위험",
+      "scenario": "작업자가 굴착기와 가까운 곳에서 작업하는 과정에서 충돌로 인해 부상 사고 발생",
+      "directCause": "작업 공간 부족으로 인한 근접 작업",
+      "expectedInjury": "중상(입원)",
+      "improvementMeasure": "굴착기 작업 구역에 안전 울타리 설치 (산업안전보건기준에관한규칙 제37조)"
+    },
+    {
+      "factor": "암반 낙하물 위험",
+      "riskLevel": "저위험",
+      "scenario": "작업자가 굴착 작업 중 암반이 떨어져 부상 사고 발생",
+      "directCause": "안정되지 않은 암반",
+      "expectedInjury": "경상(통원치료)",
+      "improvementMeasure": "낙하물 방지망 설치 (산업안전보건기준에관한규칙 제383조)"
+    },
+    {
+      "factor": "굴착면 붕괴 위험",
+      "riskLevel": "중위험",
+      "scenario": "작업자가 굴착된 구역에 접근하는 과정에서 벽면이 붕괴되어 사고 발생",
+      "directCause": "지반 약화",
+      "expectedInjury": "중대재해(영구장해/사망가능)",
+      "improvementMeasure": "굴착면에 지지공 설치 및 안전 검사 (산업안전보건기준에관한규칙 제386조)"
+    }
+  ],
+  "threeLevel": [
+    {
+      "factor": "굴착기와의 충돌 위험",
+      "judgment": "개선필요",
+      "measure": "굴착기 작업 구역에 안전 울타리 설치 (산업안전보건기준에관한규칙 제37조)"
+    },
+    {
+      "factor": "암반 낙하물 위험",
+      "judgment": "허용가능",
+      "measure": "낙하물 방지망 설치 (산업안전보건기준에관한규칙 제383조)"
+    },
+    {
+      "factor": "굴착면 붕괴 위험",
+      "judgment": "개선필요",
+      "measure": "굴착면에 지지공 설치 및 안전 검사 (산업안전보건기준에관한규칙 제386조)"
+    }
+  ],
+  "health": {
+    "applicable": false,
+    "summary": "현재 빈도×강도법 평가 모드에서는 건강장해 분석이 포함되지 않습니다.",
+    "items": []
+  },
+  "overallSummary": {
+    "highest_risk_item": "굴착기와의 충돌 위험",
+    "highest_risk_score": 9,
+    "immediate_action_required": false,
+    "recommended_action": "지정된 구역에 대한 울타리 설치 및 근로자 교육 실시"
+  }
+}

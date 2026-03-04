@@ -1,0 +1,57 @@
+{
+  "tbm_info": {
+    "work_name": "$inputs.workname",
+    "description": "$inputs.descript",
+    "analysis_basis": "고소 작업 중 작업자들이 이동하며 구조물 설치 수행."
+  },
+  "tbm_checklist": [
+    {
+      "id": 1,
+      "checkpoint_question": "높은 곳에서 이동 순간 발을 헛디딜 위험이 있는가?"
+    },
+    {
+      "id": 2,
+      "checkpoint_question": "구조물 체결 시 체결점 변경 순간 안전을 확보하였는가?"
+    },
+    {
+      "id": 3,
+      "checkpoint_question": "구조물 설치 시 손가락 끼임 사고가 발생할 수 있는가?"
+    },
+    {
+      "id": 4,
+      "checkpoint_question": "상부 구조물 작업 시 하단 작업자와의 동시 작업 위험이 있는가?"
+    },
+    {
+      "id": 5,
+      "checkpoint_question": "안전 고리 체결 점이 충분히 견고한가?"
+    },
+    {
+      "id": 6,
+      "checkpoint_question": "도구를 교환하는 순간 도구가 떨어질 위험이 있는가?"
+    },
+    {
+      "id": 7,
+      "checkpoint_question": "작업 중 안전망이 제대로 설치되어 있는가?"
+    },
+    {
+      "id": 8,
+      "checkpoint_question": "작업자가 이동할 때 주변 구조물에 부딪칠 가능성이 있는가?"
+    },
+    {
+      "id": 9,
+      "checkpoint_question": "작업자 간 통신이 원활하지 않아 오해할 위험이 있는가?"
+    },
+    {
+      "id": 10,
+      "checkpoint_question": "비상시 사용할 탈출 경로가 충분히 확보되었는가?"
+    },
+    {
+      "id": 11,
+      "checkpoint_question": "작업 중 구조물이 흔들릴 가능성이 있는가?"
+    },
+    {
+      "id": 12,
+      "checkpoint_question": "안전 장비 착용이 제대로 이루어졌는가?"
+    }
+  ]
+}

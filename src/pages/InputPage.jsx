@@ -25,7 +25,71 @@ import FireDetailPage           from './FireDetailPage'
 import AiModelDemo              from './AiModelDemo'
 import { FormDocumentPreview } from './FormInputPage'
 import html2canvas from 'html2canvas'
+import SiteDetailPage from './SiteDetailPage'
 import SafetyMarketingSections from './SafetyMarketingSections'
+// import ContractDetailPage     from './ContractDetailPage'
+// import BoardDetailPage        from './BoardDetailPage'
+import BoardIndexPage from './BoardIndexPage'
+import SiteListPage       from './SiteListPage'
+
+import BoardListPage from './BoardListPage'
+import BoardDetailPage from './BoardDetailPage'
+
+import TbmListPage from './TbmListPage'
+import TbmDetailPage from './TbmDetailPage'
+
+import InspectionListPage from './InspectionListPage'
+import InspectionDetailPage from './InspectionDetailPage'
+
+import PpeListPage from './PpeListPage'
+import PpeDetailPage from './PpeDetailPage'
+
+import SafetyEduListPage   from './SafetyEduListPage'
+import SafetyEduDetailPage from './SafetyEduDetailPage'
+
+
+import SafetyDetailPage from './SafetyDetailPage'
+
+import SafetyListPage from './SafetyListPage'
+
+import TbmResultPage from './TbmResultPage'
+import EmergencyListPage   from './EmergencyListPage'
+import EmergencyDetailPage from './EmergencyDetailPage'
+
+import RiskFactorModal from './RiskFactorModal'
+// import TbmDetailPage          from './TbmDetailPage'
+// import RiskDetailPage         from './RiskDetailPage'
+// import SafetyLogDetailPage    from './SafetyLogDetailPage'
+// import OshmsDetailPage        from './OshmsDetailPage'
+// import ApprovalDetailPage     from './ApprovalDetailPage'
+// import DocsDetailPage         from './DocsDetailPage'
+
+// const CONSTRUCTION_DETAIL_PAGE_MAP = {
+//   contract: ContractDetailPage,
+//   board: BoardDetailPage,
+//   report: ReportDetailPage,
+//   tbm: TbmDetailPage,
+//   risk: RiskDetailPage,
+//   safetylog: SafetyLogDetailPage,
+//   oshms: OshmsDetailPage,
+//   approval: ApprovalDetailPage,
+//   docs: DocsDetailPage,
+// }contract
+
+const CONSTRUCTION_DETAIL_PAGE_MAP = {
+  contract: SiteListPage,
+   board: BoardIndexPage,  
+
+report:SafetyListPage,
+ tbm: TbmListPage, 
+  edu: SafetyEduListPage   , 
+ ppe: PpeListPage,
+   emergency: EmergencyListPage   , 
+
+  inspection: InspectionListPage   , 
+
+}
+
 
 function useIsMobile() {
   const [isMobile, setIsMobile] = useState(
@@ -900,6 +964,108 @@ const RISK_GRID = [
 ]
 
 
+const CMANAGE_CARDS = [
+  {
+    key: 'all',
+    title: '전체',
+    desc: '',
+    img: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=400&q=75&fit=crop'
+  },
+
+
+
+  {
+    key: 'board',
+    title: '공사구역',
+    desc: '현장 공지/협업 게시판/댓글',
+    img: 'https://images.unsplash.com/photo-1533378890784-b2a5b0a59d40?w=400&q=75&fit=crop'
+  },
+
+
+
+  {
+    key: 'tbmai',
+    title: 'AI TBM',
+    desc: '작업 전 안전회의/교육일지 관리',
+    img: 'https://images.unsplash.com/photo-1622611935038-1c4caa0db5d2?w=400&q=75&fit=crop'
+  },
+  {
+    key: 'tbm',
+    title: 'TBM',
+    desc: '작업 전 안전회의/교육일지 관리',
+    img: 'https://images.unsplash.com/photo-1622611935038-1c4caa0db5d2?w=400&q=75&fit=crop'
+  },
+
+
+  {
+    key: 'risk',
+    title: '위험성평가',
+    desc: '공종별 위험요인 DB/평가표 작성',
+    img: 'https://images.unsplash.com/photo-1581092160562-40aa08e78837?w=400&q=75&fit=crop'
+  },
+
+
+    {
+    key: 'report',
+    title: '안전신고',
+    desc: '위험요소 신고/조치내역 관리',
+    img: 'https://images.unsplash.com/photo-1730473145269-ae0bb7665a34?w=400&q=75&fit=crop'
+  },
+
+
+
+  {
+    key: 'emergency',
+    title: '비상훈련',
+    desc: '안전사고, 화재 및 폭팔 등 다양한 훈련 관리',
+    img: 'https://images.unsplash.com/photo-1643635197111-96179e1797ce?w=400&q=75&fit=crop'
+  },
+  {
+    key: 'inspection',
+    title: '안전점검',
+    desc: '정기, 특별, 순회 등 다양한 점검',
+    img: 'https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=400&q=75&fit=crop'
+  },
+
+   {
+    key: 'edu',
+    title: '안전교육일지',
+    desc: '안전교육/비상훈련/점검/PPE 관리',
+    img: 'https://images.unsplash.com/photo-1612024499574-7b0379631333?w=400&q=75&fit=crop'
+  },
+  {
+    key: 'ppe',
+    title: '개인보호구',
+    desc: '개인보호구의 지급·수령 이력을  관리',
+    img: 'https://images.unsplash.com/photo-1662309376159-b95fb193d96b?w=400&q=75&fit=crop'
+  },
+    {
+    key: 'contract',
+    title: '현장관리',
+    desc: '공사 계약/기간/도급/책임자 정보 관리',
+    img: 'https://images.unsplash.com/photo-1554224155-1696413565d3?w=400&q=75&fit=crop'
+  },
+  // {
+  //   key: 'oshms',
+  //   title: '',
+  //   desc: '등록/정기점검/결과보고 관리',
+  //   img: 'https://images.unsplash.com/photo-1581090700227-4c4f50f9c1c4?w=400&q=75&fit=crop'
+  // },
+
+  // {
+  //   key: 'approval',
+  //   title: '전자결재',
+  //   desc: '결재 요청/승인/반려 관리',
+  //   img: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=400&q=75&fit=crop'
+  // },
+
+  {
+    key: 'docs',
+    title: '안전관리서식',
+    desc: '파일관리/사진대지/서식자동생성/CAD',
+    img: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=400&q=75&fit=crop'
+  },
+];
 
 
 const CCTV_CARDS = [
@@ -954,6 +1120,9 @@ function ImageGrid({ items, isMobile, onSelect, columns }) {
     </div>
   )
 }
+
+
+
 function CctvPage({ isMobile, activeSubTab, onSelectSubTab }) {
   const filtered = activeSubTab === 'all' ? CCTV_CARDS : CCTV_CARDS.filter(c => c.key === activeSubTab)
   const handleCardClick = (key) => { if (activeSubTab !== 'all') return; onSelectSubTab?.(key) }
@@ -1102,15 +1271,227 @@ function PhoneMockup({ isMobile }) {
   )
 }
 
+function CmanagePage({ isMobile, activeSubTab, onSelectSubTab, onNavigateTab }) {
+  const filtered =
+    activeSubTab === 'all'
+      ? CMANAGE_CARDS.filter(c => c.key !== 'all') // 전체일 땐 실제 카드들 보여주고 싶으면 이렇게
+      : CMANAGE_CARDS.filter(c => c.key === activeSubTab)
+
+    const handleCardClick = (key) => {
+    if (activeSubTab !== 'all') return
+    if (key === 'docs') {
+      onNavigateTab?.('forms')  // ✅ 메인 탭 'forms'으로 전환
+      return
+    }
+ if (key === 'risk' || key === 'tbmai') {
+      onNavigateTab?.('risk')  // ✅ 메인 탭 'forms'으로 전환
+      return
+    }
+
+
+    onSelectSubTab?.(key)
+  }
+
+  const activeCard = CMANAGE_CARDS.find(c => c.key === activeSubTab)
+if (activeSubTab !== 'all') return null
+  return (
+    <motion.main
+      key={`cmanage-${activeSubTab}`}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      style={{
+        ...s.hero,
+        flexDirection: isMobile ? 'column' : 'row',
+        padding: isMobile ? '36px 20px 48px' : '60px 40px',
+        gap: isMobile ? 0 : 60,
+        alignItems: isMobile ? 'flex-start' : 'center'
+      }}
+    >
+      {/* ── 왼쪽 텍스트 영역 ── */}
+      <div style={{ flex: isMobile ? 'none' : '0 0 460px', maxWidth: isMobile ? '100%' : 460, width: '100%' }}>
+        <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
+          <div style={{ ...s.eyebrow, fontSize: isMobile ? 11 : 12 }}>Construction Safety Management</div>
+          <h1 style={{ ...s.heroTitle, fontSize: isMobile ?  32 : 62, letterSpacing: isMobile ? '-1.2px' : '-2.5px', marginBottom: isMobile ? 12 : 18, fontWeight: 400 }}>
+           <span style={{ fontWeight: 900 }}>AI</span>가 바꾸는<br/>건설현장 ,TBM
+          </h1>
+          <p style={{ ...s.heroSub, fontSize: isMobile ? 14 : 16, marginBottom: isMobile ? 20 : 32 }}>
+            건설 현장에 필요한 관리 항목을 카테고리로 확인하십시오.
+          </p>
+
+          {activeSubTab !== 'all' && (
+            <motion.div key={activeSubTab} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} style={s.subTabDetail}>
+              <div style={s.subTabDetailTitle}>{activeCard?.title || activeSubTab}</div>
+              <p style={s.subTabDetailDesc}>{activeCard?.desc}</p>
+            </motion.div>
+          )}
+
+          {/* ✅ 모바일: 텍스트 바로 아래 2열 카드 */}
+          {isMobile && (
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={activeSubTab}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                transition={{ duration: 0.25 }}
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: activeSubTab !== 'all' ? '1fr' : 'repeat(2, 1fr)',
+                  gap: 10,
+                  marginTop: 24
+                }}
+              >
+                {filtered.map((item) => (
+                  <motion.div
+                    key={item.key}
+                    style={{
+                      ...s.cctvCard,
+                      backgroundImage: `url(${item.img})`,
+                      backgroundSize: 'cover',
+                      backgroundPosition: 'center',
+                      aspectRatio: activeSubTab !== 'all' ? '16/7' : '4/3',
+                      cursor: activeSubTab === 'all' ? 'pointer' : 'default'
+                    }}
+                    whileTap={{ scale: 0.97 }}
+                    onClick={() => handleCardClick(item.key)}
+                  >
+                    <div style={s.cctvCardDim} />
+                    <div style={{ position: 'relative', zIndex: 2 }}>
+                      <div style={s.cctvCardTitle}>{item.title}</div>
+                      {activeSubTab !== 'all' && <div style={s.cctvCardDesc}>{item.desc}</div>}
+                    </div>
+                  </motion.div>
+                ))}
+              </motion.div>
+            </AnimatePresence>
+          )}
+        </motion.div>
+      </div>
+
+      {/* ✅ PC만: 오른쪽 3열 카드 */}
+      {!isMobile && (
+        <motion.div style={{ flex: 1, minWidth: 0 }} initial={{ opacity: 0, x: 24 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6, delay: 0.15 }}>
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeSubTab}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.25 }}
+              style={{
+                display: 'grid',
+                gridTemplateColumns: activeSubTab !== 'all' ? '1fr' : 'repeat(3, 1fr)',
+                gap: 14
+              }}
+            >
+              {filtered.map((item) => (
+                <motion.div
+                  key={item.key}
+                  style={{
+                    ...s.cctvCard,
+                    backgroundImage: `url(${item.img})`,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    aspectRatio: activeSubTab !== 'all' ? '16/7' : '4/3',
+                    cursor: activeSubTab === 'all' ? 'pointer' : 'default'
+                  }}
+                  whileHover={{ y: -3, boxShadow: '0 8px 24px rgba(0,0,0,0.18)' }}
+                  transition={{ duration: 0.18 }}
+                  onClick={() => handleCardClick(item.key)}
+                  role={activeSubTab === 'all' ? 'button' : undefined}
+                  tabIndex={activeSubTab === 'all' ? 0 : undefined}
+                  onKeyDown={(e) => {
+                    if (activeSubTab !== 'all') return
+                    if (e.key === 'Enter' || e.key === ' ') handleCardClick(item.key)
+                  }}
+                >
+                  <div style={s.cctvCardDim} />
+                  <div style={{ position: 'relative', zIndex: 2 }}>
+                    <div style={s.cctvCardTitle}>{item.title}</div>
+                    <div style={s.cctvCardDesc}>{item.desc}</div>
+                  </div>
+                </motion.div>
+              ))}
+            </motion.div>
+          </AnimatePresence>
+        </motion.div>
+      )}
+    </motion.main>
+  )
+}
 
 
 
 
-/* ── 메인 ── */
+const ReferralBox = ({ isMobile }) => (
+  <div style={{
+    width: '100%',
+    background: '#f7f7f7',
+    borderRadius: isMobile ? 10 : 12,
+    padding: isMobile ? '12px 14px' : '16px 18px',
+    marginBottom: isMobile ? 12 : 14,
+  }}>
+    <div style={{ marginBottom: isMobile ? 6 : 10 }}>
+      <span style={{
+        fontSize: isMobile ? 12 : 13,
+        fontWeight: 800,
+        color: '#111',
+        cursor: 'pointer',
+        textDecoration: 'underline',
+        textUnderlineOffset: 3,
+        display: 'inline-flex',
+        alignItems: 'center',
+        gap: 6,
+      }}>
+        추천코드가 없다면 클릭<span>👉</span>
+      </span>
+    </div>
+    <div style={{ display: 'flex', gap: isMobile ? 6 : 8 }}>
+      <input
+        type="text"
+        placeholder="추천인 코드를 입력하세요"
+        style={{
+          flex: 1,
+          padding: isMobile ? '8px 12px' : '10px 14px',
+          border: '1.5px solid #e0e0e0',
+          borderRadius: 8,
+          fontSize: isMobile ? 12 : 13,
+          fontFamily: 'inherit',
+          outline: 'none',
+          background: '#fff',
+          color: '#333',
+          minWidth: 0,
+        }}
+      />
+      <button style={{
+        padding: isMobile ? '8px 14px' : '10px 18px',
+        background: '#FAE100',
+        color: '#3C1E1E',
+        border: 'none',
+        borderRadius: 8,
+        fontSize: isMobile ? 12 : 13,
+        fontWeight: 800,
+        cursor: 'pointer',
+        whiteSpace: 'nowrap',
+      }}>
+        신청하기
+      </button>
+    </div>
+    {/* <div style={{ fontSize: 11, color: '#aaa', marginTop: 8, lineHeight: 1.5 }}>
+      추천코드 입력 시 50인 미만 사업장 무상 도입이 적용됩니다.
+    </div> */}
+
+    <div style={{ fontSize: 11, color: '#aaa', marginTop: 8, lineHeight: 1.5 }}>
+  추천코드 입력 후 신청 시, 아래 화면은 실제 도입 후 운영 예시입니다. 50인 미만 사업장은 무상으로 동일한 체계를 사용하실 수 있습니다.
+</div>
+  </div>
+)
+
 export default function InputPage() {
   const navigate = useNavigate()
   const isMobile = useIsMobile()
-  const { analyze, loading: apiLoading, error } = useAnalyze()
+  const { analyze, analyze2, loading: apiLoading, error } = useAnalyze()
   const [cacheLoading, setCacheLoading] = useState(false)
   const fileInputRef = useRef(null)
   const cctvDetailAnchorRef = useRef(null)
@@ -1119,204 +1500,357 @@ export default function InputPage() {
   const [cameraOpen, setCameraOpen] = useState(false)
   const [activeTab, setActiveTab] = useState('risk')
   const [activeSubTab, setActiveSubTab] = useState('all')
+  const [activeCmanageSubTab, setActiveCmanageSubTab] = useState('all')
+  const [selectedSiteId, setSelectedSiteId] = useState(null)
+  const [selectedEmergencyId, setSelectedEmergencyId] = useState(null)
+  const [selectedInspectionId, setSelectedInspectionId] = useState(null)
+  const [selectedEduId, setSelectedEduId] = useState(null)
+  const [selectedPpeId, setSelectedPpeId] = useState(null)
+  const [selectedPostId, setSelectedPostId] = useState(null)
+  const [selectedSafetyId, setSelectedSafetyId] = useState(null)
+  const [selectedTbmId, setSelectedTbmId] = useState(null)
+  const [riskModalOpen, setRiskModalOpen] = useState(false)
+  const [pendingRiskFile, setPendingRiskFile] = useState(null) // { file, imageUrl, cachedResult }
+  const pendingActionRef = useRef(null)
+  const [selectedRiskFactors, setSelectedRiskFactors] = useState([])
 
-  // ✅ NEW: 롤링 카피 (Grid 자리)
+  const HERO_SLIDES = [
+    { question: '대기업이랑 같은 시스템이라고요?',
+      line1: '대기업 수억원. 중견기업 수천만원. 50인 미만 추천 사업장 0원.',
+      line2: '시스템은 하나입니다. 도입하는 사람에 따라 가격이 다릅니다. 고용노동부 지정 안전관리 전문기관이 설계한 동일 체계입니다.',
+      img: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&q=80&fit=crop' },
+    { question: '어떻게 무료 공급이 가능한가요?',
+      line1: '셰어웨어 모델은 공공기관·기업 등 특정 소비자 구간과 무료 구간이 다르게 시장가를 형성합니다.',
+      line2: '대기업은 안전에 연간 10억을 투자합니다.  법 기준은 동일합니다.  이에 GRBlab이  50인 미만 사업장은, 무료로  보급 하고 있습니다 .',
+      img: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&q=80&fit=crop' },
+    { question: '추천하면 저는 뭐가 좋아지나요?',
+      line1: '소개만 했을 뿐인데, 우리 사업장 시스템이 무료가 됩니다.',
+      line2: '복잡한 절차 없습니다. 추천인 코드만 전달했을 뿐입니다.\n\n"써보고 만족해서 추천했는데, 관리 시스템이 공짜가 됐습니다." — 인천, 제조업 대표',
+      img: 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=800&q=80&fit=crop' },
+    { question: '추천받은 사업장은 얼마를 내나요?',
+      line1: '50이 미만 사업체는 무료 입니다.',
+      line2: '스마트안전 장비를 추가 선택하실 경우 월 1만 9천원대 가격으로 , 중견기업에 평균 4천5백만원대 공급하는  안전관리 체계를 운영합니다.',
+      img: '/riskimage/밧데리.png' },
+    { question: '저는 사업장이 없는데요?',
+      line1: '사업장이 없어도, 50인 이상이어도 됩니다.',
+      line2: '추천인 코드로 누군가 등록하면, 수수료로 돌아옵니다. 시스템 무료 대신, 현금입니다.',
+      img: 'https://images.unsplash.com/photo-1568992687947-868a62a9f521?w=800&q=80&fit=crop' },
+    { question: '어떻게 알리면 되나요?',
+      line1: '어제 사장들 모임에 다녀왔습니다. 추천 코드 몇 개 돌렸습니다.',
+      line2: '설명 길게 안 했습니다. "써봤는데 괜찮더라" 한마디면 충분했습니다. 코드 하나가 내 사업장 비용을 없앴습니다.',
+      img: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&q=80&fit=crop' },
+    { question: '이미 늦은 건 아닌가요?',
+      line1: '카톡으로 코드 전달하려는데, 이미 전달된 분들로 떠 있었습니다.',
+      line2: '무료라서 먼저 움직인 겁니다. 늦으면, 줄 사람이 없어집니다.',
+      img: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=800&q=80&fit=crop' },
+    { question: '협회 단위로도 가능한가요?',
+      line1: '협회 회원사 전체에 추천 코드 일괄 배포합니다.',
+      line2: '담당자 한 명이 움직이면, 회원사 전체가 무료 구간에 들어옵니다. 협회가 회원사에게 줄 수 있는 가장 실질적인 혜택입니다.',
+      img: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&q=80&fit=crop' },
+    { question: '사업단지 입주사들한테도 되나요?',
+      line1: '관리소 공지 하나면 됩니다. 입주 사업장 전체가 대상입니다.',
+      line2: '코드만 배포하면 됩니다. 도입은 각 사업장이 알아서 합니다. 단지 전체의 안전 수준이 공지 한 번으로 올라갑니다.',
+      img: 'https://images.unsplash.com/photo-1575505586569-646b2ca898fc?w=800&q=80&fit=crop' },
+    { question: '블로그 , 유튜브 채널로도 수익이 되나요?',
+      line1: '안전관리 콘텐츠를 만드십니까. 구독자가 코드를 쓸 때마다 수수료가 발생합니다.',
+      line2: '광고가 아닙니다. 실제로 무료로 쓰는 시스템을 소개하는 겁니다. 콘텐츠의 신뢰는 지키면서, 수익은 따라옵니다.',
+      img: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80&fit=crop' },
+    { question: '주변 사업장은 이미 준비했나요?',
+      line1: '같은 규모의 사업장이 먼저 기준을 갖추고 있습니다.',
+      line2: '준비한 사람 순서대로 격차가 벌어집니다.',
+      img: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=800&q=80&fit=crop' },
+    { question: '산업재해, 우리 현장 얘기인가요?',
+      line1: '올해 산업재해 피해자 수, 142,771명.',
+      line2: '숫자는 크지만, 현장에서는 늘 한 사람에서 시작됩니다.',
+      img: 'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=800&q=80&fit=crop' },
+    { question: '안 준비하면 얼마나 위험한가요?',
+      line1: '법인 벌금 최대 50억. 보험료 영향은 사고 이후 3~5년.',
+      line2: '준비 여부가 결국 "격차"로 남는 구간입니다.',
+      img: 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85f?w=800&q=80&fit=crop' },
+  ]
 
-const HERO_SLIDES = [
-  { question: '대기업이랑 같은 시스템이라고요?',
-    line1: '대기업 수억원. 중견기업 수천만원. 50인 미만 추천 사업장 0원.',
-    line2: '시스템은 하나입니다. 도입하는 사람에 따라 가격이 다릅니다. 고용노동부 지정 안전관리 전문기관이 설계한 동일 체계입니다.',
-    img: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&q=80&fit=crop' },
+  const [copyIdx, setCopyIdx] = useState(0)
 
-  { question: '어떻게 무료 공급이 가능한가요?',
-    line1: '셰어웨어 모델은 공공기관·기업 등 특정 소비자 구간과 무료 구간이 다르게 시장가를 형성합니다.',
-    line2: '대기업은 안전에 연간 10억을 투자합니다.  법 기준은 동일합니다.  이에 GRBlab이  50인 미만 사업장은, 무료로  보급 하고 있습니다 .',
-    img: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&q=80&fit=crop' },
+  // ─────────────────────────────────────────────
+  // ✅ 핵심: 모든 이미지 입력의 단일 종착점
+  //
+  //  factors.workName 있음 → analyze2 → /tbm/result
+  //  factors.workName 없음 → analyze  → /result
+  // ─────────────────────────────────────────────
+// ────────────────────────────────────────
+// 4. handleRiskFactorConfirm (디버그 버전)
+// ────────────────────────────────────────
+const handleRiskFactorConfirm = useCallback(async (factors) => {
+  console.log('[MODAL] onConfirm 호출됨 factors:', JSON.stringify(factors))
 
-  { question: '추천하면 저는 뭐가 좋아지나요?',
-    line1: '소개만 했을 뿐인데, 우리 사업장 시스템이 무료가 됩니다.',
-    line2: '복잡한 절차 없습니다. 추천인 코드만 전달했을 뿐입니다.\n\n"써보고 만족해서 추천했는데, 관리 시스템이 공짜가 됐습니다." — 인천, 제조업 대표',
-    img: 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=800&q=80&fit=crop' },
+  setSelectedRiskFactors(factors)
+  setRiskModalOpen(false)
 
+  const action = pendingActionRef.current
+  console.log('[ACTION] pendingActionRef.current:', action)
+  pendingActionRef.current = null
 
-  { question: '추천받은 사업장은 얼마를 내나요?',
-    line1: '50이 미만 사업체는 무료 입니다.',
-    line2: '스마트안전 장비를 추가 선택하실 경우 월 1만 9천원대 가격으로 , 중견기업에 평균 4천5백만원대 공급하는  안전관리 체계를 운영합니다.',
-    img: '/riskimage/밧데리.png' },
-
-
-
-
-
-
-  { question: '저는 사업장이 없는데요?',
-    line1: '사업장이 없어도, 50인 이상이어도 됩니다.',
-    line2: '추천인 코드로 누군가 등록하면, 수수료로 돌아옵니다. 시스템 무료 대신, 현금입니다.',
-    img: 'https://images.unsplash.com/photo-1568992687947-868a62a9f521?w=800&q=80&fit=crop' },
-
-  { question: '어떻게 알리면 되나요?',
-    line1: '어제 사장들 모임에 다녀왔습니다. 추천 코드 몇 개 돌렸습니다.',
-    line2: '설명 길게 안 했습니다. "써봤는데 괜찮더라" 한마디면 충분했습니다. 코드 하나가 내 사업장 비용을 없앴습니다.',
-    img: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&q=80&fit=crop' },
-
-  { question: '이미 늦은 건 아닌가요?',
-    line1: '카톡으로 코드 전달하려는데, 이미 전달된 분들로 떠 있었습니다.',
-    line2: '무료라서 먼저 움직인 겁니다. 늦으면, 줄 사람이 없어집니다.',
-    img: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=800&q=80&fit=crop' },
-
-  { question: '협회 단위로도 가능한가요?',
-    line1: '협회 회원사 전체에 추천 코드 일괄 배포합니다.',
-    line2: '담당자 한 명이 움직이면, 회원사 전체가 무료 구간에 들어옵니다. 협회가 회원사에게 줄 수 있는 가장 실질적인 혜택입니다.',
-    img: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&q=80&fit=crop' },
-
-  { question: '사업단지 입주사들한테도 되나요?',
-    line1: '관리소 공지 하나면 됩니다. 입주 사업장 전체가 대상입니다.',
-    line2: '코드만 배포하면 됩니다. 도입은 각 사업장이 알아서 합니다. 단지 전체의 안전 수준이 공지 한 번으로 올라갑니다.',
-    img: 'https://images.unsplash.com/photo-1575505586569-646b2ca898fc?w=800&q=80&fit=crop' },
-
-  { question: '블로그 , 유튜브 채널로도 수익이 되나요?',
-    line1: '안전관리 콘텐츠를 만드십니까. 구독자가 코드를 쓸 때마다 수수료가 발생합니다.',
-    line2: '광고가 아닙니다. 실제로 무료로 쓰는 시스템을 소개하는 겁니다. 콘텐츠의 신뢰는 지키면서, 수익은 따라옵니다.',
-    img: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80&fit=crop' },
-
-  { question: '주변 사업장은 이미 준비했나요?',
-    line1: '같은 규모의 사업장이 먼저 기준을 갖추고 있습니다.',
-    line2: '준비한 사람 순서대로 격차가 벌어집니다.',
-    img: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=800&q=80&fit=crop' },
-
-  { question: '산업재해, 우리 현장 얘기인가요?',
-    line1: '올해 산업재해 피해자 수, 142,771명.',
-    line2: '숫자는 크지만, 현장에서는 늘 한 사람에서 시작됩니다.',
-    img: 'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=800&q=80&fit=crop' },
-
-  { question: '안 준비하면 얼마나 위험한가요?',
-    line1: '법인 벌금 최대 50억. 보험료 영향은 사고 이후 3~5년.',
-    line2: '준비 여부가 결국 "격차"로 남는 구간입니다.',
-    img: 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85f?w=800&q=80&fit=crop' },
-]
-
-// const [copyIdx, setCopyIdx] = useState(0)
-
-// useEffect(() => {
-//   if (activeTab !== 'risk') return
-//   const t = setInterval(() => {
-//     setCopyIdx(prev => (prev + 1) % rollingCopies.length)
-//   }, 10000)
-//   return () => clearInterval(t)
-// }, [activeTab, rollingCopies.length])
-
-
-const [copyIdx, setCopyIdx] = useState(0);
-
-useEffect(() => {
-  const timer = setInterval(() => {
-    setCopyIdx(prev => (prev + 1) % HERO_SLIDES.length);
-  }, 7000);
-  return () => clearInterval(timer);
-}, []);
-
-
-  const loading = apiLoading || cacheLoading
-  const isDev = import.meta.env.DEV
-
-  async function getCachedResult(filename) {
-    try {
-      const res = await fetch(`/api-cache/${filename}.json`, { cache: 'no-store' })
-      if (!res.ok) return null
-      return await res.json()
-    } catch {
-      return null
-    }
+  if (action === 'camera') {
+    console.log('[ACTION] → 카메라 오픈')
+    setCameraOpen(true)
+    return
   }
 
-  async function saveCacheResult(filename, data) {
-    if (!isDev) return
-    try {
-      await fetch('/api/save-cache', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ filename, data }),
-      })
-    } catch (e) {
-      console.warn('cache save fail', e)
-    }
+  if (action === 'gallery') {
+    console.log('[ACTION] → 갤러리 파일선택창 오픈')
+    fileInputRef.current?.click()
+    return
   }
 
-  const runAnalysis = useCallback(async (file, imageUrl = null) => {
-    if (!file) return
-    const cacheKey = file.name.replace(/\s+/g, '_')
-    const cached = await getCachedResult(cacheKey)
-    if (cached) {
+  console.log('[PENDING] pendingRiskFile:', pendingRiskFile)
+  if (!pendingRiskFile) {
+    console.warn('[PENDING] pendingRiskFile 없음 → 종료')
+    return
+  }
+
+  const { file, imageUrl } = pendingRiskFile
+  console.log('[FILE] name:', file.name, 'type:', file.type, 'size:', file.size)
+  console.log('[IMAGE] imageUrl:', imageUrl)
+
+  setPendingRiskFile(null)
+  setPreview(imageUrl)
+
+const hasWorkSelected = !!factors?.workName && factors?.mode !== 'risk'
+  console.log('[BRANCH] hasWorkSelected:', hasWorkSelected, '/ workName:', factors?.workName, '/ detailName:', factors?.detailName)
+
+  const cachePrefix = hasWorkSelected ? 'tbm' : 'risk'
+  const cacheKey = `${cachePrefix}_${file.name.replace(/\s+/g, '_')}`
+  console.log('[CACHE] cacheKey:', cacheKey)
+
+  let cachedResult = null
+  try {
+    const cr = await fetch(`/api-cache/${cacheKey}.json`, { cache: 'no-store' })
+    console.log('[CACHE] fetch status:', cr.status, 'ok:', cr.ok)
+    if (cr.ok) {
+      cachedResult = await cr.json()
+      console.log('[CACHE] 캐시 히트! cachedResult keys:', Object.keys(cachedResult))
+    } else {
+      console.log('[CACHE] 캐시 없음 → API 호출')
+    }
+  } catch (e) {
+    console.warn('[CACHE] fetch 에러:', e)
+  }
+
+  if (hasWorkSelected) {
+    const workname = factors.workName
+    const descript = factors.detailName ?? ''
+    console.log('[TBM] workname:', workname, '/ descript:', descript)
+
+    if (cachedResult) {
+      console.log('[TBM] 캐시 사용 → /tbm/result')
       setCacheLoading(true)
       await new Promise(r => setTimeout(r, 2000))
       setCacheLoading(false)
-      navigate('/result', { state: { result: cached, imageUrl } })
+      navigate('/tbm/result', { state: { result: cachedResult, imageUrl, workname, descript } })
       return
     }
+
+    console.log('[TBM] analyze2 호출 시작')
+    const result = await analyze2(file, workname, descript)
+    console.log('[TBM] analyze2 결과:', result ? '성공 / keys:' + Object.keys(result) : '실패(null)')
+    if (!result) return
+
+    if (import.meta.env.DEV) {
+      try {
+        const saveRes = await fetch('/api/save-cache', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ filename: cacheKey, data: result }),
+        })
+        console.log('[CACHE] tbm 저장 결과:', saveRes.ok, 'filename:', cacheKey)
+      } catch (e) {
+        console.warn('[CACHE] tbm 저장 실패:', e)
+      }
+    }
+
+    console.log('[TBM] navigate → /tbm/result')
+    navigate('/tbm/result', { state: { result, imageUrl, workname, descript } })
+
+  } else {
+    console.log('[RISK] analyze 호출 시작')
+
+    if (cachedResult) {
+      console.log('[RISK] 캐시 사용 → /result')
+      setCacheLoading(true)
+      await new Promise(r => setTimeout(r, 2000))
+      setCacheLoading(false)
+      navigate('/result', { state: { result: cachedResult, imageUrl, riskFactors: factors } })
+      return
+    }
+
+    const result = await analyze(file)
+    console.log('[RISK] analyze 결과:', result ? '성공 / keys:' + Object.keys(result) : '실패(null)')
+    if (!result) return
+
+    if (import.meta.env.DEV) {
+      try {
+        const saveRes = await fetch('/api/save-cache', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ filename: cacheKey, data: result }),
+        })
+        console.log('[CACHE] risk 저장 결과:', saveRes.ok, 'filename:', cacheKey)
+      } catch (e) {
+        console.warn('[CACHE] risk 저장 실패:', e)
+      }
+    }
+
+    console.log('[RISK] navigate → /result')
+    navigate('/result', { state: { result, imageUrl, riskFactors: factors } })
+  }
+}, [
+  pendingRiskFile,
+  analyze,
+  analyze2,
+  navigate,
+  setPreview,
+  setPendingRiskFile,
+  setRiskModalOpen,
+  setSelectedRiskFactors,
+  setCacheLoading,
+  setCameraOpen,
+])
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCopyIdx(prev => (prev + 1) % HERO_SLIDES.length)
+    }, 7000)
+    return () => clearInterval(timer)
+  }, [])
+
+  const loading = apiLoading || cacheLoading
+
+  // ─────────────────────────────────────────────
+  // ✅ handleFile: 모달 → handleRiskFactorConfirm 경로로 통일
+  //    (갤러리 onChange, 드롭 모두 여기서 처리)
+  // ─────────────────────────────────────────────
+  const handleFile = useCallback(async (file) => {
+    if (!file) return
+    if (!file.type.startsWith('image/')) {
+      message.error('이미지 파일만 업로드 가능합니다.')
+      return
+    }
+    const imageUrl = URL.createObjectURL(file)
+
+    // 캐시 먼저 확인
+    let cachedResult = null
+    try {
+      const cacheKey = file.name.replace(/\s+/g, '_')
+      const cr = await fetch(`/api-cache/${cacheKey}.json`, { cache: 'no-store' })
+      if (cr.ok) cachedResult = await cr.json()
+    } catch (_) {}
+
+    setPendingRiskFile({ file, imageUrl, cachedResult })
+    pendingActionRef.current = 'drop'
+    setRiskModalOpen(true)
+  }, [])
+
+  // ─────────────────────────────────────────────
+  // ✅ handleCapture: 촬영 완료 → 모달 → handleRiskFactorConfirm 경로로 통일
+  // ─────────────────────────────────────────────
+ const handleCapture = useCallback(async (file, previewSrc) => {
+  setCameraOpen(false)
+  setPreview(previewSrc)
+
+  const factors = selectedRiskFactors
+const hasWorkSelected = !!factors?.workName && factors?.mode !== 'risk'
+  const cachePrefix = hasWorkSelected ? 'tbm' : 'risk'
+  const cacheKey = `${cachePrefix}_${file.name.replace(/\s+/g, '_')}`
+
+  let cachedResult = null
+  try {
+    const cr = await fetch(`/api-cache/${cacheKey}.json`, { cache: 'no-store' })
+    const contentType = cr.headers.get('content-type') ?? ''
+    if (cr.ok && contentType.includes('application/json')) {
+      cachedResult = await cr.json()
+    }
+  } catch (_) {}
+
+  if (hasWorkSelected) {
+    const workname = factors.workName
+    const descript = factors.detailName ?? ''
+
+    if (cachedResult) {
+      setCacheLoading(true)
+      await new Promise(r => setTimeout(r, 2000))
+      setCacheLoading(false)
+      navigate('/tbm/result', { state: { result: cachedResult, imageUrl: previewSrc, workname, descript } })
+      return
+    }
+
+    const result = await analyze2(file, workname, descript)
+    if (!result) return
+
+    if (import.meta.env.DEV) {
+      try {
+        await fetch('/api/save-cache', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ filename: cacheKey, data: result }),
+        })
+      } catch (e) { console.warn(e) }
+    }
+
+    navigate('/tbm/result', { state: { result, imageUrl: previewSrc, workname, descript } })
+
+  } else {
+
+    if (cachedResult) {
+      setCacheLoading(true)
+      await new Promise(r => setTimeout(r, 2000))
+      setCacheLoading(false)
+      navigate('/result', { state: { result: cachedResult, imageUrl: previewSrc, riskFactors: factors } })
+      return
+    }
+
     const result = await analyze(file)
     if (!result) return
-    await saveCacheResult(cacheKey, result)
-    navigate('/result', { state: { result, imageUrl } })
-  }, [analyze, navigate])
 
-  const handleFile = useCallback((file) => {
-    if (!file) return
-    if (!file.type.startsWith('image/')) { message.error('이미지 파일만 업로드 가능합니다.'); return }
-    const url = URL.createObjectURL(file)
-    setPreview(url)
-    runAnalysis(file, url)
-  }, [runAnalysis])
+    if (import.meta.env.DEV) {
+      try {
+        await fetch('/api/save-cache', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ filename: cacheKey, data: result }),
+        })
+      } catch (e) { console.warn(e) }
+    }
 
+    navigate('/result', { state: { result, imageUrl: previewSrc, riskFactors: factors } })
+  }
+}, [selectedRiskFactors, analyze, analyze2, navigate, setPreview, setCacheLoading])
+
+  // ─────────────────────────────────────────────
+  // ✅ handleRiskImageSelect: 그리드 클릭 → 모달 → handleRiskFactorConfirm (기존과 동일)
+  // ─────────────────────────────────────────────
   const handleRiskImageSelect = useCallback(async (filename) => {
     try {
       const imageUrl = `/riskimage/${filename}`
+      let cachedResult = null
       try {
         const cr = await fetch(`/api-cache/${filename}.json`, { cache: 'no-store' })
-        if (cr.ok) {
-          const cachedResult = await cr.json()
-          setCacheLoading(true)
-          await new Promise(r => setTimeout(r, 5000))
-          setCacheLoading(false)
-          navigate('/result', { state: { result: cachedResult, imageUrl } })
-          return
-        }
+        if (cr.ok) cachedResult = await cr.json()
       } catch (_) {}
+
       const res = await fetch(imageUrl, { cache: 'no-store' })
       if (!res.ok) throw new Error(`image fetch failed: ${res.status}`)
       const blob = await res.blob()
       const file = new File([blob], filename, { type: blob.type || 'image/png' })
-      setPreview(URL.createObjectURL(file))
-      const result = await analyze(file)
-      if (!result) return
-      if (import.meta.env.DEV) {
-        try {
-          await fetch('/api/save-cache', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ filename, data: result }),
-          })
-        } catch (e) {
-          console.warn('[dev-cache-writer] save failed:', e?.message || e)
-        }
-      }
-      navigate('/result', { state: { result, imageUrl } })
+
+      setPendingRiskFile({ file, imageUrl, cachedResult })
+      setRiskModalOpen(true)
     } catch (err) {
       console.error('Risk image load/analyze failed:', err)
     }
-  }, [analyze, navigate, setPreview])
-
-  const handleCapture = useCallback((file, previewSrc) => {
-    setCameraOpen(false)
-    setPreview(previewSrc)
-    runAnalysis(file, previewSrc)
-  }, [runAnalysis])
-
-  const onDrop = useCallback((e) => {
-    e.preventDefault(); setDragOver(false)
-    handleFile(e.dataTransfer.files[0])
-  }, [handleFile])
+  }, [])
 
   const DetailPageComponent = DETAIL_PAGE_MAP[activeSubTab] || null
+  const CmanageDetailComponent = CONSTRUCTION_DETAIL_PAGE_MAP[activeCmanageSubTab] || null
 
   const LoadingUI = (
     <motion.div key="loading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
@@ -1341,26 +1875,51 @@ useEffect(() => {
     <motion.div key="form" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
       {isMobile ? (
         <div style={s.mobileActions}>
-          <motion.button style={s.mobileCamBtn} whileTap={{ scale: 0.97 }} onClick={() => setCameraOpen(true)}>
+          <motion.button
+            style={s.mobileCamBtn}
+            whileTap={{ scale: 0.97 }}
+            onClick={() => {
+              pendingActionRef.current = 'camera'
+              setRiskModalOpen(true)
+            }}
+          >
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
               <circle cx="12" cy="13" r="4.5" stroke="white" strokeWidth="1.8"/>
               <path d="M3 9h2l2-3h10l2 3h2a1 1 0 011 1v9a1 1 0 01-1 1H3a1 1 0 01-1-1v-9a1 1 0 011-1z" stroke="white" strokeWidth="1.8"/>
             </svg>
             카메라로 촬영하기
           </motion.button>
-          <button style={s.mobileFileBtn} onClick={() => fileInputRef.current?.click()}>
+
+          <button
+            style={s.mobileFileBtn}
+            onClick={() => {
+              pendingActionRef.current = 'gallery'
+              setRiskModalOpen(true)
+            }}
+          >
             또는 갤러리에서 파일 선택
           </button>
+
           {error && <div style={s.errorBox}>! {error} — 데모 데이터로 표시됩니다.</div>}
         </div>
       ) : (
         <div>
           <div
             style={{ ...s.dropZone, ...(dragOver ? s.dropActive : {}) }}
-            onDragOver={e => { e.preventDefault(); setDragOver(true) }}
+            onDragOver={(e) => { e.preventDefault(); setDragOver(true) }}
             onDragLeave={() => setDragOver(false)}
-            onDrop={onDrop}
-            onClick={() => fileInputRef.current?.click()}
+            onDrop={(e) => {
+              e.preventDefault()
+              setDragOver(false)
+              const file = e.dataTransfer?.files?.[0]
+              if (!file) return
+              // ✅ 드롭 → handleFile → 모달
+              handleFile(file)
+            }}
+            onClick={() => {
+              pendingActionRef.current = 'gallery'
+              setRiskModalOpen(true)
+            }}
           >
             <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
               <path d="M14 4v16M7 11l7-7 7 7" stroke="#aaa" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
@@ -1369,14 +1928,28 @@ useEffect(() => {
             <span style={s.dropText}>이미지를 끌어다 놓거나 화면의 테스트 이미지를 클릭</span>
             <span style={s.dropSub}>JPG · PNG · WEBP</span>
           </div>
+
           <div style={s.pcBtnRow}>
-            <button style={s.pcFileBtn} onClick={() => fileInputRef.current?.click()}>
+            <button
+              style={s.pcFileBtn}
+              onClick={() => {
+                pendingActionRef.current = 'gallery'
+                setRiskModalOpen(true)
+              }}
+            >
               <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
                 <path d="M14 10v3a1 1 0 01-1 1H3a1 1 0 01-1-1v-3M8 2v8M5 5l3-3 3 3" stroke="#333" strokeWidth="1.5" strokeLinecap="round"/>
               </svg>
               파일 선택
             </button>
-            <button style={s.pcCamBtn} onClick={() => setCameraOpen(true)}>
+
+            <button
+              style={s.pcCamBtn}
+              onClick={() => {
+                pendingActionRef.current = 'camera'
+                setRiskModalOpen(true)
+              }}
+            >
               <svg width="15" height="15" viewBox="0 0 20 20" fill="none">
                 <circle cx="10" cy="11" r="4" stroke="white" strokeWidth="1.5"/>
                 <path d="M2 8h2l1.5-2.5h9L16 8h2a1 1 0 011 1v8a1 1 0 01-1 1H2a1 1 0 01-1-1V9a1 1 0 011-1z" stroke="white" strokeWidth="1.5"/>
@@ -1384,33 +1957,11 @@ useEffect(() => {
               카메라 촬영
             </button>
           </div>
+
           {error && <div style={s.errorBox}>! {error} — 데모 데이터로 표시됩니다.</div>}
         </div>
       )}
     </motion.div>
-  )
-
-  // ✅ NEW: Grid 블록을 “오른쪽 위(Phone Frame 위)”로 옮기기 위해 별도 컴포넌트화
-  const GridBlock = (
-    <div style={{
-      width: '100%',
-      display: 'flex',
-      justifyContent: isMobile ? 'flex-start' : 'center',
-      marginBottom: isMobile ? 12 : 14,
-    }}>
-      <div style={{
-        width: isMobile ? '100%' : 520,
-        maxWidth: '100%',
-      }}>
-        <p style={{ ...s.gridSectionLabel, marginBottom: 8, textAlign: isMobile ? 'left' : 'right' }}>현장 유형 테스트</p>
-        <ImageGrid
-          items={RISK_GRID}
-          isMobile={isMobile}
-          onSelect={handleRiskImageSelect}s
-          columns={6}
-        />
-      </div>
-    </div>
   )
 
   return (
@@ -1430,17 +1981,18 @@ useEffect(() => {
       <div style={s.page}>
 
         {/* ── 네비 ── */}
-        <nav style={s.nav}>
-          <div style={{ ...s.navInner, padding: isMobile ? '0 -1px' : '0 40px' }}>
-            <div style={s.logo}>
-              <div style={s.logoMark}>G</div>
-              <span style={s.logoText}>GRBlab</span>
-            </div>
+       <nav style={s.nav}>
+  <div style={{ ...s.navInner, padding: isMobile ? '0 12px' : '0 40px' }}>
+    <div style={{ ...s.logo, transform: isMobile ? 'scale(0.8)' : 'none', transformOrigin: 'left center' }}>
+      <div style={s.logoMark}>G</div>
+      <span style={s.logoText}>GRBlab</span>
+    </div>
             <div style={s.tabs}>
               {[
-                { key: 'risk',  label: '위험성평가' },
-                { key: 'cctv',  label: 'AI + CCTV' },
-                { key: 'forms', label: '관리 ' },
+                { key: 'cmanage', label: '건설안전' },
+                { key: 'risk',    label: '위험성평가/TBM' },
+                { key: 'cctv',    label: 'AI+CCTV' },
+                { key: 'forms',   label: '안전관리서식' },
               ].map(tab => (
                 <button
                   key={tab.key}
@@ -1449,10 +2001,20 @@ useEffect(() => {
                     color: activeTab === tab.key ? '#1a1a1a' : '#bbb',
                     fontWeight: activeTab === tab.key ? 700 : 500,
                     borderBottom: activeTab === tab.key ? '2px solid #1a1a1a' : '2px solid transparent',
+                    
+                       fontSize: isMobile ? 16 : 18,
+        padding: isMobile ? '0 6px' : '0 12px',
                   }}
                   onClick={() => {
                     setActiveTab(tab.key)
                     if (tab.key === 'cctv') setActiveSubTab('all')
+                    if (tab.key === 'cmanage') {
+                      setActiveCmanageSubTab('all')
+                      setSelectedSiteId(null)
+                      setSelectedPostId(null)
+                      setSelectedSafetyId(null)
+                      setSelectedTbmId(null)
+                    }
                   }}
                 >
                   {tab.label}
@@ -1460,112 +2022,49 @@ useEffect(() => {
               ))}
             </div>
           </div>
+
           {activeTab === 'risk' && (
             <div style={{ ...s.navBelow, padding: isMobile ? '10px 20px 12px' : '20px 40px 24px' }}>
               <div style={s.navRight}>
-
-{!isMobile ? (
-  <>
-    <span style={s.navBadge}>산업안전보건법 제36조</span>
-    <span style={s.navBadge}>KRAS Open Interoperability Architecture</span>
-  </>
-) : (
-  <motion.div
-    style={{
-      alignSelf: 'stretch',
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'stretch',
-      justifyContent: 'flex-start',
-      flex: 1,
-      paddingTop: 6
-    }}
-    initial={{ opacity: 0, x: 24 }}
-    animate={{ opacity: 1, x: 0 }}
-    transition={{ duration: 0.6, delay: 0.15 }}
-  >
-    <div
-      style={{
-        width: '100%',
-        marginBottom: 10,
-        display: 'flex',
-        flexDirection: 'row',
-        gap: 14,
-        alignItems: 'stretch'
-      }}
-    >
-      <div
-        style={{
-          flex: 1,
-          background: '#f7f7f7',
-          borderRadius: 10,
-          padding: '12px 14px'
-        }}
-      >
-        <div style={{ marginBottom: 6 }}>
-          <span
-            // onClick={() => window.open('https://your-link.com', '_blank')}
-            style={{
-              fontSize: 12,
-              fontWeight: 700,
-              color: '#111',
-              cursor: 'pointer',
-              textDecoration: 'underline',
-              textUnderlineOffset: 2,
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: 4
-            }}
-          >
-            추천코드가 없다면 클릭
-            <span>👉</span>
-          </span>
-        </div>
-
-        <div style={{ display: 'flex', gap: 6 }}>
-          <input
-            type="text"
-            placeholder="추천인 코드 입력"
-            style={{
-              flex: 1,
-              padding: '8px 12px',
-              border: '1.2px solid #e0e0e0',
-              borderRadius: 8,
-              fontSize: 12,
-              fontFamily: 'inherit',
-              outline: 'none',
-              background: '#fff',
-              color: '#333',
-              minWidth: 0
-            }}
-          />
-          <button
-            style={{
-              padding: '8px 14px',
-              background: '#FAE100',
-              color: '#3C1E1E',
-              border: 'none',
-              borderRadius: 8,
-              fontSize: 12,
-              fontWeight: 700,
-              cursor: 'pointer',
-              whiteSpace: 'nowrap'
-            }}
-          >
-            신청
-          </button>
-        </div>
-      </div>
-    </div>
-  </motion.div>
-)}
-
+                {!isMobile ? (
+                  <>
+                    <span style={s.navBadge}>산업안전보건법 제36조</span>
+                    <span style={s.navBadge}>KRAS Open Interoperability Architecture</span>
+                  </>
+                ) : (
+                  <motion.div
+                    style={{ alignSelf: 'stretch', display: 'flex', flexDirection: 'column', alignItems: 'stretch', justifyContent: 'flex-start', flex: 1, paddingTop: 6 }}
+                    initial={{ opacity: 0, x: 24 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.6, delay: 0.15 }}
+                  >
+                    <div style={{ width: '100%', marginBottom: 10, display: 'flex', flexDirection: 'row', gap: 14, alignItems: 'stretch' }}>
+                      <div style={{ flex: 1, background: '#f7f7f7', borderRadius: 10, padding: '12px 14px' }}>
+                        <div style={{ marginBottom: 6 }}>
+                          <span style={{ fontSize: 12, fontWeight: 700, color: '#111', cursor: 'pointer', textDecoration: 'underline', textUnderlineOffset: 2, display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+                            추천코드가 없다면 클릭<span>👉</span>
+                          </span>
+                        </div>
+                        <div style={{ display: 'flex', gap: 6 }}>
+                          <input
+                            type="text"
+                            placeholder="추천인 코드 입력"
+                            style={{ flex: 1, padding: '8px 12px', border: '1.2px solid #e0e0e0', borderRadius: 8, fontSize: 12, fontFamily: 'inherit', outline: 'none', background: '#fff', color: '#333', minWidth: 0 }}
+                          />
+                          <button style={{ padding: '8px 14px', background: '#FAE100', color: '#3C1E1E', border: 'none', borderRadius: 8, fontSize: 12, fontWeight: 700, cursor: 'pointer', whiteSpace: 'nowrap' }}>
+                            신청
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
               </div>
             </div>
           )}
         </nav>
 
-        {/* ── 서브탭 바 (CCTV 탭만) ── */}
+        {/* ── 서브탭 바 ── */}
         <AnimatePresence>
           {activeTab === 'cctv' && (
             <div style={s.subTabWrap}>
@@ -1579,6 +2078,36 @@ useEffect(() => {
               </div>
             </div>
           )}
+
+          {activeTab === 'cmanage' && (
+            <div style={s.subTabWrap}>
+              <div className="sub-tab-scroll" style={{ ...s.subTabInner, padding: isMobile ? '0 20px' : '0 40px', overflowX: isMobile ? 'auto' : 'visible', WebkitOverflowScrolling: 'touch' }}>
+                <button
+                  style={{ ...s.subTabBtn, color: activeCmanageSubTab === 'all' ? '#1a1a1a' : '#999', fontWeight: activeCmanageSubTab === 'all' ? 700 : 400, borderBottom: activeCmanageSubTab === 'all' ? '2px solid #1a1a1a' : '2px solid transparent' }}
+                  onClick={() => { setActiveCmanageSubTab('all'); setSelectedSiteId(null); setSelectedPostId(null); setSelectedSafetyId(null); setSelectedTbmId(null) }}
+                >
+                  전체
+                </button>
+                {CMANAGE_CARDS.filter(c => c.key !== 'all').map(card => (
+                  <button
+                    key={card.key}
+                    style={{ ...s.subTabBtn, color: activeCmanageSubTab === card.key ? '#1a1a1a' : '#999', fontWeight: activeCmanageSubTab === card.key ? 700 : 400, borderBottom: activeCmanageSubTab === card.key ? '2px solid #1a1a1a' : '2px solid transparent' }}
+                    onClick={() => {
+                      if (card.key === 'docs') { setActiveTab('forms'); return }
+                      if (card.key === 'risk' || card.key === 'tbmai') { setActiveTab('risk'); return }
+                      setActiveCmanageSubTab(card.key)
+                      setSelectedSiteId(null)
+                      setSelectedPostId(null)
+                      setSelectedSafetyId(null)
+                      setSelectedTbmId(null)
+                    }}
+                  >
+                    {card.title}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
         </AnimatePresence>
 
         {/* ── 탭 콘텐츠 ── */}
@@ -1586,6 +2115,127 @@ useEffect(() => {
           {activeTab === 'forms' ? (
 
             <FormsPage key="forms" isMobile={isMobile} navigate={navigate} />
+
+          ) : activeTab === 'cmanage' ? (
+            <motion.div key="cmanage-wrapper" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+
+              {activeCmanageSubTab !== 'all' && (
+      <div style={{ padding: isMobile ? '12px 20px 0' : '20px 40px 0' }}>
+        <ReferralBox isMobile={isMobile} />
+      </div>
+    )}
+              <CmanagePage
+                isMobile={isMobile}
+                activeSubTab={activeCmanageSubTab}
+                onSelectSubTab={(key) => { setActiveCmanageSubTab(key); setSelectedSiteId(null); setSelectedPostId(null); setSelectedSafetyId(null); setSelectedTbmId(null) }}
+                onNavigateTab={(tab) => setActiveTab(tab)}
+              />
+              <AnimatePresence mode="wait">
+
+                {activeCmanageSubTab === 'contract' && (
+                  selectedSiteId ? (
+                    <motion.div key={`site-detail-${selectedSiteId}`} initial={{ opacity: 0, y: 32 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 16 }} transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }} style={{ maxWidth: 1200, margin: '0 auto', width: '100%' }}>
+                      <SiteDetailPage siteId={selectedSiteId} onBack={() => setSelectedSiteId(null)} />
+                    </motion.div>
+                  ) : (
+                    <motion.div key="site-list" initial={{ opacity: 0, y: 32 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 16 }} transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }} style={{ maxWidth: 1200, margin: '0 auto', width: '100%' }}>
+                      <SiteListPage onSelectSite={(id) => setSelectedSiteId(id)} />
+                    </motion.div>
+                  )
+                )}
+
+                {activeCmanageSubTab === 'board' && (
+                  selectedPostId ? (
+                    <motion.div key={`post-detail-${selectedPostId}`} initial={{ opacity: 0, y: 32 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 16 }} transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }} style={{ maxWidth: 1200, margin: '0 auto', width: '100%' }}>
+                      <BoardDetailPage postId={selectedPostId} onBack={() => setSelectedPostId(null)} />
+                    </motion.div>
+                  ) : (
+                    <motion.div key="board-list" initial={{ opacity: 0, y: 32 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 16 }} transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }} style={{ maxWidth: 1200, margin: '0 auto', width: '100%' }}>
+                      <BoardListPage onSelectPost={(id) => setSelectedPostId(id)} />
+                    </motion.div>
+                  )
+                )}
+
+                {activeCmanageSubTab === 'report' && (
+                  selectedSafetyId ? (
+                    <motion.div key={`safety-detail-${selectedSafetyId}`} initial={{ opacity: 0, y: 32 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 16 }} transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }} style={{ maxWidth: 1200, margin: '0 auto', width: '100%' }}>
+                      <SafetyDetailPage postId={selectedSafetyId} onBack={() => setSelectedSafetyId(null)} />
+                    </motion.div>
+                  ) : (
+                    <motion.div key="safety-list" initial={{ opacity: 0, y: 32 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 16 }} transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }} style={{ maxWidth: 1200, margin: '0 auto', width: '100%' }}>
+                      <SafetyListPage onSelectPost={(id) => setSelectedSafetyId(id)} />
+                    </motion.div>
+                  )
+                )}
+
+                {activeCmanageSubTab === 'inspection' && (
+                  selectedInspectionId ? (
+                    <motion.div key={`inspection-detail-${selectedInspectionId}`} initial={{ opacity: 0, y: 32 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 16 }} transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }} style={{ maxWidth: 1200, margin: '0 auto', width: '100%' }}>
+                      <InspectionDetailPage postId={selectedInspectionId} onBack={() => setSelectedInspectionId(null)} />
+                    </motion.div>
+                  ) : (
+                    <motion.div key="inspection-list" initial={{ opacity: 0, y: 32 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 16 }} transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }} style={{ maxWidth: 1200, margin: '0 auto', width: '100%' }}>
+                      <InspectionListPage onSelectPost={(id) => setSelectedInspectionId(id)} />
+                    </motion.div>
+                  )
+                )}
+
+                {activeCmanageSubTab === 'ppe' && (
+                  selectedPpeId ? (
+                    <motion.div key={`ppe-detail-${selectedPpeId}`} initial={{ opacity: 0, y: 32 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 16 }} transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }} style={{ maxWidth: 1200, margin: '0 auto', width: '100%' }}>
+                      <PpeDetailPage postId={selectedPpeId} onBack={() => setSelectedPpeId(null)} />
+                    </motion.div>
+                  ) : (
+                    <motion.div key="ppe-list" initial={{ opacity: 0, y: 32 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 16 }} transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }} style={{ maxWidth: 1200, margin: '0 auto', width: '100%' }}>
+                      <PpeListPage onSelectPost={(id) => setSelectedPpeId(id)} />
+                    </motion.div>
+                  )
+                )}
+
+                {activeCmanageSubTab === 'tbm' && (
+                  selectedTbmId ? (
+                    <motion.div key={`tbm-detail-${selectedTbmId}`} initial={{ opacity: 0, y: 32 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 16 }} transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }} style={{ maxWidth: 1200, margin: '0 auto', width: '100%' }}>
+                      <TbmDetailPage postId={selectedTbmId} onBack={() => setSelectedTbmId(null)} />
+                    </motion.div>
+                  ) : (
+                    <motion.div key="tbm-list" initial={{ opacity: 0, y: 32 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 16 }} transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }} style={{ maxWidth: 1200, margin: '0 auto', width: '100%' }}>
+                      <TbmListPage onSelectPost={(id) => setSelectedTbmId(id)} />
+                    </motion.div>
+                  )
+                )}
+
+                {activeCmanageSubTab === 'edu' && (
+                  selectedEduId ? (
+                    <motion.div key={`edu-detail-${selectedEduId}`} initial={{ opacity: 0, y: 32 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 16 }} transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }} style={{ maxWidth: 1200, margin: '0 auto', width: '100%' }}>
+                      <SafetyEduDetailPage postId={selectedEduId} onBack={() => setSelectedEduId(null)} />
+                    </motion.div>
+                  ) : (
+                    <motion.div key="edu-list" initial={{ opacity: 0, y: 32 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 16 }} transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }} style={{ maxWidth: 1200, margin: '0 auto', width: '100%' }}>
+                      <SafetyEduListPage onSelectPost={(id) => setSelectedEduId(id)} />
+                    </motion.div>
+                  )
+                )}
+
+                {activeCmanageSubTab === 'emergency' && (
+                  selectedEmergencyId ? (
+                    <motion.div key={`emergency-detail-${selectedEmergencyId}`} initial={{ opacity: 0, y: 32 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 16 }} transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }} style={{ maxWidth: 1200, margin: '0 auto', width: '100%' }}>
+                      <EmergencyDetailPage postId={selectedEmergencyId} onBack={() => setSelectedEmergencyId(null)} />
+                    </motion.div>
+                  ) : (
+                    <motion.div key="emergency-list" initial={{ opacity: 0, y: 32 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 16 }} transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }} style={{ maxWidth: 1200, margin: '0 auto', width: '100%' }}>
+                      <EmergencyListPage onSelectPost={(id) => setSelectedEmergencyId(id)} />
+                    </motion.div>
+                  )
+                )}
+
+                {activeCmanageSubTab !== 'all' && activeCmanageSubTab !== 'ppe' && activeCmanageSubTab !== 'inspection' && activeCmanageSubTab !== 'emergency' && activeCmanageSubTab !== 'edu' && activeCmanageSubTab !== 'contract' && activeCmanageSubTab !== 'board' && activeCmanageSubTab !== 'report' && activeCmanageSubTab !== 'tbm' && CmanageDetailComponent && (
+                  <motion.div key={`cmanage-detail-${activeCmanageSubTab}`} initial={{ opacity: 0, y: 32 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 16 }} transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }} style={{ maxWidth: 1200, margin: '0 auto', width: '100%' }}>
+                    <CmanageDetailComponent />
+                  </motion.div>
+                )}
+
+              </AnimatePresence>
+            </motion.div>
 
           ) : activeTab === 'cctv' ? (
 
@@ -1620,199 +2270,116 @@ useEffect(() => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              style={{
-                ...s.hero,
-                flexDirection: isMobile ? 'column' : 'row',
-                padding: isMobile ? '1px 20px 48px' : '60px 40px',
-                gap: isMobile ? 0 : 32,
-                alignItems: isMobile ? 'flex-start' : 'stretch',
-              }}
+              style={{ ...s.hero, flexDirection: isMobile ? 'column' : 'row', padding: isMobile ? '1px 20px 48px' : '60px 40px', gap: isMobile ? 0 : 32, alignItems: isMobile ? 'flex-start' : 'stretch' }}
             >
+              {/* ── 왼쪽 컬럼 ── */}
+              <div style={{ flex: isMobile ? 'none' : '0 0 460px', maxWidth: isMobile ? '100%' : 460, width: '100%' }}>
+                <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
 
-              {/* ── 왼쪽 컬럼: 제목 + (롤링카피) + 업로드 ── */}
-{/* ── 왼쪽 컬럼 ── */}
-<div style={{ flex: isMobile ? 'none' : '0 0 460px', maxWidth: isMobile ? '100%' : 460, width: '100%' }}>
-  <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
+                  <h1 style={{ ...s.heroTitle, fontSize: isMobile ? 32 : 42, lineHeight: 1.4 , letterSpacing: isMobile ? '-1.2px' : '-2.5px', marginBottom: isMobile ? 12 : 18, fontWeight: 400 }}>
+                    <span style={{ fontWeight: 900 }}>AI</span>가 바꾸는 <br/> TBM  /  위험성평가
+                  </h1>
 
-    {/* <div style={{ ...s.eyebrow, fontSize: isMobile ? 11 : 12 }}>AI Safety Assessment Platform</div> */}
+                  <p style={{ ...s.heroSub, fontSize: isMobile ? 15 : 17, marginBottom: isMobile ? 10 : 14 }}>
+                    AI로 더 빠르고 정확하게
+                  </p>
 
-    <h1 style={{ ...s.heroTitle, fontSize: isMobile ? 32 : 42, letterSpacing: isMobile ? '-1.2px' : '-2.5px', marginBottom: isMobile ? 12 : 18, fontWeight: 400 }}>
-      <span style={{ fontWeight: 900 }}>AI</span>가 바꾸는<br/>산업안전관리, 위험성평가
-    </h1>
+                  {/* 채팅 버블 */}
+                  <div style={{ marginBottom: isMobile ? 16 : 20, minHeight: isMobile ? 110 : 120 }}>
+                    <AnimatePresence mode="wait">
+                      <motion.div
+                        key={copyIdx}
+                        initial={{ opacity: 0, y: 8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -8 }}
+                        transition={{ duration: 0.4 }}
+                        style={{ display: 'flex', flexDirection: 'column', gap: 10 }}
+                      >
+                        <div style={{ display: 'flex', alignItems: 'flex-end', gap: 8 }}>
+                          <div style={{ width: 30, height: 30, borderRadius: '50%', background: '#e8e8e8', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 10, fontWeight: 900, color: '#555', flexShrink: 0 }}>Q</div>
+                          <div style={{ background: '#f0f0f0', borderRadius: '0px 14px 14px 14px', padding: '10px 14px', fontSize: isMobile ? 13 : 15, fontWeight: 700, color: '#333', lineHeight: 1.55, maxWidth: '80%' }}>
+                            {HERO_SLIDES[copyIdx % HERO_SLIDES.length].question}
+                          </div>
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'flex-end', gap: 8, flexDirection: 'row-reverse' }}>
+                          <div style={{ width: 30, height: 30, borderRadius: '50%', background: '#FAE100', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 10, fontWeight: 900, color: '#3C1E1E', flexShrink: 0 }}>A</div>
+                          <div style={{ background: '#FAE100', borderRadius: '14px 0px 14px 14px', padding: '10px 14px', maxWidth: '80%' }}>
+                            <p style={{ fontSize: isMobile ? 13 : 15, fontWeight: 800, color: '#3C1E1E', lineHeight: 1.5, margin: '0 0 4px' }}>{HERO_SLIDES[copyIdx % HERO_SLIDES.length].line1}</p>
+                            <p style={{ fontSize: isMobile ? 12 : 13, color: 'rgba(60,30,30,0.7)', lineHeight: 1.7, margin: 0 }}>{HERO_SLIDES[copyIdx % HERO_SLIDES.length].line2}</p>
+                          </div>
+                        </div>
+                      </motion.div>
+                    </AnimatePresence>
+                  </div>
 
-    <p style={{ ...s.heroSub, fontSize: isMobile ? 15 : 17, marginBottom: isMobile ? 10 : 14 }}>
-      AI로 더 빠르고 정확하게
-    </p>
+                  {/* ImageGrid */}
+                  <div style={{ marginBottom: isMobile ? 16 : 20 }}>
+                    <p style={{ ...s.gridSectionLabel, marginBottom: 8 }}>현장 유형 테스트</p>
+                    <ImageGrid items={RISK_GRID} isMobile={isMobile} onSelect={handleRiskImageSelect} columns={6} />
+                  </div>
 
-    
+                  {/* 업로드 */}
+                  <AnimatePresence mode="wait">
+                    {loading ? LoadingUI : ActionUI}
+                  </AnimatePresence>
 
-    {/* 채팅 버블 */}
-    <div style={{ marginBottom: isMobile ? 16 : 20, minHeight: isMobile ? 110 : 120 }}>
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={copyIdx}
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -8 }}
-          transition={{ duration: 0.4 }}
-          style={{ display: 'flex', flexDirection: 'column', gap: 10 }}
-        >
-          <div style={{ display: 'flex', alignItems: 'flex-end', gap: 8 }}>
-            <div style={{ width: 30, height: 30, borderRadius: '50%', background: '#e8e8e8', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 10, fontWeight: 900, color: '#555', flexShrink: 0 }}>Q</div>
-            <div style={{ background: '#f0f0f0', borderRadius: '0px 14px 14px 14px', padding: '10px 14px', fontSize: isMobile ? 13 : 15, fontWeight: 700, color: '#333', lineHeight: 1.55, maxWidth: '80%' }}>
-              {HERO_SLIDES[copyIdx % HERO_SLIDES.length].question}
-            </div>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'flex-end', gap: 8, flexDirection: 'row-reverse' }}>
-            <div style={{ width: 30, height: 30, borderRadius: '50%', background: '#FAE100', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 10, fontWeight: 900, color: '#3C1E1E', flexShrink: 0 }}>A</div>
-            <div style={{ background: '#FAE100', borderRadius: '14px 0px 14px 14px', padding: '10px 14px', maxWidth: '80%' }}>
-              <p style={{ fontSize: isMobile ? 13 : 15, fontWeight: 800, color: '#3C1E1E', lineHeight: 1.5, margin: '0 0 4px' }}>{HERO_SLIDES[copyIdx % HERO_SLIDES.length].line1}</p>
-              <p style={{ fontSize: isMobile ? 12 : 13, color: 'rgba(60,30,30,0.7)', lineHeight: 1.7, margin: 0 }}>{HERO_SLIDES[copyIdx % HERO_SLIDES.length].line2}</p>
-            </div>
-          </div>
-        </motion.div>
-      </AnimatePresence>
-    </div>
+                  {isMobile && <PhoneMockup isMobile={true} />}
+                </motion.div>
+              </div>
 
-    {/* ImageGrid — 채팅버블 아래 */}
-    <div style={{ marginBottom: isMobile ? 16 : 20 }}>
-      <p style={{ ...s.gridSectionLabel, marginBottom: 8 }}>현장 유형 테스트</p>
-      <ImageGrid items={RISK_GRID} isMobile={isMobile} onSelect={handleRiskImageSelect} columns={6} />
-    </div>
+              {/* ── 오른쪽 컬럼 (PC만) ── */}
+              {!isMobile && (
+                <motion.div
+                  style={{ alignSelf: 'stretch', display: 'flex', flexDirection: 'column', alignItems: 'stretch', justifyContent: 'flex-start', flex: 1, paddingTop: 6 }}
+                  initial={{ opacity: 0, x: 24 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.6, delay: 0.15 }}
+                >
+                  {/* 추천코드 UI */}
+                  <div style={{ width: '100%', marginBottom: 14, display: 'flex', flexDirection: 'row', gap: 14, alignItems: 'stretch' }}>
+                    <div style={{ flex: 1, background: '#f7f7f7', borderRadius: 12, padding: '16px 18px' }}>
+                      <div style={{ marginBottom: 10 }}>
+                        <span style={{ fontSize: 13, fontWeight: 800, color: '#111', cursor: 'pointer', textDecoration: 'underline', textUnderlineOffset: 3, display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                          추천코드가 없다면 클릭<span>👉</span>
+                        </span>
+                      </div>
+                      <div style={{ display: 'flex', gap: 8 }}>
+                        <input
+                          type="text"
+                          placeholder="추천인 코드를 입력하세요"
+                          style={{ flex: 1, padding: '10px 14px', border: '1.5px solid #e0e0e0', borderRadius: 8, fontSize: 13, fontFamily: 'inherit', outline: 'none', background: '#fff', color: '#333', minWidth: 0 }}
+                        />
+                        <button style={{ padding: '10px 18px', background: '#FAE100', color: '#3C1E1E', border: 'none', borderRadius: 8, fontSize: 13, fontWeight: 800, cursor: 'pointer', whiteSpace: 'nowrap' }}>
+                          신청하기
+                        </button>
+                      </div>
+                      <div style={{ fontSize: 11, color: '#aaa', marginTop: 8, lineHeight: 1.5 }}>
+                        추천코드 입력 시 50인 미만 사업장 무상 도입이 적용됩니다.
+                      </div>
+                    </div>
+                  </div>
 
-    {/* 업로드 */}
-    <AnimatePresence mode="wait">
-      {loading ? LoadingUI : ActionUI}
-    </AnimatePresence>
-
-    {isMobile && <PhoneMockup isMobile={true} />}
-  </motion.div>
-</div>
-
-              {/* ── 오른쪽 컬럼: (Grid를 오른쪽 위로) + PhoneMockup (PC만) ── */}
-{/* ── 오른쪽 컬럼 ── */}
-  {!isMobile && (
-  <motion.div
-    style={{ alignSelf: 'stretch', display: 'flex', flexDirection: 'column', alignItems: 'stretch', justifyContent: 'flex-start', flex: 1, paddingTop: 6 }}
-    initial={{ opacity: 0, x: 24 }}
-    animate={{ opacity: 1, x: 0 }}
-    transition={{ duration: 0.6, delay: 0.15 }}
-  >
-
-    {/* 추천코드 UI — GridBlock 자리 */}
- <div
-  style={{
-    width: '100%',
-    marginBottom: 14,
-    display: 'flex',
-    flexDirection: 'row',
-    gap: 14,
-    alignItems: 'stretch'
-  }}
->
-
-  <div
-    style={{
-      flex: 1,
-      background: '#f7f7f7',
-      borderRadius: 12,
-      padding: '16px 18px'
-    }}
-  >
-    {/* 🔹 제목을 링크형으로 변경 */}
-    <div style={{ marginBottom: 10 }}>
-      <span
-        // onClick={() => window.open('https://your-link.com', '_blank')}
-        style={{
-          fontSize: 13,
-          fontWeight: 800,
-          color: '#111',
-          cursor: 'pointer',
-          textDecoration: 'underline',
-          textUnderlineOffset: 3,
-          display: 'inline-flex',
-          alignItems: 'center',
-          gap: 6
-        }}
-      >
-        추천코드가 없다면 클릭
-        <span>👉</span>
-      </span>
-    </div>
-
-    {/* 기존 입력 UI 유지 */}
-    <div style={{ display: 'flex', gap: 8 }}>
-      <input
-        type="text"
-        placeholder="추천인 코드를 입력하세요"
-        style={{
-          flex: 1,
-          padding: '10px 14px',
-          border: '1.5px solid #e0e0e0',
-          borderRadius: 8,
-          fontSize: 13,
-          fontFamily: 'inherit',
-          outline: 'none',
-          background: '#fff',
-          color: '#333',
-          minWidth: 0
-        }}
-      />
-      <button
-        style={{
-          padding: '10px 18px',
-          background: '#FAE100',
-          color: '#3C1E1E',
-          border: 'none',
-          borderRadius: 8,
-          fontSize: 13,
-          fontWeight: 800,
-          cursor: 'pointer',
-          whiteSpace: 'nowrap'
-        }}
-      >
-        신청하기
-      </button>
-    </div>
-
-    <div style={{ fontSize: 11, color: '#aaa', marginTop: 8, lineHeight: 1.5 }}>
-      추천코드 입력 시 50인 미만 사업장 무상 도입이 적용됩니다.
-    </div>
-
-  </div>
-</div>
-   
-
-
-
-    {/* Phone Frame */}
-
-   <div style={{ height: 700, aspectRatio: '1 / 2', background: '#1a1a1a', borderRadius: 44, padding: '10px 7px', boxShadow: '0 24px 80px rgba(0,0,0,0.28), inset 0 0 0 1px rgba(255,255,255,0.07)', position: 'relative', flexShrink: 0, alignSelf: 'center' }}>
-      <div style={{ position: 'absolute', top: 12, left: '50%', transform: 'translateX(-50%)', width: 52, height: 7, background: '#000', borderRadius: 4, zIndex: 10 }}/>
-      <div style={{ width: '100%', height: '100%', borderRadius: 36, overflow: 'hidden', background: '#000' }}>
-        <video autoPlay loop muted playsInline style={{ width: '100%', height: '100%', objectFit: 'cover' }} src="/output.webm"/>
-      </div>
-      <div style={{ position: 'absolute', bottom: 7, left: '50%', transform: 'translateX(-50%)', width: 52, height: 4, background: 'rgba(255,255,255,0.25)', borderRadius: 2 }}/>
-      <div style={{ position: 'absolute', right: -3, top: 80, width: 3, height: 40, background: '#2a2a2a', borderRadius: 2 }}/>
-      <div style={{ position: 'absolute', left: -3, top: 70, width: 3, height: 26, background: '#2a2a2a', borderRadius: 2 }}/>
-      <div style={{ position: 'absolute', left: -3, top: 104, width: 3, height: 26, background: '#2a2a2a', borderRadius: 2 }}/>
-    </div>
-
-
-
-  </motion.div>
-
-)}
-
+                  {/* Phone Frame */}
+                  <div style={{ height: 700, aspectRatio: '1 / 2', background: '#1a1a1a', borderRadius: 44, padding: '10px 7px', boxShadow: '0 24px 80px rgba(0,0,0,0.28), inset 0 0 0 1px rgba(255,255,255,0.07)', position: 'relative', flexShrink: 0, alignSelf: 'center' }}>
+                    <div style={{ position: 'absolute', top: 12, left: '50%', transform: 'translateX(-50%)', width: 52, height: 7, background: '#000', borderRadius: 4, zIndex: 10 }}/>
+                    <div style={{ width: '100%', height: '100%', borderRadius: 36, overflow: 'hidden', background: '#000' }}>
+                      <video autoPlay loop muted playsInline style={{ width: '100%', height: '100%', objectFit: 'cover' }} src="/output.webm"/>
+                    </div>
+                    <div style={{ position: 'absolute', bottom: 7, left: '50%', transform: 'translateX(-50%)', width: 52, height: 4, background: 'rgba(255,255,255,0.25)', borderRadius: 2 }}/>
+                    <div style={{ position: 'absolute', right: -3, top: 80, width: 3, height: 40, background: '#2a2a2a', borderRadius: 2 }}/>
+                    <div style={{ position: 'absolute', left: -3, top: 70, width: 3, height: 26, background: '#2a2a2a', borderRadius: 2 }}/>
+                    <div style={{ position: 'absolute', left: -3, top: 104, width: 3, height: 26, background: '#2a2a2a', borderRadius: 2 }}/>
+                  </div>
+                </motion.div>
+              )}
 
             </motion.main>
 
           )}
         </AnimatePresence>
 
- {activeTab === 'risk' && (
-         <SafetyMarketingSections isMobile={isMobile} />
-   )}
+        {activeTab === 'risk' && <SafetyMarketingSections isMobile={isMobile} />}
+
         <div style={{ ...s.notice, padding: isMobile ? '12px 20px' : '12px 40px' }}>
           <span style={s.noticeDot}/>
           <span style={s.noticeText}>본 서비스는 산업안전보건법 제36조에 따른 위험성평가 보조 도구입니다. AI 분석 결과는 참고용이며 최종 판단은 안전관리자가 확인해야 합니다.</span>
@@ -1827,16 +2394,32 @@ useEffect(() => {
         </footer>
       </div>
 
-      <input ref={fileInputRef} type="file" accept="image/*" style={{ display: 'none' }}
-        onChange={e => handleFile(e.target.files[0])}/>
+      {/* ✅ 갤러리 input: handleFile → 모달 경로로 통일 */}
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/*"
+        style={{ display: 'none' }}
+        onChange={e => {
+          const file = e.target.files?.[0]
+          e.target.value = ''  // 같은 파일 재선택 허용
+          if (file) handleFile(file)
+        }}
+      />
 
-
-       
+      <RiskFactorModal
+        open={riskModalOpen}
+        onClose={() => {
+          setRiskModalOpen(false)
+          setPendingRiskFile(null)
+          pendingActionRef.current = null
+        }}
+        onConfirm={handleRiskFactorConfirm}
+      />
     </>
-
-    
   )
 }
+
 /* ── 카메라 스타일 ── */
 const cam = {
   root: { position: 'fixed', inset: 0, zIndex: 2000, background: '#000', display: 'flex', flexDirection: 'column', alignItems: 'center', fontFamily: "'Noto Sans KR',sans-serif" },
@@ -1878,7 +2461,7 @@ navRight: {
   logoText: { fontSize: 15, fontWeight: 800, color: '#1a1a1a', letterSpacing: '-0.5px' },
   tabs: { display: 'flex', alignItems: 'stretch', height: 58 },
   tabBtn: { background: 'none', border: 'none', borderBottom: '2px solid transparent', padding: '0 20px', fontSize: 14, cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.15s', whiteSpace: 'nowrap' },
-  navRight: { display: 'flex', gap: 8 },
+  navRightBox: { display: 'flex', gap: 8 },
   navBadge: { fontSize: 11, color: '#999', border: '1px solid #e8e8e8', padding: '3px 10px', borderRadius: 20 },
   subTabWrap: { borderBottom: '1px solid #f0f0f0', background: '#fafafa', position: 'sticky', top: 58, zIndex: 90 },
   subTabInner: { maxWidth: 1200, margin: '0 auto', height: 44, display: 'flex', alignItems: 'stretch', gap: 0, whiteSpace: 'nowrap' },

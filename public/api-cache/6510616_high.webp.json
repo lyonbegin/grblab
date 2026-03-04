@@ -1,0 +1,4 @@
+{
+  "received_workname": "$inputs.workname",
+  "received_descript": "$inputs.descript"
+}

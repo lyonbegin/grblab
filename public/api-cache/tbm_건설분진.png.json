@@ -1,0 +1,57 @@
+{
+  "tbm_info": {
+    "work_name": "",
+    "description": "",
+    "analysis_basis": "이미지에서는 작업자가 벽면을 드릴로 뚫고 있으며, 작업 흐름은 주로 콘크리트 천공 작업으로 보입니다."
+  },
+  "tbm_checklist": [
+    {
+      "id": 1,
+      "checkpoint_question": "벽을 뚫을 때 드릴이 갑자기 멈추는 순간 손잡이가 잘 고정되어 있는가?"
+    },
+    {
+      "id": 2,
+      "checkpoint_question": "콘크리트를 뚫는 동안 먼지가 발생하는 순간 방진 마스크를 제대로 착용하고 있는가?"
+    },
+    {
+      "id": 3,
+      "checkpoint_question": "드릴이 벽에 닿는 순간 드릴 비트가 손상되지 않았는가?"
+    },
+    {
+      "id": 4,
+      "checkpoint_question": "드릴 작업 시작 순간 전선이 바닥에 깔려 있어 걸리지 않도록 정리되어 있는가?"
+    },
+    {
+      "id": 5,
+      "checkpoint_question": "작업 중 전원이 갑자기 차단되는 순간 대체 전원은 준비되어 있는가?"
+    },
+    {
+      "id": 6,
+      "checkpoint_question": "천공 작업 중 손에 진동이 전달되는 순간 장갑이 충분히 보호해 주는가?"
+    },
+    {
+      "id": 7,
+      "checkpoint_question": "코너나 경계면에서 드릴 작업을 하는 순간 벽 균열 위험은 없는가?"
+    },
+    {
+      "id": 8,
+      "checkpoint_question": "작업 중 발생할 수 있는 소음의 순간 귀마개를 착용하여 청력 보호를 하고 있는가?"
+    },
+    {
+      "id": 9,
+      "checkpoint_question": "천공 작업이 끝나는 순간 현장의 깨끗한 정리가 이루어졌는가?"
+    },
+    {
+      "id": 10,
+      "checkpoint_question": "드릴 작업 전 드릴 비트를 교체할 필요성은 없는가?"
+    },
+    {
+      "id": 11,
+      "checkpoint_question": "작업 구역에 물이 고인 순간 전자 장비 사용에 위험은 없는가?"
+    },
+    {
+      "id": 12,
+      "checkpoint_question": "천공 깊이를 확인하는 순간 자재의 두께를 정확히 측정했는가?"
+    }
+  ]
+}

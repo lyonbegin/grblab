@@ -1,0 +1,57 @@
+{
+  "tbm_info": {
+    "work_name": "$inputs.workname",
+    "description": "$inputs.descript",
+    "analysis_basis": "작업자들이 고소에서 구조물을 조립 중이며, 무거운 자재를 수동으로 이동시키고 있는 상황이 확인됨."
+  },
+  "tbm_checklist": [
+    {
+      "id": 1,
+      "checkpoint_question": "고소 작업 시 구조물 이동 순간 불안정한 자세를 취하지 않았는가?"
+    },
+    {
+      "id": 2,
+      "checkpoint_question": "자재 체결 순간 손이나 다른 신체가 위험 구역에 있지 않았는가?"
+    },
+    {
+      "id": 3,
+      "checkpoint_question": "상단 작업자가 자재를 하부로 전달하는 순간 보호구가 제대로 착용되어 있는가?"
+    },
+    {
+      "id": 4,
+      "checkpoint_question": "구조물 체결 작업 중 사용 공구가 확실히 고정되어 있는가?"
+    },
+    {
+      "id": 5,
+      "checkpoint_question": "사다리 등 이동 수단 사용 시 그 순간마다 흔들림이 없었는가?"
+    },
+    {
+      "id": 6,
+      "checkpoint_question": "체결점 변경 순간 안전고리가 적절히 고정되어 있는가?"
+    },
+    {
+      "id": 7,
+      "checkpoint_question": "상하 작업 동시 진행 시 작업 영역이 서로 겹치지 않았는가?"
+    },
+    {
+      "id": 8,
+      "checkpoint_question": "자재 이동 시 통행로에 근로자가 지나가지 않았는가?"
+    },
+    {
+      "id": 9,
+      "checkpoint_question": "작업 전 비상 대처 방안이 모든 근로자에게 숙지되어 있는가?"
+    },
+    {
+      "id": 10,
+      "checkpoint_question": "무거운 자재를 이동하는 순간 인원의 이동 경로가 명확히 구분되어 있는가?"
+    },
+    {
+      "id": 11,
+      "checkpoint_question": "각종 도구의 교환 순간 낙하 위험이 없는가?"
+    },
+    {
+      "id": 12,
+      "checkpoint_question": "작업 환경에서 순간적으로 통신 장애가 발생하지 않았는가?"
+    }
+  ]
+}

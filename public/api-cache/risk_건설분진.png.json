@@ -1,0 +1,204 @@
+{
+  "summary": {
+    "processName": "콘크리트 천공 작업",
+    "workContent": "설치",
+    "equipment": "건설",
+    "basis": "사진 분석에 따른 위험 요소 도출"
+  },
+  "hazards": [
+    {
+      "name": "PPE 미착용",
+      "category": "PPE미착용"
+    },
+    {
+      "name": "낙하물 위험",
+      "category": "낙하물"
+    },
+    {
+      "name": "전도 위험",
+      "category": "전도"
+    }
+  ],
+  "overallLevel": {
+    "label": "고위험",
+    "immediateAction": false,
+    "topHazard": "PPE 미착용",
+    "score": 12
+  },
+  "raw": {
+    "site_analysis": {
+      "industry": "건설",
+      "detailed_process": "콘크리트 천공 작업",
+      "work_stage": "설치",
+      "analysis_basis": "사진 분석에 따른 위험 요소 도출"
+    },
+    "hazards": [
+      {
+        "id": 1,
+        "hazard_name": "PPE 미착용",
+        "hazard_category": "PPE미착용",
+        "accident_scenario": "작업자가 콘크리트 천공 작업하는 과정에서 보호장구 미착용으로 인해 낙하물 사고 발생",
+        "direct_cause": "보호구 미착용",
+        "expected_injury": "머리 외상",
+        "probability": 4,
+        "severity": 3,
+        "risk_score": 12,
+        "risk_level": "고위험",
+        "improvement_measure": "산업안전보건법 제23조에 의거하여 안전모 및 보호장구 착용 필수",
+        "ocr": null,
+        "bbox": [
+          200,
+          150,
+          350,
+          500
+        ]
+      },
+      {
+        "id": 2,
+        "hazard_name": "낙하물 위험",
+        "hazard_category": "낙하물",
+        "accident_scenario": "작업자가 천공 작업 중 상부에서 낙하물로 인해 부상 사고 발생",
+        "direct_cause": "위험지역 작업",
+        "expected_injury": "두부 손상",
+        "probability": 3,
+        "severity": 4,
+        "risk_score": 12,
+        "risk_level": "고위험",
+        "improvement_measure": "위험물 낙하 방지망 설치 (산업안전보건기준에 관한 규칙 제38조)",
+        "ocr": null,
+        "bbox": [
+          120,
+          80,
+          220,
+          400
+        ]
+      },
+      {
+        "id": 3,
+        "hazard_name": "전도 위험",
+        "hazard_category": "전도",
+        "accident_scenario": "작업자가 전선 등의 장애물로 인해 발을 헛디뎌 전도 사고 발생",
+        "direct_cause": "장애물 미정리",
+        "expected_injury": "타박상",
+        "probability": 3,
+        "severity": 2,
+        "risk_score": 6,
+        "risk_level": "중위험",
+        "improvement_measure": "작업 전 현장 정리 및 전선 정리 (산업안전보건기준에 관한 규칙 제46조)",
+        "ocr": null,
+        "bbox": [
+          300,
+          300,
+          450,
+          600
+        ]
+      }
+    ],
+    "overall_risk_summary": {
+      "highest_risk_item": "PPE 미착용",
+      "highest_risk_score": 12,
+      "immediate_action_required": false,
+      "recommended_action": "안전관리 감독자 배치를 통한 보호장구 착용 여부 점검 강화"
+    }
+  },
+  "frequencySeverity": [
+    {
+      "factor": "PPE 미착용",
+      "category": "PPE미착용",
+      "probability": 4,
+      "severity": 3,
+      "score": 12,
+      "level": "고위험"
+    },
+    {
+      "factor": "낙하물 위험",
+      "category": "낙하물",
+      "probability": 3,
+      "severity": 4,
+      "score": 12,
+      "level": "고위험"
+    },
+    {
+      "factor": "전도 위험",
+      "category": "전도",
+      "probability": 3,
+      "severity": 2,
+      "score": 6,
+      "level": "중위험"
+    }
+  ],
+  "checklist": [
+    {
+      "factor": "PPE 미착용",
+      "category": "PPE미착용",
+      "directCause": "보호구 미착용",
+      "judgment": "고위험"
+    },
+    {
+      "factor": "낙하물 위험",
+      "category": "낙하물",
+      "directCause": "위험지역 작업",
+      "judgment": "고위험"
+    },
+    {
+      "factor": "전도 위험",
+      "category": "전도",
+      "directCause": "장애물 미정리",
+      "judgment": "중위험"
+    }
+  ],
+  "coreFactors": [
+    {
+      "factor": "PPE 미착용",
+      "riskLevel": "고위험",
+      "scenario": "작업자가 콘크리트 천공 작업하는 과정에서 보호장구 미착용으로 인해 낙하물 사고 발생",
+      "directCause": "보호구 미착용",
+      "expectedInjury": "머리 외상",
+      "improvementMeasure": "산업안전보건법 제23조에 의거하여 안전모 및 보호장구 착용 필수"
+    },
+    {
+      "factor": "낙하물 위험",
+      "riskLevel": "고위험",
+      "scenario": "작업자가 천공 작업 중 상부에서 낙하물로 인해 부상 사고 발생",
+      "directCause": "위험지역 작업",
+      "expectedInjury": "두부 손상",
+      "improvementMeasure": "위험물 낙하 방지망 설치 (산업안전보건기준에 관한 규칙 제38조)"
+    },
+    {
+      "factor": "전도 위험",
+      "riskLevel": "중위험",
+      "scenario": "작업자가 전선 등의 장애물로 인해 발을 헛디뎌 전도 사고 발생",
+      "directCause": "장애물 미정리",
+      "expectedInjury": "타박상",
+      "improvementMeasure": "작업 전 현장 정리 및 전선 정리 (산업안전보건기준에 관한 규칙 제46조)"
+    }
+  ],
+  "threeLevel": [
+    {
+      "factor": "PPE 미착용",
+      "judgment": "허용불가능",
+      "measure": "산업안전보건법 제23조에 의거하여 안전모 및 보호장구 착용 필수"
+    },
+    {
+      "factor": "낙하물 위험",
+      "judgment": "허용불가능",
+      "measure": "위험물 낙하 방지망 설치 (산업안전보건기준에 관한 규칙 제38조)"
+    },
+    {
+      "factor": "전도 위험",
+      "judgment": "개선필요",
+      "measure": "작업 전 현장 정리 및 전선 정리 (산업안전보건기준에 관한 규칙 제46조)"
+    }
+  ],
+  "health": {
+    "applicable": false,
+    "summary": "현재 빈도×강도법 평가 모드에서는 건강장해 분석이 포함되지 않습니다.",
+    "items": []
+  },
+  "overallSummary": {
+    "highest_risk_item": "PPE 미착용",
+    "highest_risk_score": 12,
+    "immediate_action_required": false,
+    "recommended_action": "안전관리 감독자 배치를 통한 보호장구 착용 여부 점검 강화"
+  }
+}
