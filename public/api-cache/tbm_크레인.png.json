@@ -1,0 +1,57 @@
+{
+  "tbm_info": {
+    "work_name": "",
+    "description": "",
+    "analysis_basis": "이미지는 고온 물질을 운반하는 크레인이며, descript를 통해 작업의 안전성을 높이는 과정이 포함되어야 한다."
+  },
+  "tbm_checklist": [
+    {
+      "id": 1,
+      "checkpoint_question": "크레인 이동 순간 주변에 인원이 없는가?"
+    },
+    {
+      "id": 2,
+      "checkpoint_question": "상부에서 작업하는 인원과 하부 인원 간 신호 통신이 원활한가?"
+    },
+    {
+      "id": 3,
+      "checkpoint_question": "고온 물질을 운반할 때 크레인 체결점은 안전한가?"
+    },
+    {
+      "id": 4,
+      "checkpoint_question": "체결점 변경 순간 하중이 안정적으로 유지되는가?"
+    },
+    {
+      "id": 5,
+      "checkpoint_question": "크레인이 이동하는 경로에 장애물이 없는가?"
+    },
+    {
+      "id": 6,
+      "checkpoint_question": "공구 교환 순간 다른 공구의 탈락 위험이 없는가?"
+    },
+    {
+      "id": 7,
+      "checkpoint_question": "고온 물질 운반 시 누출 방지 장치가 작동하는가?"
+    },
+    {
+      "id": 8,
+      "checkpoint_question": "작업자가 고온 물질 사고에 대비한 보호 장비를 착용하고 있는가?"
+    },
+    {
+      "id": 9,
+      "checkpoint_question": "장비 운전 시각에 어떠한 전기적 사고 위험이 없는가?"
+    },
+    {
+      "id": 10,
+      "checkpoint_question": "상하 동시작업 순간 충돌 위험이 없는가?"
+    },
+    {
+      "id": 11,
+      "checkpoint_question": "이동 순간 경보 장치가 정상적으로 작동하는가?"
+    },
+    {
+      "id": 12,
+      "checkpoint_question": "작업 공간 내 빠른 대피 통로가 확보��어 있는가?"
+    }
+  ]
+}

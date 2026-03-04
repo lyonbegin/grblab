@@ -1,0 +1,204 @@
+{
+  "summary": {
+    "processName": "배터리 적재 및 운반 작업",
+    "workContent": "운반",
+    "equipment": "배터리 저장 및 관리",
+    "basis": "대한민국 산업안전보건법 제34조"
+  },
+  "hazards": [
+    {
+      "name": "배터리 화재",
+      "category": "화재"
+    },
+    {
+      "name": "전기 감전",
+      "category": "감전"
+    },
+    {
+      "name": "무거운 배터리 낙하",
+      "category": "낙하물"
+    }
+  ],
+  "overallLevel": {
+    "label": "고위험",
+    "immediateAction": false,
+    "topHazard": "배터리 화재",
+    "score": 12
+  },
+  "raw": {
+    "site_analysis": {
+      "industry": "배터리 저장 및 관리",
+      "detailed_process": "배터리 적재 및 운반 작업",
+      "work_stage": "운반",
+      "analysis_basis": "대한민국 산업안전보건법 제34조"
+    },
+    "hazards": [
+      {
+        "id": 1,
+        "hazard_name": "배터리 화재",
+        "hazard_category": "화재",
+        "accident_scenario": "작업자가 배터리를 적재하는 과정에서 배터리 과열로 인해 화재 사고 발생",
+        "direct_cause": "배터리 과열 및 결함",
+        "expected_injury": "화상",
+        "probability": 3,
+        "severity": 4,
+        "risk_score": 12,
+        "risk_level": "고위험",
+        "improvement_measure": "소화기 구비(산업안전보건기준에관한규칙 제281조)",
+        "ocr": null,
+        "bbox": [
+          100,
+          200,
+          300,
+          400
+        ]
+      },
+      {
+        "id": 2,
+        "hazard_name": "전기 감전",
+        "hazard_category": "감전",
+        "accident_scenario": "작업자가 배터리를 점검하는 과정에서 누전으로 인해 감전 사고 발생",
+        "direct_cause": "전선 누전",
+        "expected_injury": "감전 상해",
+        "probability": 2,
+        "severity": 3,
+        "risk_score": 6,
+        "risk_level": "중위험",
+        "improvement_measure": "절연 장갑 착용(산업안전보건기준에관한규칙 제264조)",
+        "ocr": null,
+        "bbox": [
+          200,
+          300,
+          400,
+          500
+        ]
+      },
+      {
+        "id": 3,
+        "hazard_name": "무거운 배터리 낙하",
+        "hazard_category": "낙하물",
+        "accident_scenario": "작업자가 배터리를 운반하는 과정에서 미끄러져 배터리 낙하 사고 발생",
+        "direct_cause": "운반 중 미끄럼",
+        "expected_injury": "골절",
+        "probability": 2,
+        "severity": 4,
+        "risk_score": 8,
+        "risk_level": "중위험",
+        "improvement_measure": "안전벨트 및 안전모 착용(산업안전보건기준에관한규칙 제235조)",
+        "ocr": null,
+        "bbox": [
+          300,
+          400,
+          500,
+          600
+        ]
+      }
+    ],
+    "overall_risk_summary": {
+      "highest_risk_item": "배터리 화재",
+      "highest_risk_score": 12,
+      "immediate_action_required": false,
+      "recommended_action": "화재 예방시설 설치 및 주기적 점검 실시"
+    }
+  },
+  "frequencySeverity": [
+    {
+      "factor": "배터리 화재",
+      "category": "화재",
+      "probability": 3,
+      "severity": 4,
+      "score": 12,
+      "level": "고위험"
+    },
+    {
+      "factor": "전기 감전",
+      "category": "감전",
+      "probability": 2,
+      "severity": 3,
+      "score": 6,
+      "level": "중위험"
+    },
+    {
+      "factor": "무거운 배터리 낙하",
+      "category": "낙하물",
+      "probability": 2,
+      "severity": 4,
+      "score": 8,
+      "level": "중위험"
+    }
+  ],
+  "checklist": [
+    {
+      "factor": "배터리 화재",
+      "category": "화재",
+      "directCause": "배터리 과열 및 결함",
+      "judgment": "고위험"
+    },
+    {
+      "factor": "전기 감전",
+      "category": "감전",
+      "directCause": "전선 누전",
+      "judgment": "중위험"
+    },
+    {
+      "factor": "무거운 배터리 낙하",
+      "category": "낙하물",
+      "directCause": "운반 중 미끄럼",
+      "judgment": "중위험"
+    }
+  ],
+  "coreFactors": [
+    {
+      "factor": "배터리 화재",
+      "riskLevel": "고위험",
+      "scenario": "작업자가 배터리를 적재하는 과정에서 배터리 과열로 인해 화재 사고 발생",
+      "directCause": "배터리 과열 및 결함",
+      "expectedInjury": "화상",
+      "improvementMeasure": "소화기 구비(산업안전보건기준에관한규칙 제281조)"
+    },
+    {
+      "factor": "전기 감전",
+      "riskLevel": "중위험",
+      "scenario": "작업자가 배터리를 점검하는 과정에서 누전으로 인해 감전 사고 발생",
+      "directCause": "전선 누전",
+      "expectedInjury": "감전 상해",
+      "improvementMeasure": "절연 장갑 착용(산업안전보건기준에관한규칙 제264조)"
+    },
+    {
+      "factor": "무거운 배터리 낙하",
+      "riskLevel": "중위험",
+      "scenario": "작업자가 배터리를 운반하는 과정에서 미끄러져 배터리 낙하 사고 발생",
+      "directCause": "운반 중 미끄럼",
+      "expectedInjury": "골절",
+      "improvementMeasure": "안전벨트 및 안전모 착용(산업안전보건기준에관한규칙 제235조)"
+    }
+  ],
+  "threeLevel": [
+    {
+      "factor": "배터리 화재",
+      "judgment": "허용불가능",
+      "measure": "소화기 구비(산업안전보건기준에관한규칙 제281조)"
+    },
+    {
+      "factor": "전기 감전",
+      "judgment": "개선필요",
+      "measure": "절연 장갑 착용(산업안전보건기준에관한규칙 제264조)"
+    },
+    {
+      "factor": "무거운 배터리 낙하",
+      "judgment": "개선필요",
+      "measure": "안전벨트 및 안전모 착용(산업안전보건기준에관한규칙 제235조)"
+    }
+  ],
+  "health": {
+    "applicable": false,
+    "summary": "현재 빈도×강도법 평가 모드에서는 건강장해 분석이 포함되지 않습니다.",
+    "items": []
+  },
+  "overallSummary": {
+    "highest_risk_item": "배터리 화재",
+    "highest_risk_score": 12,
+    "immediate_action_required": false,
+    "recommended_action": "화재 예방시설 설치 및 주기적 점검 실시"
+  }
+}

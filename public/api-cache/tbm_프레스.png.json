@@ -1,0 +1,57 @@
+{
+  "tbm_info": {
+    "work_name": "",
+    "description": "",
+    "analysis_basis": "이미지에서 프레스 기계 사용 상황이 확인되며, 설명에서 프레스 작업 흐름이 강조됨."
+  },
+  "tbm_checklist": [
+    {
+      "id": 1,
+      "checkpoint_question": "프레스 작동 순간에 주변에 사람이 없는가?"
+    },
+    {
+      "id": 2,
+      "checkpoint_question": "금형 교환 순간에 안전 장치가 제대로 작동하는가?"
+    },
+    {
+      "id": 3,
+      "checkpoint_question": "프레스 시작 순간에 이상 소음이 없는가?"
+    },
+    {
+      "id": 4,
+      "checkpoint_question": "긴급 정지 버튼이 작동하는가?"
+    },
+    {
+      "id": 5,
+      "checkpoint_question": "작업 시작 전에 기계 중심점이 맞춰져 있는가?"
+    },
+    {
+      "id": 6,
+      "checkpoint_question": "작업자가 기계 조작 순간에 지정된 위치에 서 있는가?"
+    },
+    {
+      "id": 7,
+      "checkpoint_question": "전원 연결 순간에 불필요한 전기 위험이 없는가?"
+    },
+    {
+      "id": 8,
+      "checkpoint_question": "상하 작업 순간에 장비가 안정적으로 고정되어 있는가?"
+    },
+    {
+      "id": 9,
+      "checkpoint_question": "작업 변경 순간에 통신이 원활한가?"
+    },
+    {
+      "id": 10,
+      "checkpoint_question": "안전 센서가 작동 순간에 정확히 감지하는가?"
+    },
+    {
+      "id": 11,
+      "checkpoint_question": "필기 도구 교환 순간에 정확히 기록하는가?"
+    },
+    {
+      "id": 12,
+      "checkpoint_question": "작업 변경 순간에 보호구를 다시 점검하였는가?"
+    }
+  ]
+}

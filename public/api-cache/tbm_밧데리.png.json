@@ -1,0 +1,57 @@
+{
+  "tbm_info": {
+    "work_name": "$inputs.workname",
+    "description": "$inputs.descript",
+    "analysis_basis": "이미지에서 배터리와 전선이 보이며, 설명 텍스트에 기반한 작업 흐름을 바탕으로 각종 전기적 요소들에 위험이 존재함."
+  },
+  "tbm_checklist": [
+    {
+      "id": 1,
+      "checkpoint_question": "전선 연결 순간, 전원이 차단되었습니까?"
+    },
+    {
+      "id": 2,
+      "checkpoint_question": "배터리를 이동할 때 손잡이가 제대로 확보되었습니까?"
+    },
+    {
+      "id": 3,
+      "checkpoint_question": "장비 체결점을 변경하는 순간 전원 연결을 차단했습니까?"
+    },
+    {
+      "id": 4,
+      "checkpoint_question": "배터리를 장착할 때 인접 배터리와 충돌을 피했습니까?"
+    },
+    {
+      "id": 5,
+      "checkpoint_question": "충전기 교환 순간에 전원 스위치를 사용했습니까?"
+    },
+    {
+      "id": 6,
+      "checkpoint_question": "전선의 피복이 벗겨지거나 손상되지 않았는지 확인했습니까?"
+    },
+    {
+      "id": 7,
+      "checkpoint_question": "전기 장치를 상하로 동시에 작업할 때 별도의 안전 조치를 했습니까?"
+    },
+    {
+      "id": 8,
+      "checkpoint_question": "배터리 케이스가 제대로 닫혔는지 확인했습니까?"
+    },
+    {
+      "id": 9,
+      "checkpoint_question": "코드 연결 순간, 손에 땀이 묻어 있지 않았습니까?"
+    },
+    {
+      "id": 10,
+      "checkpoint_question": "공구를 교환할 때 전원 버튼이 눌리지 않았습니까?"
+    },
+    {
+      "id": 11,
+      "checkpoint_question": "인접한 작업자가 충전 영역에 들어오지 않도록 했습니까?"
+    },
+    {
+      "id": 12,
+      "checkpoint_question": "배터리를 운반할 때 바닥의 장애물을 치우고 이동했습니까?"
+    }
+  ]
+}

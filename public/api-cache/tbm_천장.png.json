@@ -1,0 +1,57 @@
+{
+  "tbm_info": {
+    "work_name": "",
+    "description": "",
+    "analysis_basis": "작업자는 보호복과 마스크를 착용하고 있으며, 천장 부근에서 보호장비를 이용한 작업이 확인됩니다."
+  },
+  "tbm_checklist": [
+    {
+      "id": 1,
+      "checkpoint_question": "작업자가 사다리에서 이동하는 순간 안정적인 자세를 유지하고 있는가?"
+    },
+    {
+      "id": 2,
+      "checkpoint_question": "천장 패널을 제거하는 순간 이탈물을 방지할 수 있는 보호장치가 마련되어 있는가?"
+    },
+    {
+      "id": 3,
+      "checkpoint_question": "상부 작업자의 도구가 이동 중 떨어지지 않도록 장비 상태를 최종 점검했는가?"
+    },
+    {
+      "id": 4,
+      "checkpoint_question": "상하부 동시 작업 시 위험한 접근 위치를 피하도록 작업 계획을 수립했는가?"
+    },
+    {
+      "id": 5,
+      "checkpoint_question": "천장 구조물에서 이동할 때 손잡이나 지지대가 견고하게 고정되어 있는가?"
+    },
+    {
+      "id": 6,
+      "checkpoint_question": "공구 교환 순간에 주변 작업자에게 안전 신호를 주고 있는가?"
+    },
+    {
+      "id": 7,
+      "checkpoint_question": "작업 중 보호복이 찢어지거나 손상될 수 있는 요소가 없는가?"
+    },
+    {
+      "id": 8,
+      "checkpoint_question": "천장 부품을 고정하는 순간 제대로 체결했는지 확인했는가?"
+    },
+    {
+      "id": 9,
+      "checkpoint_question": "이동 중 사다리의 안정성을 확보하기 위한 조치가 이루어졌는가?"
+    },
+    {
+      "id": 10,
+      "checkpoint_question": "작업 위치 변경 시 주변 전선이나 케이블에 부딪히지 않도록 주의하고 있는가?"
+    },
+    {
+      "id": 11,
+      "checkpoint_question": "동시 작업 시 통행로를 확보하여 사고 가능성을 최소화했는가?"
+    },
+    {
+      "id": 12,
+      "checkpoint_question": "작업 위험이 발생했을 때 즉각적인 대응 체계를 준비했는가?"
+    }
+  ]
+}

@@ -1,0 +1,57 @@
+{
+  "tbm_info": {
+    "work_name": "$inputs.workname",
+    "description": "$inputs.descript",
+    "analysis_basis": "이미지에서는 폐기물 처리 현장의 불도저 작업이 보입니다. 폐기물 적재 및 운반 중 발생할 수 있는 사고에 주의가 필요합니다."
+  },
+  "tbm_checklist": [
+    {
+      "id": 1,
+      "checkpoint_question": "불도저 이동 순간에 작업 구역에 인원이 있는가?"
+    },
+    {
+      "id": 2,
+      "checkpoint_question": "쓰레기 더미 옆에 있을 때 기계 접근 소음을 잘 듣고 있는가?"
+    },
+    {
+      "id": 3,
+      "checkpoint_question": "불도저 운전자가 안전 벨트를 착용하고 있는가?"
+    },
+    {
+      "id": 4,
+      "checkpoint_question": "쓰레기 적재 중 주변 안전 거리가 확보되었는가?"
+    },
+    {
+      "id": 5,
+      "checkpoint_question": "운반 중인 불도저의 경로에 장애물이 없는가?"
+    },
+    {
+      "id": 6,
+      "checkpoint_question": "불도저가 이동할 때 경적을 사용하였는가?"
+    },
+    {
+      "id": 7,
+      "checkpoint_question": "야간 작업 시 충분한 조명이 설치되어 있는가?"
+    },
+    {
+      "id": 8,
+      "checkpoint_question": "비상시 사용 가능한 대피 경로가 확보되어 있는가?"
+    },
+    {
+      "id": 9,
+      "checkpoint_question": "분진 발생 시 보호 장비를 착용하고 있는가?"
+    },
+    {
+      "id": 10,
+      "checkpoint_question": "기계가 쓰레기 더미를 밀어올릴 때 주변 안전을 확인했는가?"
+    },
+    {
+      "id": 11,
+      "checkpoint_question": "쓰레기 적재 높이가 안정적인가?"
+    },
+    {
+      "id": 12,
+      "checkpoint_question": "불도저 운전석 출입 시 발 디딤판 상태가 양호한가?"
+    }
+  ]
+}

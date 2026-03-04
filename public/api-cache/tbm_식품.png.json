@@ -1,0 +1,57 @@
+{
+  "tbm_info": {
+    "work_name": "$inputs.workname",
+    "description": "$inputs.descript",
+    "analysis_basis": "이미지에서는 작업 일구의 정리되지 않은 상태와 물이 흘러내리고 있어 작업 시 위험 요소가 확인됩니다. 설명에서는 기계의 점검 및 청소 작업이 포함된 것으로 추정됩니다."
+  },
+  "tbm_checklist": [
+    {
+      "id": 1,
+      "checkpoint_question": "작업 시작 전 기계의 전원 차단 상태를 확인했는가?"
+    },
+    {
+      "id": 2,
+      "checkpoint_question": "작업 구역 내 미끄러짐 위험이 없는지 확인했는가?"
+    },
+    {
+      "id": 3,
+      "checkpoint_question": "작업 현장에 물이 흐르고 있는 곳이 없는가?"
+    },
+    {
+      "id": 4,
+      "checkpoint_question": "기계 작동 시 주변의 작업물이 기계에 걸리지 않을 것인가?"
+    },
+    {
+      "id": 5,
+      "checkpoint_question": "작업 중 하수구와 물 배수구가 막혀있지 않은가?"
+    },
+    {
+      "id": 6,
+      "checkpoint_question": "기계 점검 중 기계 작동 여부를 미리 알렸는가?"
+    },
+    {
+      "id": 7,
+      "checkpoint_question": "작업 도중 보호 장비를 제대로 착용하고 있는가?"
+    },
+    {
+      "id": 8,
+      "checkpoint_question": "작업 종료 후 청소 및 정리 작업을 제대로 수행했는가?"
+    },
+    {
+      "id": 9,
+      "checkpoint_question": "기계 작동 중 이상 소음이 없었는가?"
+    },
+    {
+      "id": 10,
+      "checkpoint_question": "작업 진행 중 긴급 상황 발생 시 즉시 대처 계획이 있는가?"
+    },
+    {
+      "id": 11,
+      "checkpoint_question": "기계 점검 순서와 방법을 숙지하고 있는가?"
+    },
+    {
+      "id": 12,
+      "checkpoint_question": "상하 동시작업 시 상부 작업자의 동선을 확인했는가?"
+    }
+  ]
+}

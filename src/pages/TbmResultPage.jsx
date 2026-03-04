@@ -280,7 +280,7 @@ export default function TbmResultPage() {
 
   // 교육/출석/참석자(샘플 UI: 실제로는 귀사 데이터로 치환)
   const [eduApplied, setEduApplied] = useState('예')
-  const [eduCourse, setEduCourse] = useState(() => (workName ? `${workName} TBM 안전보건교육` : 'TBM 안전보건교육'))
+  const [eduCourse, setEduCourse] = useState(() => ('TBM 안전보건교육'))
   const [attendanceMode, setAttendanceMode] = useState('전자서명') // 전자서명 | QR
 
   const [participants, setParticipants] = useState([
@@ -365,7 +365,7 @@ export default function TbmResultPage() {
             <div>
               <div style={ui.cardKicker}>안전점검</div>
               <div style={ui.cardTitle}>
-                {workName ? `${workName} 체크리스트` : 'TBM 체크리스트'}
+         
               </div>
             </div>
             <div style={ui.cardHeaderRight}>

@@ -1618,8 +1618,11 @@ const handleRiskFactorConfirm = useCallback(async (factors) => {
 const hasWorkSelected = !!factors?.workName && factors?.mode !== 'risk'
   console.log('[BRANCH] hasWorkSelected:', hasWorkSelected, '/ workName:', factors?.workName, '/ detailName:', factors?.detailName)
 
-  const cachePrefix = hasWorkSelected ? 'tbm' : 'risk'
-  const cacheKey = `${cachePrefix}_${file.name.replace(/\s+/g, '_')}`
+const cacheKey = hasWorkSelected
+  ? `tbm_${file.name.replace(/\s+/g, '_')}`
+  : file.name
+
+  
   console.log('[CACHE] cacheKey:', cacheKey)
 
   let cachedResult = null

@@ -1,0 +1,57 @@
+{
+  "tbm_info": {
+    "work_name": "$inputs.workname",
+    "description": "$inputs.descript",
+    "analysis_basis": "이미지는 기계 설비와 관련된 사용 금지 표지판이 확인됨. 작업 흐름은 작업자의 안전을 위한 장비 운영 및 관리로 판단됨."
+  },
+  "tbm_checklist": [
+    {
+      "id": 1,
+      "checkpoint_question": "기계를 이동하는 순간 안전 통로가 확보되었습니까?"
+    },
+    {
+      "id": 2,
+      "checkpoint_question": "작동 버튼을 눌렀을 때 주변에 사람이 없었습니까?"
+    },
+    {
+      "id": 3,
+      "checkpoint_question": "기계를 점검하기 위해 커버를 열었을 때 전원이 차단되었습니까?"
+    },
+    {
+      "id": 4,
+      "checkpoint_question": "작업자가 기계를 점검하는 순간 보호 장구를 착용했습니까?"
+    },
+    {
+      "id": 5,
+      "checkpoint_question": "기계 작동 중 긴급 상황 시 비상 정지 버튼의 위치를 알고 있습니까?"
+    },
+    {
+      "id": 6,
+      "checkpoint_question": "기계의 회전 부위가 작동 중 손에 닿을 위험을 피할 수 있습니까?"
+    },
+    {
+      "id": 7,
+      "checkpoint_question": "기계의 사용 금지 구역이 명확히 표시되었습니까?"
+    },
+    {
+      "id": 8,
+      "checkpoint_question": "시작 전에 기계 부품이 정상적으로 체결되었는지 확인했습니까?"
+    },
+    {
+      "id": 9,
+      "checkpoint_question": "작업 종료 후 기계의 전원을 안전하게 차단했습니까?"
+    },
+    {
+      "id": 10,
+      "checkpoint_question": "유지보수 작업 전에 주변 환경이 정리되었습니까?"
+    },
+    {
+      "id": 11,
+      "checkpoint_question": "작업자를 보호하기 위한 안전막이 설치되었습니까?"
+    },
+    {
+      "id": 12,
+      "checkpoint_question": "기계 사용 중 사고가 나는 순간 즉시 대처할 수 있는 사람이 배치되었습니까?"
+    }
+  ]
+}

@@ -1,0 +1,57 @@
+{
+  "tbm_info": {
+    "work_name": "$inputs.workname",
+    "description": "$inputs.descript",
+    "analysis_basis": "이미지에 나타난 방호복 착용과 작업 설명에 근거해 유해 물질 관리를 집중 점검."
+  },
+  "tbm_checklist": [
+    {
+      "id": 1,
+      "checkpoint_question": "유해 물질 누출 시 즉각 대피 가능한 비상 통로는 확보되어 있는가?"
+    },
+    {
+      "id": 2,
+      "checkpoint_question": "작업 공간 내 모든 방호복 착용 상태는 유지되고 있는가?"
+    },
+    {
+      "id": 3,
+      "checkpoint_question": "화학물질 주변 작업 중 환기장치는 제대로 작동하고 있는가?"
+    },
+    {
+      "id": 4,
+      "checkpoint_question": "유해 물질 보관 공간이 적절하게 밀폐되어 있는가?"
+    },
+    {
+      "id": 5,
+      "checkpoint_question": "비상 샤워장치 및 세안 장치의 위치를 모든 작업자가 숙지하고 있는가?"
+    },
+    {
+      "id": 6,
+      "checkpoint_question": "화재 발생 시 사용할 소화기는 충분한지 빈 상태가 아닌가?"
+    },
+    {
+      "id": 7,
+      "checkpoint_question": "출입구 주변에 물건이 쌓여 있지 않고 즉시 대피 가능한가?"
+    },
+    {
+      "id": 8,
+      "checkpoint_question": "작업장 내 모든 안전 표지판이 명확하게 보이는가?"
+    },
+    {
+      "id": 9,
+      "checkpoint_question": "작업자 간 소통을 위한 무전기나 통신 장비는 모두 작동 중인가?"
+    },
+    {
+      "id": 10,
+      "checkpoint_question": "작업 전에 모든 장비의 이상 여부를 점검했는가?"
+    },
+    {
+      "id": 11,
+      "checkpoint_question": "화학 물질을 다룰 때 사고 발생 순간 보호 장구가 손상되지 않았는가?"
+    },
+    {
+      "id": 12,
+      "checkpoint_question": "화학 물질의 안전 자료가 모두 구비되어 있는가?"
+    }
+  ]
+}
