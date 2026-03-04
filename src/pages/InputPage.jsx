@@ -1769,78 +1769,30 @@ const cacheKey = hasWorkSelected
   // ─────────────────────────────────────────────
   // ✅ handleCapture: 촬영 완료 → 모달 → handleRiskFactorConfirm 경로로 통일
   // ─────────────────────────────────────────────
- const handleCapture = useCallback(async (file, previewSrc) => {
+const handleCapture = useCallback(async (file, previewSrc) => {
   setCameraOpen(false)
   setPreview(previewSrc)
 
   const factors = selectedRiskFactors
-const hasWorkSelected = !!factors?.workName && factors?.mode !== 'risk'
-  const cachePrefix = hasWorkSelected ? 'tbm' : 'risk'
-  const cacheKey = `${cachePrefix}_${file.name.replace(/\s+/g, '_')}`
-
-  let cachedResult = null
-  try {
-    const cr = await fetch(`/api-cache/${cacheKey}.json`, { cache: 'no-store' })
-    const contentType = cr.headers.get('content-type') ?? ''
-    if (cr.ok && contentType.includes('application/json')) {
-      cachedResult = await cr.json()
-    }
-  } catch (_) {}
+  const hasWorkSelected = !!factors?.workName && factors?.mode !== 'risk'
 
   if (hasWorkSelected) {
     const workname = factors.workName
     const descript = factors.detailName ?? ''
 
-    if (cachedResult) {
-      setCacheLoading(true)
-      await new Promise(r => setTimeout(r, 2000))
-      setCacheLoading(false)
-      navigate('/tbm/result', { state: { result: cachedResult, imageUrl: previewSrc, workname, descript } })
-      return
-    }
-
     const result = await analyze2(file, workname, descript)
     if (!result) return
-
-    if (import.meta.env.DEV) {
-      try {
-        await fetch('/api/save-cache', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ filename: cacheKey, data: result }),
-        })
-      } catch (e) { console.warn(e) }
-    }
 
     navigate('/tbm/result', { state: { result, imageUrl: previewSrc, workname, descript } })
 
   } else {
 
-    if (cachedResult) {
-      setCacheLoading(true)
-      await new Promise(r => setTimeout(r, 2000))
-      setCacheLoading(false)
-      navigate('/result', { state: { result: cachedResult, imageUrl: previewSrc, riskFactors: factors } })
-      return
-    }
-
     const result = await analyze(file)
     if (!result) return
 
-    if (import.meta.env.DEV) {
-      try {
-        await fetch('/api/save-cache', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ filename: cacheKey, data: result }),
-        })
-      } catch (e) { console.warn(e) }
-    }
-
     navigate('/result', { state: { result, imageUrl: previewSrc, riskFactors: factors } })
   }
-}, [selectedRiskFactors, analyze, analyze2, navigate, setPreview, setCacheLoading])
-
+}, [selectedRiskFactors, analyze, analyze2, navigate, setPreview])
   // ─────────────────────────────────────────────
   // ✅ handleRiskImageSelect: 그리드 클릭 → 모달 → handleRiskFactorConfirm (기존과 동일)
   // ─────────────────────────────────────────────

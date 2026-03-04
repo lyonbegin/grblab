@@ -256,8 +256,8 @@ export default function TbmResultPage() {
 
   const tbm = useMemo(() => parseRoboflowTbm(result), [result])
 
-  const workName = tbm?.tbm_info?.work_name || state?.workname || ''
-  const descript = tbm?.tbm_info?.description || state?.descript || ''
+ const workName = state?.workname ||  ''
+const descript = state?.descript || ''
   const analysisBasis = tbm?.tbm_info?.analysis_basis || ''
 
   const rawChecklist = Array.isArray(tbm?.tbm_checklist) ? tbm.tbm_checklist : []
