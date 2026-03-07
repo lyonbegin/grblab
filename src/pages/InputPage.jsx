@@ -27,6 +27,12 @@ import { FormDocumentPreview } from './FormInputPage'
 import html2canvas from 'html2canvas'
 import SiteDetailPage from './SiteDetailPage'
 import SafetyMarketingSections from './SafetyMarketingSections'
+import HeavyEquipmentCollisionDetailPage from './HeavyEquipmentCollisionDetailPage'
+
+import ManufacturingCollisionDetailPage from './ManufacturingCollisionDetailPage'
+
+import OpeningFallDetailPage from './OpeningFallDetailPage'
+
 // import ContractDetailPage     from './ContractDetailPage'
 // import BoardDetailPage        from './BoardDetailPage'
 import BoardIndexPage from './BoardIndexPage'
@@ -47,6 +53,8 @@ import PpeDetailPage from './PpeDetailPage'
 import SafetyEduListPage   from './SafetyEduListPage'
 import SafetyEduDetailPage from './SafetyEduDetailPage'
 
+import ThermalDetectionDetailPage from './ThermalDetectionDetailPage'
+import AnalogGaugeAIDetailPage from './AnalogGaugeAIDetailPage'
 
 import SafetyDetailPage from './SafetyDetailPage'
 
@@ -55,6 +63,7 @@ import SafetyListPage from './SafetyListPage'
 import TbmResultPage from './TbmResultPage'
 import EmergencyListPage   from './EmergencyListPage'
 import EmergencyDetailPage from './EmergencyDetailPage'
+import PPESmartManagementDetailPage from './PPESmartManagementDetailPage'
 
 import RiskFactorModal from './RiskFactorModal'
 // import TbmDetailPage          from './TbmDetailPage'
@@ -876,6 +885,19 @@ function FormsPage({ isMobile, navigate }) {
 // ─────────────────────────────────────
 
 const SUBTAB_MODEL_CONFIG = {
+//   '중장비 충돌 예방': {
+//   modelId: 'construction-site-safety/27',
+//   apiKey: 'P0UYFNweFjm7uZo2nVVG',
+//   modelName: '건설 현장 안전 감지 모델',
+//   modelVersion: 'v27',
+//   modelStats: { mAP: 84.1, precision: 92.7, recall: 77.4 },
+//   sampleImages: [
+//     '/riskimage/collision-02-zones.jpg',
+//     '/riskimage/collision-03-beacon.png',
+//     '/riskimage/collision-05-helmet.jpg',
+//     '/riskimage/collision-06-full.jpg',
+//   ],
+// },
   '농업': { modelId: 'detecting-diseases/5', apiKey: 'P0UYFNweFjm7uZo2nVVG', modelName: '작물 병해 감지 모델', modelVersion: 'v5', modelStats: { mAP: 91.5, precision: 89.1, recall: 88.7 }, sampleImages: ['https://source.roboflow.com/6nOEoTQ7uLUslcyM5Gl4fc0d8Ov2/VKK0QdiTEEcLmHOlIdGs/original.jpg','https://source.roboflow.com/6nOEoTQ7uLUslcyM5Gl4fc0d8Ov2/BHuN2ZMlqhmZfi6I9YkL/original.jpg','https://source.roboflow.com/6nOEoTQ7uLUslcyM5Gl4fc0d8Ov2/Tk3nqiOMKjHCyC0gvIt4/original.jpg','https://source.roboflow.com/6nOEoTQ7uLUslcyM5Gl4fc0d8Ov2/URPH8OQFEo3DkljAYF1A/original.jpg'] },
   '건설': { modelId: 'construction-site-safety/27', apiKey: 'P0UYFNweFjm7uZo2nVVG', modelName: '건설 현장 안전 감지 모델', modelVersion: 'v27', modelStats: { mAP: 84.1, precision: 92.7, recall: 77.4 }, sampleImages: ['https://source.roboflow.com/zD7y6XOoQnh7WC160Ae7/4D5gAya8QSO2rMPJh8Zn/original.jpg','https://source.roboflow.com/zD7y6XOoQnh7WC160Ae7/MGXm4Ba0fuVYseAlOqVo/original.jpg','https://source.roboflow.com/zD7y6XOoQnh7WC160Ae7/01YQB5mO36NOmLpc6ho6/original.jpg','https://source.roboflow.com/zD7y6XOoQnh7WC160Ae7/13rfPNN5ZnJQXOBClitr/original.jpg'] },
   '공공·정부': { modelId: 'crack-vqykz/1', apiKey: 'P0UYFNweFjm7uZo2nVVG', modelName: '균열·파손 감지 모델', modelVersion: 'v1', modelStats: { mAP: 78.9, precision: 78.9, recall: 78.9 }, sampleImages: ['https://source.roboflow.com/VdmTudKqY6NKqU260tgUbrrhdGG2/kZ54TSAdjwvdxjR7Re61/original.jpg','https://source.roboflow.com/VdmTudKqY6NKqU260tgUbrrhdGG2/mGx7orc2td1xPuWhVYeR/original.jpg','https://source.roboflow.com/VdmTudKqY6NKqU260tgUbrrhdGG2/zVVLAWRh2sNbZltPTCRd/original.jpg','https://source.roboflow.com/VdmTudKqY6NKqU260tgUbrrhdGG2/mlOfLAewXjBr067OmuDD/original.jpg'] },
@@ -891,24 +913,16 @@ const DETAIL_PAGE_MAP = {
   '농업': AgricultureDetailPage, '건설': ConstructionDetailPage, '공공·정부': GovernmentDetailPage,
   '의료·헬스케어': HealthcareDetailPage, '제조': ManufacturingDetailPage, '유통·물류': LogisticsDetailPage,
   '안전·보안': SecurityDetailPage, '교통·운송': TransportDetailPage, '소방·화재': FireDetailPage,
+   'TBM 안전 관리': PPESmartManagementDetailPage, '설비 게이지 모니터링': AnalogGaugeAIDetailPage,'열화상 감지': ThermalDetectionDetailPage,'중장비 충돌 예방': HeavyEquipmentCollisionDetailPage,'지게차 충돌 예방': ManufacturingCollisionDetailPage,'개구부 추락 예방': OpeningFallDetailPage,
 }
 
-// function useIsMobile() {
-//   const [isMobile, setIsMobile] = useState(typeof window !== 'undefined' ? window.innerWidth < 768 : false)
-//   useEffect(() => {
-//     const fn = () => setIsMobile(window.innerWidth < 768)
-//     window.addEventListener('resize', fn)
-//     return () => window.removeEventListener('resize', fn)
-//   }, [])
-//   return isMobile
-// }
 
 function CameraOverlay({ onCapture, onClose }) {
   const webcamRef = useRef(null)
   const [capturing, setCapturing] = useState(false)
   const isMobile = typeof window !== 'undefined' && window.innerWidth < 768
   const shoot = useCallback(async () => {
-    if (capturing) return
+    if (capturing) returnㄴ
     setCapturing(true)
     const imgSrc = webcamRef.current?.getScreenshot()
     if (!imgSrc) { setCapturing(false); return }
@@ -972,6 +986,41 @@ const CMANAGE_CARDS = [
     img: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=400&q=75&fit=crop'
   },
 
+// ── 스마트 건설안전장비 ──
+  {
+    key: '중장비 충돌 예방',
+    title: '중장비 충돌',
+    desc: 'AI 카메라 기반 충돌 예방',
+    img: '/riskimage/건설구역.png'
+  },
+
+
+//  { key: '지게차 충돌 예방', title: '지게차 충돌', img: '/riskimage/지게차.png' },
+  {
+    key: '지게차 충돌 예방',
+    title: '지게차 충돌',
+    desc: '지게차 충돌',
+    img: '/riskimage/지게차.png'
+  },
+
+  {
+    key: '개구부 추락 예방',
+    title: '개구부 추락',
+    desc: '개구부 추락 감지',
+    img: '/riskimage/개구부.png'
+  },
+  {
+    key: 'TBM 안전 관리',
+    title: '개인 보호구 태그',
+    desc: '개인 보호구 위치 기반 관리',
+    img: '/riskimage/tbm.png'
+  },
+  // {
+  //   key: '호이스트 충돌 예방',
+  //   title: '크레인 충돌',
+  //   desc: '크레인 충돌 예방',
+  //   img: '/riskimage/호이스트.png'
+  // },
 
 
   {
@@ -1068,16 +1117,101 @@ const CMANAGE_CARDS = [
 ];
 
 
+
+
+
+const SMART_CONSTRUCTION_CARDS = [
+  {
+    key: '중장비 충돌 예방',
+    title: '중장비 충돌',
+    desc: 'AI 카메라 기반 충돌 예방',
+    img: '/riskimage/건설구역.png'
+  },
+
+    {
+    key: '지게차 충돌 예방',
+    title: '지게차 충돌',
+    desc: '지게차 충돌',
+    img: '/riskimage/지게차.png'
+  },
+
+  {
+    key: '개구부 추락 예방',
+    title: '개구부 추락',
+    desc: '개구부 추락 감지',
+    img: '/riskimage/개구부.png'
+  },
+  {
+    key: 'TBM 안전 관리',
+    title: '개인 보호구 태그',
+    desc: '개인 보호구 위치 기반 관리',
+    img: '/riskimage/tbm.png'
+  },
+  //   {
+  //   key: '호이스트 충돌 예방',
+  //   title: '크레인 충돌',
+  //   desc: '크레인 충돌 예방',
+  //   img: '/riskimage/호이스트.png',
+  // },
+]
+
 const CCTV_CARDS = [
-  { key: '농업', title: '농업', desc: '', img: 'https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=400&q=75&fit=crop' },
-  { key: '건설', title: '건설', desc: '', img: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=400&q=75&fit=crop' },
-  { key: '공공·정부', title: '공공·정부', desc: '', img: 'https://images.unsplash.com/photo-1762090242198-e8260bfaeb04?w=400&q=75&fit=crop' },
-  { key: '의료·헬스케어', title: '의료·헬스케어', desc: '', img: 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=400&q=75&fit=crop' },
-  { key: '제조', title: '제조', desc: '', img: 'https://images.unsplash.com/photo-1701328778019-e95dedbf5346?w=400&q=75&fit=crop' },
+
+  {
+    key: '중장비 충돌 예방',
+    title: '중장비 충돌 예방',
+    desc: '굴삭기, 지게차, 덤프트럭, 크레인 주변 작업자 접근 시 경보를 발생시켜 충돌 위험을 줄입니다.',
+    img: '/riskimage/건설구역.png',
+  },
+  {
+    key: '개구부 추락 예방',
+    title: '개구부 추락 예방',
+    desc: '개구부 주변 접근을 감지해 경보를 발생시키고 추락 사고를 예방합니다.',
+    img: '/riskimage/개구부.png',
+  },
+  {
+    key: 'TBM 안전 관리',
+    title: '개인 보호구 태그',
+    desc: 'TBM 진행 시 참여자 태그 인식과 모바일 앱 연동으로 출석 및 안전관리 기록을 자동화합니다.',
+    img: '/riskimage/tbm.png',
+  },
+  {
+    key: '지게차 충돌 예방',
+    title: '지게차 충돌 예방',
+    desc: '지게차 주변 위험 구역을 감시하여 작업자 접근 시 즉시 경보를 제공합니다.',
+    img: '/riskimage/지게차.png',
+  },
+  {
+    key: '열화상 감지',
+    title: '열화상 감지',
+    desc: '분전반, 배터리, 컴프레서 등 주요 설비의 온도 상승을 감지하여 화재를 조기에 발견합니다.',
+    img: '/riskimage/열화상.png',
+  },
+  {
+    key: '설비 게이지 모니터링',
+    title: '설비 게이지 모니터링',
+    desc: '압력·온도·유량 게이지를 영상으로 읽고 이상 수치를 자동 감지합니다.',
+    img: '/riskimage/게이지.png',
+  },
+  // {
+  //   key: '호이스트 충돌 예방',
+  //   title: '호이스트 충돌 예방',
+  //   desc: '호이스트 작업 구역 접근을 감지하여 낙하물 및 충돌 위험을 예방합니다.',
+  //   img: '/riskimage/호이스트.png',
+  // },
+   { key: '소방·화재', title: '소방·화재', desc: '', img: 'https://images.unsplash.com/photo-1741024189350-f1d22a92da02?w=400&q=75&fit=crop' },
+
+    { key: '건설', title: '건설', desc: '', img: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=400&q=75&fit=crop' },
+   { key: '제조', title: '제조', desc: '', img: 'https://images.unsplash.com/photo-1701328778019-e95dedbf5346?w=400&q=75&fit=crop' },
   { key: '유통·물류', title: '유통·물류', desc: '', img: 'https://images.unsplash.com/photo-1553413077-190dd305871c?w=400&q=75&fit=crop' },
   { key: '안전·보안', title: '안전·보안', desc: '', img: 'https://images.unsplash.com/photo-1557597774-9d273605dfa9?w=400&q=75&fit=crop' },
   { key: '교통·운송', title: '교통·운송', desc: '.', img: 'https://images.unsplash.com/photo-1740647154342-92a91e89c3c9?w=400&q=75&fit=crop' },
-  { key: '소방·화재', title: '소방·화재', desc: '', img: 'https://images.unsplash.com/photo-1741024189350-f1d22a92da02?w=400&q=75&fit=crop' },
+ 
+ { key: '공공·정부', title: '공공·정부', desc: '', img: 'https://images.unsplash.com/photo-1762090242198-e8260bfaeb04?w=400&q=75&fit=crop' },
+  { key: '의료·헬스케어', title: '의료·헬스케어', desc: '', img: 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=400&q=75&fit=crop' },
+
+{ key: '농업', title: '농업', desc: '', img: 'https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=400&q=75&fit=crop' },
+
 ]
 
 function ImageGrid({ items, isMobile, onSelect, columns }) {
@@ -1136,7 +1270,7 @@ function CctvPage({ isMobile, activeSubTab, onSelectSubTab }) {
         <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
           <div style={{ ...s.eyebrow, fontSize: isMobile ? 11 : 12 }}>AI CCTV Monitoring Platform</div>
           <h1 style={{ ...s.heroTitle, fontSize: isMobile ? 36 : 62, letterSpacing: isMobile ? '-1.2px' : '-2.5px', marginBottom: isMobile ? 12 : 18, fontWeight: 400 }}>
-            <span style={{ fontWeight: 900 }}>AI</span>가 바꾸는<br />산업현장 CCTV
+            <span style={{ fontWeight: 900 }}>AI</span>가 바꾸는<br />산업안전 시스템
           </h1>
           <p style={{ ...s.heroSub, fontSize: isMobile ? 14 : 16, marginBottom: isMobile ? 20 : 32 }}>
             컴퓨터 비전은 현실의 비즈니스 문제를 해결합니다.<br />산업별 적용 방법을 확인하세요.
@@ -1186,7 +1320,7 @@ function CctvPage({ isMobile, activeSubTab, onSelectSubTab }) {
                   <div style={s.cctvCardDim} />
                   <div style={{ position: 'relative', zIndex: 2 }}>
                     <div style={s.cctvCardTitle}>{item.title}</div>
-                    <div style={s.cctvCardDesc}>{item.desc}</div>
+                    {/* <div style={s.cctvCardDesc}>{item.desc}</div> */}
                   </div>
                 </motion.div>
               ))}
@@ -1271,29 +1405,48 @@ function PhoneMockup({ isMobile }) {
   )
 }
 
+
+
+
 function CmanagePage({ isMobile, activeSubTab, onSelectSubTab, onNavigateTab }) {
   const filtered =
     activeSubTab === 'all'
-      ? CMANAGE_CARDS.filter(c => c.key !== 'all') // 전체일 땐 실제 카드들 보여주고 싶으면 이렇게
+      ? CMANAGE_CARDS.filter(c => c.key !== 'all')
       : CMANAGE_CARDS.filter(c => c.key === activeSubTab)
 
-    const handleCardClick = (key) => {
+  const SMART_KEYS = ['중장비 충돌 예방', '개구부 추락 예방', 'TBM 안전 관리']
+
+const constructionCards = filtered.filter(c => !SMART_KEYS.includes(c.key))
+
+  const handleCardClick = (key) => {
     if (activeSubTab !== 'all') return
+
     if (key === 'docs') {
-      onNavigateTab?.('forms')  // ✅ 메인 탭 'forms'으로 전환
-      return
-    }
- if (key === 'risk' || key === 'tbmai') {
-      onNavigateTab?.('risk')  // ✅ 메인 탭 'forms'으로 전환
+      onNavigateTab?.('forms')
       return
     }
 
+    if (key === 'risk' || key === 'tbmai') {
+      onNavigateTab?.('risk')
+      return
+    }
 
     onSelectSubTab?.(key)
   }
 
+
+
+  
+const handleSmartCardClick = (key) => {
+  if (activeSubTab !== 'all') return
+  onNavigateTab?.('cctv', key)  // key도 같이 넘기기
+}
+
+
   const activeCard = CMANAGE_CARDS.find(c => c.key === activeSubTab)
-if (activeSubTab !== 'all') return null
+
+  if (activeSubTab !== 'all') return null
+
   return (
     <motion.main
       key={`cmanage-${activeSubTab}`}
@@ -1308,28 +1461,60 @@ if (activeSubTab !== 'all') return null
         alignItems: isMobile ? 'flex-start' : 'center'
       }}
     >
-
-
-
       {/* ── 왼쪽 텍스트 영역 ── */}
-      <div style={{ flex: isMobile ? 'none' : '0 0 460px', maxWidth: isMobile ? '100%' : 460, width: '100%' }}>
-        <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-          <div style={{ ...s.eyebrow, fontSize: isMobile ? 11 : 12 }}>Construction Safety Management</div>
-          <h1 style={{ ...s.heroTitle, fontSize: isMobile ?  32 : 62, letterSpacing: isMobile ? '-1.2px' : '-2.5px', marginBottom: isMobile ? 12 : 18, fontWeight: 400 }}>
-           <span style={{ fontWeight: 900 }}>AI</span>가 바꾸는<br/>건설현장 ,TBM
+      <div
+        style={{
+          flex: isMobile ? 'none' : '0 0 460px',
+          maxWidth: isMobile ? '100%' : 460,
+          width: '100%'
+        }}
+      >
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <div style={{ ...s.eyebrow, fontSize: isMobile ? 11 : 12 }}>
+            Construction Safety Management
+          </div>
+
+          <h1
+            style={{
+              ...s.heroTitle,
+              fontSize: isMobile ? 32 : 62,
+              letterSpacing: isMobile ? '-1.2px' : '-2.5px',
+              marginBottom: isMobile ? 12 : 18,
+              fontWeight: 400
+            }}
+          >
+            <span style={{ fontWeight: 900 }}>AI</span>가 바꾸는
+            <br />
+            건설현장
           </h1>
-          <p style={{ ...s.heroSub, fontSize: isMobile ? 14 : 16, marginBottom: isMobile ? 20 : 32 }}>
+
+          <p
+            style={{
+              ...s.heroSub,
+              fontSize: isMobile ? 14 : 16,
+              marginBottom: isMobile ? 20 : 32
+            }}
+          >
             건설 현장에 필요한 관리 항목을 카테고리로 확인하십시오.
           </p>
 
           {activeSubTab !== 'all' && (
-            <motion.div key={activeSubTab} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} style={s.subTabDetail}>
+            <motion.div
+              key={activeSubTab}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              style={s.subTabDetail}
+            >
               <div style={s.subTabDetailTitle}>{activeCard?.title || activeSubTab}</div>
-              <p style={s.subTabDetailDesc}>{activeCard?.desc}</p>
+              {/* <p style={s.subTabDetailDesc}>{activeCard?.desc}</p> */}
             </motion.div>
           )}
 
-          {/* ✅ 모바일: 텍스트 바로 아래 2열 카드 */}
+          {/* 모바일 */}
           {isMobile && (
             <AnimatePresence mode="wait">
               <motion.div
@@ -1338,43 +1523,88 @@ if (activeSubTab !== 'all') return null
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -8 }}
                 transition={{ duration: 0.25 }}
-                style={{
-                  display: 'grid',
-                  gridTemplateColumns: activeSubTab !== 'all' ? '1fr' : 'repeat(2, 1fr)',
-                  gap: 10,
-                  marginTop: 24
-                }}
+                style={{ marginTop: 24 }}
               >
-                {filtered.map((item) => (
-                  <motion.div
-                    key={item.key}
-                    style={{
-                      ...s.cctvCard,
-                      backgroundImage: `url(${item.img})`,
-                      backgroundSize: 'cover',
-                      backgroundPosition: 'center',
-                      aspectRatio: activeSubTab !== 'all' ? '16/7' : '4/3',
-                      cursor: activeSubTab === 'all' ? 'pointer' : 'default'
-                    }}
-                    whileTap={{ scale: 0.97 }}
-                    onClick={() => handleCardClick(item.key)}
-                  >
-                    <div style={s.cctvCardDim} />
-                    <div style={{ position: 'relative', zIndex: 2 }}>
-                      <div style={s.cctvCardTitle}>{item.title}</div>
-                      {activeSubTab !== 'all' && <div style={s.cctvCardDesc}>{item.desc}</div>}
-                    </div>
-                  </motion.div>
-                ))}
+                <div style={{ marginBottom: 10, fontSize: 14, fontWeight: 800, color: '#222' }}>
+                  스마트 건설안전장비
+                </div>
+
+                <div
+                  style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(2, 1fr)',
+                    gap: 10,
+                    marginBottom: 26
+                  }}
+                >
+                  {SMART_CONSTRUCTION_CARDS.map((item) => (
+                    <motion.div
+                      key={item.key}
+                      style={{
+                        ...s.cctvCard,
+                        backgroundImage: `url(${item.img})`,
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
+                        aspectRatio: '4/3',
+                        cursor: 'pointer'
+                      }}
+                      whileTap={{ scale: 0.97 }}
+                      onClick={() => handleSmartCardClick(item.key)}
+                    >
+                      <div style={s.cctvCardDim} />
+                      <div style={{ position: 'relative', zIndex: 2 }}>
+                        <div style={s.cctvCardTitle}>{item.title}</div>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+
+                <div style={{ marginBottom: 10, fontSize: 14, fontWeight: 800, color: '#222' }}>
+                  건설안전관리
+                </div>
+
+                <div
+                  style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(3, 1fr)',
+                    gap: 10
+                  }}
+                >
+                  {constructionCards.map((item) => (
+                    <motion.div
+                      key={item.key}
+                      style={{
+                        ...s.cctvCard,
+                        backgroundImage: `url(${item.img})`,
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
+                        aspectRatio: '4/3',
+                        cursor: 'pointer'
+                      }}
+                      whileTap={{ scale: 0.97 }}
+                      onClick={() => handleCardClick(item.key)}
+                    >
+                      <div style={s.cctvCardDim} />
+                      <div style={{ position: 'relative', zIndex: 2 }}>
+                        <div style={s.cctvCardTitle}>{item.title}</div>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
               </motion.div>
             </AnimatePresence>
           )}
         </motion.div>
       </div>
 
-      {/* ✅ PC만: 오른쪽 3열 카드 */}
+      {/* PC */}
       {!isMobile && (
-        <motion.div style={{ flex: 1, minWidth: 0 }} initial={{ opacity: 0, x: 24 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6, delay: 0.15 }}>
+        <motion.div
+          style={{ flex: 1, minWidth: 0 }}
+          initial={{ opacity: 0, x: 24 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.6, delay: 0.15 }}
+        >
           <AnimatePresence mode="wait">
             <motion.div
               key={activeSubTab}
@@ -1382,40 +1612,86 @@ if (activeSubTab !== 'all') return null
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.25 }}
-              style={{
-                display: 'grid',
-                gridTemplateColumns: activeSubTab !== 'all' ? '1fr' : 'repeat(3, 1fr)',
-                gap: 14
-              }}
             >
-              {filtered.map((item) => (
-                <motion.div
-                  key={item.key}
-                  style={{
-                    ...s.cctvCard,
-                    backgroundImage: `url(${item.img})`,
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                    aspectRatio: activeSubTab !== 'all' ? '16/7' : '4/3',
-                    cursor: activeSubTab === 'all' ? 'pointer' : 'default'
-                  }}
-                  whileHover={{ y: -3, boxShadow: '0 8px 24px rgba(0,0,0,0.18)' }}
-                  transition={{ duration: 0.18 }}
-                  onClick={() => handleCardClick(item.key)}
-                  role={activeSubTab === 'all' ? 'button' : undefined}
-                  tabIndex={activeSubTab === 'all' ? 0 : undefined}
-                  onKeyDown={(e) => {
-                    if (activeSubTab !== 'all') return
-                    if (e.key === 'Enter' || e.key === ' ') handleCardClick(item.key)
-                  }}
-                >
-                  <div style={s.cctvCardDim} />
-                  <div style={{ position: 'relative', zIndex: 2 }}>
-                    <div style={s.cctvCardTitle}>{item.title}</div>
-                    <div style={s.cctvCardDesc}>{item.desc}</div>
-                  </div>
-                </motion.div>
-              ))}
+              <div style={{ marginBottom: 12, fontSize: 16, fontWeight: 800, color: '#222' }}>
+                스마트 건설안전장비
+              </div>
+
+              <div
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(2, 1fr)',
+                  gap: 14,
+                  marginBottom: 30
+                }}
+              >
+                {SMART_CONSTRUCTION_CARDS.map((item) => (
+                  <motion.div
+                    key={item.key}
+                    style={{
+                      ...s.cctvCard,
+                      backgroundImage: `url(${item.img})`,
+                      backgroundSize: 'cover',
+                      backgroundPosition: 'center',
+                      aspectRatio: '4/3',
+                      cursor: 'pointer'
+                    }}
+                    whileHover={{ y: -3, boxShadow: '0 8px 24px rgba(0,0,0,0.18)' }}
+                    transition={{ duration: 0.18 }}
+                    onClick={() => handleSmartCardClick(item.key)}
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') handleSmartCardClick(item.key)
+                    }}
+                  >
+                    <div style={s.cctvCardDim} />
+                    <div style={{ position: 'relative', zIndex: 2 }}>
+                      <div style={s.cctvCardTitle}>{item.title}</div>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+
+              <div style={{ marginBottom: 12, fontSize: 16, fontWeight: 800, color: '#222' }}>
+                건설안전관리
+              </div>
+
+              <div
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(3, 1fr)',
+                  gap: 14
+                }}
+              >
+                {constructionCards.map((item) => (
+                  <motion.div
+                    key={item.key}
+                    style={{
+                      ...s.cctvCard,
+                      backgroundImage: `url(${item.img})`,
+                      backgroundSize: 'cover',
+                      backgroundPosition: 'center',
+                      aspectRatio: '4/3',
+                      cursor: 'pointer'
+                    }}
+                    whileHover={{ y: -3, boxShadow: '0 8px 24px rgba(0,0,0,0.18)' }}
+                    transition={{ duration: 0.18 }}
+                    onClick={() => handleCardClick(item.key)}
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') handleCardClick(item.key)
+                    }}
+                  >
+                    <div style={s.cctvCardDim} />
+                    <div style={{ position: 'relative', zIndex: 2 }}>
+                      <div style={s.cctvCardTitle}>{item.title}</div>
+                      {/* <div style={s.cctvCardDesc}>{item.desc}</div> */}
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
             </motion.div>
           </AnimatePresence>
         </motion.div>
@@ -1423,9 +1699,6 @@ if (activeSubTab !== 'all') return null
     </motion.main>
   )
 }
-
-
-
 
 const ReferralBox = ({ isMobile }) => (
   <div style={{
@@ -1491,6 +1764,10 @@ const ReferralBox = ({ isMobile }) => (
   </div>
 )
 
+
+
+
+
 export default function InputPage() {
   const navigate = useNavigate()
   const isMobile = useIsMobile()
@@ -1517,220 +1794,245 @@ export default function InputPage() {
   const pendingActionRef = useRef(null)
   const [selectedRiskFactors, setSelectedRiskFactors] = useState([])
 
-
-
   const previewRef = useRef(null)
 
+  const HERO_SLIDES = [
+    {
+      question: '대기업이랑 같은 시스템이라고요?',
+      line1: '대기업 수억원. 중견기업 수천만원. 50인 미만 추천 사업장 0원.',
+      line2: '시스템은 하나입니다. 도입하는 사람에 따라 가격이 다릅니다. 고용노동부 지정 안전관리 전문기관이 설계한 동일 체계입니다.',
+      img: '/riskimage/건설분진.png'
+    },
+    {
+      question: '어떻게 무료 공급이 가능한가요?',
+      line1: '셰어웨어 모델은 공공기관·기업 등 특정 소비자 구간과 무료 구간이 다르게 시장가를 형성합니다.',
+      line2: '대기업은 안전에 연간 10억을 투자합니다.  법 기준은 동일합니다.  이에 GRBlab이  50인 미만 사업장은, 무료로  보급 하고 있습니다 .',
+      img: '/riskimage/건설포크.png'
+    },
+    {
+      question: '추천하면 저는 뭐가 좋아지나요?',
+      line1: '소개만 했을 뿐인데, 우리 사업장 시스템이 무료가 됩니다.',
+      line2: '복잡한 절차 없습니다. 추천인 코드만 전달했을 뿐입니다.\n\n"써보고 만족해서 추천했는데, 관리 시스템이 공짜가 됐습니다." — 인천, 제조업 대표',
+      img: '/riskimage/끼임.png'
+    },
+    {
+      question: '추천받은 사업장은 얼마를 내나요?',
+      line1: '50이 미만 사업체는 무료 입니다.',
+      line2: '스마트안전 장비를 추가 선택하실 경우 월 1만 9천원대 가격으로 , 중견기업에 평균 4천5백만원대 공급하는  안전관리 체계를 운영합니다.',
+      img: '/riskimage/밧데리.png'
+    },
+    {
+      question: '저는 사업장이 없는데요?',
+      line1: '사업장이 없어도, 50인 이상이어도 됩니다.',
+      line2: '추천인 코드로 누군가 등록하면, 수수료로 돌아옵니다. 시스템 무료 대신, 현금입니다.',
+      img: '/riskimage/천장.png'
+    },
+    {
+      question: '어떻게 알리면 되나요?',
+      line1: '어제 사장들 모임에 다녀왔습니다. 추천 코드 몇 개 돌렸습니다.',
+      line2: '설명 길게 안 했습니다. "써봤는데 괜찮더라" 한마디면 충분했습니다. 코드 하나가 내 사업장 비용을 없앴습니다.',
+      img: '/riskimage/식품.png'
+    },
+    {
+      question: '이미 늦은 건 아닌가요?',
+      line1: '카톡으로 코드 전달하려는데, 이미 전달된 분들로 떠 있었습니다.',
+      line2: '무료라서 먼저 움직인 겁니다. 늦으면, 줄 사람이 없어집니다.',
+      img: '/riskimage/전기.png'
+    },
+    {
+      question: '협회 단위로도 가능한가요?',
+      line1: '협회 회원사 전체에 추천 코드 일괄 배포합니다.',
+      line2: '담당자 한 명이 움직이면, 회원사 전체가 무료 구간에 들어옵니다. 협회가 회원사에게 줄 수 있는 가장 실질적인 혜택입니다.',
+      img: '/riskimage/컨베이어.png'
+    },
+    {
+      question: '사업단지 입주사들한테도 되나요?',
+      line1: '관리소 공지 하나면 됩니다. 입주 사업장 전체가 대상입니다.',
+      line2: '코드만 배포하면 됩니다. 도입은 각 사업장이 알아서 합니다. 단지 전체의 안전 수준이 공지 한 번으로 올라갑니다.',
+      img: '/riskimage/크레인.png'
+    },
+    {
+      question: '블로그 , 유튜브 채널로도 수익이 되나요?',
+      line1: '안전관리 콘텐츠를 만드십니까. 구독자가 코드를 쓸 때마다 수수료가 발생합니다.',
+      line2: '광고가 아닙니다. 실제로 무료로 쓰는 시스템을 소개하는 겁니다. 콘텐츠의 신뢰는 지키면서, 수익은 따라옵니다.',
+      img: '/riskimage/패기물.png'
+    },
+    {
+      question: '주변 사업장은 이미 준비했나요?',
+      line1: '같은 규모의 사업장이 먼저 기준을 갖추고 있습니다.',
+      line2: '준비한 사람 순서대로 격차가 벌어집니다.',
+      img: '/riskimage/프레스.png'
+    },
+    {
+      question: '산업재해, 우리 현장 얘기인가요?',
+      line1: '올해 산업재해 피해자 수, 142,771명.',
+      line2: '숫자는 크지만, 현장에서는 늘 한 사람에서 시작됩니다.',
+      img: '/riskimage/화학.png'
+    },
+    {
+      question: '안 준비하면 얼마나 위험한가요?',
+      line1: '법인 벌금 최대 50억. 보험료 영향은 사고 이후 3~5년.',
+      line2: '준비 여부가 결국 "격차"로 남는 구간입니다.',
+      img: '/riskimage/건설분진.png'
+    },
+  ]
 
+  const SMART_EQUIPMENT_ITEMS = [
+    { key: '중장비 충돌 예방', title: '중장비 충돌', img: '/riskimage/건설구역.png' },
+    { key: '개구부 추락 예방', title: '개구부 추락', img: '/riskimage/개구부.png' },
+    { key: 'TBM 안전 관리', title: '개인 보호구', img: '/riskimage/tbm.png' },
+    { key: '지게차 충돌 예방', title: '지게차 충돌', img: '/riskimage/지게차.png' },
+    { key: '열화상 감지', title: '열화상 감지', img: '/riskimage/열화상.png' },
+    { key: '설비 게이지 모니터링', title: '게이지 감시', img: '/riskimage/게이지.png' },
+    // { key: '호이스트 충돌 예방', title: '호이스트 충돌', img: '/riskimage/호이스트.png' },
+  ]
 
- const HERO_SLIDES = [
-  { question: '대기업이랑 같은 시스템이라고요?',
-    line1: '대기업 수억원. 중견기업 수천만원. 50인 미만 추천 사업장 0원.',
-    line2: '시스템은 하나입니다. 도입하는 사람에 따라 가격이 다릅니다. 고용노동부 지정 안전관리 전문기관이 설계한 동일 체계입니다.',
-    img: '/riskimage/건설분진.png' },
-  { question: '어떻게 무료 공급이 가능한가요?',
-    line1: '셰어웨어 모델은 공공기관·기업 등 특정 소비자 구간과 무료 구간이 다르게 시장가를 형성합니다.',
-    line2: '대기업은 안전에 연간 10억을 투자합니다.  법 기준은 동일합니다.  이에 GRBlab이  50인 미만 사업장은, 무료로  보급 하고 있습니다 .',
-    img: '/riskimage/건설포크.png' },
-  { question: '추천하면 저는 뭐가 좋아지나요?',
-    line1: '소개만 했을 뿐인데, 우리 사업장 시스템이 무료가 됩니다.',
-    line2: '복잡한 절차 없습니다. 추천인 코드만 전달했을 뿐입니다.\n\n"써보고 만족해서 추천했는데, 관리 시스템이 공짜가 됐습니다." — 인천, 제조업 대표',
-    img: '/riskimage/끼임.png' },
-  { question: '추천받은 사업장은 얼마를 내나요?',
-    line1: '50이 미만 사업체는 무료 입니다.',
-    line2: '스마트안전 장비를 추가 선택하실 경우 월 1만 9천원대 가격으로 , 중견기업에 평균 4천5백만원대 공급하는  안전관리 체계를 운영합니다.',
-    img: '/riskimage/밧데리.png' },
-  { question: '저는 사업장이 없는데요?',
-    line1: '사업장이 없어도, 50인 이상이어도 됩니다.',
-    line2: '추천인 코드로 누군가 등록하면, 수수료로 돌아옵니다. 시스템 무료 대신, 현금입니다.',
-    img: '/riskimage/천장.png' },
-  { question: '어떻게 알리면 되나요?',
-    line1: '어제 사장들 모임에 다녀왔습니다. 추천 코드 몇 개 돌렸습니다.',
-    line2: '설명 길게 안 했습니다. "써봤는데 괜찮더라" 한마디면 충분했습니다. 코드 하나가 내 사업장 비용을 없앴습니다.',
-    img: '/riskimage/식품.png' },
-  { question: '이미 늦은 건 아닌가요?',
-    line1: '카톡으로 코드 전달하려는데, 이미 전달된 분들로 떠 있었습니다.',
-    line2: '무료라서 먼저 움직인 겁니다. 늦으면, 줄 사람이 없어집니다.',
-    img: '/riskimage/전기.png' },
-  { question: '협회 단위로도 가능한가요?',
-    line1: '협회 회원사 전체에 추천 코드 일괄 배포합니다.',
-    line2: '담당자 한 명이 움직이면, 회원사 전체가 무료 구간에 들어옵니다. 협회가 회원사에게 줄 수 있는 가장 실질적인 혜택입니다.',
-    img: '/riskimage/컨베이어.png' },
-  { question: '사업단지 입주사들한테도 되나요?',
-    line1: '관리소 공지 하나면 됩니다. 입주 사업장 전체가 대상입니다.',
-    line2: '코드만 배포하면 됩니다. 도입은 각 사업장이 알아서 합니다. 단지 전체의 안전 수준이 공지 한 번으로 올라갑니다.',
-    img: '/riskimage/크레인.png' },
-  { question: '블로그 , 유튜브 채널로도 수익이 되나요?',
-    line1: '안전관리 콘텐츠를 만드십니까. 구독자가 코드를 쓸 때마다 수수료가 발생합니다.',
-    line2: '광고가 아닙니다. 실제로 무료로 쓰는 시스템을 소개하는 겁니다. 콘텐츠의 신뢰는 지키면서, 수익은 따라옵니다.',
-    img: '/riskimage/패기물.png' },
-  { question: '주변 사업장은 이미 준비했나요?',
-    line1: '같은 규모의 사업장이 먼저 기준을 갖추고 있습니다.',
-    line2: '준비한 사람 순서대로 격차가 벌어집니다.',
-    img: '/riskimage/프레스.png' },
-  { question: '산업재해, 우리 현장 얘기인가요?',
-    line1: '올해 산업재해 피해자 수, 142,771명.',
-    line2: '숫자는 크지만, 현장에서는 늘 한 사람에서 시작됩니다.',
-    img: '/riskimage/화학.png' },
-  { question: '안 준비하면 얼마나 위험한가요?',
-    line1: '법인 벌금 최대 50억. 보험료 영향은 사고 이후 3~5년.',
-    line2: '준비 여부가 결국 "격차"로 남는 구간입니다.',
-    img: '/riskimage/건설분진.png' },
-]
   const [copyIdx, setCopyIdx] = useState(0)
 
-  // ─────────────────────────────────────────────
-  // ✅ 핵심: 모든 이미지 입력의 단일 종착점
-  //
-  //  factors.workName 있음 → analyze2 → /tbm/result
-  //  factors.workName 없음 → analyze  → /result
-  // ─────────────────────────────────────────────
-// ────────────────────────────────────────
-// 4. handleRiskFactorConfirm (디버그 버전)
-// ────────────────────────────────────────
-const handleRiskFactorConfirm = useCallback(async (factors) => {
-  console.log('[MODAL] onConfirm 호출됨 factors:', JSON.stringify(factors))
+  const handleRiskFactorConfirm = useCallback(async (factors) => {
+    console.log('[MODAL] onConfirm 호출됨 factors:', JSON.stringify(factors))
 
-  setSelectedRiskFactors(factors)
-  setRiskModalOpen(false)
+    setSelectedRiskFactors(factors)
+    setRiskModalOpen(false)
 
-  const action = pendingActionRef.current
-  console.log('[ACTION] pendingActionRef.current:', action)
-  pendingActionRef.current = null
+    const action = pendingActionRef.current
+    console.log('[ACTION] pendingActionRef.current:', action)
+    pendingActionRef.current = null
 
-  if (action === 'camera') {
-    console.log('[ACTION] → 카메라 오픈')
-    setCameraOpen(true)
-    return
-  }
+    if (action === 'camera') {
+      console.log('[ACTION] → 카메라 오픈')
+      setCameraOpen(true)
+      return
+    }
 
-  if (action === 'gallery') {
-    console.log('[ACTION] → 갤러리 파일선택창 오픈')
-    fileInputRef.current?.click()
-    return
-  }
+    if (action === 'gallery') {
+      console.log('[ACTION] → 갤러리 파일선택창 오픈')
+      fileInputRef.current?.click()
+      return
+    }
 
-  console.log('[PENDING] pendingRiskFile:', pendingRiskFile)
-  if (!pendingRiskFile) {
-    console.warn('[PENDING] pendingRiskFile 없음 → 종료')
-    return
-  }
+    console.log('[PENDING] pendingRiskFile:', pendingRiskFile)
+    if (!pendingRiskFile) {
+      console.warn('[PENDING] pendingRiskFile 없음 → 종료')
+      return
+    }
 
-  const { file, imageUrl } = pendingRiskFile
-  console.log('[FILE] name:', file.name, 'type:', file.type, 'size:', file.size)
-  console.log('[IMAGE] imageUrl:', imageUrl)
+    const { file, imageUrl } = pendingRiskFile
+    console.log('[FILE] name:', file.name, 'type:', file.type, 'size:', file.size)
+    console.log('[IMAGE] imageUrl:', imageUrl)
 
-  setPendingRiskFile(null)
-  setPreview(imageUrl)
-setTimeout(() => {
-  if (!previewRef.current) return
-  const rect = previewRef.current.getBoundingClientRect()
-  const scrollTop = window.pageYOffset + rect.top - (window.innerHeight / 2) + (rect.height / 2)
-  window.scrollTo({ top: scrollTop, behavior: 'smooth' })
-}, 300)
-const hasWorkSelected = !!factors?.workName && factors?.mode !== 'risk'
-  console.log('[BRANCH] hasWorkSelected:', hasWorkSelected, '/ workName:', factors?.workName, '/ detailName:', factors?.detailName)
+    setPendingRiskFile(null)
+    setPreview(imageUrl)
 
-const cacheKey = hasWorkSelected
-  ? `tbm_${file.name.replace(/\s+/g, '_')}`
-  : file.name
+    setTimeout(() => {
+      if (!previewRef.current) return
+      const rect = previewRef.current.getBoundingClientRect()
+      const scrollTop = window.pageYOffset + rect.top - (window.innerHeight / 2) + (rect.height / 2)
+      window.scrollTo({ top: scrollTop, behavior: 'smooth' })
+    }, 300)
 
+    const hasWorkSelected = !!factors?.workName && factors?.mode !== 'risk'
+    console.log('[BRANCH] hasWorkSelected:', hasWorkSelected, '/ workName:', factors?.workName, '/ detailName:', factors?.detailName)
 
-  console.log('[CACHE] cacheKey:', cacheKey)
+    const cacheKey = hasWorkSelected
+      ? `tbm_${file.name.replace(/\s+/g, '_')}`
+      : file.name
 
-  let cachedResult = null
-  try {
-    const cr = await fetch(`/api-cache/${cacheKey}.json`, { cache: 'no-store' })
-    console.log('[CACHE] fetch status:', cr.status, 'ok:', cr.ok)
-    if (cr.ok) {
-      cachedResult = await cr.json()
-      console.log('[CACHE] 캐시 히트! cachedResult keys:', Object.keys(cachedResult))
+    console.log('[CACHE] cacheKey:', cacheKey)
+
+    let cachedResult = null
+    try {
+      const cr = await fetch(`/api-cache/${cacheKey}.json`, { cache: 'no-store' })
+      console.log('[CACHE] fetch status:', cr.status, 'ok:', cr.ok)
+      if (cr.ok) {
+        cachedResult = await cr.json()
+        console.log('[CACHE] 캐시 히트! cachedResult keys:', Object.keys(cachedResult))
+      } else {
+        console.log('[CACHE] 캐시 없음 → API 호출')
+      }
+    } catch (e) {
+      console.warn('[CACHE] fetch 에러:', e)
+    }
+
+    if (hasWorkSelected) {
+      const workname = factors.workName
+      const descript = factors.detailName ?? ''
+      console.log('[TBM] workname:', workname, '/ descript:', descript)
+
+      if (cachedResult) {
+        console.log('[TBM] 캐시 사용 → /tbm/result')
+        setCacheLoading(true)
+        await new Promise(r => setTimeout(r, 2000))
+        setCacheLoading(false)
+        navigate('/tbm/result', { state: { result: cachedResult, imageUrl, workname, descript } })
+        return
+      }
+
+      console.log('[TBM] analyze2 호출 시작')
+      const result = await analyze2(file, workname, descript)
+      console.log('[TBM] analyze2 결과:', result ? '성공 / keys:' + Object.keys(result) : '실패(null)')
+      if (!result) return
+
+      if (import.meta.env.DEV) {
+        try {
+          const saveRes = await fetch('/api/save-cache', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ filename: cacheKey, data: result }),
+          })
+          console.log('[CACHE] tbm 저장 결과:', saveRes.ok, 'filename:', cacheKey)
+        } catch (e) {
+          console.warn('[CACHE] tbm 저장 실패:', e)
+        }
+      }
+
+      console.log('[TBM] navigate → /tbm/result')
+      navigate('/tbm/result', { state: { result, imageUrl, workname, descript } })
+
     } else {
-      console.log('[CACHE] 캐시 없음 → API 호출')
-    }
-  } catch (e) {
-    console.warn('[CACHE] fetch 에러:', e)
-  }
+      console.log('[RISK] analyze 호출 시작')
 
-  if (hasWorkSelected) {
-    const workname = factors.workName
-    const descript = factors.detailName ?? ''
-    console.log('[TBM] workname:', workname, '/ descript:', descript)
-
-    if (cachedResult) {
-      console.log('[TBM] 캐시 사용 → /tbm/result')
-      setCacheLoading(true)
-      await new Promise(r => setTimeout(r, 2000))
-      setCacheLoading(false)
-      navigate('/tbm/result', { state: { result: cachedResult, imageUrl, workname, descript } })
-      return
-    }
-
-    console.log('[TBM] analyze2 호출 시작')
-    const result = await analyze2(file, workname, descript)
-    console.log('[TBM] analyze2 결과:', result ? '성공 / keys:' + Object.keys(result) : '실패(null)')
-    if (!result) return
-
-    if (import.meta.env.DEV) {
-      try {
-        const saveRes = await fetch('/api/save-cache', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ filename: cacheKey, data: result }),
-        })
-        console.log('[CACHE] tbm 저장 결과:', saveRes.ok, 'filename:', cacheKey)
-      } catch (e) {
-        console.warn('[CACHE] tbm 저장 실패:', e)
+      if (cachedResult) {
+        console.log('[RISK] 캐시 사용 → /result')
+        setCacheLoading(true)
+        await new Promise(r => setTimeout(r, 2000))
+        setCacheLoading(false)
+        navigate('/result', { state: { result: cachedResult, imageUrl, riskFactors: factors } })
+        return
       }
-    }
 
-    console.log('[TBM] navigate → /tbm/result')
-    navigate('/tbm/result', { state: { result, imageUrl, workname, descript } })
+      const result = await analyze(file)
+      console.log('[RISK] analyze 결과:', result ? '성공 / keys:' + Object.keys(result) : '실패(null)')
+      if (!result) return
 
-  } else {
-    console.log('[RISK] analyze 호출 시작')
-
-    if (cachedResult) {
-      console.log('[RISK] 캐시 사용 → /result')
-      setCacheLoading(true)
-      await new Promise(r => setTimeout(r, 2000))
-      setCacheLoading(false)
-      navigate('/result', { state: { result: cachedResult, imageUrl, riskFactors: factors } })
-      return
-    }
-
-    const result = await analyze(file)
-    console.log('[RISK] analyze 결과:', result ? '성공 / keys:' + Object.keys(result) : '실패(null)')
-    if (!result) return
-
-    if (import.meta.env.DEV) {
-      try {
-        const saveRes = await fetch('/api/save-cache', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ filename: cacheKey, data: result }),
-        })
-        console.log('[CACHE] risk 저장 결과:', saveRes.ok, 'filename:', cacheKey)
-      } catch (e) {
-        console.warn('[CACHE] risk 저장 실패:', e)
+      if (import.meta.env.DEV) {
+        try {
+          const saveRes = await fetch('/api/save-cache', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ filename: cacheKey, data: result }),
+          })
+          console.log('[CACHE] risk 저장 결과:', saveRes.ok, 'filename:', cacheKey)
+        } catch (e) {
+          console.warn('[CACHE] risk 저장 실패:', e)
+        }
       }
-    }
 
-    console.log('[RISK] navigate → /result')
-    navigate('/result', { state: { result, imageUrl, riskFactors: factors } })
-  }
-}, [
-  pendingRiskFile,
-  analyze,
-  analyze2,
-  navigate,
-  setPreview,
-  setPendingRiskFile,
-  setRiskModalOpen,
-  setSelectedRiskFactors,
-  setCacheLoading,
-  setCameraOpen,
-])
+      console.log('[RISK] navigate → /result')
+      navigate('/result', { state: { result, imageUrl, riskFactors: factors } })
+    }
+  }, [
+    pendingRiskFile,
+    analyze,
+    analyze2,
+    navigate,
+    setPreview,
+    setPendingRiskFile,
+    setRiskModalOpen,
+    setSelectedRiskFactors,
+    setCacheLoading,
+    setCameraOpen,
+  ])
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -1741,10 +2043,6 @@ const cacheKey = hasWorkSelected
 
   const loading = apiLoading || cacheLoading
 
-  // ─────────────────────────────────────────────
-  // ✅ handleFile: 모달 → handleRiskFactorConfirm 경로로 통일
-  //    (갤러리 onChange, 드롭 모두 여기서 처리)
-  // ─────────────────────────────────────────────
   const handleFile = useCallback(async (file) => {
     if (!file) return
     if (!file.type.startsWith('image/')) {
@@ -1753,7 +2051,6 @@ const cacheKey = hasWorkSelected
     }
     const imageUrl = URL.createObjectURL(file)
 
-    // 캐시 먼저 확인
     let cachedResult = null
     try {
       const cacheKey = file.name.replace(/\s+/g, '_')
@@ -1766,41 +2063,35 @@ const cacheKey = hasWorkSelected
     setRiskModalOpen(true)
   }, [])
 
-  // ─────────────────────────────────────────────
-  // ✅ handleCapture: 촬영 완료 → 모달 → handleRiskFactorConfirm 경로로 통일
-  // ─────────────────────────────────────────────
-const handleCapture = useCallback(async (file, previewSrc) => {
-  setCameraOpen(false)
-  setPreview(previewSrc)
+  const handleCapture = useCallback(async (file, previewSrc) => {
+    setCameraOpen(false)
+    setPreview(previewSrc)
 
-  const factors = selectedRiskFactors
-  const hasWorkSelected = !!factors?.workName && factors?.mode !== 'risk'
+    const factors = selectedRiskFactors
+    const hasWorkSelected = !!factors?.workName && factors?.mode !== 'risk'
 
-  if (hasWorkSelected) {
-    const workname = factors.workName
-    const descript = factors.detailName ?? ''
+    if (hasWorkSelected) {
+      const workname = factors.workName
+      const descript = factors.detailName ?? ''
 
-    const result = await analyze2(file, workname, descript)
-    if (!result) return
+      const result = await analyze2(file, workname, descript)
+      if (!result) return
 
-    navigate('/tbm/result', { state: { result, imageUrl: previewSrc, workname, descript } })
+      navigate('/tbm/result', { state: { result, imageUrl: previewSrc, workname, descript } })
 
-  } else {
+    } else {
+      const result = await analyze(file)
+      if (!result) return
 
-    const result = await analyze(file)
-    if (!result) return
+      navigate('/result', { state: { result, imageUrl: previewSrc, riskFactors: factors } })
+    }
+  }, [selectedRiskFactors, analyze, analyze2, navigate, setPreview])
 
-    navigate('/result', { state: { result, imageUrl: previewSrc, riskFactors: factors } })
-  }
-}, [selectedRiskFactors, analyze, analyze2, navigate, setPreview])
-  // ─────────────────────────────────────────────
-  // ✅ handleRiskImageSelect: 그리드 클릭 → 모달 → handleRiskFactorConfirm (기존과 동일)
-  // ─────────────────────────────────────────────
   const handleRiskImageSelect = useCallback(async (filename) => {
     try {
       const imageUrl = `/riskimage/${filename}`
 
-setRiskModalOpen(true)
+      setRiskModalOpen(true)
       let cachedResult = null
       try {
         const cr = await fetch(`/api-cache/${filename}.json`, { cache: 'no-store' })
@@ -1813,10 +2104,18 @@ setRiskModalOpen(true)
       const file = new File([blob], filename, { type: blob.type || 'image/png' })
 
       setPendingRiskFile({ file, imageUrl, cachedResult })
-      
     } catch (err) {
       console.error('Risk image load/analyze failed:', err)
     }
+  }, [])
+
+  const handleSmartEquipmentClick = useCallback((key) => {
+    setActiveTab('cctv')
+    setActiveSubTab(key)
+
+    setTimeout(() => {
+      cctvDetailAnchorRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }, 80)
   }, [])
 
   const DetailPageComponent = DETAIL_PAGE_MAP[activeSubTab] || null
@@ -1824,16 +2123,20 @@ setRiskModalOpen(true)
 
   const LoadingUI = (
     <motion.div key="loading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-     {preview && (
-  <div ref={previewRef} style={s.loadingPreview}>
-    <img src={preview} alt="" style={s.loadingImg}/>
-    <motion.div style={s.loadingScan} animate={{ top: ['0%', '100%', '0%'] }} transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}/>
-  </div>
-)}
+      {preview && (
+        <div ref={previewRef} style={s.loadingPreview}>
+          <img src={preview} alt="" style={s.loadingImg} />
+          <motion.div
+            style={s.loadingScan}
+            animate={{ top: ['0%', '100%', '0%'] }}
+            transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
+          />
+        </div>
+      )}
       <div style={s.loadingSteps}>
         {['이미지 전처리 및 객체 인식', 'KRAS 위험등급 분류', '법적 기준 검토', '보고서 자동 생성'].map((step, i) => (
           <motion.div key={i} style={s.stepRow} initial={{ opacity: 0.2 }} animate={{ opacity: 1 }} transition={{ delay: i * 0.5 }}>
-            <motion.div style={s.stepDot} animate={{ background: ['#ccc', '#1a1a1a'] }} transition={{ delay: i * 0.5 }}/>
+            <motion.div style={s.stepDot} animate={{ background: ['#ccc', '#1a1a1a'] }} transition={{ delay: i * 0.5 }} />
             <span style={s.stepText}>{step}</span>
           </motion.div>
         ))}
@@ -1854,8 +2157,8 @@ setRiskModalOpen(true)
             }}
           >
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-              <circle cx="12" cy="13" r="4.5" stroke="white" strokeWidth="1.8"/>
-              <path d="M3 9h2l2-3h10l2 3h2a1 1 0 011 1v9a1 1 0 01-1 1H3a1 1 0 01-1-1v-9a1 1 0 011-1z" stroke="white" strokeWidth="1.8"/>
+              <circle cx="12" cy="13" r="4.5" stroke="white" strokeWidth="1.8" />
+              <path d="M3 9h2l2-3h10l2 3h2a1 1 0 011 1v9a1 1 0 01-1 1H3a1 1 0 01-1-1v-9a1 1 0 011-1z" stroke="white" strokeWidth="1.8" />
             </svg>
             카메라로 촬영하기
           </motion.button>
@@ -1883,7 +2186,6 @@ setRiskModalOpen(true)
               setDragOver(false)
               const file = e.dataTransfer?.files?.[0]
               if (!file) return
-              // ✅ 드롭 → handleFile → 모달
               handleFile(file)
             }}
             onClick={() => {
@@ -1892,8 +2194,8 @@ setRiskModalOpen(true)
             }}
           >
             <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-              <path d="M14 4v16M7 11l7-7 7 7" stroke="#aaa" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-              <rect x="4" y="22" width="20" height="2" rx="1" fill="#ddd"/>
+              <path d="M14 4v16M7 11l7-7 7 7" stroke="#aaa" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+              <rect x="4" y="22" width="20" height="2" rx="1" fill="#ddd" />
             </svg>
             <span style={s.dropText}>이미지를 끌어다 놓거나 화면의 테스트 이미지를 클릭</span>
             <span style={s.dropSub}>JPG · PNG · WEBP</span>
@@ -1908,7 +2210,7 @@ setRiskModalOpen(true)
               }}
             >
               <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
-                <path d="M14 10v3a1 1 0 01-1 1H3a1 1 0 01-1-1v-3M8 2v8M5 5l3-3 3 3" stroke="#333" strokeWidth="1.5" strokeLinecap="round"/>
+                <path d="M14 10v3a1 1 0 01-1 1H3a1 1 0 01-1-1v-3M8 2v8M5 5l3-3 3 3" stroke="#333" strokeWidth="1.5" strokeLinecap="round" />
               </svg>
               파일 선택
             </button>
@@ -1921,8 +2223,8 @@ setRiskModalOpen(true)
               }}
             >
               <svg width="15" height="15" viewBox="0 0 20 20" fill="none">
-                <circle cx="10" cy="11" r="4" stroke="white" strokeWidth="1.5"/>
-                <path d="M2 8h2l1.5-2.5h9L16 8h2a1 1 0 011 1v8a1 1 0 01-1 1H2a1 1 0 01-1-1V9a1 1 0 011-1z" stroke="white" strokeWidth="1.5"/>
+                <circle cx="10" cy="11" r="4" stroke="white" strokeWidth="1.5" />
+                <path d="M2 8h2l1.5-2.5h9L16 8h2a1 1 0 011 1v8a1 1 0 01-1 1H2a1 1 0 01-1-1V9a1 1 0 011-1z" stroke="white" strokeWidth="1.5" />
               </svg>
               카메라 촬영
             </button>
@@ -1945,24 +2247,25 @@ setRiskModalOpen(true)
       `}</style>
 
       <AnimatePresence>
-        {cameraOpen && <CameraOverlay onCapture={handleCapture} onClose={() => setCameraOpen(false)}/>}
+        {cameraOpen && <CameraOverlay onCapture={handleCapture} onClose={() => setCameraOpen(false)} />}
       </AnimatePresence>
 
       <div style={s.page}>
 
         {/* ── 네비 ── */}
-       <nav style={s.nav}>
-  <div style={{ ...s.navInner, padding: isMobile ? '0 12px' : '0 40px' }}>
-    <div style={{ ...s.logo, transform: isMobile ? 'scale(0.8)' : 'none', transformOrigin: 'left center' }}>
-      <div style={s.logoMark}>G</div>
-      <span style={s.logoText}>GRBlab</span>
-    </div>
+        <nav style={s.nav}>
+          <div style={{ ...s.navInner, padding: isMobile ? '0 12px' : '0 40px' }}>
+            <div style={{ ...s.logo, transform: isMobile ? 'scale(0.8)' : 'none', transformOrigin: 'left center' }}>
+              <div style={s.logoMark}>G</div>
+              <span style={s.logoText}>GRBlab</span>
+            </div>
+
             <div style={s.tabs}>
               {[
                 { key: 'cmanage', label: '건설안전' },
-                { key: 'risk',    label: '위험성평가/TBM' },
-                { key: 'cctv',    label: 'AI+CCTV' },
-                { key: 'forms',   label: '안전관리서식' },
+                { key: 'risk', label: 'AI안전' },
+                { key: 'cctv', label: '스마트안전장비' },
+                { key: 'forms', label: '안전관리서식' },
               ].map(tab => (
                 <button
                   key={tab.key}
@@ -1971,9 +2274,8 @@ setRiskModalOpen(true)
                     color: activeTab === tab.key ? '#1a1a1a' : '#bbb',
                     fontWeight: activeTab === tab.key ? 700 : 500,
                     borderBottom: activeTab === tab.key ? '2px solid #1a1a1a' : '2px solid transparent',
-                    
-                       fontSize: isMobile ? 16 : 18,
-        padding: isMobile ? '0 6px' : '0 12px',
+                    fontSize: isMobile ? 16 : 18,
+                    padding: isMobile ? '0 6px' : '0 12px',
                   }}
                   onClick={() => {
                     setActiveTab(tab.key)
@@ -2038,10 +2340,38 @@ setRiskModalOpen(true)
         <AnimatePresence>
           {activeTab === 'cctv' && (
             <div style={s.subTabWrap}>
-              <div className="sub-tab-scroll" style={{ ...s.subTabInner, padding: isMobile ? '0 20px' : '0 40px', overflowX: isMobile ? 'auto' : 'visible', WebkitOverflowScrolling: 'touch' }}>
-                <button style={{ ...s.subTabBtn, color: activeSubTab === 'all' ? '#1a1a1a' : '#999', fontWeight: activeSubTab === 'all' ? 700 : 400, borderBottom: activeSubTab === 'all' ? '2px solid #1a1a1a' : '2px solid transparent' }} onClick={() => setActiveSubTab('all')}>전체</button>
+              <div
+                className="sub-tab-scroll"
+                style={{
+                  ...s.subTabInner,
+                  padding: isMobile ? '0 20px' : '0 40px',
+                  overflowX: isMobile ? 'auto' : 'visible',
+                  WebkitOverflowScrolling: 'touch'
+                }}
+              >
+                <button
+                  style={{
+                    ...s.subTabBtn,
+                    color: activeSubTab === 'all' ? '#1a1a1a' : '#999',
+                    fontWeight: activeSubTab === 'all' ? 700 : 400,
+                    borderBottom: activeSubTab === 'all' ? '2px solid #1a1a1a' : '2px solid transparent'
+                  }}
+                  onClick={() => setActiveSubTab('all')}
+                >
+                  전체
+                </button>
+
                 {CCTV_CARDS.map(card => (
-                  <button key={card.key} style={{ ...s.subTabBtn, color: activeSubTab === card.key ? '#1a1a1a' : '#999', fontWeight: activeSubTab === card.key ? 700 : 400, borderBottom: activeSubTab === card.key ? '2px solid #1a1a1a' : '2px solid transparent' }} onClick={() => setActiveSubTab(card.key)}>
+                  <button
+                    key={card.key}
+                    style={{
+                      ...s.subTabBtn,
+                      color: activeSubTab === card.key ? '#1a1a1a' : '#999',
+                      fontWeight: activeSubTab === card.key ? 700 : 400,
+                      borderBottom: activeSubTab === card.key ? '2px solid #1a1a1a' : '2px solid transparent'
+                    }}
+                    onClick={() => setActiveSubTab(card.key)}
+                  >
                     {card.title}
                   </button>
                 ))}
@@ -2051,30 +2381,70 @@ setRiskModalOpen(true)
 
           {activeTab === 'cmanage' && (
             <div style={s.subTabWrap}>
-              <div className="sub-tab-scroll" style={{ ...s.subTabInner, padding: isMobile ? '0 20px' : '0 40px', overflowX: isMobile ? 'auto' : 'visible', WebkitOverflowScrolling: 'touch' }}>
+              <div
+                className="sub-tab-scroll"
+                style={{
+                  ...s.subTabInner,
+                  padding: isMobile ? '0 20px' : '0 40px',
+                  overflowX: isMobile ? 'auto' : 'visible',
+                  WebkitOverflowScrolling: 'touch'
+                }}
+              >
                 <button
-                  style={{ ...s.subTabBtn, color: activeCmanageSubTab === 'all' ? '#1a1a1a' : '#999', fontWeight: activeCmanageSubTab === 'all' ? 700 : 400, borderBottom: activeCmanageSubTab === 'all' ? '2px solid #1a1a1a' : '2px solid transparent' }}
-                  onClick={() => { setActiveCmanageSubTab('all'); setSelectedSiteId(null); setSelectedPostId(null); setSelectedSafetyId(null); setSelectedTbmId(null) }}
+                  style={{
+                    ...s.subTabBtn,
+                    color: activeCmanageSubTab === 'all' ? '#1a1a1a' : '#999',
+                    fontWeight: activeCmanageSubTab === 'all' ? 700 : 400,
+                    borderBottom: activeCmanageSubTab === 'all' ? '2px solid #1a1a1a' : '2px solid transparent'
+                  }}
+                  onClick={() => {
+                    setActiveCmanageSubTab('all')
+                    setSelectedSiteId(null)
+                    setSelectedPostId(null)
+                    setSelectedSafetyId(null)
+                    setSelectedTbmId(null)
+                  }}
                 >
                   전체
                 </button>
-                {CMANAGE_CARDS.filter(c => c.key !== 'all').map(card => (
-                  <button
-                    key={card.key}
-                    style={{ ...s.subTabBtn, color: activeCmanageSubTab === card.key ? '#1a1a1a' : '#999', fontWeight: activeCmanageSubTab === card.key ? 700 : 400, borderBottom: activeCmanageSubTab === card.key ? '2px solid #1a1a1a' : '2px solid transparent' }}
-                    onClick={() => {
-                      if (card.key === 'docs') { setActiveTab('forms'); return }
-                      if (card.key === 'risk' || card.key === 'tbmai') { setActiveTab('risk'); return }
-                      setActiveCmanageSubTab(card.key)
-                      setSelectedSiteId(null)
-                      setSelectedPostId(null)
-                      setSelectedSafetyId(null)
-                      setSelectedTbmId(null)
-                    }}
-                  >
-                    {card.title}
-                  </button>
-                ))}
+
+              {CMANAGE_CARDS.filter(c => c.key !== 'all').map(card => (
+  <button
+    key={card.key}
+    style={{
+      ...s.subTabBtn,
+      color: activeCmanageSubTab === card.key ? '#1a1a1a' : '#999',
+      fontWeight: activeCmanageSubTab === card.key ? 700 : 400,
+      borderBottom: activeCmanageSubTab === card.key ? '2px solid #1a1a1a' : '2px solid transparent'
+    }}
+    onClick={() => {
+      if (card.key === 'docs') { setActiveTab('forms'); return }
+      if (card.key === 'risk' || card.key === 'tbmai') { setActiveTab('risk'); return }
+
+      // 스마트 건설안전장비 → cctv 탭으로 이동
+
+
+
+      const SMART_KEYS = ['중장비 충돌 예방', '개구부 추락 예방', 'TBM 안전 관리','지게차 충돌 예방']
+      if (SMART_KEYS.includes(card.key)) {
+        setActiveTab('cctv')
+        setActiveSubTab(card.key)
+        setTimeout(() => {
+          cctvDetailAnchorRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+        }, 150)
+        return
+      }
+
+      setActiveCmanageSubTab(card.key)
+      setSelectedSiteId(null)
+      setSelectedPostId(null)
+      setSelectedSafetyId(null)
+      setSelectedTbmId(null)
+    }}
+  >
+    {card.title}
+  </button>
+))}
               </div>
             </div>
           )}
@@ -2087,23 +2457,37 @@ setRiskModalOpen(true)
             <FormsPage key="forms" isMobile={isMobile} navigate={navigate} />
 
           ) : activeTab === 'cmanage' ? (
+
             <motion.div key="cmanage-wrapper" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
 
-  {activeCmanageSubTab !== 'all' && (
-  <div style={{ padding: isMobile ? '12px 20px 0' : '12px 40px 0' }}>
-    <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-      <ReferralBox isMobile={isMobile} />
-    </div>
-  </div>
-)}
-              <CmanagePage
-                isMobile={isMobile}
-                activeSubTab={activeCmanageSubTab}
-                onSelectSubTab={(key) => { setActiveCmanageSubTab(key); setSelectedSiteId(null); setSelectedPostId(null); setSelectedSafetyId(null); setSelectedTbmId(null) }}
-                onNavigateTab={(tab) => setActiveTab(tab)}
-              />
+              {activeCmanageSubTab !== 'all' && (
+                <div style={{ padding: isMobile ? '12px 20px 0' : '12px 40px 0' }}>
+                  <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+                    <ReferralBox isMobile={isMobile} />
+                  </div>
+                </div>
+              )}
+<CmanagePage
+  isMobile={isMobile}
+  activeSubTab={activeCmanageSubTab}
+  onSelectSubTab={(key) => {
+    setActiveCmanageSubTab(key)
+    setSelectedSiteId(null)
+    setSelectedPostId(null)
+    setSelectedSafetyId(null)
+    setSelectedTbmId(null)
+  }}
+  onNavigateTab={(tab, subKey) => {
+    setActiveTab(tab)
+    if (subKey) setActiveSubTab(subKey)
+    if (tab === 'cctv') {
+      setTimeout(() => {
+        cctvDetailAnchorRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      }, 150)
+    }
+  }}
+/>
               <AnimatePresence mode="wait">
-
                 {activeCmanageSubTab === 'contract' && (
                   selectedSiteId ? (
                     <motion.div key={`site-detail-${selectedSiteId}`} initial={{ opacity: 0, y: 32 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 16 }} transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }} style={{ maxWidth: 1200, margin: '0 auto', width: '100%' }}>
@@ -2200,19 +2584,29 @@ setRiskModalOpen(true)
                   )
                 )}
 
-                {activeCmanageSubTab !== 'all' && activeCmanageSubTab !== 'ppe' && activeCmanageSubTab !== 'inspection' && activeCmanageSubTab !== 'emergency' && activeCmanageSubTab !== 'edu' && activeCmanageSubTab !== 'contract' && activeCmanageSubTab !== 'board' && activeCmanageSubTab !== 'report' && activeCmanageSubTab !== 'tbm' && CmanageDetailComponent && (
-                  <motion.div key={`cmanage-detail-${activeCmanageSubTab}`} initial={{ opacity: 0, y: 32 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 16 }} transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }} style={{ maxWidth: 1200, margin: '0 auto', width: '100%' }}>
-                    <CmanageDetailComponent />
-                  </motion.div>
-                )}
-
+                {activeCmanageSubTab !== 'all'
+                  && activeCmanageSubTab !== 'ppe'
+                  && activeCmanageSubTab !== 'inspection'
+                  && activeCmanageSubTab !== 'emergency'
+                  && activeCmanageSubTab !== 'edu'
+                  && activeCmanageSubTab !== 'contract'
+                  && activeCmanageSubTab !== 'board'
+                  && activeCmanageSubTab !== 'report'
+                  && activeCmanageSubTab !== 'tbm'
+                  && CmanageDetailComponent && (
+                    <motion.div key={`cmanage-detail-${activeCmanageSubTab}`} initial={{ opacity: 0, y: 32 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 16 }} transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }} style={{ maxWidth: 1200, margin: '0 auto', width: '100%' }}>
+                      <CmanageDetailComponent />
+                    </motion.div>
+                  )}
               </AnimatePresence>
             </motion.div>
 
           ) : activeTab === 'cctv' ? (
 
             <motion.div key="cctv-wrapper" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-              <CctvPage isMobile={isMobile} activeSubTab={activeSubTab}
+              <CctvPage
+                isMobile={isMobile}
+                activeSubTab={activeSubTab}
                 onSelectSubTab={(key) => {
                   setActiveSubTab(key)
                   requestAnimationFrame(() => {
@@ -2242,14 +2636,20 @@ setRiskModalOpen(true)
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              style={{ ...s.hero, flexDirection: isMobile ? 'column' : 'row', padding: isMobile ? '1px 20px 48px' : '60px 40px', gap: isMobile ? 0 : 32, alignItems: isMobile ? 'flex-start' : 'stretch' }}
+              style={{
+                ...s.hero,
+                flexDirection: isMobile ? 'column' : 'row',
+                padding: isMobile ? '1px 20px 48px' : '60px 40px',
+                gap: isMobile ? 0 : 32,
+                alignItems: isMobile ? 'flex-start' : 'stretch'
+              }}
             >
               {/* ── 왼쪽 컬럼 ── */}
               <div style={{ flex: isMobile ? 'none' : '0 0 460px', maxWidth: isMobile ? '100%' : 460, width: '100%' }}>
                 <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
 
-                  <h1 style={{ ...s.heroTitle, fontSize: isMobile ? 32 : 42, lineHeight: 1.4 , letterSpacing: isMobile ? '-1.2px' : '-2.5px', marginBottom: isMobile ? 12 : 18, fontWeight: 400 }}>
-                    <span style={{ fontWeight: 900 }}>AI</span>가 바꾸는 <br/> TBM  /  위험성평가
+                  <h1 style={{ ...s.heroTitle, fontSize: isMobile ? 30 : 40, lineHeight: 1.4, letterSpacing: isMobile ? '-1.2px' : '-2.5px', marginBottom: isMobile ? 12 : 18, fontWeight: 400 }}>
+                    <span style={{ fontWeight: 900 }}>AI</span>가 바꾸는 <br /> 안전장비 / TBM / 위험성평가
                   </h1>
 
                   <p style={{ ...s.heroSub, fontSize: isMobile ? 15 : 17, marginBottom: isMobile ? 10 : 14 }}>
@@ -2268,25 +2668,103 @@ setRiskModalOpen(true)
                         style={{ display: 'flex', flexDirection: 'column', gap: 10 }}
                       >
                         <div style={{ display: 'flex', alignItems: 'flex-end', gap: 8 }}>
-                          <div style={{ width: 30, height: 30, borderRadius: '50%', background: '#e8e8e8', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 10, fontWeight: 900, color: '#555', flexShrink: 0 }}>Q</div>
+                          <div style={{ width: 30, height: 30, borderRadius: '50%', background: '#e8e8e8', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 10, fontWeight: 900, color: '#555', flexShrink: 0 }}>
+                            Q
+                          </div>
                           <div style={{ background: '#f0f0f0', borderRadius: '0px 14px 14px 14px', padding: '10px 14px', fontSize: isMobile ? 13 : 15, fontWeight: 700, color: '#333', lineHeight: 1.55, maxWidth: '80%' }}>
                             {HERO_SLIDES[copyIdx % HERO_SLIDES.length].question}
                           </div>
                         </div>
+
                         <div style={{ display: 'flex', alignItems: 'flex-end', gap: 8, flexDirection: 'row-reverse' }}>
-                          <div style={{ width: 30, height: 30, borderRadius: '50%', background: '#FAE100', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 10, fontWeight: 900, color: '#3C1E1E', flexShrink: 0 }}>A</div>
+                          <div style={{ width: 30, height: 30, borderRadius: '50%', background: '#FAE100', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 10, fontWeight: 900, color: '#3C1E1E', flexShrink: 0 }}>
+                            A
+                          </div>
                           <div style={{ background: '#FAE100', borderRadius: '14px 0px 14px 14px', padding: '10px 14px', maxWidth: '80%' }}>
-                            <p style={{ fontSize: isMobile ? 13 : 15, fontWeight: 800, color: '#3C1E1E', lineHeight: 1.5, margin: '0 0 4px' }}>{HERO_SLIDES[copyIdx % HERO_SLIDES.length].line1}</p>
-                            <p style={{ fontSize: isMobile ? 12 : 13, color: 'rgba(60,30,30,0.7)', lineHeight: 1.7, margin: 0 }}>{HERO_SLIDES[copyIdx % HERO_SLIDES.length].line2}</p>
+                            <p style={{ fontSize: isMobile ? 13 : 15, fontWeight: 800, color: '#3C1E1E', lineHeight: 1.5, margin: '0 0 4px' }}>
+                              {HERO_SLIDES[copyIdx % HERO_SLIDES.length].line1}
+                            </p>
+                            <p style={{ fontSize: isMobile ? 12 : 13, color: 'rgba(60,30,30,0.7)', lineHeight: 1.7, margin: 0 }}>
+                              {HERO_SLIDES[copyIdx % HERO_SLIDES.length].line2}
+                            </p>
                           </div>
                         </div>
                       </motion.div>
                     </AnimatePresence>
                   </div>
 
+                  {/* 스마트안전장비 */}
+      <div style={{ marginBottom: isMobile ? 16 : 20 }}>
+  <p style={{ ...s.gridSectionLabel, marginBottom: 8 }}>스마트안전장비</p>
+
+  <div
+    style={{
+      display: 'grid',
+      gridTemplateColumns: isMobile ? 'repeat(3, 1fr)' : 'repeat(3, 1fr)',
+      gap: isMobile ? 8 : 10,
+    }}
+  >
+    {SMART_EQUIPMENT_ITEMS.map((item) => (
+      <motion.button
+        key={item.key}
+        type="button"
+        whileHover={isMobile ? undefined : { y: -1 }}
+        whileTap={{ scale: 0.98 }}
+        onClick={() => handleSmartEquipmentClick(item.key)}
+        style={{
+          position: 'relative',
+          border: 'none',
+          borderRadius: 14,
+          overflow: 'hidden',
+          background: '#ddd',
+          cursor: 'pointer',
+          padding: 0,
+          textAlign: 'left',
+          aspectRatio: '1 / 1',
+          boxShadow: 'none',
+        }}
+      >
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            backgroundImage: `url(${item.img})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+          }}
+        />
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            background: 'linear-gradient(to top, rgba(0,0,0,0.55), rgba(0,0,0,0.08) 55%, rgba(0,0,0,0.02))',
+          }}
+        />
+        <div
+          style={{
+            position: 'absolute',
+            left: 8,
+            right: 8,
+            bottom: 8,
+            zIndex: 2,
+            color: '#fff',
+            fontSize: isMobile ? 11 : 12,
+            fontWeight: 800,
+            lineHeight: 1.2,
+            textShadow: '0 1px 2px rgba(0,0,0,0.35)',
+            wordBreak: 'keep-all',
+          }}
+        >
+          {item.title}
+        </div>
+      </motion.button>
+    ))}
+  </div>
+</div>
+
                   {/* ImageGrid */}
                   <div style={{ marginBottom: isMobile ? 16 : 20 }}>
-                    <p style={{ ...s.gridSectionLabel, marginBottom: 8 }}>현장 유형 테스트</p>
+                    <p style={{ ...s.gridSectionLabel, marginBottom: 8 }}> AI 위험성 평가 / TBM  </p>
                     <ImageGrid items={RISK_GRID} isMobile={isMobile} onSelect={handleRiskImageSelect} columns={6} />
                   </div>
 
@@ -2307,7 +2785,6 @@ setRiskModalOpen(true)
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.6, delay: 0.15 }}
                 >
-                  {/* 추천코드 UI */}
                   <div style={{ width: '100%', marginBottom: 14, display: 'flex', flexDirection: 'row', gap: 14, alignItems: 'stretch' }}>
                     <div style={{ flex: 1, background: '#f7f7f7', borderRadius: 12, padding: '16px 18px' }}>
                       <div style={{ marginBottom: 10 }}>
@@ -2331,42 +2808,40 @@ setRiskModalOpen(true)
                     </div>
                   </div>
 
-                  {/* Phone Frame */}
                   <div style={{ height: 700, aspectRatio: '1 / 2', background: '#1a1a1a', borderRadius: 44, padding: '10px 7px', boxShadow: '0 24px 80px rgba(0,0,0,0.28), inset 0 0 0 1px rgba(255,255,255,0.07)', position: 'relative', flexShrink: 0, alignSelf: 'center' }}>
-                    <div style={{ position: 'absolute', top: 12, left: '50%', transform: 'translateX(-50%)', width: 52, height: 7, background: '#000', borderRadius: 4, zIndex: 10 }}/>
+                    <div style={{ position: 'absolute', top: 12, left: '50%', transform: 'translateX(-50%)', width: 52, height: 7, background: '#000', borderRadius: 4, zIndex: 10 }} />
                     <div style={{ width: '100%', height: '100%', borderRadius: 36, overflow: 'hidden', background: '#000' }}>
-                      <video autoPlay loop muted playsInline style={{ width: '100%', height: '100%', objectFit: 'cover' }} src="/output.webm"/>
+                      <video autoPlay loop muted playsInline style={{ width: '100%', height: '100%', objectFit: 'cover' }} src="/output.webm" />
                     </div>
-                    <div style={{ position: 'absolute', bottom: 7, left: '50%', transform: 'translateX(-50%)', width: 52, height: 4, background: 'rgba(255,255,255,0.25)', borderRadius: 2 }}/>
-                    <div style={{ position: 'absolute', right: -3, top: 80, width: 3, height: 40, background: '#2a2a2a', borderRadius: 2 }}/>
-                    <div style={{ position: 'absolute', left: -3, top: 70, width: 3, height: 26, background: '#2a2a2a', borderRadius: 2 }}/>
-                    <div style={{ position: 'absolute', left: -3, top: 104, width: 3, height: 26, background: '#2a2a2a', borderRadius: 2 }}/>
+                    <div style={{ position: 'absolute', bottom: 7, left: '50%', transform: 'translateX(-50%)', width: 52, height: 4, background: 'rgba(255,255,255,0.25)', borderRadius: 2 }} />
+                    <div style={{ position: 'absolute', right: -3, top: 80, width: 3, height: 40, background: '#2a2a2a', borderRadius: 2 }} />
+                    <div style={{ position: 'absolute', left: -3, top: 70, width: 3, height: 26, background: '#2a2a2a', borderRadius: 2 }} />
+                    <div style={{ position: 'absolute', left: -3, top: 104, width: 3, height: 26, background: '#2a2a2a', borderRadius: 2 }} />
                   </div>
                 </motion.div>
               )}
-
             </motion.main>
-
           )}
         </AnimatePresence>
 
         {activeTab === 'risk' && <SafetyMarketingSections isMobile={isMobile} />}
 
         <div style={{ ...s.notice, padding: isMobile ? '12px 20px' : '12px 40px' }}>
-          <span style={s.noticeDot}/>
-          <span style={s.noticeText}>본 서비스는 산업안전보건법 제36조에 따른 위험성평가 보조 도구입니다. AI 분석 결과는 참고용이며 최종 판단은 안전관리자가 확인해야 합니다.</span>
+          <span style={s.noticeDot} />
+          <span style={s.noticeText}>
+            본 서비스는 산업안전보건법 제36조에 따른 위험성평가 보조 도구입니다. AI 분석 결과는 참고용이며 최종 판단은 안전관리자가 확인해야 합니다.
+          </span>
         </div>
 
         <footer style={{ ...s.footer, padding: isMobile ? '14px 20px' : '14px 40px', flexDirection: isMobile ? 'column' : 'row', gap: isMobile ? 4 : 14 }}>
           <span>© 2026 GRBlab AI 위험성평가 산업안전관리 시스템</span>
           {!isMobile && <span style={s.footerDiv}>|</span>}
-          <span>고용노동부 · 안전보건공단  의 KRAS채계와 호환 </span>
+          <span>고용노동부 · 안전보건공단 의 KRAS채계와 호환</span>
           {!isMobile && <span style={s.footerDiv}>|</span>}
           <span>sky011900@gmail.com</span>
         </footer>
       </div>
 
-      {/* ✅ 갤러리 input: handleFile → 모달 경로로 통일 */}
       <input
         ref={fileInputRef}
         type="file"
@@ -2374,7 +2849,7 @@ setRiskModalOpen(true)
         style={{ display: 'none' }}
         onChange={e => {
           const file = e.target.files?.[0]
-          e.target.value = ''  // 같은 파일 재선택 허용
+          e.target.value = ''
           if (file) handleFile(file)
         }}
       />
@@ -2391,7 +2866,6 @@ setRiskModalOpen(true)
     </>
   )
 }
-
 /* ── 카메라 스타일 ── */
 const cam = {
   root: { position: 'fixed', inset: 0, zIndex: 2000, background: '#000', display: 'flex', flexDirection: 'column', alignItems: 'center', fontFamily: "'Noto Sans KR',sans-serif" },
