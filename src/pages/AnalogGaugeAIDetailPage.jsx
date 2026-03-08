@@ -287,7 +287,7 @@ export default function AnalogGaugeAIDetailPage() {
             <FadeIn>
               <div style={p.sectionLabel}>작동 원리</div>
               <h2 style={{ ...p.sectionTitle, fontSize: isMobile ? 26 : 42 }}>
-                수치 이상이 사고가 되기 전<br/><span style={{ fontWeight: 900 }}>6단계로 차단합니다</span>
+                수치 이상이 사고가 되기 전<br/><span style={{ fontWeight: 900 }}>24/7 모니터링 합니다</span>
               </h2>
               <p style={{ ...p.sectionSub, maxWidth: 520 }}>문제 인식부터 전체 연동까지 — 현장의 실제 이미지로 확인하는 아날로그 게이지 AI 판독 시스템 작동 흐름입니다.</p>
             </FadeIn>

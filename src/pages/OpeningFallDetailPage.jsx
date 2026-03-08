@@ -287,7 +287,7 @@ export default function OpeningFallDetailPage() {
             <FadeIn>
               <div style={p.sectionLabel}>작동 원리</div>
               <h2 style={{ ...p.sectionTitle, fontSize: isMobile ? 26 : 42 }}>
-                열린 개구부를<br/><span style={{ fontWeight: 900 }}>6단계로 통제합니다</span>
+                개구부를<br/><span style={{ fontWeight: 900 }}> AI가 관리 합니다</span>
               </h2>
               <p style={{ ...p.sectionSub, maxWidth: 520 }}>문제 인식부터 게이트 경보까지 — 실제 현장 이미지로 확인하는 개구부 추락 예방 시스템입니다.</p>
             </FadeIn>
