@@ -28,78 +28,60 @@ function FadeIn({ children, delay = 0, style = {} }) {
 
 /* 히어로 슬라이더 */
 const HERO_SLIDES = [
-  { question: '대기업이랑 같은 시스템이라고요?',
-    line1: '대기업 수억원. 중견기업 수천만원. 50인 미만 추천 사업장 0원.',
-    line2: '시스템은 하나입니다. 도입하는 사람에 따라 가격이 다릅니다. 고용노동부 지정 안전관리 전문기관이 설계한 동일 체계입니다.',
-    img: '/riskimage/건설분진.png' },
-
-  { question: '어떻게 무료 공급이 가능한가요?',
-    line1: '셰어웨어 모델은 공공기관·기업 등 특정 소비자 구간과 무료 구간이 다르게 시장가를 형성합니다.',
-    line2: '대기업은 안전에 연간 10억을 투자합니다.  법 기준은 동일합니다.  이에 GRBlab이  50인 미만 사업장은, 무료로  보급 하고 있습니다 .',
-    img: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&q=80&fit=crop' },
-
-  { question: '추천하면 저는 뭐가 좋아지나요?',
-    line1: '소개만 했을 뿐인데, 우리 사업장 시스템이 무료가 됩니다.',
-    line2: '복잡한 절차 없습니다. 추천인 코드만 전달했을 뿐입니다.\n\n"써보고 만족해서 추천했는데, 관리 시스템이 공짜가 됐습니다." — 인천, 제조업 대표',
-    img: 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=800&q=80&fit=crop' },
-
-
-  { question: '추천받은 사업장은 얼마를 내나요?',
-    line1: '50이 미만 사업체는 무료 입니다.',
-    line2: '스마트안전 장비를 추가 선택하실 경우 월 1만 9천원대 가격으로 , 중견기업에 평균 4천5백만원대 공급하는  안전관리 체계를 운영합니다.',
-    img: '/riskimage/밧데리.png' },
-
-
-
-  { question: '추천받은 사람이 또 추천하면요?',
-    line1: '추천받은 사업장이 또 누군가에게 전달했습니다.',
-    line2: '그 순간, 처음 소개한 사장님도 다시 무료가 됩니다. 연결될수록, 모두의 부담이 줄어듭니다.',
-    img: '/riskimage/천장.png' },
-
-  { question: '저는 사업장이 없는데요?',
-    line1: '사업장이 없어도, 50인 이상이어도 됩니다.',
-    line2: '추천인 코드로 누군가 등록하면, 수수료로 돌아옵니다. 시스템 무료 대신, 현금입니다.',
-    img: '/riskimage/식품.png' },
-
-  { question: '어떻게 알리면 되나요?',
-    line1: '어제 사장들 모임에 다녀왔습니다. 추천 코드 몇 개 돌렸습니다.',
-    line2: '설명 길게 안 했습니다. "써봤는데 괜찮더라" 한마디면 충분했습니다. 코드 하나가 내 사업장 비용을 없앴습니다.',
-    img: '/riskimage/전기.png' },
-
-  { question: '이미 늦은 건 아닌가요?',
-    line1: '카톡으로 코드 전달하려는데, 이미 전달된 분들로 떠 있었습니다.',
-    line2: '무료라서 먼저 움직인 겁니다. 늦으면, 줄 사람이 없어집니다.',
-    img: '/riskimage/컨베이어.png' },
-
-  { question: '협회 단위로도 가능한가요?',
-    line1: '협회 회원사 전체에 추천 코드 일괄 배포합니다.',
-    line2: '담당자 한 명이 움직이면, 회원사 전체가 무료 구간에 들어옵니다. 협회가 회원사에게 줄 수 있는 가장 실질적인 혜택입니다.',
-    img: '/riskimage/크레인.png' },
-
-  { question: '사업단지 입주사들한테도 되나요?',
-    line1: '관리소 공지 하나면 됩니다. 입주 사업장 전체가 대상입니다.',
-    line2: '코드만 배포하면 됩니다. 도입은 각 사업장이 알아서 합니다. 단지 전체의 안전 수준이 공지 한 번으로 올라갑니다.',
-    img: '/riskimage/패기물.png' },
-
-  { question: '블로그 , 유튜브 채널로도 수익이 되나요?',
-    line1: '안전관리 콘텐츠를 만드십니까. 구독자가 코드를 쓸 때마다 수수료가 발생합니다.',
-    line2: '광고가 아닙니다. 실제로 무료로 쓰는 시스템을 소개하는 겁니다. 콘텐츠의 신뢰는 지키면서, 수익은 따라옵니다.',
-    img: '/riskimage/프레스.png' },
-
-  { question: '주변 사업장은 이미 준비했나요?',
-    line1: '같은 규모의 사업장이 먼저 기준을 갖추고 있습니다.',
-    line2: '준비한 사람 순서대로 격차가 벌어집니다.',
-    img: '/riskimage/화학.png' },
-
-  { question: '산업재해, 우리 현장 얘기인가요?',
-    line1: '올해 산업재해 피해자 수, 142,771명.',
-    line2: '숫자는 크지만, 현장에서는 늘 한 사람에서 시작됩니다.',
-    img: '/riskimage/건설분진.png' },
-
-  { question: '안 준비하면 얼마나 위험한가요?',
-    line1: '법인 벌금 최대 50억. 보험료 영향은 사고 이후 3~5년.',
-    line2: '준비 여부가 결국 "격차"로 남는 구간입니다.',
-    img: '/riskimage/끼임.png' },
+  {
+    question: '왜 일부 사업장은 무료 도입이 가능한가요?',
+    line1: '협회, 노무법인, 안전진단기관, 산업재해 예방기관 등 전문기관 추천 사업장은 무료 도입 구조로 운영됩니다.',
+    line2: '산업안전 및 전기안전 관리가 필요한 사업장을 전문기관이 추천하면, 당사가 시스템 구축과 운영을 지원합니다.',
+    img: '/riskimage/전기.png'
+  },
+  {
+    question: '무엇을 관리하는 시스템인가요?',
+    line1: '전기 안전, 전력 비용, 설비 상태를 하나의 체계로 통합 관리합니다.',
+    line2: '카메라 AI 판독, CT 전류 측정, 전력 분석, 전기설비 점검, 산업안전진단을 연결하여 현장 운영 리스크와 비용을 동시에 관리합니다.',
+    img: '/riskimage/컨베이어.png'
+  },
+  {
+    question: '어떤 사업장이 대상인가요?',
+    line1: '제조업, 식품공장, 냉동·냉장 설비 사업장, 산업단지 입주사, 노후 설비 사업장이 우선 대상입니다.',
+    line2: '컴프레셔, 냉동기, 팬·펌프, 전기실, 분전반, 생산설비를 보유한 사업장에서 전기 안전과 전력 절감 효과를 동시에 기대할 수 있습니다.',
+    img: '/riskimage/식품.png'
+  },
+  {
+    question: '기존 설비를 모두 바꿔야 하나요?',
+    line1: '기존 계기와 설비를 최대한 유지한 상태에서 적용합니다.',
+    line2: '배선 공사와 설비 개조를 최소화하고, 카메라와 CT 기반으로 데이터를 수집해 기존 공장 환경에 맞춰 도입할 수 있습니다.',
+    img: '/riskimage/프레스.png'
+  },
+  {
+    question: '단순 모니터링 시스템인가요?',
+    line1: '아닙니다. 전기 안전 감시, 전력 진단, 절감 솔루션, 법정 점검 대응까지 포함하는 운영 서비스입니다.',
+    line2: '전기설비 상태 점검, 열화상 진단, 산업안전진단, 전력 절감 실행, 성과 측정·검증까지 연결되는 구조입니다.',
+    img: '/riskimage/크레인.png'
+  },
+  {
+    question: '전문기관은 어떤 방식으로 연계되나요?',
+    line1: '협회, 노무법인, 산업안전진단기관, 산업재해 예방기관, 산업단지 관리조직이 추천기관이 됩니다.',
+    line2: '전문기관은 관리가 필요한 사업장을 추천하고, 당사는 시스템 도입·현장 진단·운영·보고 체계를 제공하는 구조입니다.',
+    img: '/riskimage/화학.png'
+  },
+  {
+    question: '비용은 어떻게 정산되나요?',
+    line1: '성과기반 에너지계약 구조에서는 절감이 검증된 경우에만 성과보수를 청구 합니다',
+    line2: '기준선 대비 절감량을 측정·검증한 후 절감액의 계약 비율로 정산하며, 전문기관 추천 무료 도입 사업장은 별도 구조로 운영합니다.',
+    img: '/riskimage/건설분진.png'
+  },
+  {
+    question: '법정 점검도 포함되나요?',
+    line1: '산업안전진단, 전기안전진단, 전력·화재진단, 공식 보고서 및 기관 제출까지 계약 범위에 포함됩니다.',
+    line2: '법정 자격 전문인력이 직접 방문해 현장 점검, 보고서 작성, 관계기관 제출, 사후 관리까지 수행합니다.',
+    img: '/riskimage/천장.png'
+  },
+  {
+  question: '50인 미만 사업장은 추가 지원이 있나요?',
+  line1: '협회, 노무법인, 안전진단기관 등 전문기관 추천 사업장은 무료 도입 구조로 운영됩니다.',
+  line2: '또한 50인 미만 사업장의 경우 정부의 산업안전 및 에너지 관련 지원사업 대상에 해당할 수 있으며, 적용 가능 여부를 함께 검토합니다.',
+  img: '/riskimage/전기.png'
+}
 ]
 /* 파이프라인 3개 */
 const PIPELINE_ITEMS = [
@@ -123,115 +105,133 @@ const PIPELINE_ITEMS = [
   },
 ]
 /* 18개 카피 파이프라인 */
+/* 산업 안전 · 전력 관리 메시지 파이프라인 */
 const COPY_PIPELINE = [
-  {
-    num: '01',
-    title: '같은 규모의 사업장, 이미 “기준”을 갖추고 있습니다.',
-    body: '아직 모르시는 사장님이 계시면, 이 한 줄만 전달해도 충분합니다.\n\n"요즘은 다들 준비하더라."\n\n그 말이 시작점이 됩니다.',
-    img: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=800&q=80&fit=crop',
-  },
-  {
-    num: '02',
-    title: '소개는 가볍게, 진행은 체계적으로.',
-    body: '아는 사장님께 이 페이지 링크 하나만 전달해주시면 됩니다.\n\n첫 달 무료. 가입비 없음. 계약을 강요하지 않습니다.\n\n“좋은 정보가 있다” 한마디가 현장을 바꿉니다.',
-    img: 'https://images.unsplash.com/photo-1581092160607-ee67df57d4a1?w=800&q=80&fit=crop',
-  },
-  {
-    num: '03',
-    title: '사고 한 번이 형사 책임으로 이어질 수 있습니다.',
-    body: '중대재해처벌법 시행 이후 달라진 현실입니다.\n\n사망 사고 1건, 사업주 개인 형사 책임 최소 1년.\n\n이 사실을 아직 체감하지 못한 사장님이 많습니다. 먼저 알려주실수록 의미가 큽니다.',
-    img: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=800&q=80&fit=crop',
-  },
-  {
-    num: '04',
-    title: '법인 벌금 최대 50억. “모르면 손해”인 숫자입니다.',
-    body: '사고 이후 법인에 부과될 수 있는 벌금, 최대 50억.\n\n사업장이 작아도 기준은 같습니다.\n\n이 숫자를 보는 순간, 사장님은 “우리 현장은 준비됐나”를 떠올립니다. 그 계기를 만들어주십시오.',
-    img: 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85f?w=800&q=80&fit=crop',
-  },
-  {
-    num: '05',
-    title: '박성호 씨, 38세. 용접공. 두 아이의 아버지.',
-    body: '그날도 평소처럼 출근했습니다.\n\n설비 이상 신호는 이전부터 있었습니다. 누구도 정리하지 않았고, 누구도 기록하지 않았습니다.\n\n이 문장이 “사람”으로 보이는 순간, 결정은 달라집니다. 주변에 전해주십시오.',
-    img: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=800&q=80&fit=crop',
-  },
-  {
-    num: '06',
-    title: '굳이 보지 않으셔도 됩니다. 다만, 이유는 분명해집니다.',
-    body: '실제 산업재해 현장 기록입니다.\n\n이 자료를 확인한 뒤 “주변에 알려야겠다”고 말하는 분들이 많았습니다.\n\n알게 되면, 공유하고 싶어집니다. 그게 예방의 시작입니다.',
-    img: 'https://images.unsplash.com/photo-1575505586569-646b2ca898fc?w=800&q=80&fit=crop',
-  },
-  {
-    num: '07',
-    title: '대기업은 10억을 씁니다. 법 기준은 동일합니다.',
-    body: '대기업과 소규모 사업장이 지는 법적 책임, 같습니다.\n\n하지만 준비 방식은 달라도 됩니다. 월 30만 원부터 시작할 수 있습니다.\n\n“이런 선택지가 있다”는 걸 모르는 사장님이 많습니다.',
-    img: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&q=80&fit=crop',
-  },
-  {
-    num: '08',
-    title: '신뢰는 “근거”에서 나옵니다.',
-    body: '산업안전보건법 제17조, 고용노동부 지정 안전관리 전문기관.\n\n“아는 분에게 부탁했다”가 아니라, 법이 인정한 자격으로 현장을 보는 방식입니다.\n\n소개하는 분의 신뢰를 지키기 위해, 근거부터 정리했습니다.',
-    img: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&q=80&fit=crop',
-  },
-  {
-    num: '09',
-    title: '이번 달 무료 점검, 3곳만 남았습니다.',
-    body: '매월 선착순 20곳만 진행합니다. 이번 달은 17곳이 마감됐습니다.\n\n필요한 사장님이 계시면 지금 전달해주시는 편이 낫습니다.\n\n다음 달은 다음 달의 순서가 필요합니다.',
-    img: 'https://images.unsplash.com/photo-1434626881859-194d67b2b86f?w=800&q=80&fit=crop',
-  },
-  {
-    num: '10',
-    title: '"처음엔 기대가 크지 않았습니다."',
-    body: '경기도 시흥, 금속가공 사업장 대표.\n\n"점검을 받고 나서야 놓친 지점이 보였습니다. 개선 후엔 현장 분위기도 달라졌습니다."\n\n이런 경험은 혼자만 알기 아깝습니다. 주변에 전달해주십시오.',
-    img: 'https://images.unsplash.com/photo-1560472355-536de3962603?w=800&q=80&fit=crop',
-  },
-  {
-    num: '11',
-    title: '자기 현장 위험 등급을 “정확히” 아는 곳은 많지 않습니다.',
-    body: '진단을 시작했다가 결과 직전에 멈추는 분들이 많습니다.\n\n혼자 하기 어려운 분에게 “같이 확인해보자”고 전해주십시오.\n\n5분 자가진단 링크 하나면 충분합니다.',
-    img: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80&fit=crop',
-  },
-  {
-    num: '12',
-    title: '알고 있는데, 시작이 어려운 사장님이 많습니다.',
-    body: '사고가 한 번이면 끝이 아니라는 걸 모르는 분은 없습니다.\n\n문제는 “어디서부터”입니다.\n\n그 시작점을 정리해드렸습니다. 링크 하나면 됩니다.',
-    img: 'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=800&q=80&fit=crop',
-  },
-  {
-    num: '13',
-    title: '서류는 “있어야 한다”가 아니라 “되어 있어야” 합니다.',
-    body: '위험성 평가, 작업표준서, 안전보건교육일지.\n\n무엇을 갖춰야 하는지 모르는 상태에서 점검이 나오면 흔들릴 수밖에 없습니다.\n\n처음부터 끝까지 흐름대로 정리해드립니다. 그 사실만 알려주셔도 됩니다.',
-    img: 'https://images.unsplash.com/photo-1568992687947-868a62a9f521?w=800&q=80&fit=crop',
-  },
-  {
-    num: '14',
-    title: '"이런 것까지 챙기는 줄 몰랐습니다."',
-    body: '점검 이후 현장에서 자주 나오는 말입니다.\n\n안전은 통제가 아니라 신뢰를 만드는 장치입니다.\n\n좋은 사업장을 만드는 방법을, 주변에 소개해주십시오.',
-    img: 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=800&q=80&fit=crop',
-  },
-  {
-    num: '15',
-    title: '딱 한 가지만 전달하셔도 됩니다.',
-    body: '이 링크 하나입니다.\n\n“이메일 하나만 남기면 체크리스트가 나온다”고만 전해주십시오.\n\n그걸로 충분합니다.',
-    img: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=800&q=80&fit=crop',
-  },
-  {
-    num: '16',
-    title: '보험료 영향은 3~5년 이어질 수 있습니다.',
-    body: '사고는 하루로 끝날 수 있습니다. 비용은 그렇지 않습니다.\n\n보험료 최대 40% 인상, 그 영향이 3~5년.\n\n이 사실을 “미리” 아는 것 자체가 방어가 됩니다. 주변에 알려주십시오.',
-    img: 'https://images.unsplash.com/photo-1554224154-26032ffc0d07?w=800&q=80&fit=crop',
-  },
-  {
-    num: '17',
-    title: '5분 자가진단, 링크 하나로 전달 가능합니다.',
-    body: '사람은 직접 확인한 문제를 더 빠르게 해결합니다.\n\n“한 번만 확인해보자”는 한마디와 함께 링크를 보내주십시오.\n\n5분이 시작점이 됩니다.',
-    img: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&q=80&fit=crop',
-  },
-  {
-    num: '18',
-    title: '142,771명. 숫자지만, 결국은 사람입니다.',
-    body: '올해 산업재해 피해자 수로 언급되는 수치입니다.\n\n숫자 하나하나는 이름이 있고, 가족이 있고, 출근했던 사람입니다.\n\n이 사실을 알게 된 분은 주변에 알려주게 됩니다.',
-    img: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=800&q=80&fit=crop',
-  },
+{
+num: '01',
+title: '같은 규모의 사업장, 이미 관리 체계를 갖추고 있습니다.',
+body: '최근 산업 현장에서는 전기 안전과 설비 관리 체계를 동시에 구축하는 흐름이 빠르게 확산되고 있습니다.\n\n특히 제조업과 산업단지 사업장을 중심으로 안전관리 시스템 도입이 표준처럼 자리 잡고 있습니다.',
+img: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=800&q=80&fit=crop'
+},
+
+{
+num: '02',
+title: '전문기관 추천 사업장은 도입 절차가 단순합니다.',
+body: '협회, 노무법인, 산업안전진단기관 등 전문기관 추천 사업장은 별도 복잡한 절차 없이 시스템 도입 상담을 진행할 수 있습니다.\n\n추천 기관을 통해 현장 상황에 맞는 관리 체계를 안내받을 수 있습니다.',
+img: 'https://images.unsplash.com/photo-1581092160607-ee67df57d4a1?w=800&q=80&fit=crop'
+},
+
+{
+num: '03',
+title: '산업재해 이후 책임 구조는 크게 달라졌습니다.',
+body: '중대재해처벌법 시행 이후 산업재해는 단순 사고가 아니라 경영 책임 문제로 이어질 수 있습니다.\n\n현장의 안전관리 체계가 실제로 운영되고 있는지 확인하는 것이 중요해졌습니다.',
+img: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=800&q=80&fit=crop'
+},
+
+{
+num: '04',
+title: '사업장 규모와 관계없이 법적 기준은 동일합니다.',
+body: '대기업과 중소 사업장 모두 동일한 산업안전보건법 기준이 적용됩니다.\n\n사업장 규모가 작더라도 안전관리 체계는 동일한 기준에서 요구됩니다.',
+img: 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85f?w=800&q=80&fit=crop'
+},
+
+{
+num: '05',
+title: '대부분의 사고는 작은 이상 신호에서 시작됩니다.',
+body: '설비 이상, 과전류, 과열, 누설 등 작은 신호가 누적되면서 사고로 이어지는 경우가 많습니다.\n\n초기 단계에서 이상을 감지하고 관리하는 체계가 중요한 이유입니다.',
+img: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=800&q=80&fit=crop'
+},
+
+{
+num: '06',
+title: '현장을 기록하고 관리하는 체계가 필요합니다.',
+body: '많은 사업장에서 설비 상태와 전력 사용 상태를 동시에 기록하는 체계를 구축하고 있습니다.\n\n이 데이터는 안전 관리뿐 아니라 운영 개선에도 활용됩니다.',
+img: 'https://images.unsplash.com/photo-1575505586569-646b2ca898fc?w=800&q=80&fit=crop'
+},
+
+{
+num: '07',
+title: '대기업은 이미 전력·안전 통합 관리 체계를 운영합니다.',
+body: '대기업은 전기 안전, 설비 상태, 전력 사용 데이터를 함께 관리하는 시스템을 구축하고 있습니다.\n\n최근에는 중소 사업장에서도 같은 방식의 관리 체계를 적용하는 사례가 늘고 있습니다.',
+img: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&q=80&fit=crop'
+},
+
+{
+num: '08',
+title: '신뢰는 전문기관의 기준에서 시작됩니다.',
+body: '산업안전보건법 기준에 따라 고용노동부 지정 안전관리 전문기관이 현장을 진단하고 관리 체계를 구축합니다.\n\n현장의 위험 요소를 법적 기준에 맞춰 분석합니다.',
+img: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&q=80&fit=crop'
+},
+
+{
+num: '09',
+title: '현장 점검은 일정 범위 내에서 진행됩니다.',
+body: '현장 점검과 진단은 일정 수의 사업장을 기준으로 순차적으로 진행됩니다.\n\n사업장 규모와 설비 상태에 따라 진단 일정이 조정됩니다.',
+img: 'https://images.unsplash.com/photo-1434626881859-194d67b2b86f?w=800&q=80&fit=crop'
+},
+
+{
+num: '10',
+title: '현장 점검 이후 운영 방식이 달라집니다.',
+body: '설비 상태를 데이터로 확인하면서 현장의 관리 방식이 바뀌는 사례가 많습니다.\n\n이상 징후를 사전에 확인하고 대응할 수 있기 때문입니다.',
+img: 'https://images.unsplash.com/photo-1560472355-536de3962603?w=800&q=80&fit=crop'
+},
+
+{
+num: '11',
+title: '사업장 위험 수준을 정확히 파악하는 것이 중요합니다.',
+body: '많은 사업장이 실제 위험 수준을 정확히 파악하지 못한 상태에서 운영됩니다.\n\n전문 진단을 통해 설비와 전력 상태를 함께 확인하는 것이 필요합니다.',
+img: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80&fit=crop'
+},
+
+{
+num: '12',
+title: '문제는 대부분 시작점이 없습니다.',
+body: '안전 관리가 필요하다는 것은 대부분 알고 있습니다.\n\n하지만 어디서부터 시작해야 할지 모르는 경우가 많습니다.',
+img: 'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=800&q=80&fit=crop'
+},
+
+{
+num: '13',
+title: '안전 서류는 형식이 아니라 운영 체계입니다.',
+body: '위험성 평가, 작업 표준서, 교육 기록 등은 단순 문서가 아니라 실제 관리 체계입니다.\n\n현장에서 실제로 운영되는 구조가 중요합니다.',
+img: 'https://images.unsplash.com/photo-1568992687947-868a62a9f521?w=800&q=80&fit=crop'
+},
+
+{
+num: '14',
+title: '안전 관리 체계는 현장 문화를 바꿉니다.',
+body: '안전 관리 체계가 도입된 현장은 작업 방식과 현장 분위기가 달라지는 경우가 많습니다.\n\n사전 예방 중심의 관리 방식이 자리 잡기 때문입니다.',
+img: 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=800&q=80&fit=crop'
+},
+
+{
+num: '15',
+title: '현장 진단은 간단한 절차로 시작할 수 있습니다.',
+body: '사업장 기본 정보와 설비 현황을 기반으로 초기 진단을 진행할 수 있습니다.\n\n이 과정을 통해 현장 상황을 먼저 확인합니다.',
+img: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=800&q=80&fit=crop'
+},
+
+{
+num: '16',
+title: '사고 이후 비용 영향은 장기간 이어질 수 있습니다.',
+body: '산업재해는 사고 이후에도 보험료와 운영 비용에 장기간 영향을 줄 수 있습니다.\n\n사전 예방 관리가 중요한 이유입니다.',
+img: 'https://images.unsplash.com/photo-1554224154-26032ffc0d07?w=800&q=80&fit=crop'
+},
+
+{
+num: '17',
+title: '현장 점검은 짧은 진단으로 시작됩니다.',
+body: '초기 진단을 통해 설비 상태와 관리 수준을 확인할 수 있습니다.\n\n필요한 경우 추가 점검과 개선 방안을 안내합니다.',
+img: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&q=80&fit=crop'
+},
+
+{
+num: '18',
+title: '산업재해는 결국 사람의 문제입니다.',
+body: '산업재해 통계는 숫자로 보이지만 결국 현장의 사람에게 발생하는 일입니다.\n\n안전 관리 체계를 구축하는 이유도 여기에 있습니다.',
+img: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=800&q=80&fit=crop'
+}
 ]
 
 
@@ -279,10 +279,10 @@ const DATA_FEATURES = [
 ]
 
 const STATS = [
-  { num: '무료',  label: '추천한 사업장 무상 공급 — 추천 받은 사업자 월 1만원대' },
-  { num: '50억',  label: '법인 벌금 최대치 — 기준은 동일할 수 있습니다' },
-  { num: '3~5년', label: '사고 이후 보험료 영향이 이어질 수 있는 기간' },
-  { num: '15년형 ',   label: '사망사고가 발생 회사 CEO가 15년형 징역형을 선고' },
+  { num: '3축', label: '전기 안전 · 전력 운영 · 설비 상태 통합 관리' },
+  { num: '24/7', label: '카메라 AI + CT 기반 상시 모니터링' },
+  { num: '5분야', label: '관리 · 기계 · 전기 · 화공 · 전력·화재진단 연계' },
+  { num: 'M&V', label: '성과 측정·검증 기반 절감량 산정' },
 ]
 
 const ag = {
@@ -480,11 +480,14 @@ export default function SafetyMarketingSections({ isMobile }) {
   <div style={ag.inner}>
     <FadeIn>
       <div style={ag.sectionLabel}>하나씩 확인하세요</div>
-      <h2 style={{ ...ag.sectionTitle, fontSize: isMobile ? 24 : 36, fontWeight: 600, color: '#333', lineHeight: 1.55 }}>
-        <span style={{ fontWeight: 900, color: '#888' }}>AI </span>안전관리시스템을<br/>
-        50인 미만 사업장에 무상 공급합니다
+      <h2 style={{ ...ag.sectionTitle, fontSize: isMobile ? 24 : 36, fontWeight: 400, color: '#333', lineHeight: 1.55 }}>
+    안전부터
+전력 비용까지
+<br/>
+
+      <span style={{ fontWeight:900 }}>무료</span> 로 도입하고 <br/>   산업 전기료 최대 50%까지<span style={{ fontWeight:900 }}> 낮춥니다</span>    <br/>
       </h2>
-      <p style={{ ...ag.sectionSub, maxWidth: 500 }}>추천인 사업장 무료 도입, 추천 받아 등록한 사업장 월 1만원대</p>
+      {/* <p style={{ ...ag.sectionSub, maxWidth: 500 }}>전력 운영 최적화를 통해 산업 전기료 최대 절반 수준까지 낮출 수 있습니다</p> */}
     </FadeIn>
 
     <div style={{ display: 'flex', flexDirection: 'column', gap: isMobile ? 64 : 96, marginTop: isMobile ? 36 : 60 }}>
@@ -502,34 +505,79 @@ export default function SafetyMarketingSections({ isMobile }) {
                 </div>
               </div>
             </div>
+{/* 설명형 브리핑 블록 */}
+<div style={{ flex: 1 }}>
+  <div
+    style={{
+      display: 'flex',
+      flexDirection: 'column',
+      gap: 14,
+      padding: isMobile ? '4px 0' : '8px 0',
+    }}
+  >
+    <div
+      style={{
+        fontSize: 11,
+        color: '#bbb',
+        fontWeight: 700,
+        letterSpacing: '0.08em',
+      }}
+    >
+      POINT {String(i + 1).padStart(2, '0')}
+    </div>
 
-            {/* Q&A 버블만 */}
-            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 14 }}>
+    <h3
+      style={{
+        fontSize: isMobile ? 20 : 28,
+        fontWeight: 800,
+        color: '#1a1a1a',
+        lineHeight: 1.35,
+        letterSpacing: '-0.6px',
+        margin: 0,
+      }}
+    >
+      {item.question}
+    </h3>
 
-              {/* Q 버블 — 왼쪽 흰색 */}
-              <div style={{ display: 'flex', alignItems: 'flex-end', gap: 8 }}>
-                <div style={{ width: 36, height: 36, borderRadius: '50%', background: '#e8e8e8', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 900, color: '#555', flexShrink: 0 }}>Q</div>
-                <div>
-                  <div style={{ fontSize: 11, color: '#bbb', fontWeight: 600, marginBottom: 4 }}>질문</div>
-                 <div style={{ background: '#f0f0f0', borderRadius: '0px 16px 16px 16px', padding: '12px 16px', fontSize: isMobile ? 16 : 18, fontWeight: 700, color: '#333', lineHeight: 1.55, maxWidth: isMobile ? '85%' : 320 }}>
-  {item.question}
+    <div
+      style={{
+        width: 40,
+        height: 2,
+        background: '#1a1a1a',
+        borderRadius: 2,
+      }}
+    />
+
+    <p
+      style={{
+        fontSize: isMobile ? 16 : 19,
+        fontWeight: 700,
+        color: '#1a1a1a',
+        lineHeight: 1.6,
+        margin: 0,
+        letterSpacing: '-0.2px',
+      }}
+    >
+      {item.line1}
+    </p>
+
+    <p
+      style={{
+        fontSize: isMobile ? 14 : 15,
+        color: '#666',
+        lineHeight: 1.85,
+        margin: 0,
+        whiteSpace: 'pre-line',
+      }}
+    >
+      {item.line2}
+    </p>
+  </div>
 </div>
-                </div>
-              </div>
 
-              {/* A 버블 — 오른쪽 노란색 */}
-              <div style={{ display: 'flex', alignItems: 'flex-end', gap: 8, flexDirection: 'row-reverse' }}>
-                <div style={{ width: 36, height: 36, borderRadius: '50%', background: '#FAE100', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 900, color: '#3C1E1E', flexShrink: 0 }}>A</div>
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
-                  <div style={{ fontSize: 11, color: '#bbb', fontWeight: 600, marginBottom: 4 }}>GRB AI</div>
-            <div style={{ background: '#FAE100', borderRadius: '16px 0px 16px 16px', padding: '14px 18px', maxWidth: isMobile ? '85%' : 340 }}>
-  <p style={{ fontSize: isMobile ? 16 : 19, fontWeight: 800, color: '#3C1E1E', lineHeight: 1.5, margin: '0 0 8px' }}>{item.line1}</p>
-  <p style={{ fontSize: isMobile ? 14 : 15, color: 'rgba(60,30,30,0.7)', lineHeight: 1.75, margin: 0, whiteSpace: 'pre-line' }}>{item.line2}</p>
-</div>
-                </div>
-              </div>
 
-            </div>
+
+
           </div>
         </FadeIn>
       ))}

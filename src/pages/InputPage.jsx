@@ -1796,86 +1796,67 @@ export default function InputPage() {
 
   const previewRef = useRef(null)
 
-  const HERO_SLIDES = [
-    {
-      question: '대기업이랑 같은 시스템이라고요?',
-      line1: '대기업 수억원. 중견기업 수천만원. 50인 미만 추천 사업장 0원.',
-      line2: '시스템은 하나입니다. 도입하는 사람에 따라 가격이 다릅니다. 고용노동부 지정 안전관리 전문기관이 설계한 동일 체계입니다.',
-      img: '/riskimage/건설분진.png'
-    },
-    {
-      question: '어떻게 무료 공급이 가능한가요?',
-      line1: '셰어웨어 모델은 공공기관·기업 등 특정 소비자 구간과 무료 구간이 다르게 시장가를 형성합니다.',
-      line2: '대기업은 안전에 연간 10억을 투자합니다.  법 기준은 동일합니다.  이에 GRBlab이  50인 미만 사업장은, 무료로  보급 하고 있습니다 .',
-      img: '/riskimage/건설포크.png'
-    },
-    {
-      question: '추천하면 저는 뭐가 좋아지나요?',
-      line1: '소개만 했을 뿐인데, 우리 사업장 시스템이 무료가 됩니다.',
-      line2: '복잡한 절차 없습니다. 추천인 코드만 전달했을 뿐입니다.\n\n"써보고 만족해서 추천했는데, 관리 시스템이 공짜가 됐습니다." — 인천, 제조업 대표',
-      img: '/riskimage/끼임.png'
-    },
-    {
-      question: '추천받은 사업장은 얼마를 내나요?',
-      line1: '50이 미만 사업체는 무료 입니다.',
-      line2: '스마트안전 장비를 추가 선택하실 경우 월 1만 9천원대 가격으로 , 중견기업에 평균 4천5백만원대 공급하는  안전관리 체계를 운영합니다.',
-      img: '/riskimage/밧데리.png'
-    },
-    {
-      question: '저는 사업장이 없는데요?',
-      line1: '사업장이 없어도, 50인 이상이어도 됩니다.',
-      line2: '추천인 코드로 누군가 등록하면, 수수료로 돌아옵니다. 시스템 무료 대신, 현금입니다.',
-      img: '/riskimage/천장.png'
-    },
-    {
-      question: '어떻게 알리면 되나요?',
-      line1: '어제 사장들 모임에 다녀왔습니다. 추천 코드 몇 개 돌렸습니다.',
-      line2: '설명 길게 안 했습니다. "써봤는데 괜찮더라" 한마디면 충분했습니다. 코드 하나가 내 사업장 비용을 없앴습니다.',
-      img: '/riskimage/식품.png'
-    },
-    {
-      question: '이미 늦은 건 아닌가요?',
-      line1: '카톡으로 코드 전달하려는데, 이미 전달된 분들로 떠 있었습니다.',
-      line2: '무료라서 먼저 움직인 겁니다. 늦으면, 줄 사람이 없어집니다.',
-      img: '/riskimage/전기.png'
-    },
-    {
-      question: '협회 단위로도 가능한가요?',
-      line1: '협회 회원사 전체에 추천 코드 일괄 배포합니다.',
-      line2: '담당자 한 명이 움직이면, 회원사 전체가 무료 구간에 들어옵니다. 협회가 회원사에게 줄 수 있는 가장 실질적인 혜택입니다.',
-      img: '/riskimage/컨베이어.png'
-    },
-    {
-      question: '사업단지 입주사들한테도 되나요?',
-      line1: '관리소 공지 하나면 됩니다. 입주 사업장 전체가 대상입니다.',
-      line2: '코드만 배포하면 됩니다. 도입은 각 사업장이 알아서 합니다. 단지 전체의 안전 수준이 공지 한 번으로 올라갑니다.',
-      img: '/riskimage/크레인.png'
-    },
-    {
-      question: '블로그 , 유튜브 채널로도 수익이 되나요?',
-      line1: '안전관리 콘텐츠를 만드십니까. 구독자가 코드를 쓸 때마다 수수료가 발생합니다.',
-      line2: '광고가 아닙니다. 실제로 무료로 쓰는 시스템을 소개하는 겁니다. 콘텐츠의 신뢰는 지키면서, 수익은 따라옵니다.',
-      img: '/riskimage/패기물.png'
-    },
-    {
-      question: '주변 사업장은 이미 준비했나요?',
-      line1: '같은 규모의 사업장이 먼저 기준을 갖추고 있습니다.',
-      line2: '준비한 사람 순서대로 격차가 벌어집니다.',
-      img: '/riskimage/프레스.png'
-    },
-    {
-      question: '산업재해, 우리 현장 얘기인가요?',
-      line1: '올해 산업재해 피해자 수, 142,771명.',
-      line2: '숫자는 크지만, 현장에서는 늘 한 사람에서 시작됩니다.',
-      img: '/riskimage/화학.png'
-    },
-    {
-      question: '안 준비하면 얼마나 위험한가요?',
-      line1: '법인 벌금 최대 50억. 보험료 영향은 사고 이후 3~5년.',
-      line2: '준비 여부가 결국 "격차"로 남는 구간입니다.',
-      img: '/riskimage/건설분진.png'
-    },
-  ]
+  
+// ② state 선언부에 추가 (다른 useState 옆에)
+const [activePowerTab, setActivePowerTab] = useState(false)
+
+
+const HERO_SLIDES = [
+  {
+    question: '왜 일부 사업장은 무료 도입이 가능한가요?',
+    line1: '협회, 노무법인, 안전진단기관, 산업재해 예방기관 등 전문기관 추천 사업장은 무료 도입 구조로 운영됩니다.',
+    line2: '개인 추천이나 코드 배포 방식이 아닙니다. 산업안전 및 전기안전 관리가 필요한 사업장을 전문기관이 추천하면, 당사가 시스템 구축과 운영을 지원합니다.',
+    img: '/riskimage/전기.png'
+  },
+  {
+    question: '무엇을 관리하는 시스템인가요?',
+    line1: '전기 안전, 전력 비용, 설비 상태를 하나의 체계로 통합 관리합니다.',
+    line2: '카메라 AI 판독, CT 전류 측정, 전력 분석, 전기설비 점검, 산업안전진단을 연결하여 현장 운영 리스크와 비용을 동시에 관리합니다.',
+    img: '/riskimage/컨베이어.png'
+  },
+  {
+    question: '어떤 사업장이 대상인가요?',
+    line1: '제조업, 식품공장, 냉동·냉장 설비 사업장, 산업단지 입주사, 노후 설비 사업장이 우선 대상입니다.',
+    line2: '컴프레셔, 냉동기, 팬·펌프, 전기실, 분전반, 생산설비를 보유한 사업장에서 전기 안전과 전력 절감 효과를 동시에 기대할 수 있습니다.',
+    img: '/riskimage/식품.png'
+  },
+  {
+    question: '기존 설비를 모두 바꿔야 하나요?',
+    line1: '기존 계기와 설비를 최대한 유지한 상태에서 적용합니다.',
+    line2: '배선 공사와 설비 개조를 최소화하고, 카메라와 CT 기반으로 데이터를 수집해 기존 공장 환경에 맞춰 도입할 수 있습니다.',
+    img: '/riskimage/프레스.png'
+  },
+  {
+    question: '단순 모니터링 시스템인가요?',
+    line1: '아닙니다. 전기 안전 감시, 전력 진단, 절감 솔루션, 법정 점검 대응까지 포함하는 운영 서비스입니다.',
+    line2: '전기설비 상태 점검, 열화상 진단, 산업안전진단, 전력 절감 실행, 성과 측정·검증까지 연결되는 구조입니다.',
+    img: '/riskimage/크레인.png'
+  },
+  {
+    question: '전문기관은 어떤 방식으로 연계되나요?',
+    line1: '협회, 노무법인, 산업안전진단기관, 산업재해 예방기관, 산업단지 관리조직이 추천기관이 됩니다.',
+    line2: '전문기관은 관리가 필요한 사업장을 추천하고, 당사는 시스템 도입·현장 진단·운영·보고 체계를 제공하는 구조입니다.',
+    img: '/riskimage/화학.png'
+  },
+  {
+    question: '비용은 어떻게 정산되나요?',
+    line1: '성과기반 에너지계약 구조에서는 절감이 검증된 경우에만 성과보수가 발생합니다.',
+    line2: '기준선 대비 절감량을 측정·검증한 후 절감액의 계약 비율로 정산하며, 전문기관 추천 무료 도입 사업장은 별도 구조로 운영합니다.',
+    img: '/riskimage/건설분진.png'
+  },
+  {
+    question: '법정 점검도 포함되나요?',
+    line1: '산업안전진단, 전기안전진단, 전력·화재진단, 공식 보고서 및 기관 제출까지 계약 범위에 포함됩니다.',
+    line2: '법정 자격 전문인력이 직접 방문해 현장 점검, 보고서 작성, 관계기관 제출, 사후 관리까지 수행합니다.',
+    img: '/riskimage/천장.png'
+  },
+  {
+  question: '50인 미만 사업장은 추가 지원이 있나요?',
+  line1: '협회, 노무법인, 안전진단기관 등 전문기관 추천 사업장은 무료 도입 구조로 운영됩니다.',
+  line2: '또한 50인 미만 사업장의 경우 정부의 산업안전 및 에너지 관련 지원사업 대상에 해당할 수 있으며, 적용 가능 여부를 함께 검토합니다.',
+  img: '/riskimage/전기.png'
+}
+]
 
   const SMART_EQUIPMENT_ITEMS = [
     { key: '중장비 충돌 예방', title: '중장비 충돌', img: '/riskimage/건설구역.png' },
@@ -2257,41 +2238,48 @@ export default function InputPage() {
           <div style={{ ...s.navInner, padding: isMobile ? '0 12px' : '0 40px' }}>
             <div style={{ ...s.logo, transform: isMobile ? 'scale(0.8)' : 'none', transformOrigin: 'left center' }}>
               <div style={s.logoMark}>G</div>
-              <span style={s.logoText}>GRBlab</span>
+              {/* <span style={s.logoText}>GRBlab</span> */}
             </div>
 
             <div style={s.tabs}>
-              {[
-                { key: 'cmanage', label: '건설안전' },
-                { key: 'risk', label: 'AI안전' },
-                { key: 'cctv', label: '스마트안전장비' },
-                { key: 'forms', label: '안전관리서식' },
-              ].map(tab => (
-                <button
-                  key={tab.key}
-                  style={{
-                    ...s.tabBtn,
-                    color: activeTab === tab.key ? '#1a1a1a' : '#bbb',
-                    fontWeight: activeTab === tab.key ? 700 : 500,
-                    borderBottom: activeTab === tab.key ? '2px solid #1a1a1a' : '2px solid transparent',
-                    fontSize: isMobile ? 16 : 18,
-                    padding: isMobile ? '0 6px' : '0 12px',
-                  }}
-                  onClick={() => {
-                    setActiveTab(tab.key)
-                    if (tab.key === 'cctv') setActiveSubTab('all')
-                    if (tab.key === 'cmanage') {
-                      setActiveCmanageSubTab('all')
-                      setSelectedSiteId(null)
-                      setSelectedPostId(null)
-                      setSelectedSafetyId(null)
-                      setSelectedTbmId(null)
-                    }
-                  }}
-                >
-                  {tab.label}
-                </button>
-              ))}
+
+
+
+
+{[
+    { key: 'power', label: 'PowerOps' },
+  { key: 'cmanage', label: '건설안전' },
+  { key: 'risk', label: 'AI안전' },
+  { key: 'cctv', label: '스마트안전장비' },
+  // { key: 'forms', label: '안전관리서식' },
+
+].map(tab => (
+  <button
+    key={tab.key}
+    style={{
+      ...s.tabBtn,
+      color: activeTab === tab.key ? '#1a1a1a' : '#bbb',
+      fontWeight: activeTab === tab.key ? 700 : 500,
+      borderBottom: activeTab === tab.key ? '2px solid #1a1a1a' : '2px solid transparent',
+      fontSize: isMobile ? 15 : 18,
+      padding: isMobile ? '0 6px' : '0 12px',
+    }}
+    onClick={() => {
+      setActiveTab(tab.key)
+      if (tab.key === 'cctv') setActiveSubTab('all')
+      if (tab.key === 'cmanage') {
+        setActiveCmanageSubTab('all')
+        setSelectedSiteId(null)
+        setSelectedPostId(null)
+        setSelectedSafetyId(null)
+        setSelectedTbmId(null)
+      }
+    }}
+  >
+    {tab.label}
+  </button>
+))}
+
             </div>
           </div>
 
@@ -2450,9 +2438,27 @@ export default function InputPage() {
           )}
         </AnimatePresence>
 
-        {/* ── 탭 콘텐츠 ── */}
+        {/* ── 탭 콘텐츠 ── */} 
         <AnimatePresence mode="wait">
-          {activeTab === 'forms' ? (
+          {
+          
+          
+          
+          
+          
+activeTab === 'power' ? (
+
+  <motion.div
+    key="power"
+    initial={{ opacity: 0, y: 16 }}
+    animate={{ opacity: 1, y: 0 }}
+    exit={{ opacity: 0 }}
+    // transition={{ duration: 0.1, ease: [0.22, 1, 0.36, 1] }}
+  >
+    <SmartPowerSafetyDetailPage />
+  </motion.div>
+
+) : activeTab === 'forms' ? (
 
             <FormsPage key="forms" isMobile={isMobile} navigate={navigate} />
 
@@ -2657,7 +2663,7 @@ export default function InputPage() {
                   </p>
 
                   {/* 채팅 버블 */}
-                  <div style={{ marginBottom: isMobile ? 16 : 20, minHeight: isMobile ? 110 : 120 }}>
+                  {/* <div style={{ marginBottom: isMobile ? 16 : 20, minHeight: isMobile ? 110 : 120 }}>
                     <AnimatePresence mode="wait">
                       <motion.div
                         key={copyIdx}
@@ -2691,7 +2697,7 @@ export default function InputPage() {
                         </div>
                       </motion.div>
                     </AnimatePresence>
-                  </div>
+                  </div> */}
 
                   {/* 스마트안전장비 */}
       <div style={{ marginBottom: isMobile ? 16 : 20 }}>
