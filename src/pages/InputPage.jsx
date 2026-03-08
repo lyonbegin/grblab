@@ -55,7 +55,7 @@ import SafetyEduDetailPage from './SafetyEduDetailPage'
 
 import ThermalDetectionDetailPage from './ThermalDetectionDetailPage'
 import AnalogGaugeAIDetailPage from './AnalogGaugeAIDetailPage'
-
+import SmartPowerSafetyDetailPage from './SmartPowerSafetyDetailPage'
 import SafetyDetailPage from './SafetyDetailPage'
 
 import SafetyListPage from './SafetyListPage'
@@ -913,7 +913,7 @@ const DETAIL_PAGE_MAP = {
   '농업': AgricultureDetailPage, '건설': ConstructionDetailPage, '공공·정부': GovernmentDetailPage,
   '의료·헬스케어': HealthcareDetailPage, '제조': ManufacturingDetailPage, '유통·물류': LogisticsDetailPage,
   '안전·보안': SecurityDetailPage, '교통·운송': TransportDetailPage, '소방·화재': FireDetailPage,
-   'TBM 안전 관리': PPESmartManagementDetailPage, '설비 게이지 모니터링': AnalogGaugeAIDetailPage,'열화상 감지': ThermalDetectionDetailPage,'중장비 충돌 예방': HeavyEquipmentCollisionDetailPage,'지게차 충돌 예방': ManufacturingCollisionDetailPage,'개구부 추락 예방': OpeningFallDetailPage,
+   'TBM 안전 관리': PPESmartManagementDetailPage, '설비 게이지 모니터링': SmartPowerSafetyDetailPage,'열화상 감지': ThermalDetectionDetailPage,'중장비 충돌 예방': HeavyEquipmentCollisionDetailPage,'지게차 충돌 예방': ManufacturingCollisionDetailPage,'개구부 추락 예방': OpeningFallDetailPage,
 }
 
 
@@ -1189,7 +1189,7 @@ const CCTV_CARDS = [
   },
   {
     key: '설비 게이지 모니터링',
-    title: '설비 게이지 모니터링',
+    title: '전기안전 통합모니터링',
     desc: '압력·온도·유량 게이지를 영상으로 읽고 이상 수치를 자동 감지합니다.',
     img: '/riskimage/게이지.png',
   },
@@ -1883,7 +1883,7 @@ export default function InputPage() {
     { key: 'TBM 안전 관리', title: '개인 보호구', img: '/riskimage/tbm.png' },
     { key: '지게차 충돌 예방', title: '지게차 충돌', img: '/riskimage/지게차.png' },
     { key: '열화상 감지', title: '열화상 감지', img: '/riskimage/열화상.png' },
-    { key: '설비 게이지 모니터링', title: '게이지 감시', img: '/riskimage/게이지.png' },
+    { key: '설비 게이지 모니터링', title: '전기안전 통합모니터링', img: '/riskimage/게이지.png' },
     // { key: '호이스트 충돌 예방', title: '호이스트 충돌', img: '/riskimage/호이스트.png' },
   ]
 
