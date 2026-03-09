@@ -2068,27 +2068,27 @@ const HERO_SLIDES = [
     }
   }, [selectedRiskFactors, analyze, analyze2, navigate, setPreview])
 
-  const handleRiskImageSelect = useCallback(async (filename) => {
+const handleRiskImageSelect = useCallback(async (filename) => {
+  try {
+    const imageUrl = `/riskimage/${filename}`
+
+    let cachedResult = null
     try {
-      const imageUrl = `/riskimage/${filename}`
+      const cr = await fetch(`/api-cache/${filename}.json`, { cache: 'no-store' })
+      if (cr.ok) cachedResult = await cr.json()
+    } catch (_) {}
 
-      setRiskModalOpen(true)
-      let cachedResult = null
-      try {
-        const cr = await fetch(`/api-cache/${filename}.json`, { cache: 'no-store' })
-        if (cr.ok) cachedResult = await cr.json()
-      } catch (_) {}
+    const res = await fetch(imageUrl, { cache: 'no-store' })
+    if (!res.ok) throw new Error(`image fetch failed: ${res.status}`)
+    const blob = await res.blob()
+    const file = new File([blob], filename, { type: blob.type || 'image/png' })
 
-      const res = await fetch(imageUrl, { cache: 'no-store' })
-      if (!res.ok) throw new Error(`image fetch failed: ${res.status}`)
-      const blob = await res.blob()
-      const file = new File([blob], filename, { type: blob.type || 'image/png' })
-
-      setPendingRiskFile({ file, imageUrl, cachedResult })
-    } catch (err) {
-      console.error('Risk image load/analyze failed:', err)
-    }
-  }, [])
+    setPendingRiskFile({ file, imageUrl, cachedResult })  // ← 먼저 세팅
+    setRiskModalOpen(true)  // ← 세팅 완료 후 모달 열기
+  } catch (err) {
+    console.error('Risk image load/analyze failed:', err)
+  }
+}, [])
 
   const handleSmartEquipmentClick = useCallback((key) => {
     setActiveTab('cctv')
