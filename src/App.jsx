@@ -62,6 +62,8 @@ export default function App() {
 <Route path="/inspection" element={<InspectionListPage />} />
 <Route path="/inspection/:postId" element={<InspectionDetailPage />} />
 
+<Route path="/partner" element={<PartnerPage />} />
+
 <Route path="/emergency"            element={<EmergencyListPage />} />
 <Route path="/emergency/:postId"    element={<EmergencyDetailPage />} />
  <Route path="ppe"       element={<PpeListPage />} />
