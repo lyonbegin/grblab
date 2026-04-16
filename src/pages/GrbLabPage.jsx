@@ -272,7 +272,7 @@ export default function GrbLabPage() {
           <div className="grb-hero-grid">
             <div>
               <span className="grb-eyebrow">서울과학기술대학교 안전공학과 교수팀 실증사업 · GRB LAB 주관</span>
-              <h1>산업화재보험 <br />설계사를 위한 산업전기 안전 &amp; 절감 파트너십</h1>
+              <h1  style={{  fontSize: 35 }} >산업화재보험 <br />설계사를 위한 산업전기 안전 &amp; 절감 파트너십</h1>
               <p className="grb-lead">
                 고객에게는 연간 화재보험료 100% 지원과 전기요금 절감 제안을 동시에 제공하고,<br />
                 설계사에게는 신규 영업 명분과 기존 고객 기반의 반복 수익 구조를 연결하는 파트너 프로그램입니다.
