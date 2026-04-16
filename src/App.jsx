@@ -21,6 +21,8 @@ import PpeListPage   from './pages/PpeListPage'
 import PpeDetailPage from './pages/PpeDetailPage'
 import SafetyEduDetailPage from './pages/SafetyEduDetailPage'
 import SafetyEduListPage   from './pages/SafetyEduListPage'
+
+import PartnerPage   from './pages/PartnerPage'
 // 임시 Stub (아직 구현 안 된 탭용)
 const Stub = ({ title }) => (
   <div style={{ padding: 24 }}>
