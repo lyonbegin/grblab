@@ -21,7 +21,7 @@ import PpeListPage   from './pages/PpeListPage'
 import PpeDetailPage from './pages/PpeDetailPage'
 import SafetyEduDetailPage from './pages/SafetyEduDetailPage'
 import SafetyEduListPage   from './pages/SafetyEduListPage'
-
+import GrbLabPage from './pages/GrbLabPage'
 // import PartnerPage   from './pages/PartnerPage'
 // 임시 Stub (아직 구현 안 된 탭용)
 const Stub = ({ title }) => (
@@ -65,7 +65,7 @@ export default function App() {
 <Route path="/inspection/:postId" element={<InspectionDetailPage />} />
 
 {/* <Route path="/partner" element={<PartnerPage />} /> */}
-
+<Route path="/pt" element={<GrbLabPage />} />
 <Route path="/emergency"            element={<EmergencyListPage />} />
 <Route path="/emergency/:postId"    element={<EmergencyDetailPage />} />
  <Route path="ppe"       element={<PpeListPage />} />
