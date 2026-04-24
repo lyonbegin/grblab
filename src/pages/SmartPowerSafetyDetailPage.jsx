@@ -321,21 +321,22 @@ export default function SmartPowerSafetyDetailPage() {
                       <div key={i} style={{ fontSize: 11, fontWeight: 700, color: '#555', background: '#f5f5f5', border: '1px solid #e0e0e0', borderRadius: 20, padding: '5px 12px' }}>{t}</div>
                     ))}
                   </div>
-                  <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-                    <motion.button style={p.ctaPrimary} whileTap={{ scale: 0.97 }} whileHover={{ background: '#333' }}> <a
-                 
-                  href="brochure.pdf"
-                  download
-                >
-                 브로슈어 자료 받기 
-                </a></motion.button>
-
-
-                    
-                    {/* <motion.button style={p.ctaSecondary} whileTap={{ scale: 0.97 }}>도입 상담 →</motion.button> */}
-                  </div>
-                </motion.div>
-              </div>
+             <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+  <motion.a
+    href="brochure.pdf"
+    download
+    style={{
+      ...p.ctaPrimary,
+      color: '#fff',
+      textDecoration: 'none',
+      display: 'inline-block'
+    }}
+    whileTap={{ scale: 0.97 }}
+    whileHover={{ background: '#333' }}
+  >
+    브로슈어 자료 받기
+  </motion.a>
+</div>
               <div style={{ flex: 1, minWidth: 0 }}>
                 <motion.div initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.65, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}>
                   <div style={{ borderRadius: 14, overflow: 'hidden', aspectRatio: isMobile ? '4/3' : '16/9', position: 'relative', background: '#111' }}>
