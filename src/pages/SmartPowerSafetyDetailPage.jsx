@@ -322,8 +322,18 @@ export default function SmartPowerSafetyDetailPage() {
                     ))}
                   </div>
                   <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-                    <motion.button style={p.ctaPrimary} whileTap={{ scale: 0.97 }} whileHover={{ background: '#333' }}>지금 무료로 시작하기</motion.button>
-                    <motion.button style={p.ctaSecondary} whileTap={{ scale: 0.97 }}>도입 상담 →</motion.button>
+                    <motion.button style={p.ctaPrimary} whileTap={{ scale: 0.97 }} whileHover={{ background: '#333' }}> <a
+                  className="grb-btn grb-btn-primary"
+                  style={{ width: '100%', fontSize: 20, minHeight: 72 }}
+                  href="brochure.pdf"
+                  download
+                >
+                  자료 받기
+                </a></motion.button>
+
+
+                    
+                    {/* <motion.button style={p.ctaSecondary} whileTap={{ scale: 0.97 }}>도입 상담 →</motion.button> */}
                   </div>
                 </motion.div>
               </div>
