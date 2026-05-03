@@ -2276,7 +2276,7 @@ const handleRiskImageSelect = useCallback(async (filename) => {
               }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                   <div style={s.logoMark}>G</div>
-                  <span style={{ fontSize: 14, fontWeight: 800, color: '#1a1a1a' }}>안전보건전문가그룹</span>
+                  {/* <span style={{ fontSize: 14, fontWeight: 800, color: '#1a1a1a' }}>안전보건전문가그룹</span> */}
                 </div>
                 <button
                   onClick={() => setDrawerOpen(false)}
