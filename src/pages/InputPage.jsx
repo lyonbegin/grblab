@@ -1800,6 +1800,10 @@ export default function InputPage() {
 // ② state 선언부에 추가 (다른 useState 옆에)
 const [activePowerTab, setActivePowerTab] = useState(false)
 
+// 모바일 햄버거 드로어
+const [drawerOpen, setDrawerOpen] = useState(false)
+const [drawerExpandedTab, setDrawerExpandedTab] = useState(null)
+
 
 const HERO_SLIDES = [
   {
@@ -2231,56 +2235,276 @@ const handleRiskImageSelect = useCallback(async (filename) => {
         {cameraOpen && <CameraOverlay onCapture={handleCapture} onClose={() => setCameraOpen(false)} />}
       </AnimatePresence>
 
+      {/* ── 모바일 햄버거 드로어 ── */}
+      <AnimatePresence>
+        {drawerOpen && isMobile && (
+          <>
+            {/* 딤 오버레이 */}
+            <motion.div
+              key="drawer-overlay"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.25 }}
+              onClick={() => setDrawerOpen(false)}
+              style={{
+                position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.45)',
+                zIndex: 200,
+              }}
+            />
+
+            {/* 드로어 패널 */}
+            <motion.div
+              key="drawer-panel"
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={{ type: 'tween', duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+              style={{
+                position: 'fixed', top: 0, right: 0, bottom: 0,
+                width: '78vw', maxWidth: 320,
+                background: '#fff', zIndex: 201,
+                display: 'flex', flexDirection: 'column',
+                boxShadow: '-4px 0 32px rgba(0,0,0,0.18)',
+                overflowY: 'auto',
+              }}
+            >
+              {/* 드로어 헤더 */}
+              <div style={{
+                display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                padding: '18px 20px', borderBottom: '1px solid #f0f0f0',
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <div style={s.logoMark}>G</div>
+                  <span style={{ fontSize: 14, fontWeight: 800, color: '#1a1a1a' }}>메뉴</span>
+                </div>
+                <button
+                  onClick={() => setDrawerOpen(false)}
+                  style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                >
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M4 4l12 12M16 4L4 16" stroke="#1a1a1a" strokeWidth="2" strokeLinecap="round"/>
+                  </svg>
+                </button>
+              </div>
+
+              {/* 드로어 메뉴 목록 */}
+              <div style={{ flex: 1, padding: '12px 0' }}>
+                {[
+                  {
+                    key: 'power',
+                    label: 'PowerOps',
+                    subs: [],
+                  },
+                  {
+                    key: 'cmanage',
+                    label: '건설안전',
+                    subs: CMANAGE_CARDS.filter(c => c.key !== 'all').map(c => ({ key: c.key, label: c.title })),
+                  },
+                  {
+                    key: 'risk',
+                    label: 'AI안전',
+                    subs: [],
+                  },
+                  {
+                    key: 'cctv',
+                    label: '스마트안전장비',
+                    subs: CCTV_CARDS.map(c => ({ key: c.key, label: c.title })),
+                  },
+                ].map(tab => {
+                  const isActive = activeTab === tab.key
+                  const isExpanded = drawerExpandedTab === tab.key
+                  const hasSubs = tab.subs.length > 0
+
+                  return (
+                    <div key={tab.key}>
+                      {/* 메인 탭 항목 */}
+                      <button
+                        onClick={() => {
+                          if (hasSubs) {
+                            setDrawerExpandedTab(isExpanded ? null : tab.key)
+                          } else {
+                            setActiveTab(tab.key)
+                            setDrawerOpen(false)
+                          }
+                        }}
+                        style={{
+                          width: '100%', background: 'none', border: 'none', cursor: 'pointer',
+                          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                          padding: '14px 20px',
+                          fontFamily: 'inherit',
+                          borderLeft: isActive ? '3px solid #1a1a1a' : '3px solid transparent',
+                          background: isActive ? '#f8f8f8' : 'none',
+                        }}
+                      >
+                        <span style={{
+                          fontSize: 15, fontWeight: isActive ? 800 : 600,
+                          color: isActive ? '#1a1a1a' : '#555',
+                        }}>
+                          {tab.label}
+                        </span>
+                        {hasSubs && (
+                          <svg
+                            width="16" height="16" viewBox="0 0 16 16" fill="none"
+                            style={{ transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s' }}
+                          >
+                            <path d="M4 6l4 4 4-4" stroke="#999" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                          </svg>
+                        )}
+                      </button>
+
+                      {/* 서브 메뉴 */}
+                      <AnimatePresence>
+                        {hasSubs && isExpanded && (
+                          <motion.div
+                            key={`sub-${tab.key}`}
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: 'auto', opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+                            style={{ overflow: 'hidden', background: '#fafafa', borderTop: '1px solid #f0f0f0', borderBottom: '1px solid #f0f0f0' }}
+                          >
+                            {tab.subs.map(sub => {
+                              const isSubActive =
+                                (tab.key === 'cctv' && activeSubTab === sub.key) ||
+                                (tab.key === 'cmanage' && activeCmanageSubTab === sub.key)
+
+                              return (
+                                <button
+                                  key={sub.key}
+                                  onClick={() => {
+                                    setActiveTab(tab.key)
+                                    if (tab.key === 'cctv') {
+                                      // cmanage_cards 에서 cctv/risk 탭으로 리다이렉트 되는 키들 처리
+                                      if (sub.key === 'docs') { setActiveTab('forms') }
+                                      else if (sub.key === 'risk' || sub.key === 'tbmai') { setActiveTab('risk') }
+                                      else { setActiveSubTab(sub.key) }
+                                    } else if (tab.key === 'cmanage') {
+                                      if (sub.key === 'docs') { setActiveTab('forms') }
+                                      else if (sub.key === 'risk' || sub.key === 'tbmai') { setActiveTab('risk') }
+                                      else {
+                                        const SMART_KEYS = ['중장비 충돌 예방', '개구부 추락 예방', 'TBM 안전 관리', '지게차 충돌 예방']
+                                        if (SMART_KEYS.includes(sub.key)) {
+                                          setActiveTab('cctv')
+                                          setActiveSubTab(sub.key)
+                                        } else {
+                                          setActiveCmanageSubTab(sub.key)
+                                          setSelectedSiteId(null)
+                                          setSelectedPostId(null)
+                                          setSelectedSafetyId(null)
+                                          setSelectedTbmId(null)
+                                        }
+                                      }
+                                    }
+                                    setDrawerOpen(false)
+                                  }}
+                                  style={{
+                                    width: '100%', background: 'none', border: 'none', cursor: 'pointer',
+                                    display: 'flex', alignItems: 'center', gap: 10,
+                                    padding: '11px 20px 11px 32px',
+                                    fontFamily: 'inherit',
+                                    borderLeft: isSubActive ? '3px solid #555' : '3px solid transparent',
+                                    background: isSubActive ? '#f0f0f0' : 'none',
+                                    textAlign: 'left',
+                                  }}
+                                >
+                                  <span style={{ width: 5, height: 5, borderRadius: '50%', background: isSubActive ? '#1a1a1a' : '#ccc', flexShrink: 0 }} />
+                                  <span style={{
+                                    fontSize: 13, fontWeight: isSubActive ? 700 : 400,
+                                    color: isSubActive ? '#1a1a1a' : '#666',
+                                  }}>
+                                    {sub.label}
+                                  </span>
+                                </button>
+                              )
+                            })}
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  )
+                })}
+              </div>
+
+              {/* 드로어 하단 */}
+              <div style={{ padding: '16px 20px', borderTop: '1px solid #f0f0f0' }}>
+                <span style={{ fontSize: 11, color: '#ccc' }}>GRBlab · 산업안전 AI 플랫폼</span>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
       <div style={s.page}>
 
         {/* ── 네비 ── */}
         <nav style={s.nav}>
-          <div style={{ ...s.navInner, padding: isMobile ? '0 12px' : '0 40px' }}>
-            <div style={{ ...s.logo, transform: isMobile ? 'scale(0.8)' : 'none', transformOrigin: 'left center' }}>
+          <div style={{ ...s.navInner, padding: isMobile ? '0 16px' : '0 40px' }}>
+            <div style={{ ...s.logo, transform: isMobile ? 'scale(0.85)' : 'none', transformOrigin: 'left center' }}>
               <div style={s.logoMark}>G</div>
               {/* <span style={s.logoText}>GRBlab</span> */}
             </div>
 
-            <div style={s.tabs}>
-
-
-
-
-{[
-    { key: 'power', label: 'PowerOps' },
-  { key: 'cmanage', label: '건설안전' },
-  { key: 'risk', label: 'AI안전' },
-  { key: 'cctv', label: '스마트안전장비' },
-  // { key: 'forms', label: '안전관리서식' },
-
-].map(tab => (
-  <button
-    key={tab.key}
-    style={{
-      ...s.tabBtn,
-      color: activeTab === tab.key ? '#1a1a1a' : '#bbb',
-      fontWeight: activeTab === tab.key ? 700 : 500,
-      borderBottom: activeTab === tab.key ? '2px solid #1a1a1a' : '2px solid transparent',
-      fontSize: isMobile ? 15 : 18,
-      padding: isMobile ? '0 6px' : '0 12px',
-    }}
-    onClick={() => {
-      setActiveTab(tab.key)
-      if (tab.key === 'cctv') setActiveSubTab('all')
-      if (tab.key === 'cmanage') {
-        setActiveCmanageSubTab('all')
-        setSelectedSiteId(null)
-        setSelectedPostId(null)
-        setSelectedSafetyId(null)
-        setSelectedTbmId(null)
-      }
-    }}
-  >
-    {tab.label}
-  </button>
-))}
-
-            </div>
+            {/* PC: 탭 버튼 / 모바일: 현재 탭 이름 + 햄버거 */}
+            {isMobile ? (
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                <span style={{ fontSize: 14, fontWeight: 700, color: '#1a1a1a' }}>
+                  {[
+                    { key: 'power', label: 'PowerOps' },
+                    { key: 'cmanage', label: '건설안전' },
+                    { key: 'risk', label: 'AI안전' },
+                    { key: 'cctv', label: '스마트안전장비' },
+                  ].find(t => t.key === activeTab)?.label}
+                </span>
+                <button
+                  onClick={() => { setDrawerOpen(true); setDrawerExpandedTab(activeTab) }}
+                  style={{
+                    background: 'none', border: 'none', cursor: 'pointer',
+                    padding: '6px', display: 'flex', flexDirection: 'column',
+                    gap: 5, alignItems: 'center', justifyContent: 'center',
+                  }}
+                  aria-label="메뉴 열기"
+                >
+                  <span style={{ display: 'block', width: 22, height: 2, background: '#1a1a1a', borderRadius: 2 }} />
+                  <span style={{ display: 'block', width: 22, height: 2, background: '#1a1a1a', borderRadius: 2 }} />
+                  <span style={{ display: 'block', width: 22, height: 2, background: '#1a1a1a', borderRadius: 2 }} />
+                </button>
+              </div>
+            ) : (
+              <div style={s.tabs}>
+                {[
+                  { key: 'power', label: 'PowerOps' },
+                  { key: 'cmanage', label: '건설안전' },
+                  { key: 'risk', label: 'AI안전' },
+                  { key: 'cctv', label: '스마트안전장비' },
+                ].map(tab => (
+                  <button
+                    key={tab.key}
+                    style={{
+                      ...s.tabBtn,
+                      color: activeTab === tab.key ? '#1a1a1a' : '#bbb',
+                      fontWeight: activeTab === tab.key ? 700 : 500,
+                      borderBottom: activeTab === tab.key ? '2px solid #1a1a1a' : '2px solid transparent',
+                      fontSize: 18,
+                      padding: '0 12px',
+                    }}
+                    onClick={() => {
+                      setActiveTab(tab.key)
+                      if (tab.key === 'cctv') setActiveSubTab('all')
+                      if (tab.key === 'cmanage') {
+                        setActiveCmanageSubTab('all')
+                        setSelectedSiteId(null)
+                        setSelectedPostId(null)
+                        setSelectedSafetyId(null)
+                        setSelectedTbmId(null)
+                      }
+                    }}
+                  >
+                    {tab.label}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
           {activeTab === 'risk' && (
