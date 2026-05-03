@@ -233,7 +233,7 @@ const CASES = [
     metric: '저전력',
     metricSub: '혹서 대책',
     date: '2025.06',
-    img: 'https://work-kaizen.com/wp-content/uploads/29d3bc99193cb0b837fb8cc53f050ae5.jpg',
+    img: '1.jpg',
     summary:
       '우물물을 활용한 냉풍 장치를 작업장 내에 도입해, 에어컨에 비해 소비전력을 대폭 억제하면서 여름철 혹서 환경을 개선한 사례입니다. 전기 요금 절감과 작업환경 개선을 동시에 달성했습니다.',
     situation:
@@ -256,7 +256,7 @@ const CASES = [
     metric: '체감온도↓',
     metricSub: '혹서 환경 개선',
     date: '2025.06',
-    img: 'https://work-kaizen.com/wp-content/uploads/20210726_161715-1024x925.jpg',
+    img: '2.jpg',
     summary:
       '유인팬과 배기팬으로 공장 상부의 열기를 외부로 배출하면서, 우물물을 활용한 냉풍 장치로 신선한 냉기를 공급하는 투트랙 방식으로 작업환경의 체감온도를 크게 낮춘 사례입니다.',
     situation:
@@ -279,7 +279,7 @@ const CASES = [
     metric: '환경 개선',
     metricSub: '열환경 쾌적화',
     date: '2025.06',
-    img: 'https://work-kaizen.com/wp-content/uploads/d0d88f756854adf2d723b88e9d7e6647-1024x768.jpg',
+    img: '3.jpg',
     summary:
       '칠러·열교환기·급기팬을 조합해 냉각된 외기를 실내로 공급하는 방식으로 공장 내 온도를 낮추고 작업환경을 쾌적하게 개선한 사례입니다.',
     situation:
@@ -302,7 +302,7 @@ const CASES = [
     metric: '온도 저감',
     metricSub: '열기 배출 최적화',
     date: '2025.06',
-    img: 'https://work-kaizen.com/wp-content/uploads/CIMG1726-1024x768.jpg',
+    img: '4.jpg',
     summary:
       '건물 지붕 아래에 정체되는 열기를 유인팬과 프로펠러팬을 조합해 효율적으로 외부로 배출함으로써 공장 내 온도를 낮추는 데 성공한 사례입니다.',
     situation:
@@ -325,7 +325,7 @@ const CASES = [
     metric: '공조 부하↓',
     metricSub: '열환경·에너지 동시 개선',
     date: '2023.08',
-    img: 'https://work-kaizen.com/wp-content/uploads/Heat-Case-02.jpg',
+    img: '5.jpg',
     summary:
       '국소배기설비 도입으로 공장 내 공기를 외부로 배출한 결과 동량의 외기가 유입되면서 기존 공조 설비가 과부하 상태가 되었습니다. 외기처리공조기를 추가해 유입 외기를 1차 처리함으로써 공조 부하를 대폭 낮춘 사례입니다.',
     situation:
@@ -348,7 +348,7 @@ const CASES = [
     metric: '열중증 리스크↓',
     metricSub: '이동 구간 환경 개선',
     date: '2023.08',
-    img: 'https://work-kaizen.com/wp-content/uploads/Heat-Case-01.jpg',
+    img: '6.jpg',
     summary:
       '자동차 조립 공장에서 공정 간 이동 시와 바람이 닿지 않는 작업 구역의 열중증 리스크를 해결하기 위해, 메인 통로와 안전 보행대에 상시 기류를 형성해 작업자가 항상 바람을 느낄 수 있는 환경을 구현한 사례입니다.',
     situation:
@@ -373,7 +373,7 @@ const CASES = [
     metric: '클레임 제로',
     metricSub: '분진 확산 차단',
     date: '2024.05',
-    img: 'https://work-kaizen.com/wp-content/uploads/Dust-Case-01-1.png',
+    img: '7.png',
     summary:
       '금속 제품 제조 공장에서 연속 용접기로부터 발생하는 흄 연기가 공장 전체에 충만해 완성품에 산화철 분진이 부착되는 불량이 반복되었습니다. 이동 흡인 덕트·집진기 갱신·포위식 개조를 통해 발진 문제를 근본적으로 해결한 사례입니다.',
     situation:
@@ -397,7 +397,7 @@ const CASES = [
     metric: '1관리구분',
     metricSub: '작업환경 기준 달성',
     date: '2024.05',
-    img: 'https://work-kaizen.com/wp-content/uploads/Dust-Case-04.png',
+    img: '8.png',
     summary:
       '철구 가공 공장의 플라즈마 절단 작업에서 발생하는 산화철 분진이 작업자 건강과 작업환경에 악영향을 미치고 있었습니다. 고압형 집진기와 이동식 흡인 후드 설치를 통해 작업환경을 법정 기준인 1관리구분으로 개선한 사례입니다.',
     situation:
@@ -422,7 +422,7 @@ const CASES = [
     metric: '환경 개선',
     metricSub: '작업환경 쾌적화',
     date: '2025.06',
-    img: 'https://work-kaizen.com/wp-content/uploads/1-1.png',
+    img: '9.png',
     summary:
       '기존 전체 환기 방식으로는 해결되지 않던 국소 오염 문제를 국소배기장치 도입으로 해결한 사례입니다. 작업 방식을 바꾸지 않고도 오염물질을 발생원에서 직접 포집해 작업환경을 크게 개선했습니다.',
     situation:
@@ -445,7 +445,7 @@ const CASES = [
     metric: '환경 기준 달성',
     metricSub: '환기 효율 최적화',
     date: '2025.06',
-    img: 'https://work-kaizen.com/wp-content/uploads/RIMG3053-1024x768.jpg',
+    img: '10.jpg',
     summary:
       '푸시풀형 환기장치로 오염 공기를 효율적으로 포집하고, 배기팬을 통해 지붕 위로 배출하는 방식으로 작업 구역 전체의 공기질을 개선한 사례입니다.',
     situation:
@@ -468,7 +468,7 @@ const CASES = [
     metric: '환경 개선',
     metricSub: '기존 설비 활용',
     date: '2025.06',
-    img: 'https://work-kaizen.com/wp-content/uploads/DSC_04551.jpg',
+    img: '11.jpg',
     summary:
       '새 설비를 도입하지 않고 기존 기기를 국소배기장치로 개조하는 방식으로 초기 비용을 절감하면서 작업환경을 개선한 사례입니다. 작업성도 전혀 손상되지 않았습니다.',
     situation:
@@ -493,7 +493,7 @@ const CASES = [
     metric: '확산 차단',
     metricSub: '유해물질 대책',
     date: '2023.08',
-    img: 'https://work-kaizen.com/wp-content/uploads/ToxicSubstance-Case-01.png',
+    img: '12.png',
     summary:
       '건축 자재 도장 작업에서 유기용제가 공장 내로 확산되는 문제를 이동식 국소배기장치 도입으로 해결한 사례입니다. 작업 위치와 가공물 크기가 다양해도 유연하게 대응할 수 있는 구조를 구현했습니다.',
     situation:
@@ -516,7 +516,7 @@ const CASES = [
     metric: '법정 기준 달성',
     metricSub: '유해물질 제어',
     date: '2023.08',
-    img: 'https://work-kaizen.com/wp-content/uploads/ToxicSubstance-Case-07.png',
+    img: '13.png',
     summary:
       '압연·혼련 공정에서 유기용제 증기가 확산되어 작업환경 측정 결과가 3관리구분이었습니다. 기존 작업 방식을 그대로 유지하면서 포위식 후드와 배풍기를 갱신해 법정 제어 풍속을 충족시킨 사례입니다.',
     situation:
@@ -541,7 +541,7 @@ const CASES = [
     metric: '안전·정확',
     metricSub: '시공 전 치수 확인',
     date: '2023.08',
-    img: 'https://work-kaizen.com/wp-content/uploads/3Dscan-Case-03.jpg',
+    img: '14.jpg',
     summary:
       '기존 공장 내 복잡하게 얽힌 고소 배관 사이에 새 설비를 설치해야 하는 상황에서, 3D스캔을 활용해 안전하고 정확하게 현장 치수를 취득한 사례입니다. 시공 전 간섭 확인과 관계자 간 정보 공유도 원활해졌습니다.',
     situation:
@@ -564,7 +564,7 @@ const CASES = [
     metric: '시공 전 검증',
     metricSub: '기류 시뮬레이션',
     date: '2023.08',
-    img: 'https://work-kaizen.com/wp-content/uploads/AirFlow-Case-01.jpg',
+    img: '15.jpg',
     summary:
       '자동차 관련 기업의 자동 용접 로봇 공정에서 배기 부스 형상과 배기구 위치를 최적화하기 위해 기류해석 소프트웨어를 활용. 시공 전에 복수의 부스 형상을 3D 모델로 검증해 가장 효율적인 설계를 결정한 사례입니다.',
     situation:
@@ -589,7 +589,7 @@ const CASES = [
     metric: '품질 안정화',
     metricSub: '불량률 제거',
     date: '2023.08',
-    img: 'https://work-kaizen.com/wp-content/uploads/Quolity-Case-01.jpg',
+    img: '16.jpg',
     summary:
       '커터 날 코팅 공정에서 수작업에 의한 막 두께 편차와 품질 불안정 문제를 도장 로봇 도입으로 해결한 사례입니다. 도장 부스·로봇·도료 공급 장치·건조로를 일괄 도입해 품질 안정화와 작업자 건강 리스크 저감을 동시에 달성했습니다.',
     situation:
