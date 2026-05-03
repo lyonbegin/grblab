@@ -427,11 +427,11 @@ export default function PowerOpsCasesSection() {
 
   return (
     <>
-      <section style={{
-        padding: '56px 40px 64px',
-        maxWidth: 1200, margin: '0 auto',
-        fontFamily: "'Noto Sans KR','Malgun Gothic',sans-serif",
-      }}>
+     <section style={{
+  padding: '56px 40px 64px',
+  fontFamily: "'Noto Sans KR','Malgun Gothic',sans-serif",
+}}>
+  <div style={{ maxWidth: 1200, margin: '0 auto' }}> 
         {/* 헤더 */}
         <div style={{ marginBottom: 36 }}>
           <div style={{
@@ -494,6 +494,7 @@ export default function PowerOpsCasesSection() {
             ))}
           </AnimatePresence>
         </motion.div>
+        </div> 
       </section>
 
       {/* 상세 슬라이드 패널 */}
