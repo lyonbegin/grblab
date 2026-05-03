@@ -56,6 +56,10 @@ import SafetyEduDetailPage from './SafetyEduDetailPage'
 import ThermalDetectionDetailPage from './ThermalDetectionDetailPage'
 import AnalogGaugeAIDetailPage from './AnalogGaugeAIDetailPage'
 import SmartPowerSafetyDetailPage from './SmartPowerSafetyDetailPage'
+
+import PowerOpsCasesSection  from './PowerOpsCasesSection'
+
+
 import SafetyDetailPage from './SafetyDetailPage'
 
 import SafetyListPage from './SafetyListPage'
@@ -2680,6 +2684,7 @@ activeTab === 'power' ? (
     // transition={{ duration: 0.1, ease: [0.22, 1, 0.36, 1] }}
   >
     <SmartPowerSafetyDetailPage />
+    <PowerOpsCasesSection />
   </motion.div>
 
 ) : activeTab === 'forms' ? (
