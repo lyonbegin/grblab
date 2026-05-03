@@ -2683,8 +2683,9 @@ activeTab === 'power' ? (
     exit={{ opacity: 0 }}
     // transition={{ duration: 0.1, ease: [0.22, 1, 0.36, 1] }}
   >
+     <PowerOpsCasesSection />
     <SmartPowerSafetyDetailPage />
-    <PowerOpsCasesSection />
+   
   </motion.div>
 
 ) : activeTab === 'forms' ? (
