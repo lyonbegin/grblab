@@ -842,33 +842,49 @@ export default function PowerOpsCasesSection() {
           </p>
         </div>
 
-        {/* 카테고리 탭 */}
-        <div style={{ display: 'flex', gap: 4, marginBottom: 32, borderBottom: '1px solid #f0f0f0' }}>
-          {CATEGORIES.map(cat => {
-            const count = cat.key === 'all' ? CASES.length : CASES.filter(c => c.category === cat.key).length
-            const active = activeCategory === cat.key
-            return (
-              <button key={cat.key} onClick={() => setActiveCategory(cat.key)} style={{
-                background: 'none', border: 'none',
-                borderBottom: active ? '2px solid #1a1a1a' : '2px solid transparent',
-                padding: '8px 16px', marginBottom: -1,
-                fontSize: 13, fontWeight: active ? 700 : 500,
-                color: active ? '#1a1a1a' : '#aaa',
-                cursor: 'pointer', fontFamily: 'inherit',
-                transition: 'all 0.15s',
-                display: 'flex', alignItems: 'center', gap: 5,
-              }}>
-                {cat.label}
-                <span style={{
-                  fontSize: 10, padding: '1px 5px', borderRadius: 10, fontWeight: 600,
-                  background: active ? '#1a1a1a' : '#f0f0f0',
-                  color: active ? '#fff' : '#aaa',
-                  transition: 'all 0.15s',
-                }}>{count}</span>
-              </button>
-            )
-          })}
-        </div>
+    {/* 카테고리 탭 */}
+<div style={{
+  overflowX: 'auto',
+  WebkitOverflowScrolling: 'touch',
+  marginBottom: 32,
+  borderBottom: '1px solid #f0f0f0',
+  scrollbarWidth: 'none', // Firefox
+  msOverflowStyle: 'none', // IE
+}}>
+  <div style={{
+    display: 'flex',
+    gap: 4,
+    width: 'max-content', // 탭이 줄바꿈 없이 한 줄로
+    minWidth: '100%',
+  }}>
+    {CATEGORIES.map(cat => {
+      const count = cat.key === 'all' ? CASES.length : CASES.filter(c => c.category === cat.key).length
+      const active = activeCategory === cat.key
+      return (
+        <button key={cat.key} onClick={() => setActiveCategory(cat.key)} style={{
+          background: 'none', border: 'none',
+          borderBottom: active ? '2px solid #1a1a1a' : '2px solid transparent',
+          padding: '8px 14px', marginBottom: -1,
+          fontSize: 13, fontWeight: active ? 700 : 500,
+          color: active ? '#1a1a1a' : '#aaa',
+          cursor: 'pointer', fontFamily: 'inherit',
+          transition: 'all 0.15s',
+          display: 'flex', alignItems: 'center', gap: 5,
+          whiteSpace: 'nowrap', // ← 핵심: 텍스트 줄바꿈 방지
+          flexShrink: 0,
+        }}>
+          {cat.label}
+          <span style={{
+            fontSize: 10, padding: '1px 5px', borderRadius: 10, fontWeight: 600,
+            background: active ? '#1a1a1a' : '#f0f0f0',
+            color: active ? '#fff' : '#aaa',
+            transition: 'all 0.15s',
+          }}>{count}</span>
+        </button>
+      )
+    })}
+  </div>
+</div>
 
         {/* 카드 그리드 */}
         <motion.div layout style={{
