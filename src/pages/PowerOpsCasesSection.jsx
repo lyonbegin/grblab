@@ -18,7 +18,7 @@ const CASES = [
     metric: '최대 9.3%',
     metricSub: '전력 절감률',
     date: '2023.02',
-    img: 'https://eco-saving.com/factory/wp-content/uploads/2023/02/189-コピー-800x440.png',
+    img: '31.png',
     summary:
       '이미 멀티 컴프레셔 통합 제어 시스템을 도입한 공장이라도 일반 제어반으로는 구현할 수 없는 제어가 있어 추가 절감의 여지가 남아 있습니다. 기존 시스템을 특수 멀티 컴프레셔 통합 제어 시스템으로 교체한 것만으로 추가 에너지 절감을 실현한 사례입니다.',
     situation:
@@ -40,7 +40,7 @@ const CASES = [
     metric: '최대 33.8%',
     metricSub: '전력 절감률',
     date: '2022.12',
-    img: 'https://eco-saving.com/factory/wp-content/uploads/2022/12/185-コピー-800x520.png',
+    img: '32.png',
     summary:
       '공장 전체 전력 사용량의 20~25%를 차지하는 컴프레셔. 멀티 컴프레셔 통합 제어 시스템을 처음 도입한 4개 사업장에서 모두 약 20% 이상의 전력 절감 효과를 실현한 실적을 수치와 함께 소개합니다.',
     situation:
@@ -64,7 +64,7 @@ const CASES = [
     metric: '30%',
     metricSub: '소비전력 절감',
     date: '2021.02',
-    img: 'https://eco-saving.com/factory/wp-content/uploads/2021/02/IMG_03600001-e1612624837838.jpg',
+    img: '33.jpg',
     summary:
       '24시간 가동하는 제조 공장에서 현황 파악부터 시작해 개선책 제시, 실제 시공까지 진행하여 당초 소비전력의 30% 절감을 실현했습니다. 37kW~70kW급 이기종 컴프레셔 6대를 운용 중이던 현장입니다.',
     situation:
@@ -87,7 +87,7 @@ const CASES = [
     metric: '13%',
     metricSub: '에너지 절감률',
     date: '2021.02',
-    img: 'https://eco-saving.com/factory/wp-content/uploads/2021/02/iStock-10720737180001.jpg',
+    img: '34.jpg',
     summary:
       '금속 부품 제조 공장에서 분산 설치된 컴프레셔의 사용 상황과 생산 설비가 필요로 하는 에어량·압력을 파악한 뒤 최적 설정을 적용한 결과, 소비전력 13% 절감을 실현했습니다.',
     situation:
@@ -110,7 +110,7 @@ const CASES = [
     metric: '4%',
     metricSub: '에너지 절감률',
     date: '2021.02',
-    img: 'https://eco-saving.com/factory/wp-content/uploads/2021/02/iStock-1785225340017.jpg',
+    img: '35.jpg',
     summary:
       '공장 내 배관을 통해 에어를 공급하는 수지 성형 제조 공장에서, 에어 배관에 전자밸브를 설치하고 가동 설비에 맞게 자동 개폐하는 절감 방안을 적용한 결과 4%의 에너지 절감을 실현했습니다.',
     situation:
@@ -135,7 +135,7 @@ const CASES = [
     metric: '80%+',
     metricSub: '공조 전력 절감',
     date: '2021.02',
-    img: 'https://eco-saving.com/factory/wp-content/uploads/2020/03/iStock-10579189840009.jpg',
+    img: '36.jpg',
     summary:
       '중앙 공조의 단점인 피크 시에 맞춘 용량으로 운용하면 낭비 에너지가 발생합니다. 온도 관리를 통해 펌프 동작을 제어하는 방법으로 연간 80% 이상, 월간 최대 98.3%의 전력 절감을 실현했습니다.',
     situation:
@@ -159,7 +159,7 @@ const CASES = [
     metric: '15%',
     metricSub: '공조 전력 절감',
     date: '2021.02',
-    img: 'https://eco-saving.com/factory/wp-content/uploads/2020/03/iStock-6798791480015.jpg',
+    img: '37.jpg',
     summary:
       '10여 년 동안 에너지 절약을 추진해 온 제조 공장에서, 더 이상의 방법이 없어 고민하던 중 기존 공조 설비에 후부착으로 적용 가능한 특수 제어 방식을 도입해 전기 사용량 15% 절감과 가동 현황 가시화를 실현했습니다.',
     situation:
@@ -184,7 +184,7 @@ const CASES = [
     metric: '초기비용 0원',
     metricSub: 'LED 전환',
     date: '2021.02',
-    img: 'https://eco-saving.com/factory/wp-content/uploads/2021/02/2405862_l0001-e1612625186422.jpg',
+    img: '38.jpg',
     summary:
       '조명 LED 전환을 추진하는 보조금이 해마다 줄고 있어 현실적으로 활용이 어려운 상황에서, 「밝기 제공 서비스」 방식을 활용해 초기비용 0원으로 LED 전환에 성공한 사례입니다.',
     situation:
@@ -208,7 +208,7 @@ const CASES = [
     metric: '단선 제로',
     metricSub: '트러블 해결',
     date: '2021.02',
-    img: 'https://eco-saving.com/factory/wp-content/uploads/2021/02/3212845_l0002-e1612625210232.jpg',
+    img: '39.jpg',
     summary:
       'LED 조명은 열에 약하다는 특성이 있어 열원 설비 상부에서는 고열 대응 제품도 반복 단선이 발생했습니다. 세미오더 타입 LED 조명을 설치함으로써 고온 환경에서도 단선 없이 운용하게 된 사례입니다.',
     situation:
