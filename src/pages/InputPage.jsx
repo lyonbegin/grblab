@@ -57,7 +57,7 @@ import ThermalDetectionDetailPage from './ThermalDetectionDetailPage'
 import AnalogGaugeAIDetailPage from './AnalogGaugeAIDetailPage'
 import SmartPowerSafetyDetailPage from './SmartPowerSafetyDetailPage'
 
-import PowerOpsCasesSection  from './PowerOpsCasesSection'
+
 
 
 import SafetyDetailPage from './SafetyDetailPage'
@@ -2683,7 +2683,7 @@ activeTab === 'power' ? (
     exit={{ opacity: 0 }}
     // transition={{ duration: 0.1, ease: [0.22, 1, 0.36, 1] }}
   >
-     <PowerOpsCasesSection />
+
     <SmartPowerSafetyDetailPage />
    
   </motion.div>

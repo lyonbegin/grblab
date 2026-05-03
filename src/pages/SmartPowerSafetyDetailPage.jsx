@@ -12,6 +12,8 @@
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence, useInView } from 'framer-motion'
 
+
+import PowerOpsCasesSection  from './PowerOpsCasesSection'
 function useIsMobile() {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768)
   useEffect(() => {
@@ -364,6 +366,9 @@ export default function SmartPowerSafetyDetailPage() {
             </div>
           </div>
         </section>
+
+
+             <PowerOpsCasesSection />
 
         {/* ══════ SECTION 2 · 통계 바 ══════ */}
         <section style={{ background: '#1a1a1a', padding: isMobile ? '32px 20px' : '36px 40px' }}>
