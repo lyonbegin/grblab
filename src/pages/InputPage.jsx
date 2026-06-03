@@ -1782,7 +1782,7 @@ export default function InputPage() {
   const [preview, setPreview] = useState(null)
   const [dragOver, setDragOver] = useState(false)
   const [cameraOpen, setCameraOpen] = useState(false)
-  const [activeTab, setActiveTab] = useState('power')
+  const [activeTab, setActiveTab] = useState('antitage')
   const [activeSubTab, setActiveSubTab] = useState('all')
   const [activeCmanageSubTab, setActiveCmanageSubTab] = useState('all')
   const [selectedSiteId, setSelectedSiteId] = useState(null)

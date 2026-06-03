@@ -203,67 +203,42 @@ ${jsonTemplate}
 async function scanImageUrine(imageBlob) {
   const base64 = await blobToPureBase64(imageBlob)
 
-  console.log('========================================')
-  console.log('🧪 소변 검사지 분석 시작')
-  console.log('========================================')
-
   const res = await fetch(ROBOFLOW_WORKFLOW_URL_URINE, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       api_key: ROBOFLOW_API_KEY,
-      inputs: {
-        image: { type: 'base64', value: base64 },
-      },
+      inputs: { image: { type: 'base64', value: base64 } },
     }),
   })
 
-  console.log('🌐 Roboflow Urine HTTP Status:', res.status)
   const rawText = await res.text()
   console.log('🌐 Roboflow Urine 응답 원문:', rawText)
 
-  if (!res.ok) {
-    throw new Error(`Roboflow HTTP ${res.status}: ${rawText}`)
-  }
+  if (!res.ok) throw new Error(`Roboflow HTTP ${res.status}: ${rawText}`)
 
   const result = JSON.parse(rawText)
-  
-  // 다양한 응답 노드 트리 대응 탐색
-  let targetNode = null
-  if (Array.isArray(result)) {
-    targetNode = result[0]
-  } else if (Array.isArray(result?.outputs)) {
-    targetNode = result.outputs[0]
-  } else if (result?.outputs?.[0]?.open_ai?.output) {
-    const nested = parseOpenAIJson(result.outputs[0].open_ai.output)
-    targetNode = Array.isArray(nested) ? nested[0] : nested
-  } else {
-    // 가장 유연한 내부 키 스캔 백업
-    const lookup = result?.outputs?.[0] || result
-    if (lookup) {
-      for (const key in lookup) {
-        if (lookup[key]?.step1_raw_result || lookup[key]?.output?.[0]?.step1_raw_result) {
-          targetNode = lookup[key]?.output?.[0] || lookup[key]
-          break
-        }
-      }
-    }
-  }
 
-  if (!targetNode && result?.step1_raw_result) {
-    targetNode = result
-  }
+  // ✅ 단순하게 직접 접근
+  const targetNode = result?.outputs?.[0]
+
+  console.log('🎯 targetNode:', targetNode)  // ← 이거 찍어서 확인
 
   const step1Raw = targetNode?.step1_raw_result
   const step2Raw = targetNode?.step2_prescription_result
+
+  console.log('📋 step1Raw 있음?', !!step1Raw)
+  console.log('📋 step2Raw 있음?', !!step2Raw)
 
   if (!step1Raw && !step2Raw) {
     return { success: false, error: '소변 분석 응답 필드를 찾을 수 없습니다.', _raw: null }
   }
 
-  // 내부 마크다운 이중 JSON 파싱 자동화
   const parsedStep1 = parseOpenAIJson(step1Raw)
   const parsedStep2 = parseOpenAIJson(step2Raw)
+
+  console.log('✅ parsedStep1:', parsedStep1)
+  console.log('✅ parsedStep2:', parsedStep2)
 
   return {
     success: true,
@@ -273,7 +248,6 @@ async function scanImageUrine(imageBlob) {
     }
   }
 }
-
 // ── 데모 데이터 ──
 const DEMO_RAW = {
   site_analysis: {
