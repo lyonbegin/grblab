@@ -10,7 +10,7 @@ import { mapKras as mapAllMethods } from '../utils/krasMapper'
 const ROBOFLOW_WORKFLOW_URL     = '/roboflow/grb/workflows/custom-workflow-3'
 const ROBOFLOW_WORKFLOW_URL_TBM = '/roboflow/grb/workflows/custom-workflow-3-2'
 
-const ROBOFLOW_WORKFLOW_URL_URINE = '/roboflow/grb/workflows/custom-workflow-urine-2'
+const ROBOFLOW_WORKFLOW_URL_URINE = '/roboflow/grb/workflows/custom-workflow-urine-2-2'  // ✅ URL 변경
 
 
 
@@ -219,35 +219,40 @@ async function scanImageUrine(imageBlob) {
 
   const result = JSON.parse(rawText)
 
-  // ✅ 단순하게 직접 접근
   const targetNode = result?.outputs?.[0]
 
-  console.log('🎯 targetNode:', targetNode)  // ← 이거 찍어서 확인
+  console.log('🎯 targetNode:', targetNode)
 
   const step1Raw = targetNode?.step1_raw_result
   const step2Raw = targetNode?.step2_prescription_result
+  const step3Raw = targetNode?.step3_supplement_stack_result  // ✅ 추가
 
   console.log('📋 step1Raw 있음?', !!step1Raw)
   console.log('📋 step2Raw 있음?', !!step2Raw)
+  console.log('📋 step3Raw 있음?', !!step3Raw)  // ✅ 추가
 
-  if (!step1Raw && !step2Raw) {
+  if (!step1Raw && !step2Raw && !step3Raw) {  // ✅ step3 조건 추가
     return { success: false, error: '소변 분석 응답 필드를 찾을 수 없습니다.', _raw: null }
   }
 
   const parsedStep1 = parseOpenAIJson(step1Raw)
   const parsedStep2 = parseOpenAIJson(step2Raw)
+  const parsedStep3 = parseOpenAIJson(step3Raw)  // ✅ 추가
 
   console.log('✅ parsedStep1:', parsedStep1)
   console.log('✅ parsedStep2:', parsedStep2)
+  console.log('✅ parsedStep3:', parsedStep3)  // ✅ 추가
 
   return {
     success: true,
     _raw: {
       step1_result: parsedStep1,
-      step2_result: parsedStep2
+      step2_result: parsedStep2,
+      step3_result: parsedStep3,  // ✅ 추가
     }
   }
 }
+
 // ── 데모 데이터 ──
 const DEMO_RAW = {
   site_analysis: {
@@ -327,7 +332,7 @@ const DEMO_URINE_RAW = {
       { "mechanism": "후성유전 변형", "related_urine_item": "메틸화 대사산물", "primary_nutrients": ["에스-아데노실메티오닌", "트리메틸글리신", "피리독살-5-인산", "메틸테트라하이드로엽산", "콜린 비타르트레이트"] },
       { "mechanism": "단백질 항상성 상실", "related_urine_item": "미오글로빈", "primary_nutrients": ["류신 펩타이드", "글리신", "엔-아세틸시스테인", "타우린", "알파-리포산"] },
       { "mechanism": "영양소 감지 이상", "related_urine_item": "요당", "primary_nutrients": ["베르베린 염산염", "크롬 피콜리네이트", "알파-리포산", "시나몬 추출 폴리페놀", "이노시톨"] },
-      { "mechanism": "미토콘드리아 기능 부전", "related_urine_item": "케톤체", "primary_nutrients": ["우비퀴놀", "피롤로퀴놀린퀴نون", "엘-카르니틴 타르트레이트", "니코틴아미드 리보사이드", "디-리보스"] },
+      { "mechanism": "미토콘드리아 기능 부전", "related_urine_item": "케톤체", "primary_nutrients": ["우비퀴놀", "피롤로퀴놀린퀴논", "엘-카르니틴 타르트레이트", "니코틴아미드 리보사이드", "디-리보스"] },
       { "mechanism": "세포 노화", "related_urine_item": "크레아티닌", "primary_nutrients": ["피세틴", "쿼세틴 디하이드레이트", "레스베라트롤 트랜스형", "스페르미딘", "아피제닌"] },
       { "mechanism": "줄기세포 고갈", "related_urine_item": "요산", "primary_nutrients": ["알파-케토글루타르산 칼슘", "콜라겐 펩타이드 타입1", "히알루론산 나트륨", "비타민 디3 콜레칼시페롤", "비타민 케이2 메나퀴논7"] },
       { "mechanism": "세포 간 신호전달 변형", "related_urine_item": "알부민", "primary_nutrients": ["오메가3 인지질형", "감마-리놀렌산", "팔미토일에탄올아마이드", "마그네슘 글리시네이트", "아연-구리 복합체"] },
@@ -335,6 +340,25 @@ const DEMO_URINE_RAW = {
       { "mechanism": "만성 염증", "related_urine_item": "백혈구", "primary_nutrients": ["커큐민 피토솜", "보스웰리아 산 복합체", "오메가3 에틸에스터", "쿼세틴 피토솜", "징크 카르노신"] },
       { "mechanism": "장내 미생물 불균형", "related_urine_item": "pH", "primary_nutrients": ["락토바실러스 람노서스", "비피도박테리움 롱검", "이눌린 프락토올리고당", "아카시아 검 식이섬유", "낙산 부티르산"] }
     ]
+  },
+  step3_result: {  // ✅ 추가
+    "supplement_stack": [
+      { "rank": 1, "product_name": "트리플 오메가 3-6-9", "brand": "솔가", "target_mechanisms": ["염증 수치", "심혈관 건강", "세포막 안정성"], "key_nutrients": ["EPA", "DHA", "오메가-6", "오메가-9"], "monthly_cost": "월 약 35,000원", "dosage_tip": "식후 복용, 혈액응고제 복용 시 의사 상담 필요", "purchase_channel": "쿠팡" },
+      { "rank": 2, "product_name": "비타민D3 5000IU", "brand": "나우푸드", "target_mechanisms": ["면역 기능", "칼슘 흡수", "골밀도 유지"], "key_nutrients": ["비타민D3 5000IU"], "monthly_cost": "월 약 12,000원", "dosage_tip": "지방 함유 식사와 함께 복용 시 흡수율 증가", "purchase_channel": "아이허브" },
+      { "rank": 3, "product_name": "활성 메틸엽산 & 메틸B12", "brand": "저로우 포뮬러스", "target_mechanisms": ["메틸화 회로", "호모시스테인 조절", "신경 건강"], "key_nutrients": ["메틸폴레이트", "메틸코발라민", "비타민B6"], "monthly_cost": "월 약 28,000원", "dosage_tip": "공복 또는 식전 복용 권장, 과량 복용 시 불면 가능", "purchase_channel": "아이허브" },
+      { "rank": 4, "product_name": "징코빌로바 120mg", "brand": "닥터스베스트", "target_mechanisms": ["뇌 혈류 개선", "인지 기능", "항산화"], "key_nutrients": ["은행잎 추출물 120mg", "플라보노이드"], "monthly_cost": "월 약 25,000원", "dosage_tip": "항응고제 복용 시 주의, 수술 2주 전 중단", "purchase_channel": "아이허브" },
+      { "rank": 5, "product_name": "마그네슘 글리시네이트 400mg", "brand": "닥터스베스트", "target_mechanisms": ["신경 안정", "근육 이완", "에너지 대사"], "key_nutrients": ["마그네슘 글리시네이트 400mg"], "monthly_cost": "월 약 20,000원", "dosage_tip": "취침 전 복용 시 수면 질 개선 효과, 설사 유발 가능성 낮음", "purchase_channel": "쿠팡" },
+      { "rank": 6, "product_name": "커큐민 C3 콤플렉스", "brand": "닥터스베스트", "target_mechanisms": ["전신 염증", "관절 건강", "항산화 방어"], "key_nutrients": ["커큐민 C3 1000mg", "바이오페린"], "monthly_cost": "월 약 32,000원", "dosage_tip": "지방과 함께 복용 시 흡수 증가, 담석 환자 주의", "purchase_channel": "아이허브" },
+      { "rank": 7, "product_name": "코큐텐 유비퀴놀 100mg", "brand": "캘리포니아골드", "target_mechanisms": ["미토콘드리아 기능", "심장 건강", "세포 에너지"], "key_nutrients": ["유비퀴놀 100mg"], "monthly_cost": "월 약 38,000원", "dosage_tip": "흡수 개선형, 스타틴 복용자 필수, 식사와 함께 복용", "purchase_channel": "쿠팡" },
+      { "rank": 8, "product_name": "프로바이오틱스 500억", "brand": "자로우 포뮬러스", "target_mechanisms": ["장내 미생물군", "면역 조절", "염증 완화"], "key_nutrients": ["유산균 500억CFU", "10가지 균주"], "monthly_cost": "월 약 35,000원", "dosage_tip": "공복 또는 식전 복용, 항생제와 2시간 간격 유지", "purchase_channel": "아이허브" },
+      { "rank": 9, "product_name": "NAC 600mg", "brand": "나우푸드", "target_mechanisms": ["글루타치온 전구체", "간 해독", "항산화"], "key_nutrients": ["N-아세틸시스테인 600mg"], "monthly_cost": "월 약 22,000원", "dosage_tip": "공복 복용 권장, 충분한 수분 섭취 필요", "purchase_channel": "아이허브" },
+      { "rank": 10, "product_name": "비타민K2 MK-7 100mcg", "brand": "솔가", "target_mechanisms": ["칼슘 대사", "혈관 석회화 예방", "골 건강"], "key_nutrients": ["비타민K2 MK-7 100mcg"], "monthly_cost": "월 약 28,000원", "dosage_tip": "비타민D와 함께 복용 시 시너지, 와파린 복용자 금기", "purchase_channel": "쿠팡" },
+      { "rank": 11, "product_name": "아연 피콜리네이트 50mg", "brand": "나우푸드", "target_mechanisms": ["면역 기능", "상처 치유", "항산화 효소"], "key_nutrients": ["아연 피콜리네이트 50mg"], "monthly_cost": "월 약 15,000원", "dosage_tip": "공복 시 속쓰림 가능, 구리와 균형 고려 필요", "purchase_channel": "아이허브" },
+      { "rank": 12, "product_name": "레스베라트롤 500mg", "brand": "솔가", "target_mechanisms": ["시르투인 활성화", "항노화", "심혈관 보호"], "key_nutrients": ["트랜스-레스베라트롤 500mg"], "monthly_cost": "월 약 42,000원", "dosage_tip": "공복 복용 시 흡수 우수, 에스트로겐 민감 질환 주의", "purchase_channel": "쿠팡" },
+      { "rank": 13, "product_name": "밀크씨슬 실리마린 150mg", "brand": "솔가", "target_mechanisms": ["간 해독", "간세포 재생", "항산화"], "key_nutrients": ["실리마린 150mg", "밀크씨슬 추출물"], "monthly_cost": "월 약 30,000원", "dosage_tip": "식사와 함께 복용, 간 질환 시 의사 상담 필요", "purchase_channel": "올리브영" }
+    ],
+    "stack_summary": "본 조합은 염증 관리, 미토콘드리아 기능, 메틸화 회로, 항산화 방어 등 다차원 장수 기전을 포괄적으로 지원합니다.",
+    "total_monthly_estimate": "월 총 약 362,000원"
   }
 }
 
@@ -411,7 +435,7 @@ export function useAnalyze() {
     }
   }, [])
 
-  // ── 3. 소변 분석 (analyze3) 추가 ──
+  // ── 3. 소변 분석 (analyze3) ──
   const analyze3 = useCallback(async (imageFile) => {
     setLoading(true)
     setError(null)

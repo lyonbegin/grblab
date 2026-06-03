@@ -21,8 +21,9 @@ export default function UrineResultPage() {
   const navigate = useNavigate()
   const imageUrl = state?.imageUrl
 
-  const [step1Data, setStep1Data] = useState([]);
-  const [step2Data, setStep2Data] = useState([]);
+  const [step1Data, setStep1Data] = useState([])
+  const [step2Data, setStep2Data] = useState([])
+  const [step3Data, setStep3Data] = useState([])  // ✅ 추가
 
   useEffect(() => {
     if (!state?.result) { navigate('/'); return }
@@ -38,12 +39,15 @@ export default function UrineResultPage() {
       if (targetData.step2_result) {
         setStep2Data(targetData.step2_result?.longevity_mechanisms || [])
       }
+      if (targetData.step3_result) {  // ✅ 추가
+        setStep3Data(targetData.step3_result?.supplement_stack || [])
+      }
     } catch (e) {
       console.error("JSON 파싱 에러:", e)
     }
   }, [state, navigate])
 
-  if (!state?.result) return null;
+  if (!state?.result) return null
 
   const today = new Date().toLocaleDateString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit' })
   const isMobile = useIsMobile()
@@ -224,6 +228,60 @@ export default function UrineResultPage() {
           )}
         </div>
 
+        {/* ══ 제3항. 맞춤형 서플리먼트 스택 ══ */}
+        <SectionTitle num="03" title="Personalized Supplement Stack" />
+        <table style={s.table}>
+          <thead>
+            <tr>
+              <th style={{ ...s.th, width: 40, textAlign: 'center' }}>#</th>
+              <th style={{ ...s.th, width: 160 }}>Product / Brand</th>
+              <th style={{ ...s.th, width: 180 }}>Target Mechanisms</th>
+              <th style={s.th}>Key Nutrients</th>
+              <th style={{ ...s.th, width: 180 }}>Dosage Tip</th>
+              <th style={{ ...s.th, width: 70, textAlign: 'center' }}>Channel</th>
+            </tr>
+          </thead>
+          <tbody>
+            {step3Data.length > 0 ? step3Data.map((item, i) => (
+              <tr key={i} style={i % 2 === 1 ? { background: '#fafafa' } : {}}>
+                <td style={{ ...s.td, textAlign: 'center', fontWeight: 'bold', color: i < 3 ? '#8b5e3c' : '#777' }}>
+                  {item.rank}
+                </td>
+                <td style={s.td}>
+                  <div style={{ fontWeight: 700, color: '#1a1a1a', fontSize: 12 }}>{item.product_name}</div>
+                  <div style={{ fontSize: 10, color: '#8b5e3c', marginTop: 2 }}>{item.brand}</div>
+                </td>
+                <td style={s.td}>
+                  <div style={s.badgeContainer}>
+                    {item.target_mechanisms?.map((m, idx) => (
+                      <span key={idx} style={s.mechBadge}>{m}</span>
+                    ))}
+                  </div>
+                </td>
+                <td style={s.td}>
+                  <div style={s.badgeContainer}>
+                    {item.key_nutrients?.map((nut, idx) => (
+                      <span key={idx} style={s.nutrientBadge}>{nut}</span>
+                    ))}
+                  </div>
+                </td>
+                <td style={{ ...s.td, fontSize: 11, color: '#555', lineHeight: 1.5 }}>
+                  {item.dosage_tip}
+                </td>
+                <td style={{ ...s.td, textAlign: 'center' }}>
+                  <span style={s.channelBadge}>{item.purchase_channel}</span>
+                </td>
+              </tr>
+            )) : (
+              <tr>
+                <td style={{ ...s.td, color: '#bbb', textAlign: 'center', fontStyle: 'italic' }} colSpan={6}>
+                  No supplement data available.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+
         {/* ══ 서명 및 확인란 ══ */}
         <div style={s.signSection}>
           <div style={s.signTitle}>VERIFICATION</div>
@@ -343,6 +401,7 @@ const s = {
   td: {
     fontSize: 12, color: '#1a1a1a',
     padding: '10px 12px', border: '1px solid #e8e0d8', lineHeight: 1.6,
+    verticalAlign: 'top',
   },
   badgeContainer: { display: 'flex', flexWrap: 'wrap', gap: 6 },
   nutrientBadge: {
@@ -350,6 +409,18 @@ const s = {
     padding: '3px 9px', borderRadius: 3,
     fontSize: 11, fontWeight: 500,
     border: '1px solid #e0d4c4',
+  },
+  mechBadge: {
+    background: '#eaf1f8', color: '#2a3a50',
+    padding: '3px 9px', borderRadius: 3,
+    fontSize: 11, fontWeight: 500,
+    border: '1px solid #d0e2f0',
+  },
+  channelBadge: {
+    background: '#2a1f14', color: '#e8ddd0',
+    padding: '3px 8px', borderRadius: 3,
+    fontSize: 10, fontWeight: 700,
+    letterSpacing: '0.3px',
   },
   imageSection: { marginBottom: 16 },
   imageWrap: {
@@ -365,7 +436,6 @@ const s = {
     letterSpacing: '0.5px',
   },
   imageCaption: { marginTop: 6, fontSize: 11, color: '#9e8e7e', lineHeight: 1.6 },
-
   mechanismGrid: {
     display: 'grid',
     gridTemplateColumns: 'repeat(auto-fill, minmax(330px, 1fr))',
@@ -397,7 +467,6 @@ const s = {
     background: '#eaf1f8', padding: '2px 8px', borderRadius: 3,
     border: '1px solid #d0e2f0',
   },
-
   signSection: { marginTop: 36, border: '1px solid #ddd4c8' },
   signTitle: {
     background: '#f5f0e8', padding: '6px 14px',
