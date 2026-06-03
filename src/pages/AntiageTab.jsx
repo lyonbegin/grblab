@@ -177,6 +177,10 @@ const detailMediaItems = [
   { type: 'image', src: '/1-003.jpg' },
   { type: 'image', src: '/1-004.jpg' },
   { type: 'image', src: '/1-005.jpg' },
+
+   { type: 'image', src: '/1-005-1.jpg' },
+      { type: 'image', src: '/1-005-2.jpg' },
+         { type: 'image', src: '/1-005-3.jpg' },
   { type: 'image', src: '/1-006.jpg' },
   { type: 'image', src: '/1-007.jpg' },
   { type: 'image', src: '/1-008.jpg' },
