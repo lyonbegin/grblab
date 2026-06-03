@@ -19,29 +19,30 @@ function useIsMobile() {
 export default function UrineResultPage() {
   const { state } = useLocation()
   const navigate = useNavigate()
-  const imageUrl = state?.imageUrl // InputPage에서 전달된 프리뷰 이미지
+  const imageUrl = state?.imageUrl
 
   const [step1Data, setStep1Data] = useState([]);
   const [step2Data, setStep2Data] = useState([]);
 
-useEffect(() => {
-  if (!state?.result) { navigate('/'); return }
+  useEffect(() => {
+    if (!state?.result) { navigate('/'); return }
 
-  try {
-    const targetData = Array.isArray(state.result) ? state.result[0] : state.result
-    
-    console.log('📦 받은 result:', targetData)  // ← 확인용
+    try {
+      const targetData = Array.isArray(state.result) ? state.result[0] : state.result
 
-    if (targetData.step1_result) {
-      setStep1Data(targetData.step1_result?.분석결과 || [])
+      console.log('📦 받은 result:', targetData)
+
+      if (targetData.step1_result) {
+        setStep1Data(targetData.step1_result?.분석결과 || [])
+      }
+      if (targetData.step2_result) {
+        setStep2Data(targetData.step2_result?.longevity_mechanisms || [])
+      }
+    } catch (e) {
+      console.error("JSON 파싱 에러:", e)
     }
-    if (targetData.step2_result) {
-      setStep2Data(targetData.step2_result?.longevity_mechanisms || [])
-    }
-  } catch (e) {
-    console.error("JSON 파싱 에러:", e)
-  }
-}, [state, navigate])
+  }, [state, navigate])
+
   if (!state?.result) return null;
 
   const today = new Date().toLocaleDateString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit' })
@@ -116,7 +117,7 @@ useEffect(() => {
       heightLeft -= pageHeight
     }
 
-    pdf.save(`AI_소변분석_생체지표보고서_${new Date().toISOString().slice(0, 10)}.pdf`)
+    pdf.save(`Anti-age_Personalized_Nutrition_Report_${new Date().toISOString().slice(0, 10)}.pdf`)
   }
 
   return (
@@ -124,14 +125,14 @@ useEffect(() => {
       {/* 상단 네비바 */}
       <div style={{ ...s.navBar, ...(isMobile ? s.navBarMobile : {}) }}>
         <button onClick={() => navigate(-1)} style={{ ...s.backBtn, ...(isMobile ? s.backBtnMobile : {}) }}>
-          ← 뒤로가기
+          ← Back
         </button>
         <span style={{ ...s.navTitle, ...(isMobile ? s.navTitleMobile : {}) }}>
-          GRBlab Bio AI
+          Anti-âge
         </span>
         <div style={{ ...s.navActions, ...(isMobile ? s.navActionsMobile : {}) }}>
           <button onClick={savePdf} style={s.pdfBtn}>
-            PDF 다운로드
+            Download PDF
           </button>
         </div>
       </div>
@@ -140,49 +141,50 @@ useEffect(() => {
         {/* ══ 문서 제목 헤더 ══ */}
         <div style={s.docHeader}>
           <div style={s.docMeta}>
-            <span style={s.docMetaText}>AI 생체 지표 분석 및 소변 검사 결과보고서</span>
-            <span style={s.docMetaText}>문서번호: URINE-AI-{Date.now().toString().slice(-6)}</span>
+            <span style={s.docMetaText}>Anti-âge Personalized Nutrition Analysis</span>
+            <span style={s.docMetaText}>Report No. ANA-{Date.now().toString().slice(-6)}</span>
           </div>
-          <h1 style={s.docTitle}>소변 분석 기반 신체 기능 및 장수 가이드라인</h1>
+          <h1 style={s.docTitle}>Anti-âge 개인 영양 프로파일</h1>
+          <div style={s.docSubTitle}>Urine Biomarker — Based Nutritional Intelligence</div>
           <div style={s.docMetaBottom}>
-            <span style={s.docMetaText}>분석일자: {today}</span>
-            <span style={s.docMetaText}>AI 멀티모달 자동 정밀분석 시스템</span>
+            <span style={s.docMetaText}>Analysis Date: {today}</span>
+            <span style={s.docMetaText}>Anti-âge Bio AI Analysis System</span>
           </div>
         </div>
 
         {/* ══ 촬영 이미지 확인 섹션 ══ */}
         {imageUrl && (
           <>
-            <SectionTitle num="분석대상" title="소변 검사 시트 캡처 이미지" />
+            <SectionTitle num="SAMPLE" title="Urine Test Strip — Captured Image" />
             <div style={s.imageSection}>
               <div style={s.imageWrap}>
                 <img src={imageUrl} alt="소변 검사지" style={s.siteImage} />
-                <div style={s.imageBadge}>AI 인식 완료</div>
+                <div style={s.imageBadge}>AI Recognition Complete</div>
               </div>
               <div style={s.imageCaption}>
-                📷 촬영된 생체 지표 스트립을 분석하여 딥러닝 기반으로 각 검출 항목의 스펙트럼 강도를 추출하였습니다.
+                📷 소변 바이오마커 스트립 이미지를 AI가 분석하여 각 항목의 반응 강도를 정량화하고 개인 맞춤형 영양 인사이트를 생성하였습니다.
               </div>
             </div>
           </>
         )}
 
         {/* ══ 제1항. 소변 지표별 검출 순위 및 연계 물질 ══ */}
-        <SectionTitle num="제1항" title="소변 생체 지표별 검출 강도 순위 및 필요 영양 성분" />
+        <SectionTitle num="01" title="우선 관리 바이오마커 및 추천 영양 성분" />
         <table style={s.table}>
           <thead>
             <tr>
-              <th style={{ ...s.th, width: 60, textAlign: 'center' }}>우선순위</th>
-              <th style={{ ...s.th, width: 140 }}>지표 항목명 (Item)</th>
-              <th style={s.th}>최적 매칭 맞춤형 영양 물질 (Nutrients)</th>
+              <th style={{ ...s.th, width: 60, textAlign: 'center' }}>Priority</th>
+              <th style={{ ...s.th, width: 140 }}>Biomarker</th>
+              <th style={s.th}>Recommended Nutrients</th>
             </tr>
           </thead>
           <tbody>
             {step1Data.length > 0 ? step1Data.map((item, i) => (
               <tr key={i} style={i % 2 === 1 ? { background: '#fafafa' } : {}}>
-                <td style={{ ...s.td, textAlign: 'center', fontWeight: 'bold', color: i < 3 ? '#c0392b' : '#555' }}>
+                <td style={{ ...s.td, textAlign: 'center', fontWeight: 'bold', color: i < 3 ? '#8b5e3c' : '#777' }}>
                   {item.순위}
                 </td>
-                <td style={{ ...s.td, fontWeight: 700, color: '#1a1a2e' }}>{item.항목명}</td>
+                <td style={{ ...s.td, fontWeight: 700, color: '#1a1a1a' }}>{item.항목명}</td>
                 <td style={s.td}>
                   <div style={s.badgeContainer}>
                     {item.영양물질?.map((nut, idx) => (
@@ -192,22 +194,22 @@ useEffect(() => {
                 </td>
               </tr>
             )) : (
-              <tr><td style={{ ...s.td, color: '#999', textAlign: 'center' }} colSpan={3}>추출된 지표 데이터가 없습니다.</td></tr>
+              <tr><td style={{ ...s.td, color: '#bbb', textAlign: 'center', fontStyle: 'italic' }} colSpan={3}>No biomarker data available.</td></tr>
             )}
           </tbody>
         </table>
 
-        {/* ══ 제2항. 12대 장수 메커니즘 연계 정밀 처방 ══ */}
-        <SectionTitle num="제2항" title="12대 생체 장수 메커니즘(Longevity Mechanisms) 분석 및 보완 솔루션" />
+        {/* ══ 제2항. Well-Aging Biomarker Insights ══ */}
+        <SectionTitle num="02" title="Well-Aging Biomarker Insights" />
         <div style={s.mechanismGrid}>
           {step2Data.length > 0 ? step2Data.map((mech, i) => (
             <div key={i} style={s.mechCard}>
               <div style={s.mechHeader}>
                 <span style={s.mechTitle}>{mech.mechanism}</span>
-                <span style={s.mechLabel}>지표: {mech.related_urine_item}</span>
+                <span style={s.mechLabel}>{mech.related_urine_item}</span>
               </div>
               <div style={s.mechBody}>
-                <div style={s.mechSubTitle}>핵심 추천 고기능성 물질</div>
+                <div style={s.mechSubTitle}>Recommended Functional Nutrients</div>
                 <div style={s.nutList}>
                   {mech.primary_nutrients?.map((nut, idx) => (
                     <span key={idx} style={s.primaryNutrientBadge}>✓ {nut}</span>
@@ -216,26 +218,29 @@ useEffect(() => {
               </div>
             </div>
           )) : (
-            <div style={{ ...s.td, color: '#999', textAlign: 'center', width: '100%' }}>장수 메커니즘 데이터가 없습니다.</div>
+            <div style={{ color: '#bbb', textAlign: 'center', width: '100%', fontStyle: 'italic', fontSize: 12 }}>
+              생체 메커니즘 분석 데이터가 없습니다.
+            </div>
           )}
         </div>
 
         {/* ══ 서명 및 확인란 ══ */}
         <div style={s.signSection}>
-          <div style={s.signTitle}>분 석 확 인 란</div>
+          <div style={s.signTitle}>VERIFICATION</div>
           <div style={s.signRow}>
-            {['분석 시스템', '연구 책임자', '최종 승인'].map((label, i) => (
-              <div key={label} style={{ ...s.signBox, borderRight: i < 2 ? '1px solid #ccc' : 'none' }}>
+            {['Analysis System', 'Research Director', 'Final Approval'].map((label, i) => (
+              <div key={label} style={{ ...s.signBox, borderRight: i < 2 ? '1px solid #e5e5e5' : 'none' }}>
                 <div style={s.signLabel}>{label}</div>
                 <div style={s.signSpace} />
-                <div style={s.signBottom}>(인)</div>
+                <div style={s.signBottom}>(seal)</div>
               </div>
             ))}
           </div>
         </div>
 
         <div style={s.docFooter}>
-          본 분석 결과보고서는 GRBlab Bio AI 유린 스크리닝 아키텍처에 의해 자동 생성되었습니다. 본 가이드는 질병의 진단 및 치료를 대체할 수 없으며, 상세 수치는 연구 목적의 생체 메커니즘 추정치입니다.
+          본 보고서는 소변 바이오마커 분석 결과를 기반으로 생성된 개인 맞춤형 영양 및 건강관리 참고자료입니다.
+          본 보고서는 의료적 진단 또는 치료를 위한 자료가 아니며, 건강수명 관리와 웰에이징 라이프스타일 설계를 위한 참고 정보로 활용하시기 바랍니다.
         </div>
 
         <div style={{ height: 80 }} />
@@ -250,14 +255,15 @@ function SectionTitle({ num, title }) {
       display: 'flex', alignItems: 'center', gap: 10,
       margin: '28px 0 12px',
       paddingBottom: 6,
-      borderBottom: '2px solid #1a1a2e',
+      borderBottom: '1.5px solid #c9b89a',
     }}>
       <span style={{
-        background: '#1a1a2e', color: '#fff',
-        fontSize: 10, fontWeight: 700,
-        padding: '2px 8px', letterSpacing: '0.5px',
+        background: '#8b5e3c', color: '#fff',
+        fontSize: 9, fontWeight: 800,
+        padding: '2px 8px', letterSpacing: '1.5px',
+        textTransform: 'uppercase',
       }}>{num}</span>
-      <span style={{ fontSize: 14, fontWeight: 800, color: '#1a1a2e', letterSpacing: '-0.3px' }}>{title}</span>
+      <span style={{ fontSize: 13, fontWeight: 800, color: '#2a1f14', letterSpacing: '0.2px' }}>{title}</span>
     </div>
   )
 }
@@ -265,88 +271,101 @@ function SectionTitle({ num, title }) {
 const s = {
   page: {
     minHeight: '100dvh',
-    background: '#d4d8de',
+    background: '#ede8e0',
     fontFamily: "'Noto Sans KR', 'Malgun Gothic', sans-serif",
   },
   navBar: {
     position: 'sticky', top: 0, zIndex: 30,
     display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12,
     padding: '10px 20px',
-    background: '#1a1a2e',
-    borderBottom: '1px solid rgba(255,255,255,0.12)',
+    background: '#2a1f14',
+    borderBottom: '1px solid rgba(255,255,255,0.08)',
   },
   navBarMobile: { padding: '8px 12px', gap: 8 },
   backBtn: {
-    background: 'transparent', border: '1px solid rgba(255,255,255,0.2)',
-    color: 'rgba(255,255,255,0.85)', fontSize: 12, padding: '6px 12px',
-    cursor: 'pointer', borderRadius: 4,
+    background: 'transparent', border: '1px solid rgba(255,255,255,0.18)',
+    color: 'rgba(255,255,255,0.7)', fontSize: 12, padding: '6px 12px',
+    cursor: 'pointer', borderRadius: 3, letterSpacing: '0.3px',
   },
   backBtnMobile: { padding: '4px 8px', fontSize: 11 },
-  navTitle: { color: '#fff', fontSize: 15, fontWeight: 800, letterSpacing: '-0.2px' },
-  navTitleMobile: { fontSize: 13 },
+  navTitle: {
+    color: '#e8ddd0', fontSize: 16, fontWeight: 800,
+    letterSpacing: '1px', fontStyle: 'italic',
+  },
+  navTitleMobile: { fontSize: 14 },
   navActions: { flexShrink: 0 },
   navActionsMobile: { flexShrink: 0 },
   pdfBtn: {
-    background: '#FAE100', border: 'none', color: '#1a1a1a',
-    fontSize: 12, fontWeight: 800, padding: '6px 14px',
-    borderRadius: 6, cursor: 'pointer', boxShadow: '0 2px 8px rgba(250,225,0,0.2)',
+    background: '#c9b89a', border: 'none', color: '#2a1f14',
+    fontSize: 11, fontWeight: 800, padding: '6px 14px',
+    borderRadius: 3, cursor: 'pointer', letterSpacing: '0.5px',
+    textTransform: 'uppercase',
   },
   sheet: {
     maxWidth: 820, margin: '24px auto 40px',
     background: '#fff',
-    border: '1px solid #aaa',
-    boxShadow: '0 4px 24px rgba(0,0,0,0.15)',
-    padding: '36px 40px',
+    border: '1px solid #d4ccc0',
+    boxShadow: '0 4px 32px rgba(42,31,20,0.10)',
+    padding: '40px 44px',
     boxSizing: 'border-box',
   },
   docHeader: {
-    borderBottom: '3px double #1a1a2e',
-    paddingBottom: 16, marginBottom: 18,
-    display: 'flex', flexDirection: 'column', gap: 6,
+    borderBottom: '2px solid #2a1f14',
+    paddingBottom: 18, marginBottom: 20,
+    display: 'flex', flexDirection: 'column', gap: 4,
   },
   docMeta: { display: 'flex', justifyContent: 'space-between' },
-  docMetaBottom: { display: 'flex', justifyContent: 'space-between' },
-  docMetaText: { fontSize: 11, color: '#777', letterSpacing: '0.1px' },
+  docMetaBottom: { display: 'flex', justifyContent: 'space-between', marginTop: 4 },
+  docMetaText: { fontSize: 10, color: '#9e8e7e', letterSpacing: '0.4px' },
   docTitle: {
-    fontSize: 24, fontWeight: 900, color: '#1a1a2e',
-    letterSpacing: '-1px', margin: '6px 0', textAlign: 'center',
+    fontSize: 22, fontWeight: 900, color: '#2a1f14',
+    letterSpacing: '-0.5px', margin: '8px 0 2px', textAlign: 'center',
+  },
+  docSubTitle: {
+    textAlign: 'center',
+    fontSize: 11,
+    color: '#8b5e3c',
+    fontWeight: 600,
+    letterSpacing: '2px',
+    textTransform: 'uppercase',
+    marginBottom: 6,
   },
   table: {
     width: '100%', borderCollapse: 'collapse',
-    border: '1px solid #c0c0c0', marginBottom: 20, fontSize: 12,
+    border: '1px solid #ddd4c8', marginBottom: 20, fontSize: 12,
   },
   th: {
-    background: '#eef0f3', color: '#2c3e50',
-    fontSize: 12, fontWeight: 700,
-    padding: '10px 12px', border: '1px solid #c0c0c0',
-    textAlign: 'left',
+    background: '#f5f0e8', color: '#2a1f14',
+    fontSize: 11, fontWeight: 800,
+    padding: '10px 12px', border: '1px solid #ddd4c8',
+    textAlign: 'left', letterSpacing: '0.5px', textTransform: 'uppercase',
   },
   td: {
     fontSize: 12, color: '#1a1a1a',
-    padding: '10px 12px', border: '1px solid #c0c0c0', lineHeight: 1.6,
+    padding: '10px 12px', border: '1px solid #e8e0d8', lineHeight: 1.6,
   },
   badgeContainer: { display: 'flex', flexWrap: 'wrap', gap: 6 },
   nutrientBadge: {
-    background: '#f1f3f5', color: '#495057',
-    padding: '3px 8px', borderRadius: 4,
+    background: '#f5f0e8', color: '#5c4030',
+    padding: '3px 9px', borderRadius: 3,
     fontSize: 11, fontWeight: 500,
-    border: '1px solid #e9ecef'
+    border: '1px solid #e0d4c4',
   },
   imageSection: { marginBottom: 16 },
   imageWrap: {
-    position: 'relative', width: '100%', borderRadius: 4,
-    overflow: 'hidden', border: '1px solid #c0c0c0',
-    background: '#f8f9fa', maxHeight: 300,
+    position: 'relative', width: '100%', borderRadius: 3,
+    overflow: 'hidden', border: '1px solid #ddd4c8',
+    background: '#f8f5f0', maxHeight: 300,
   },
   siteImage: { width: '100%', maxHeight: 300, objectFit: 'contain', display: 'block' },
   imageBadge: {
     position: 'absolute', top: 10, right: 10,
-    background: 'rgba(26,26,46,0.85)', color: '#fff',
-    fontSize: 11, fontWeight: 700, padding: '4px 10px', borderRadius: 3,
+    background: 'rgba(42,31,20,0.85)', color: '#e8ddd0',
+    fontSize: 10, fontWeight: 700, padding: '4px 10px', borderRadius: 2,
+    letterSpacing: '0.5px',
   },
-  imageCaption: { marginTop: 6, fontSize: 11, color: '#888', lineHeight: 1.5 },
-  
-  // 장수 메커니즘 그리드 스타일
+  imageCaption: { marginTop: 6, fontSize: 11, color: '#9e8e7e', lineHeight: 1.6 },
+
   mechanismGrid: {
     display: 'grid',
     gridTemplateColumns: 'repeat(auto-fill, minmax(330px, 1fr))',
@@ -354,50 +373,54 @@ const s = {
     marginBottom: 24,
   },
   mechCard: {
-    border: '1px solid #dcdde1',
-    borderRadius: 6,
+    border: '1px solid #ddd4c8',
+    borderRadius: 4,
     background: '#fff',
     overflow: 'hidden',
     display: 'flex',
     flexDirection: 'column',
   },
   mechHeader: {
-    background: '#1a1a2e',
-    padding: '8px 12px',
+    background: '#215a8e',
+    padding: '9px 13px',
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  mechTitle: { color: '#fff', fontSize: 12, fontWeight: 800 },
-  mechLabel: { color: '#FAE100', fontSize: 11, fontWeight: 500 },
+  mechTitle: { color: '#fff', fontSize: 12, fontWeight: 800, letterSpacing: '0.2px' },
+  mechLabel: { color: '#c9e0f5', fontSize: 10, fontWeight: 500, letterSpacing: '0.3px' },
   mechBody: { padding: '12px', flex: 1, display: 'flex', flexDirection: 'column', gap: 6 },
-  mechSubTitle: { fontSize: 11, color: '#888', fontWeight: 600 },
+  mechSubTitle: { fontSize: 10, color: '#8b5e3c', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.8px' },
   nutList: { display: 'flex', flexWrap: 'wrap', gap: 6 },
   primaryNutrientBadge: {
-    fontSize: 11, color: '#2c3e50', fontWeight: 600,
-    background: '#edf2f7', padding: '2px 6px', borderRadius: 4,
+    fontSize: 11, color: '#2a3a50', fontWeight: 600,
+    background: '#eaf1f8', padding: '2px 8px', borderRadius: 3,
+    border: '1px solid #d0e2f0',
   },
 
-  signSection: { marginTop: 32, border: '1px solid #ccc' },
+  signSection: { marginTop: 36, border: '1px solid #ddd4c8' },
   signTitle: {
-    background: '#eef0f3', padding: '6px 14px',
-    fontSize: 11, fontWeight: 700, color: '#333',
-    borderBottom: '1px solid #ccc', letterSpacing: '2px', textAlign: 'center',
+    background: '#f5f0e8', padding: '6px 14px',
+    fontSize: 10, fontWeight: 800, color: '#2a1f14',
+    borderBottom: '1px solid #ddd4c8', letterSpacing: '3px', textAlign: 'center',
+    textTransform: 'uppercase',
   },
   signRow: { display: 'flex' },
   signBox: { flex: 1, display: 'flex', flexDirection: 'column' },
   signLabel: {
-    fontSize: 11, fontWeight: 600, color: '#444',
-    background: '#f5f5f5', textAlign: 'center',
-    padding: '6px', borderBottom: '1px solid #ddd',
+    fontSize: 10, fontWeight: 700, color: '#5c4030',
+    background: '#faf7f3', textAlign: 'center',
+    padding: '6px', borderBottom: '1px solid #e8e0d8',
+    letterSpacing: '0.3px',
   },
   signSpace: { height: 48 },
   signBottom: {
-    fontSize: 11, color: '#bbb', textAlign: 'right',
-    padding: '4px 10px', borderTop: '1px solid #eee',
+    fontSize: 10, color: '#c0b0a0', textAlign: 'right',
+    padding: '4px 10px', borderTop: '1px solid #eee8e0',
   },
   docFooter: {
-    marginTop: 24, fontSize: 10, color: '#aaa', textAlign: 'center',
-    borderTop: '1px solid #eee', paddingTop: 12, lineHeight: 1.6,
+    marginTop: 24, fontSize: 10, color: '#b0a090', textAlign: 'center',
+    borderTop: '1px solid #ede8e0', paddingTop: 12, lineHeight: 1.7,
+    letterSpacing: '0.1px',
   },
 }
