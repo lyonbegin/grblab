@@ -2014,7 +2014,7 @@ const HERO_SLIDES = [
     pendingRiskFile,
     analyze,
     analyze2,
-    analyze3,
+
     navigate,
     setPreview,
     setPendingRiskFile,
