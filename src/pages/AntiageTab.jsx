@@ -1,6 +1,30 @@
 // AntiageTab.jsx
 import SafetyMarketingSections from './SafetyMarketingSections'
 
+// 상세페이지 이미지/미디어 목록 (public 폴더 기준)
+const detailMediaItems = [
+  { type: 'image', src: '/1-001.jpg' },
+  { type: 'image', src: '/1-002.jpg' },
+  { type: 'image', src: '/1-003.jpg' },
+  { type: 'image', src: '/1-004.jpg' },
+  { type: 'image', src: '/1-005.jpg' },
+  { type: 'image', src: '/1-006.jpg' },
+  { type: 'image', src: '/1-007.jpg' },
+  { type: 'image', src: '/1-008.jpg' },
+  { type: 'image', src: '/1-009.jpg' },
+  { type: 'image', src: '/1-010.jpg' },
+  { type: 'image', src: '/1-011.jpg' },
+  { type: 'image', src: '/1-012.jpg' },
+  { type: 'image', src: '/1-013.jpg' },
+  { type: 'image', src: '/1-014.jpg' },
+  { type: 'image', src: '/1-015.gif' },
+  { type: 'video', src: '/1-016.mp4' },
+  { type: 'image', src: '/1-017.jpg' },
+  { type: 'image', src: '/1-018.jpg' },
+  { type: 'image', src: '/1-019.jpg' },
+  { type: 'image', src: '/1-020.jpg' },
+]
+
 export default function AntiageTab({
   isMobile,
   smartEquipmentItems,
@@ -15,140 +39,140 @@ export default function AntiageTab({
 }) {
   return (
     <>
-      <main
+      {/* ── 카메라 촬영 버튼 영역 ── */}
+      <div
         style={{
-          flex: 1,
-          margin: '0 auto',
           width: '100%',
-          maxWidth: 1200,
           display: 'flex',
-          flexDirection: isMobile ? 'column' : 'row',
-          padding: isMobile ? '1px 20px 48px' : '60px 40px',
-          gap: isMobile ? 0 : 32,
-          alignItems: isMobile ? 'flex-start' : 'stretch',
+          justifyContent: 'center',
+          padding: isMobile ? '20px 20px 16px' : '32px 40px 24px',
           fontFamily: "'Noto Sans KR','Malgun Gothic',sans-serif",
+          boxSizing: 'border-box',
         }}
       >
-        {/* ── 왼쪽 컬럼 ── */}
-        <div style={{ flex: isMobile ? 'none' : '0 0 460px', maxWidth: isMobile ? '100%' : 460, width: '100%' }}>
+        <div
+          style={{
+            width: '100%',
+            maxWidth: isMobile ? '100%' : 640,
+          }}
+        >
+          {loading ? LoadingUI : (
+            // ActionUI를 감싸되, 내부의 기존 버튼 로직이 그대로 실행되도록
+            // ActionUI 대신 카메라 촬영 버튼만 렌더 — ActionUI가 <input type="file"> 트리거라면
+            // 아래처럼 ActionUI를 숨김 처리하고 커스텀 버튼이 그걸 트리거하도록 래핑합니다.
+            <div style={{ position: 'relative' }}>
+              {/* 실제 ActionUI는 숨겨두고 커스텀 버튼이 클릭 이벤트를 전달 */}
+              <div
+                style={{
+                  position: 'absolute',
+                  inset: 0,
+                  opacity: 0,
+                  zIndex: 2,
+                  cursor: 'pointer',
+                  pointerEvents: 'all',
+                }}
+              >
+                {ActionUI}
+              </div>
 
-          <h1 style={{
-            fontSize: isMobile ? 30 : 40,
-            lineHeight: 1.4,
-            letterSpacing: isMobile ? '-1.2px' : '-2.5px',
-            marginBottom: isMobile ? 12 : 18,
-            fontWeight: 400,
-            color: '#1a1a1a',
-          }}>
-            <span style={{ fontWeight: 900 }}>앙티아쥬</span>가 바꾸는 <br /> 안전장비 / TBM / 위험성평가
-          </h1>
-
-          <p style={{ color: '#999', lineHeight: 1.5, letterSpacing: '-0.2px', fontWeight: 500, fontSize: isMobile ? 15 : 17, marginBottom: isMobile ? 10 : 14 }}>
-            AI로 더 빠르고 정확하게
-          </p>
-
-          {/* 스마트안전장비 */}
-          <div style={{ marginBottom: isMobile ? 16 : 20 }}>
-            <p style={{ fontSize: 11, color: '#ccc', fontWeight: 600, letterSpacing: '0.05em', textTransform: 'uppercase', marginBottom: 8 }}>
-              스마트안전장비
-            </p>
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(3, 1fr)',
-              gap: isMobile ? 8 : 10,
-            }}>
-              {smartEquipmentItems.map((item) => (
-                <button
-                  key={item.key}
-                  type="button"
-                  onClick={() => onSmartEquipmentClick(item.key)}
-                  style={{
-                    position: 'relative',
-                    border: 'none',
-                    borderRadius: 14,
-                    overflow: 'hidden',
-                    background: '#ddd',
-                    cursor: 'pointer',
-                    padding: 0,
-                    textAlign: 'left',
-                    aspectRatio: '1 / 1',
-                  }}
-                >
-                  <div style={{ position: 'absolute', inset: 0, backgroundImage: `url(${item.img})`, backgroundSize: 'cover', backgroundPosition: 'center' }} />
-                  <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.55), rgba(0,0,0,0.08) 55%, rgba(0,0,0,0.02))' }} />
-                  <div style={{
-                    position: 'absolute', left: 8, right: 8, bottom: 8, zIndex: 2,
-                    color: '#fff', fontSize: isMobile ? 11 : 12, fontWeight: 800,
-                    lineHeight: 1.2, textShadow: '0 1px 2px rgba(0,0,0,0.35)', wordBreak: 'keep-all',
-                  }}>
-                    {item.title}
-                  </div>
-                </button>
-              ))}
+              {/* 카메라 촬영 커스텀 버튼 */}
+              <button
+                type="button"
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: 10,
+                  width: '100%',
+                  padding: isMobile ? '15px 24px' : '17px 32px',
+                  background: '#FAE100',
+                  color: '#1a1a1a',
+                  border: 'none',
+                  borderRadius: 12,
+                  fontSize: isMobile ? 16 : 18,
+                  fontWeight: 800,
+                  fontFamily: "'Noto Sans KR','Malgun Gothic',sans-serif",
+                  letterSpacing: '-0.5px',
+                  cursor: 'pointer',
+                  boxShadow: '0 4px 20px rgba(250,225,0,0.35)',
+                  transition: 'transform 0.15s, box-shadow 0.15s',
+                  position: 'relative',
+                  zIndex: 1,
+                }}
+                onMouseEnter={e => {
+                  e.currentTarget.style.transform = 'translateY(-2px)'
+                  e.currentTarget.style.boxShadow = '0 8px 28px rgba(250,225,0,0.45)'
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.transform = 'translateY(0)'
+                  e.currentTarget.style.boxShadow = '0 4px 20px rgba(250,225,0,0.35)'
+                }}
+              >
+                {/* 카메라 아이콘 */}
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
+                  <circle cx="12" cy="13" r="4" />
+                </svg>
+                카메라 촬영
+              </button>
             </div>
-          </div>
-
-          {/* AI 위험성 평가 / TBM */}
-          <div style={{ marginBottom: isMobile ? 16 : 20 }}>
-            <p style={{ fontSize: 11, color: '#ccc', fontWeight: 600, letterSpacing: '0.05em', textTransform: 'uppercase', marginBottom: 8 }}>
-              AI 위험성 평가 / TBM
-            </p>
-            <ImageGrid items={riskGrid} isMobile={isMobile} onSelect={onRiskImageSelect} columns={6} />
-          </div>
-
-          {/* 업로드 UI */}
-          {loading ? LoadingUI : ActionUI}
-
-          {/* 모바일 폰 목업 */}
-          {isMobile && <PhoneMockup isMobile={true} />}
+          )}
         </div>
+      </div>
 
-        {/* ── 오른쪽 컬럼 (PC만) ── */}
-        {!isMobile && (
-          <div style={{
-            alignSelf: 'stretch', display: 'flex', flexDirection: 'column',
-            alignItems: 'stretch', justifyContent: 'flex-start', flex: 1, paddingTop: 6,
-          }}>
-            {/* 추천코드 박스 */}
-            <div style={{ flex: 1, background: '#f7f7f7', borderRadius: 12, padding: '16px 18px', marginBottom: 14 }}>
-              <div style={{ marginBottom: 10 }}>
-                <span style={{ fontSize: 13, fontWeight: 800, color: '#111', cursor: 'pointer', textDecoration: 'underline', textUnderlineOffset: 3, display: 'inline-flex', alignItems: 'center', gap: 6 }}>
-                  추천코드가 없다면 클릭<span>👉</span>
-                </span>
-              </div>
-              <div style={{ display: 'flex', gap: 8 }}>
-                <input
-                  type="text"
-                  placeholder="추천인 코드를 입력하세요"
-                  style={{ flex: 1, padding: '10px 14px', border: '1.5px solid #e0e0e0', borderRadius: 8, fontSize: 13, fontFamily: 'inherit', outline: 'none', background: '#fff', color: '#333', minWidth: 0 }}
-                />
-                <button style={{ padding: '10px 18px', background: '#FAE100', color: '#3C1E1E', border: 'none', borderRadius: 8, fontSize: 13, fontWeight: 800, cursor: 'pointer', whiteSpace: 'nowrap' }}>
-                  신청하기
-                </button>
-              </div>
-              <div style={{ fontSize: 11, color: '#aaa', marginTop: 8, lineHeight: 1.5 }}>
-                추천코드 입력 시 50인 미만 사업장 무상 도입이 적용됩니다.
-              </div>
-            </div>
-
-            {/* 폰 목업 영상 */}
-            <div style={{
-              height: 700, aspectRatio: '1 / 2', background: '#1a1a1a', borderRadius: 44,
-              padding: '10px 7px', boxShadow: '0 24px 80px rgba(0,0,0,0.28), inset 0 0 0 1px rgba(255,255,255,0.07)',
-              position: 'relative', flexShrink: 0, alignSelf: 'center',
-            }}>
-              <div style={{ position: 'absolute', top: 12, left: '50%', transform: 'translateX(-50%)', width: 52, height: 7, background: '#000', borderRadius: 4, zIndex: 10 }} />
-              <div style={{ width: '100%', height: '100%', borderRadius: 36, overflow: 'hidden', background: '#000' }}>
-                <video autoPlay loop muted playsInline style={{ width: '100%', height: '100%', objectFit: 'cover' }} src="/output.webm" />
-              </div>
-              <div style={{ position: 'absolute', bottom: 7, left: '50%', transform: 'translateX(-50%)', width: 52, height: 4, background: 'rgba(255,255,255,0.25)', borderRadius: 2 }} />
-              <div style={{ position: 'absolute', right: -3, top: 80, width: 3, height: 40, background: '#2a2a2a', borderRadius: 2 }} />
-              <div style={{ position: 'absolute', left: -3, top: 70, width: 3, height: 26, background: '#2a2a2a', borderRadius: 2 }} />
-              <div style={{ position: 'absolute', left: -3, top: 104, width: 3, height: 26, background: '#2a2a2a', borderRadius: 2 }} />
-            </div>
-          </div>
-        )}
-      </main>
+      {/* ── 상세페이지 이미지 갤러리 ── */}
+      <div
+        style={{
+          width: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          background: '#fff',
+        }}
+      >
+        <div
+          style={{
+            width: '100%',
+            maxWidth: isMobile ? '100%' : 860,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'stretch',
+            gap: 0,
+          }}
+        >
+          {detailMediaItems.map((item, idx) =>
+            item.type === 'video' ? (
+              <video
+                key={idx}
+                src={item.src}
+                autoPlay
+                loop
+                muted
+                playsInline
+                style={{
+                  width: '100%',
+                  display: 'block',
+                  verticalAlign: 'bottom',
+                  lineHeight: 0,
+                }}
+              />
+            ) : (
+              <img
+                key={idx}
+                src={item.src}
+                alt={`상세이미지 ${idx + 1}`}
+                style={{
+                  width: '100%',
+                  display: 'block',
+                  verticalAlign: 'bottom',
+                  lineHeight: 0,
+                }}
+                loading={idx < 3 ? 'eager' : 'lazy'}
+              />
+            )
+          )}
+        </div>
+      </div>
 
       <SafetyMarketingSections isMobile={isMobile} />
     </>
