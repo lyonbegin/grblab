@@ -1775,7 +1775,7 @@ const ReferralBox = ({ isMobile }) => (
 export default function InputPage() {
   const navigate = useNavigate()
   const isMobile = useIsMobile()
-  const { analyze, analyze2,  analyze3,loading: apiLoading, error } = useAnalyze()
+  const { analyze, analyze2,loading: apiLoading, error } = useAnalyze()
   const [cacheLoading, setCacheLoading] = useState(false)
   const fileInputRef = useRef(null)
   const cctvDetailAnchorRef = useRef(null)
