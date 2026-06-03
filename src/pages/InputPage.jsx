@@ -58,7 +58,7 @@ import AnalogGaugeAIDetailPage from './AnalogGaugeAIDetailPage'
 import SmartPowerSafetyDetailPage from './SmartPowerSafetyDetailPage'
 
 
-
+import AntiageTab from './AntiageTab'
 
 import SafetyDetailPage from './SafetyDetailPage'
 
@@ -2315,6 +2315,11 @@ const handleRiskImageSelect = useCallback(async (filename) => {
                     label: '스마트안전장비',
                     subs: CCTV_CARDS.map(c => ({ key: c.key, label: c.title })),
                   },
+                  {
+    key: 'antitage',
+    label: '앙티아쥬',
+    subs: [],
+  },
                 ].map(tab => {
                   const isActive = activeTab === tab.key
                   const isExpanded = drawerExpandedTab === tab.key
@@ -2458,6 +2463,7 @@ const handleRiskImageSelect = useCallback(async (filename) => {
                     { key: 'cmanage', label: '건설안전' },
                     { key: 'risk', label: 'AI안전' },
                     { key: 'cctv', label: '스마트안전장비' },
+                    { key: 'antitage', label: '앙티아쥬' },
                   ].find(t => t.key === activeTab)?.label}
                 </span>
                 <button
@@ -2481,6 +2487,7 @@ const handleRiskImageSelect = useCallback(async (filename) => {
                   { key: 'cmanage', label: '건설안전' },
                   { key: 'risk', label: 'AI안전' },
                   { key: 'cctv', label: '스마트안전장비' },
+                  { key: 'antitage', label: '앙티아쥬' },
                 ].map(tab => (
                   <button
                     key={tab.key}
@@ -2865,10 +2872,17 @@ activeTab === 'power' ? (
               </AnimatePresence>
             </motion.div>
 
+          ) : activeTab === 'antitage' ? (
+
+            <AntiageTab isMobile={isMobile} />
+
           ) : (
 
             <motion.main
               key="risk"
+
+
+
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
