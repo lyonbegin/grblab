@@ -2886,7 +2886,7 @@ activeTab === 'power' ? (
     LoadingUI={LoadingUI}
     ActionUI={ActionUI}
     PhoneMockup={PhoneMockup}
-    analyze={analyze3}      
+    analyze={analyze}      
 setPreview={setPreview} 
   />
 
