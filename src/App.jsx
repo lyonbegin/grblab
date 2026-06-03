@@ -2,7 +2,7 @@ import { Routes, Route, Navigate } from 'react-router-dom'
 import InputPage      from './pages/InputPage'
 import ResultPage     from './pages/ResultPage'
 import FormInputPage  from './pages/FormInputPage'
-
+import UrineResultPage from './pages/UrineResultPage'
 import ProjectDashboardPage from './pages/ProjectDashboardPage'
 import BoardIndexPage       from './pages/BoardIndexPage'
 import EmergencyListPage   from './pages/EmergencyListPage'
@@ -38,6 +38,9 @@ export default function App() {
       {/* 기존 유지 */}
       <Route path="/"       element={<InputPage />} />
       <Route path="/result" element={<ResultPage />} />
+
+      <Route path="/urine-result" element={<UrineResultPage />} />
+      
       <Route path="/form"   element={<FormInputPage />} />
       <Route path="/tbm/result" element={<TbmResultPage />} />
 
