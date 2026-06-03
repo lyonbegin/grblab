@@ -2452,7 +2452,7 @@ const handleRiskImageSelect = useCallback(async (filename) => {
           <div style={{ ...s.navInner, padding: isMobile ? '0 16px' : '0 40px' }}>
             <div style={{ ...s.logo, transform: isMobile ? 'scale(0.85)' : 'none', transformOrigin: 'left center' }}>
               <div style={s.logoMark}>G</div>
-              <span style={s.logoText}>GRB 안전보건전문가그룹</span>
+              <span style={s.logoText}>GRB </span>
             </div>
 
             {/* PC: 탭 버튼 / 모바일: 현재 탭 이름 + 햄버거 */}
