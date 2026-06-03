@@ -174,7 +174,7 @@ export default function AntiageTab({
         </div>
       </div>
 
-      <SafetyMarketingSections isMobile={isMobile} />
+      {/* <SafetyMarketingSections isMobile={isMobile} /> */}
     </>
   )
 }
