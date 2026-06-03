@@ -1,10 +1,176 @@
 // AntiageTab.jsx
-import { useState, useCallback } from 'react'
-import { AnimatePresence } from 'framer-motion'
+import { useState, useCallback, useRef } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
-import AntiageCameraOverlay from './AntiageCameraOverlay'
+import Webcam from 'react-webcam'
 
-// 상세페이지 이미지/미디어 목록 (public 폴더 기준)
+// ─── 카메라 오버레이 스타일 상수 ────────────────────────────────────────────
+const cam = {
+  root: {
+    position: 'fixed', inset: 0, zIndex: 9999,
+    background: '#000',
+    display: 'flex', flexDirection: 'column',
+  },
+  video: {
+    position: 'absolute', inset: 0,
+    width: '100%', height: '100%',
+    objectFit: 'cover',
+  },
+  vignette: {
+    position: 'absolute', inset: 0,
+    background: 'radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,0.72) 100%)',
+    pointerEvents: 'none',
+  },
+  topBar: {
+    position: 'relative', zIndex: 2,
+    display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+    padding: '18px 20px 0',
+  },
+  badge: {
+    fontSize: 13, fontWeight: 700, letterSpacing: 1.5,
+    color: 'rgba(255,255,255,0.85)',
+    background: 'rgba(255,255,255,0.12)',
+    border: '1px solid rgba(255,255,255,0.22)',
+    borderRadius: 6, padding: '4px 10px',
+    fontFamily: "'Noto Sans KR','Malgun Gothic',sans-serif",
+  },
+  closeBtn: {
+    background: 'rgba(255,255,255,0.12)',
+    border: '1px solid rgba(255,255,255,0.22)',
+    borderRadius: 8, width: 38, height: 38,
+    display: 'flex', alignItems: 'center', justifyContent: 'center',
+    cursor: 'pointer',
+  },
+  framewrap: {
+    flex: 1, position: 'relative', zIndex: 2,
+    display: 'flex', flexDirection: 'column',
+    alignItems: 'center', justifyContent: 'center',
+    gap: 20,
+  },
+  frame: {
+    position: 'relative',
+    width: 'min(72vw, 320px)', height: 'min(72vw, 320px)',
+    overflow: 'hidden',
+  },
+  scanLine: {
+    position: 'absolute', left: 0, right: 0,
+    height: 2,
+    background: 'linear-gradient(90deg, transparent, rgba(250,225,0,0.9), transparent)',
+    animation: 'camScan 2.4s ease-in-out infinite',
+  },
+  guide: {
+    color: 'rgba(255,255,255,0.88)',
+    fontSize: 13, fontWeight: 500, letterSpacing: '-0.3px',
+    fontFamily: "'Noto Sans KR','Malgun Gothic',sans-serif",
+    textAlign: 'center', margin: 0,
+    textShadow: '0 1px 4px rgba(0,0,0,0.5)',
+  },
+  shutterRow: {
+    position: 'relative', zIndex: 2,
+    display: 'flex', justifyContent: 'center',
+    paddingBottom: 'max(env(safe-area-inset-bottom), 32px)',
+    paddingTop: 16,
+  },
+  shutterOuter: {
+    width: 76, height: 76, borderRadius: '50%',
+    border: '3px solid rgba(255,255,255,0.85)',
+    background: 'transparent',
+    display: 'flex', alignItems: 'center', justifyContent: 'center',
+    cursor: 'pointer',
+  },
+  shutterCore: {
+    width: 58, height: 58, borderRadius: '50%',
+    background: '#fff',
+    transition: 'opacity 0.2s',
+  },
+}
+
+const CORNERS = [
+  { top: 0,    left:  0, borderWidth: '2px 0 0 2px', borderRadius: '4px 0 0 0' },
+  { top: 0,    right: 0, borderWidth: '2px 2px 0 0', borderRadius: '0 4px 0 0' },
+  { bottom: 0, left:  0, borderWidth: '0 0 2px 2px', borderRadius: '0 0 0 4px' },
+  { bottom: 0, right: 0, borderWidth: '0 2px 2px 0', borderRadius: '0 0 4px 0' },
+]
+
+// ─── 인라인 카메라 오버레이 컴포넌트 ────────────────────────────────────────
+function CameraOverlay({ onCapture, onClose }) {
+  const webcamRef = useRef(null)
+  const [capturing, setCapturing] = useState(false)
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768
+
+  const shoot = useCallback(async () => {
+    if (capturing) return
+    setCapturing(true)
+    const imgSrc = webcamRef.current?.getScreenshot()
+    if (!imgSrc) { setCapturing(false); return }
+    const res  = await fetch(imgSrc)
+    const blob = await res.blob()
+    const file = new File([blob], 'capture.jpg', { type: 'image/jpeg' })
+    onCapture(file, imgSrc)
+  }, [capturing, onCapture])
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+      style={cam.root}
+    >
+      <style>{`@keyframes camScan { 0%{top:4%} 50%{top:96%} 100%{top:4%} }`}</style>
+
+      <Webcam
+        ref={webcamRef}
+        audio={false}
+        screenshotFormat="image/jpeg"
+        style={cam.video}
+        videoConstraints={{ facingMode: isMobile ? 'environment' : 'user' }}
+      />
+      <div style={cam.vignette} />
+
+      {/* 상단 바 */}
+      <div style={cam.topBar}>
+        <div style={cam.badge}>KRAS AI</div>
+        <button style={cam.closeBtn} onClick={onClose}>
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+            <path d="M4 4l10 10M14 4L4 14" stroke="white" strokeWidth="2" strokeLinecap="round"/>
+          </svg>
+        </button>
+      </div>
+
+      {/* 프레임 + 가이드 */}
+      <div style={cam.framewrap}>
+        <div style={cam.frame}>
+          {CORNERS.map((c, i) => (
+            <div
+              key={i}
+              style={{
+                position: 'absolute', width: 28, height: 28,
+                borderStyle: 'solid', borderColor: 'rgba(255,255,255,0.9)',
+                ...c,
+              }}
+            />
+          ))}
+          <div style={cam.scanLine} />
+        </div>
+        <p style={cam.guide}>
+          {capturing ? '분석 중…' : '현장을 프레임 안에 맞춰 촬영하세요'}
+        </p>
+      </div>
+
+      {/* 셔터 */}
+      <div style={cam.shutterRow}>
+        <motion.button
+          style={cam.shutterOuter}
+          whileTap={{ scale: 0.9 }}
+          onClick={shoot}
+          disabled={capturing}
+        >
+          <div style={{ ...cam.shutterCore, opacity: capturing ? 0.4 : 1 }} />
+        </motion.button>
+      </div>
+    </motion.div>
+  )
+}
+
+// ─── 상세페이지 이미지/미디어 목록 ──────────────────────────────────────────
 const detailMediaItems = [
   { type: 'image', src: '/1-001.jpg' },
   { type: 'image', src: '/1-002.jpg' },
@@ -28,31 +194,19 @@ const detailMediaItems = [
   { type: 'image', src: '/1-020.jpg' },
 ]
 
+// ─── AntiageTab (메인 export) ────────────────────────────────────────────────
 /**
- * AntiageTab
- *
  * Props (InputPage에서 내려오는 것만 사용):
  *   isMobile   — 모바일 여부
  *   loading    — AI 분석 중 여부
  *   LoadingUI  — 로딩 중 표시할 JSX
- *   analyze    — (file) => result  위험성평가 분석 함수  ← InputPage의 analyze 그대로
- *   setPreview — 미리보기 이미지 URL 세터              ← InputPage의 setPreview 그대로
+ *   analyze    — (file) => result
+ *   setPreview — 미리보기 이미지 URL 세터
  */
-export default function AntiageTab({
-  isMobile,
-  loading,
-  LoadingUI,
-  analyze,
-  setPreview,
-}) {
-  const navigate   = useNavigate()
+export default function AntiageTab({ isMobile, loading, LoadingUI, analyze, setPreview }) {
+  const navigate = useNavigate()
   const [camOpen, setCamOpen] = useState(false)
 
-  // InputPage의 handleCapture(카메라 경로)와 완전히 동일한 로직
-  // 1) 카메라 닫기
-  // 2) 미리보기 세팅
-  // 3) analyze(file) 호출 → result
-  // 4) /result 로 navigate (riskFactors는 안티에이징 탭에서는 사용 안 하므로 빈 배열)
   const handleCapture = useCallback(async (file, previewSrc) => {
     setCamOpen(false)
     setPreview(previewSrc)
@@ -65,17 +219,17 @@ export default function AntiageTab({
 
   return (
     <>
-      {/* 전용 카메라 오버레이 */}
+      {/* 카메라 오버레이 */}
       <AnimatePresence>
         {camOpen && (
-          <AntiageCameraOverlay
+          <CameraOverlay
             onCapture={handleCapture}
             onClose={() => setCamOpen(false)}
           />
         )}
       </AnimatePresence>
 
-      {/* ── 카메라 촬영 버튼 ── */}
+      {/* 촬영 버튼 */}
       <div
         style={{
           width: '100%',
@@ -129,7 +283,7 @@ export default function AntiageTab({
         </div>
       </div>
 
-      {/* ── 상세페이지 이미지 갤러리 ── */}
+      {/* 상세페이지 이미지 갤러리 */}
       <div
         style={{
           width: '100%',
