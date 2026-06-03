@@ -35,8 +35,8 @@ const detailMediaItems = [
  *   isMobile   — 모바일 여부
  *   loading    — AI 분석 중 여부
  *   LoadingUI  — 로딩 중 표시할 JSX
- *   analyze    — (file) => result  위험성평가 분석 함수
- *   setPreview — 미리보기 이미지 URL 세터
+ *   analyze    — (file) => result  위험성평가 분석 함수  ← InputPage의 analyze 그대로
+ *   setPreview — 미리보기 이미지 URL 세터              ← InputPage의 setPreview 그대로
  */
 export default function AntiageTab({
   isMobile,
@@ -48,7 +48,11 @@ export default function AntiageTab({
   const navigate   = useNavigate()
   const [camOpen, setCamOpen] = useState(false)
 
-  // 셔터 클릭 후 → 모달 없이 바로 분석
+  // InputPage의 handleCapture(카메라 경로)와 완전히 동일한 로직
+  // 1) 카메라 닫기
+  // 2) 미리보기 세팅
+  // 3) analyze(file) 호출 → result
+  // 4) /result 로 navigate (riskFactors는 안티에이징 탭에서는 사용 안 하므로 빈 배열)
   const handleCapture = useCallback(async (file, previewSrc) => {
     setCamOpen(false)
     setPreview(previewSrc)
