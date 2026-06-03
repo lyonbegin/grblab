@@ -24,34 +24,26 @@ export default function UrineResultPage() {
   const [step1Data, setStep1Data] = useState([]);
   const [step2Data, setStep2Data] = useState([]);
 
-  useEffect(() => {
-    if (!state?.result) {
-      navigate('/')
-      return
+useEffect(() => {
+  if (!state?.result) {
+    navigate('/')
+    return
+  }
+
+  try {
+    const targetData = Array.isArray(state.result) ? state.result[0] : state.result
+
+    // ✅ step1_result / step2_result 키로 변경
+    if (targetData.step1_result) {
+      setStep1Data(targetData.step1_result?.분석결과 || [])
     }
-
-    try {
-      // 배열 형태나 단일 객체 모두 대응 가능하도록 안전하게 처리
-      const targetData = Array.isArray(state.result) ? state.result[0] : state.result
-
-      // ```json ... ``` 블록 제거 후 순수 JSON 파싱
-      const cleanJson = (str) => {
-        if (!str) return '{}';
-        return str.replace(/```json\n?/, '').replace(/```$/, '').trim();
-      }
-
-      if (targetData.step1_raw_result) {
-        const parsed1 = JSON.parse(cleanJson(targetData.step1_raw_result));
-        setStep1Data(parsed1.분석결과 || []);
-      }
-      if (targetData.step2_prescription_result) {
-        const parsed2 = JSON.parse(cleanJson(targetData.step2_prescription_result));
-        setStep2Data(parsed2.longevity_mechanisms || []);
-      }
-    } catch (e) {
-      console.error("JSON 파싱 에러:", e);
+    if (targetData.step2_result) {
+      setStep2Data(targetData.step2_result?.longevity_mechanisms || [])
     }
-  }, [state, navigate])
+  } catch (e) {
+    console.error("JSON 파싱 에러:", e);
+  }
+}, [state, navigate])
 
   if (!state?.result) return null;
 
