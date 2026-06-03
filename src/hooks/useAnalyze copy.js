@@ -1,8 +1,13 @@
 import { useState, useCallback } from 'react'
 import { mapKras as mapAllMethods } from '../utils/krasMapper'
 
-const ROBOFLOW_WORKFLOW_URL     = 'https://serverless.roboflow.com/grb/workflows/custom-workflow-3'
-const ROBOFLOW_WORKFLOW_URL_TBM = 'https://serverless.roboflow.com/grb/workflows/custom-workflow-3-2'
+// const ROBOFLOW_WORKFLOW_URL     = 'https://serverless.roboflow.com/grb/workflows/custom-workflow-3'
+// const ROBOFLOW_WORKFLOW_URL_TBM = 'https://serverless.roboflow.com/grb/workflows/custom-workflow-3-2'
+
+const ROBOFLOW_WORKFLOW_URL     = '/roboflow/grb/workflows/custom-workflow-3'
+const ROBOFLOW_WORKFLOW_URL_TBM = '/roboflow/grb/workflows/custom-workflow-3-2'
+
+
 const ROBOFLOW_API_KEY          = 'P0UYFNweFjm7uZo2nVVG'
 
 function parseOpenAIJson(rawOutput) {

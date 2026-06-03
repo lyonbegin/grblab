@@ -127,7 +127,7 @@ function CameraOverlay({ onCapture, onClose }) {
 
       {/* 상단 바 */}
       <div style={cam.topBar}>
-        <div style={cam.badge}>앙뚜아쥬</div>
+        <div style={cam.badge}></div>
         <button style={cam.closeBtn} onClick={onClose}>
           <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
             <path d="M4 4l10 10M14 4L4 14" stroke="white" strokeWidth="2" strokeLinecap="round"/>
