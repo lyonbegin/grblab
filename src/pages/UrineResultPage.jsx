@@ -25,15 +25,13 @@ export default function UrineResultPage() {
   const [step2Data, setStep2Data] = useState([]);
 
 useEffect(() => {
-  if (!state?.result) {
-    navigate('/')
-    return
-  }
+  if (!state?.result) { navigate('/'); return }
 
   try {
     const targetData = Array.isArray(state.result) ? state.result[0] : state.result
+    
+    console.log('📦 받은 result:', targetData)  // ← 확인용
 
-    // ✅ step1_result / step2_result 키로 변경
     if (targetData.step1_result) {
       setStep1Data(targetData.step1_result?.분석결과 || [])
     }
@@ -41,10 +39,9 @@ useEffect(() => {
       setStep2Data(targetData.step2_result?.longevity_mechanisms || [])
     }
   } catch (e) {
-    console.error("JSON 파싱 에러:", e);
+    console.error("JSON 파싱 에러:", e)
   }
 }, [state, navigate])
-
   if (!state?.result) return null;
 
   const today = new Date().toLocaleDateString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit' })
