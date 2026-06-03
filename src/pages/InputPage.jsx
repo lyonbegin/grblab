@@ -2124,7 +2124,7 @@ const handleRiskImageSelect = useCallback(async (filename) => {
         </div>
       )}
       <div style={s.loadingSteps}>
-        {['이미지 전처리 및 객체 인식', 'KRAS 위험등급 분류', '법적 기준 검토', '보고서 자동 생성'].map((step, i) => (
+        {['이미지 전처리 및 객체 인식', 'AI 패턴 분석 및 분류', '데이터 기반 인사이트 도출', '맞춤형 보고서 자동 생성'].map((step, i) => (
           <motion.div key={i} style={s.stepRow} initial={{ opacity: 0.2 }} animate={{ opacity: 1 }} transition={{ delay: i * 0.5 }}>
             <motion.div style={s.stepDot} animate={{ background: ['#ccc', '#1a1a1a'] }} transition={{ delay: i * 0.5 }} />
             <span style={s.stepText}>{step}</span>
