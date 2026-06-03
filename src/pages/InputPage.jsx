@@ -2874,7 +2874,18 @@ activeTab === 'power' ? (
 
           ) : activeTab === 'antitage' ? (
 
-            <AntiageTab isMobile={isMobile} />
+            <AntiageTab
+    isMobile={isMobile}
+    smartEquipmentItems={SMART_EQUIPMENT_ITEMS}
+    onSmartEquipmentClick={handleSmartEquipmentClick}
+    riskGrid={RISK_GRID}
+    ImageGrid={ImageGrid}
+    onRiskImageSelect={handleRiskImageSelect}
+    loading={loading}
+    LoadingUI={LoadingUI}
+    ActionUI={ActionUI}
+    PhoneMockup={PhoneMockup}
+  />
 
           ) : (
 
