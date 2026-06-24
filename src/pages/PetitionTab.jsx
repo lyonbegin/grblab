@@ -17,23 +17,41 @@ const C = {
   live: '#36d399',
 }
 
-// ─── 완료 오버레이 (체크 ✓ + 카운트업) ───────────────────────────────────────
-function DoneOverlay({ baseCount, onClose }) {
-  const [count, setCount] = useState(baseCount)
-  const [checkDone, setCheckDone] = useState(false)
-
-  // 카운트업: 완료 후 +1 → +3 페이크 증가
+// ─── 카운트업 훅 (run=false면 대기) ─────────────────────────────────────────
+function useCountUp(target, duration = 1500, run = true) {
+  const [display, setDisplay] = useState(0)
+  const displayRef = useRef(0)
+  const rafRef = useRef(0)
   useEffect(() => {
-    const targets = [baseCount + 1, baseCount + 2, baseCount + 3]
-    let i = 0
-    const run = () => {
-      if (i >= targets.length) return
-      setCount(targets[i++])
-      setTimeout(run, 420)
+    if (!run) return
+    const from = displayRef.current
+    const start = performance.now()
+    const ease = t => 1 - Math.pow(1 - t, 3)
+    const tick = now => {
+      const p = Math.min((now - start) / duration, 1)
+      const v = Math.round(from + (target - from) * ease(p))
+      displayRef.current = v
+      setDisplay(v)
+      if (p < 1) rafRef.current = requestAnimationFrame(tick)
     }
-    const t = setTimeout(run, 900) // 체크 그려진 뒤에 시작
+    cancelAnimationFrame(rafRef.current)
+    rafRef.current = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(rafRef.current)
+  }, [target, duration, run])
+  return display
+}
+
+// ─── 완료 오버레이 (체크 ✓ + 실제 총계 카운트업) ────────────────────────────
+function DoneOverlay({ total, onClose }) {
+  const [run, setRun] = useState(false)
+  const [checkDone, setCheckDone] = useState(false)
+  const count = useCountUp(total, 1400, run)
+
+  // 체크가 그려진 뒤 실제 총계까지 카운트업 시작 (가짜 증가 없음)
+  useEffect(() => {
+    const t = setTimeout(() => setRun(true), 650)
     return () => clearTimeout(t)
-  }, [baseCount])
+  }, [])
 
   return (
     <motion.div
@@ -68,7 +86,6 @@ function DoneOverlay({ baseCount, onClose }) {
         {/* 체크 원 */}
         <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 28 }}>
           <svg width="96" height="96" viewBox="0 0 96 96" fill="none">
-            {/* 배경 원 */}
             <motion.circle
               cx="48" cy="48" r="44"
               fill={C.green}
@@ -76,7 +93,6 @@ function DoneOverlay({ baseCount, onClose }) {
               animate={{ scale: 1 }}
               transition={{ type: 'spring', damping: 18, stiffness: 300, delay: 0.05 }}
             />
-            {/* 체크 stroke */}
             <motion.path
               d="M28 50 L42 64 L68 34"
               stroke="#fff"
@@ -100,7 +116,7 @@ function DoneOverlay({ baseCount, onClose }) {
           여러분의 서명이 변화를 만듭니다.
         </div>
 
-        {/* 카운터 */}
+        {/* 카운터 — 실제 총계 */}
         <div style={{
           background: '#f5f9f1',
           border: `1.5px solid ${C.green}33`,
@@ -111,15 +127,9 @@ function DoneOverlay({ baseCount, onClose }) {
           <div style={{ fontSize: 12, fontWeight: 700, color: C.greenDark, letterSpacing: '0.1em', marginBottom: 4 }}>
             현재 총 서명 인원
           </div>
-          <motion.div
-            key={count}
-            initial={{ y: -10, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ type: 'spring', stiffness: 400, damping: 22 }}
-            style={{ fontSize: 48, fontWeight: 900, color: C.green, lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}
-          >
+          <div style={{ fontSize: 48, fontWeight: 900, color: C.green, lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>
             {count.toLocaleString()}<span style={{ fontSize: 22, fontWeight: 800 }}>명</span>
-          </motion.div>
+          </div>
           {checkDone && (
             <motion.div
               initial={{ opacity: 0, y: 4 }}
@@ -235,7 +245,6 @@ function SignOverlay({ onDone, onClose }) {
       >
         <div style={sheetSt.grip} />
 
-        {/* 진행 바 */}
         <div style={{ display: 'flex', gap: 5, marginBottom: 22 }}>
           {[1, 2, 3].map(n => (
             <div key={n} style={{
@@ -368,41 +377,9 @@ function SignOverlay({ onDone, onClose }) {
   )
 }
 
-// ─── Live 카운터 ────────────────────────────────────────────────────────────
-function useCountUp(target, duration = 1500) {
-  const [display, setDisplay] = useState(0)
-  const displayRef = useRef(0)
-  const rafRef = useRef(0)
-  useEffect(() => {
-    const from = displayRef.current
-    const start = performance.now()
-    const ease = t => 1 - Math.pow(1 - t, 3)
-    const tick = now => {
-      const p = Math.min((now - start) / duration, 1)
-      const v = Math.round(from + (target - from) * ease(p))
-      displayRef.current = v
-      setDisplay(v)
-      if (p < 1) rafRef.current = requestAnimationFrame(tick)
-    }
-    cancelAnimationFrame(rafRef.current)
-    rafRef.current = requestAnimationFrame(tick)
-    return () => cancelAnimationFrame(rafRef.current)
-  }, [target, duration])
-  return display
-}
-
-function LiveCounter({ baseCount = 2847, variant = 'float' }) {
-  const [target, setTarget] = useState(baseCount)
-  const [flash, setFlash] = useState(null)
-  const count = useCountUp(target)
-  useEffect(() => {
-    const id = setInterval(() => {
-      const inc = 1 + Math.floor(Math.random() * 2)
-      setTarget(t => t + inc)
-      setFlash({ id: Date.now(), n: inc })
-    }, 3800)
-    return () => clearInterval(id)
-  }, [])
+// ─── Live 카운터 (실제 baseCount만 표시, 페이크 증가 제거) ───────────────────
+function LiveCounter({ baseCount = 0, variant = 'float' }) {
+  const count = useCountUp(baseCount)
   const isInline = variant === 'inline'
   const wrap = isInline
     ? { position: 'relative', width: '100%', marginBottom: 22 }
@@ -423,15 +400,6 @@ function LiveCounter({ baseCount = 2847, variant = 'float' }) {
           <span style={{ fontSize: 20, fontWeight: 800, color: '#fff' }}>명</span>
         </div>
         <div style={{ color: 'rgba(255,255,255,0.82)', fontSize: 13.5, marginTop: 6 }}>이 서명에 동참하고 있습니다</div>
-        <div style={{ height: 18, marginTop: 8 }}>
-          <AnimatePresence mode="popLayout">
-            {flash && (
-              <motion.div key={flash.id} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }} transition={{ duration: 0.4 }} onAnimationComplete={() => setTimeout(() => setFlash(null), 1600)} style={{ fontSize: 12, fontWeight: 700, color: C.live, display: 'flex', alignItems: 'center', gap: 4 }}>
-                ▲ 방금 +{flash.n}명 참여
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
       </div>
     </div>
   )
@@ -473,7 +441,7 @@ export default function PetitionTab({ isMobile, loading, LoadingUI, onGoSign }) 
     fetch(`${API}/api/petition/count`)
       .then(r => r.json())
       .then(d => setLiveCount(d.total_count))
-      .catch(() => setLiveCount(2847))
+      .catch(() => {})
   }, [])
 
   const goSign = useCallback(() => {
@@ -502,13 +470,15 @@ export default function PetitionTab({ isMobile, loading, LoadingUI, onGoSign }) 
         return
       }
       if (!res.ok) throw new Error(data.detail || '서버 오류')
+      // 서버가 반환한 실제 총계만 반영
       setLiveCount(data.total_count)
+      setSignOpen(false)
+      setDoneOpen(true)
     } catch (e) {
-      // 네트워크 오류여도 완료 화면은 보여줌
-      setLiveCount(c => c + 1)
+      // 제출 실패 시 가짜로 올리지 않음 — 에러만 표시
+      setSignOpen(false)
+      setSubmitError('서명 제출에 실패했습니다. 잠시 후 다시 시도해 주세요.')
     }
-    setSignOpen(false)
-    setDoneOpen(true)
   }, [])
 
   const handleDoneClose = useCallback(() => {
@@ -529,12 +499,12 @@ export default function PetitionTab({ isMobile, loading, LoadingUI, onGoSign }) 
         {signOpen && <SignOverlay onDone={handleDone} onClose={() => setSignOpen(false)} />}
       </AnimatePresence>
 
-      {/* 완료 오버레이 */}
+      {/* 완료 오버레이 — 실제 총계 */}
       <AnimatePresence>
-        {doneOpen && <DoneOverlay baseCount={liveCount - 1} onClose={handleDoneClose} />}
+        {doneOpen && <DoneOverlay total={liveCount} onClose={handleDoneClose} />}
       </AnimatePresence>
 
-      {/* 이미 서명 에러 토스트 */}
+      {/* 토스트 */}
       <AnimatePresence>
         {submitError && (
           <motion.div
@@ -572,7 +542,6 @@ export default function PetitionTab({ isMobile, loading, LoadingUI, onGoSign }) 
       <div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', background: '#fff', fontFamily: FONT }}>
         <div style={{ width: '100%', maxWidth: COL, display: 'flex', flexDirection: 'column', alignItems: 'stretch', gap: 0 }}>
 
-          {/* 히어로 */}
           <div style={{ position: 'relative', minHeight: isMobile ? 460 : 520, display: 'flex', alignItems: 'center', overflow: 'hidden' }}>
             <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(120deg,#d8cdbf 0%,#c9bdac 40%,#b9ac99 100%)' }} />
             <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(90deg,rgba(40,33,25,0.66) 0%,rgba(40,33,25,0.40) 52%,rgba(40,33,25,0.12) 88%)' }} />
@@ -592,7 +561,6 @@ export default function PetitionTab({ isMobile, loading, LoadingUI, onGoSign }) 
             </div>
           </div>
 
-          {/* 취지 */}
           <div style={{ background: '#fff', padding: isMobile ? '48px 24px 40px' : '60px 40px 52px' }}>
             <div style={{ maxWidth: 660, margin: '0 auto', textAlign: 'center' }}>
               <span style={{ display: 'inline-block', fontSize: 12, fontWeight: 700, letterSpacing: '0.18em', color: C.greenDark, border: '1px solid ' + C.green, borderRadius: 999, padding: '4px 14px', marginBottom: 18 }}>청원 취지</span>
@@ -601,7 +569,6 @@ export default function PetitionTab({ isMobile, loading, LoadingUI, onGoSign }) 
             </div>
           </div>
 
-          {/* 이유 섹션 */}
           <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', background: C.cream }}>
             <Ph label="이미지 자리 (현장 사진)" style={{ minHeight: isMobile ? 240 : 520, order: isMobile ? -1 : 0 }} />
             <div style={{ padding: isMobile ? '40px 24px' : '60px 48px' }}>
@@ -616,7 +583,6 @@ export default function PetitionTab({ isMobile, loading, LoadingUI, onGoSign }) 
             </div>
           </div>
 
-          {/* 요구 섹션 */}
           <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', background: '#fff' }}>
             <div style={{ padding: isMobile ? '40px 24px' : '64px 48px' }}>
               <h2 style={{ color: C.steel, fontWeight: 700, fontSize: isMobile ? 22 : 25, lineHeight: 1.42, margin: '0 0 26px' }}>치료받을 권리를<br />비용이 막지 않도록</h2>
@@ -634,7 +600,6 @@ export default function PetitionTab({ isMobile, loading, LoadingUI, onGoSign }) 
             </div>
           </div>
 
-          {/* 하단 CTA */}
           <div style={{ background: C.cream, padding: isMobile ? '44px 24px 52px' : '60px 40px 68px', textAlign: 'center' }}>
             <p style={{ fontFamily: SERIF, color: C.serif, fontSize: isMobile ? 20 : 24, fontWeight: 800, lineHeight: 1.45, margin: '0 0 24px' }}>치료받을 권리가 비용과 횟수에<br />막혀서는 안 됩니다</p>
             <button onClick={goSign}
