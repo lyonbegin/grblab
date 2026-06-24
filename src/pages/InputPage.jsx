@@ -2891,6 +2891,7 @@ activeTab === 'power' ? (
            <PetitionTab
       isMobile={isMobile}
       loading={loading}
+       signCount={2847}   
       LoadingUI={LoadingUI}
       submitSign={analyze3}   // 서명 저장 API 있으면 연결, 없으면 생략 가능
     />
