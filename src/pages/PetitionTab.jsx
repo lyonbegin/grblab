@@ -261,7 +261,6 @@ function SignOverlay({ onDone, onClose }) {
                 value={name}
                 onChange={e => setName(e.target.value)}
                 placeholder="이름을 입력하세요"
-                autoFocus
               />
               <button
                 type="button"
@@ -286,7 +285,6 @@ function SignOverlay({ onDone, onClose }) {
                 inputMode="numeric"
                 onChange={e => setPhone(e.target.value.replace(/[^0-9-]/g, ''))}
                 placeholder="010-0000-0000"
-                autoFocus
               />
               <button
                 type="button"
@@ -320,7 +318,6 @@ function SignOverlay({ onDone, onClose }) {
                       value={regNum}
                       onChange={e => setRegNum(e.target.value)}
                       placeholder="등록번호 입력"
-                      autoFocus
                     />
                     <div style={{ textAlign: 'center', fontSize: 13, color: C.serifSoft, fontWeight: 700, margin: '0 0 14px' }}>또는</div>
                     <label style={sheetSt.label}>주민등록번호</label>
