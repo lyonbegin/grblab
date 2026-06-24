@@ -450,7 +450,7 @@ function SignOverlay({ onDone, onClose }) {
 
 // ─── Live 카운터 (실제 baseCount만 표시, 페이크 증가 제거) ───────────────────
 function LiveCounter({ baseCount = 0, variant = 'float' }) {
-  const count = useCountUp(baseCount, 700, true, Math.max(0, baseCount - 3))
+  const count = baseCount   // 처음 접속 시 애니메이션 없이 최종값 그대로 표시
   const isInline = variant === 'inline'
   const wrap = isInline
     ? { position: 'relative', width: '100%', marginBottom: 22 }
