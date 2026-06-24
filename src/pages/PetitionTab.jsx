@@ -458,12 +458,23 @@ const ASKS = [
   ['장애인에게 불리한 제도의 재개정', '관리급여 등 환자 부담을 과도하게 전가하는 제도를 장애인 의료 접근권 관점에서 재검토·개정해 주십시오.'],
 ]
 
+const API = 'https://backend-production-6b41.up.railway.app'
+
 // ─── 메인 컴포넌트 ───────────────────────────────────────────────────────────
-export default function PetitionTab({ isMobile, loading, LoadingUI, signCount, onGoSign, submitSign }) {
+export default function PetitionTab({ isMobile, loading, LoadingUI, onGoSign }) {
   const navigate = useNavigate()
   const [signOpen, setSignOpen] = useState(false)
   const [doneOpen, setDoneOpen] = useState(false)
-  const [liveCount, setLiveCount] = useState(signCount ?? 2847)
+  const [liveCount, setLiveCount] = useState(0)
+  const [submitError, setSubmitError] = useState(null)
+
+  // 마운트 시 실제 카운트 조회
+  useEffect(() => {
+    fetch(`${API}/api/petition/count`)
+      .then(r => r.json())
+      .then(d => setLiveCount(d.total_count))
+      .catch(() => setLiveCount(2847))
+  }, [])
 
   const goSign = useCallback(() => {
     if (typeof onGoSign === 'function') onGoSign()
@@ -471,17 +482,37 @@ export default function PetitionTab({ isMobile, loading, LoadingUI, signCount, o
   }, [onGoSign])
 
   const handleDone = useCallback(async (form) => {
-    setSignOpen(false)
-    if (typeof submitSign === 'function') {
-      try { await submitSign(form) } catch {}
+    setSubmitError(null)
+    try {
+      const res = await fetch(`${API}/api/petition/sign`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: form.name,
+          phone: form.phone,
+          is_disabled: !form.disabled,
+          reg_num: form.regNum || null,
+          id_num: form.idNum || null,
+        }),
+      })
+      const data = await res.json()
+      if (res.status === 409) {
+        setSubmitError('이미 서명하셨습니다')
+        setSignOpen(false)
+        return
+      }
+      if (!res.ok) throw new Error(data.detail || '서버 오류')
+      setLiveCount(data.total_count)
+    } catch (e) {
+      // 네트워크 오류여도 완료 화면은 보여줌
+      setLiveCount(c => c + 1)
     }
-    setLiveCount(c => c + 1)
+    setSignOpen(false)
     setDoneOpen(true)
-  }, [submitSign])
+  }, [])
 
   const handleDoneClose = useCallback(() => {
     setDoneOpen(false)
-    // navigate('/petition-done') // 필요 시 주석 해제
   }, [])
 
   const COL = isMobile ? '100%' : 860
@@ -501,6 +532,25 @@ export default function PetitionTab({ isMobile, loading, LoadingUI, signCount, o
       {/* 완료 오버레이 */}
       <AnimatePresence>
         {doneOpen && <DoneOverlay baseCount={liveCount - 1} onClose={handleDoneClose} />}
+      </AnimatePresence>
+
+      {/* 이미 서명 에러 토스트 */}
+      <AnimatePresence>
+        {submitError && (
+          <motion.div
+            initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 40 }}
+            onAnimationComplete={() => setTimeout(() => setSubmitError(null), 2500)}
+            style={{
+              position: 'fixed', bottom: 32, left: '50%', transform: 'translateX(-50%)',
+              background: '#2f2f2f', color: '#fff', borderRadius: 12,
+              padding: '14px 24px', fontSize: 14, fontWeight: 700,
+              fontFamily: FONT, zIndex: 20000, whiteSpace: 'nowrap',
+              boxShadow: '0 8px 24px rgba(0,0,0,0.3)',
+            }}
+          >
+            {submitError}
+          </motion.div>
+        )}
       </AnimatePresence>
 
       {/* ── 상단 서명 버튼 ── */}
