@@ -6,6 +6,60 @@ import { useNavigate } from 'react-router-dom'
 const FONT = "'Noto Sans KR','Malgun Gothic',sans-serif"
 const SERIF = "'Nanum Myeongjo','Noto Sans KR',serif"
 
+// ─── 입력 검증 유틸 ──────────────────────────────────────────────────────────
+// 한글 이름: 완성형 한글(가-힣) 2~6자, 가운데 공백 1회 허용
+const HANGUL_NAME = /^[가-힣]{2,6}(\s[가-힣]{1,6})?$/
+function onlyHangul(v) {
+  // 한글 자모/완성형만 남김 (영문/숫자/특수문자 제거, 공백 1개 허용)
+  return v.replace(/[^가-힣ㄱ-ㅎㅏ-ㅣ\s]/g, '').replace(/\s{2,}/g, ' ')
+}
+function isHangulName(v) {
+  return HANGUL_NAME.test(v.trim())
+}
+
+// 휴대폰: 숫자만, 010으로 시작하는 11자리
+function onlyDigits(v) {
+  return v.replace(/\D/g, '')
+}
+function formatPhone(d) {
+  // 숫자만 받아 010-1234-5678 형태로 (표시는 하이픈, 검증/전송은 숫자)
+  const n = onlyDigits(d).slice(0, 11)
+  if (n.length < 4) return n
+  if (n.length < 8) return n.slice(0, 3) + '-' + n.slice(3)
+  return n.slice(0, 3) + '-' + n.slice(3, 7) + '-' + n.slice(7)
+}
+function isPhone(v) {
+  return /^010\d{8}$/.test(onlyDigits(v))
+}
+
+// 주민등록번호: 형식 + 생년월일 + 체크섬(검증식)까지
+function onlyRrn(v) {
+  return v.replace(/\D/g, '').slice(0, 13)
+}
+function formatRrn(d) {
+  const n = onlyRrn(d)
+  return n.length <= 6 ? n : n.slice(0, 6) + '-' + n.slice(6)
+}
+function isValidRRN(v) {
+  const n = onlyRrn(v)
+  if (!/^\d{13}$/.test(n)) return false
+  // 생년월일 유효성
+  const yy = +n.slice(0, 2), mm = +n.slice(2, 4), dd = +n.slice(4, 6)
+  const g = +n[6]
+  if (g < 1 || g > 8) return false           // 성별/세기 코드 1~8 (9,0=1800년대 제외)
+  const century = (g === 1 || g === 2 || g === 5 || g === 6) ? 1900 : 2000
+  const year = century + yy
+  if (mm < 1 || mm > 12) return false
+  const last = new Date(year, mm, 0).getDate()
+  if (dd < 1 || dd > last) return false
+  // 체크섬 (외국인 포함 표준 가중치식)
+  const w = [2, 3, 4, 5, 6, 7, 8, 9, 2, 3, 4, 5]
+  let sum = 0
+  for (let i = 0; i < 12; i++) sum += +n[i] * w[i]
+  const check = (11 - (sum % 11)) % 10
+  return check === +n[12]
+}
+
 const C = {
   green: '#79b043', greenDark: '#6aa036',
   yellow: '#FAE100', yellowText: '#1a1a1a',
@@ -17,19 +71,22 @@ const C = {
   live: '#36d399',
 }
 
-// ─── 카운트업 훅 (run=false면 대기) ─────────────────────────────────────────
-function useCountUp(target, duration = 1500, run = true) {
-  const [display, setDisplay] = useState(0)
-  const displayRef = useRef(0)
+// ─── 카운트업 훅 (run=false면 대기, from=시작값) ────────────────────────────
+function useCountUp(target, duration = 1500, run = true, from = 0) {
+  const [display, setDisplay] = useState(from)
+  const displayRef = useRef(from)
   const rafRef = useRef(0)
+  const started = useRef(false)
   useEffect(() => {
     if (!run) return
-    const from = displayRef.current
+    // 첫 애니메이션만 from에서 출발, 이후 목표 변경은 현재값에서 이어감
+    const begin = started.current ? displayRef.current : from
+    started.current = true
     const start = performance.now()
     const ease = t => 1 - Math.pow(1 - t, 3)
     const tick = now => {
       const p = Math.min((now - start) / duration, 1)
-      const v = Math.round(from + (target - from) * ease(p))
+      const v = Math.round(begin + (target - begin) * ease(p))
       displayRef.current = v
       setDisplay(v)
       if (p < 1) rafRef.current = requestAnimationFrame(tick)
@@ -37,7 +94,7 @@ function useCountUp(target, duration = 1500, run = true) {
     cancelAnimationFrame(rafRef.current)
     rafRef.current = requestAnimationFrame(tick)
     return () => cancelAnimationFrame(rafRef.current)
-  }, [target, duration, run])
+  }, [target, duration, run, from])
   return display
 }
 
@@ -45,7 +102,7 @@ function useCountUp(target, duration = 1500, run = true) {
 function DoneOverlay({ total, onClose }) {
   const [run, setRun] = useState(false)
   const [checkDone, setCheckDone] = useState(false)
-  const count = useCountUp(total, 1400, run)
+  const count = useCountUp(total, 700, run, Math.max(0, total - 3))
 
   // 체크가 그려진 뒤 실제 총계까지 카운트업 시작 (가짜 증가 없음)
   useEffect(() => {
@@ -222,9 +279,14 @@ function SignOverlay({ onDone, onClose }) {
   const [regNum, setRegNum] = useState('')
   const [idNum, setIdNum] = useState('')
 
-  const step1ok = name.trim().length >= 2
-  const step2ok = phone.trim().replace(/[^0-9]/g, '').length >= 9
-  const step3ok = disabled || regNum.trim().length >= 4 || idNum.trim().replace(/[^0-9]/g, '').length >= 6
+  const step1ok = isHangulName(name)
+  const step2ok = isPhone(phone)
+  // 비장애인은 통과 / 장애인은 등록번호(4자+) 또는 '유효한' 주민번호
+  const rrnFilled = onlyRrn(idNum).length > 0
+  const rrnOk = !rrnFilled || isValidRRN(idNum)            // 입력했다면 반드시 유효
+  const step3ok = disabled
+    ? true
+    : (regNum.trim().length >= 4 || (rrnFilled && isValidRRN(idNum)))
 
   const goNext = () => setStep(s => s + 1)
   const handleDone = () => {
@@ -267,10 +329,13 @@ function SignOverlay({ onDone, onClose }) {
               <label style={sheetSt.label}>이름</label>
               <div style={{ display: 'flex', gap: 10, alignItems: 'stretch' }}>
                 <input
-                  style={{ ...sheetSt.input, marginBottom: 0, flex: 1 }}
                   value={name}
-                  onChange={e => setName(e.target.value)}
-                  placeholder="이름을 입력하세요"
+                  onChange={e => setName(onlyHangul(e.target.value))}
+                  placeholder="홍길동"
+                  lang="ko"
+                  inputMode="text"
+                  autoComplete="name"
+                  style={{ ...sheetSt.input, marginBottom: 0, flex: 1 }}
                 />
                 <button
                   type="button"
@@ -281,6 +346,11 @@ function SignOverlay({ onDone, onClose }) {
                   다음
                 </button>
               </div>
+              {name.length > 0 && !step1ok && (
+                <p style={{ fontSize: 12, color: '#d9534f', margin: '8px 2px 0', fontWeight: 600 }}>
+                  한글 이름을 정확히 입력해 주세요. (2~6자)
+                </p>
+              )}
             </motion.div>
           )}
 
@@ -295,8 +365,9 @@ function SignOverlay({ onDone, onClose }) {
                   style={{ ...sheetSt.input, marginBottom: 0, flex: 1 }}
                   value={phone}
                   inputMode="numeric"
-                  onChange={e => setPhone(e.target.value.replace(/[^0-9-]/g, ''))}
-                  placeholder="010-0000-0000"
+                  maxLength={13}
+                  onChange={e => setPhone(formatPhone(e.target.value))}
+                  placeholder="숫자만 입력 (010…)"
                 />
                 <button
                   type="button"
@@ -307,6 +378,11 @@ function SignOverlay({ onDone, onClose }) {
                   다음
                 </button>
               </div>
+              {onlyDigits(phone).length > 0 && !step2ok && (
+                <p style={{ fontSize: 12, color: '#d9534f', margin: '8px 2px 0', fontWeight: 600 }}>
+                  010으로 시작하는 11자리 숫자를 입력해 주세요.
+                </p>
+              )}
             </motion.div>
           )}
 
@@ -339,8 +415,9 @@ function SignOverlay({ onDone, onClose }) {
                         style={{ ...sheetSt.input, marginBottom: 0, flex: 1 }}
                         value={idNum}
                         inputMode="numeric"
-                        onChange={e => setIdNum(e.target.value.replace(/[^0-9-]/g, ''))}
-                        placeholder="주민번호 입력"
+                        maxLength={14}
+                        onChange={e => setIdNum(formatRrn(e.target.value))}
+                        placeholder="000000-0000000"
                       />
                       <button
                         type="button"
@@ -351,6 +428,11 @@ function SignOverlay({ onDone, onClose }) {
                         완료
                       </button>
                     </div>
+                    {onlyRrn(idNum).length === 13 && !isValidRRN(idNum) && (
+                      <p style={{ fontSize: 12, color: '#d9534f', margin: '8px 2px 0', fontWeight: 600 }}>
+                        올바른 주민등록번호가 아닙니다. 다시 입력해 주세요.
+                      </p>
+                    )}
                     <p style={{ fontSize: 12, color: C.serifSoft, lineHeight: 1.65, margin: '10px 0 0' }}>
                       장애인 등록번호를 모르실 경우 주민번호를 기입하시면 됩니다.<br />
                       장애인 혜택 적용을 위해 필요합니다.
@@ -379,7 +461,7 @@ function SignOverlay({ onDone, onClose }) {
 
 // ─── Live 카운터 (실제 baseCount만 표시, 페이크 증가 제거) ───────────────────
 function LiveCounter({ baseCount = 0, variant = 'float' }) {
-  const count = useCountUp(baseCount)
+  const count = useCountUp(baseCount, 700, true, Math.max(0, baseCount - 3))
   const isInline = variant === 'inline'
   const wrap = isInline
     ? { position: 'relative', width: '100%', marginBottom: 22 }
@@ -426,6 +508,54 @@ const ASKS = [
   ['장애인에게 불리한 제도의 재개정', '관리급여 등 환자 부담을 과도하게 전가하는 제도를 장애인 의료 접근권 관점에서 재검토·개정해 주십시오.'],
 ]
 
+// ─── 디바이스 식별 (localStorage UUID + 핑거프린트) ──────────────────────────
+function getDeviceId() {
+  try {
+    let id = localStorage.getItem('petition_device_id')
+    if (!id) {
+      id = (window.crypto && crypto.randomUUID)
+        ? crypto.randomUUID()
+        : Date.now().toString(36) + Math.random().toString(36).slice(2, 10)
+      localStorage.setItem('petition_device_id', id)
+    }
+    return id
+  } catch {
+    // localStorage 불가(시크릿 등) 시 임시값
+    return 'nostore-' + Math.random().toString(36).slice(2, 10)
+  }
+}
+
+// 저장 안 해도 비슷하게 재현되는 보조 식별값 (16자리)
+function getFingerprint() {
+  try {
+    const cv = document.createElement('canvas')
+    const gl = cv.getContext('webgl') || cv.getContext('experimental-webgl')
+    const dbg = gl && gl.getExtension('WEBGL_debug_renderer_info')
+    const gpu = dbg ? gl.getParameter(dbg.UNMASKED_RENDERER_WEBGL) : ''
+    const parts = [
+      navigator.userAgent, navigator.language,
+      screen.width + 'x' + screen.height, screen.colorDepth,
+      Intl.DateTimeFormat().resolvedOptions().timeZone,
+      navigator.hardwareConcurrency || '', navigator.deviceMemory || '',
+      gpu,
+    ].join('|')
+    // 동기 32-bit 해시 (FNV-1a) → 8 hex
+    let h = 0x811c9dc5
+    for (let i = 0; i < parts.length; i++) {
+      h ^= parts.charCodeAt(i)
+      h = (h + ((h << 1) + (h << 4) + (h << 7) + (h << 8) + (h << 24))) >>> 0
+    }
+    return h.toString(16).padStart(8, '0')
+  } catch {
+    return '00000000'
+  }
+}
+
+// 모바일/PC 구분 (참고용 태그)
+function getPlatformTag() {
+  return /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent) ? 'm' : 'p'
+}
+
 const API = 'https://backend-production-6b41.up.railway.app'
 
 // ─── 메인 컴포넌트 ───────────────────────────────────────────────────────────
@@ -462,11 +592,13 @@ export default function PetitionTab({ isMobile, loading, LoadingUI, onGoSign }) 
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        name: form.name,
-        phone: form.phone,
+        // DB 스키마 변경 불가 → name 필드에 식별값을 함께 실어 보냄
+        // 형식: 이름::::디바이스ID::::핑거프린트::::플랫폼(m/p)  (서버에서 name.split('::::'))
+        name: `${form.name}::::${getDeviceId()}::::${getFingerprint()}::::${getPlatformTag()}`,
+        phone: onlyDigits(form.phone),            // 하이픈 제거, 숫자만 전송
         is_disabled: !form.disabled,
         reg_num: form.regNum || null,
-        id_num: form.idNum || null,
+        id_num: form.idNum ? onlyRrn(form.idNum) : null,  // 숫자 13자리만 전송
       }),
     })
       .then(async (res) => {
