@@ -72,23 +72,19 @@ const C = {
 }
 
 // ─── 카운트업 훅 (run=false면 대기, from=시작값) ────────────────────────────
-function useCountUp(target, duration = 1500, run = true, from = 0) {
+function useCountUp(target, duration = 700, run = true, from = 0) {
   const [display, setDisplay] = useState(from)
-  const displayRef = useRef(from)
   const rafRef = useRef(0)
-  const started = useRef(false)
   useEffect(() => {
     if (!run) return
-    // 첫 애니메이션만 from에서 출발, 이후 목표 변경은 현재값에서 이어감
-    const begin = started.current ? displayRef.current : from
-    started.current = true
+    // 항상 from(=목표-3)에서 출발해 target까지 — 3단계 애니메이션만
+    const begin = from
+    setDisplay(begin)               // 0이 보이지 않게 시작값 즉시 반영
     const start = performance.now()
     const ease = t => 1 - Math.pow(1 - t, 3)
     const tick = now => {
       const p = Math.min((now - start) / duration, 1)
-      const v = Math.round(begin + (target - begin) * ease(p))
-      displayRef.current = v
-      setDisplay(v)
+      setDisplay(Math.round(begin + (target - begin) * ease(p)))
       if (p < 1) rafRef.current = requestAnimationFrame(tick)
     }
     cancelAnimationFrame(rafRef.current)
@@ -273,14 +269,13 @@ function SegmentBtn({ label, active, onClick }) {
 
 function SignOverlay({ onDone, onClose }) {
   const [step, setStep] = useState(1)
-  const composing = useRef(false)   // 한글 IME 조합 중 여부
   const [name, setName] = useState('')
   const [phone, setPhone] = useState('')
   const [disabled, setDisabled] = useState(false) // true = 비장애인
   const [regNum, setRegNum] = useState('')
   const [idNum, setIdNum] = useState('')
 
-  const step1ok = isHangulName(name)
+  const step1ok = name.trim().length > 0
   const step2ok = isPhone(phone)
   // 비장애인은 통과 / 장애인은 등록번호(4자+) 또는 '유효한' 주민번호
   const rrnFilled = onlyRrn(idNum).length > 0
@@ -331,17 +326,9 @@ function SignOverlay({ onDone, onClose }) {
               <div style={{ display: 'flex', gap: 10, alignItems: 'stretch' }}>
                 <input
                   value={name}
-                  lang="ko"
-                  inputMode="text"
                   autoComplete="name"
-                  onCompositionStart={() => { composing.current = true }}
-                  onCompositionEnd={e => { composing.current = false; setName(onlyHangul(e.target.value)) }}
-                  onChange={e => {
-                    // 조합(IME) 중에는 값을 그대로 둬 글자 깨짐 방지, 끝나면 한글만 정리
-                    const v = e.target.value
-                    setName(composing.current ? v : onlyHangul(v))
-                  }}
-                  placeholder="홍길동 (한글로 입력)"
+                  onChange={e => setName(e.target.value)}
+                  placeholder="이름"
                   style={{ ...sheetSt.input, marginBottom: 0, flex: 1 }}
                 />
                 <button
@@ -353,11 +340,6 @@ function SignOverlay({ onDone, onClose }) {
                   다음
                 </button>
               </div>
-              {name.length > 0 && !step1ok && (
-                <p style={{ fontSize: 12, color: '#d9534f', margin: '8px 2px 0', fontWeight: 600 }}>
-                  한글 이름을 정확히 입력해 주세요. (2~6자)
-                </p>
-              )}
             </motion.div>
           )}
 
