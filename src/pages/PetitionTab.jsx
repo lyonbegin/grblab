@@ -273,6 +273,7 @@ function SegmentBtn({ label, active, onClick }) {
 
 function SignOverlay({ onDone, onClose }) {
   const [step, setStep] = useState(1)
+  const composing = useRef(false)   // 한글 IME 조합 중 여부
   const [name, setName] = useState('')
   const [phone, setPhone] = useState('')
   const [disabled, setDisabled] = useState(false) // true = 비장애인
@@ -330,11 +331,17 @@ function SignOverlay({ onDone, onClose }) {
               <div style={{ display: 'flex', gap: 10, alignItems: 'stretch' }}>
                 <input
                   value={name}
-                  onChange={e => setName(onlyHangul(e.target.value))}
-                  placeholder="홍길동"
                   lang="ko"
                   inputMode="text"
                   autoComplete="name"
+                  onCompositionStart={() => { composing.current = true }}
+                  onCompositionEnd={e => { composing.current = false; setName(onlyHangul(e.target.value)) }}
+                  onChange={e => {
+                    // 조합(IME) 중에는 값을 그대로 둬 글자 깨짐 방지, 끝나면 한글만 정리
+                    const v = e.target.value
+                    setName(composing.current ? v : onlyHangul(v))
+                  }}
+                  placeholder="홍길동 (한글로 입력)"
                   style={{ ...sheetSt.input, marginBottom: 0, flex: 1 }}
                 />
                 <button
