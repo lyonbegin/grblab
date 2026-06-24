@@ -60,6 +60,10 @@ import SmartPowerSafetyDetailPage from './SmartPowerSafetyDetailPage'
 
 import AntiageTab from './AntiageTab'
 
+import PetitionTab from './PetitionTab'
+
+
+
 import SafetyDetailPage from './SafetyDetailPage'
 
 import SafetyListPage from './SafetyListPage'
@@ -2321,6 +2325,13 @@ const handleRiskImageSelect = useCallback(async (filename) => {
     label: '앙티아쥬',
     subs: [],
   },
+
+                    {
+    key: 'petition',
+    label: '서명',
+    subs: [],
+  },
+
                 ].map(tab => {
                   const isActive = activeTab === tab.key
                   const isExpanded = drawerExpandedTab === tab.key
@@ -2465,6 +2476,8 @@ const handleRiskImageSelect = useCallback(async (filename) => {
                     { key: 'risk', label: 'AI안전' },
                     { key: 'cctv', label: '스마트안전장비' },
                     { key: 'antitage', label: '앙티아쥬' },
+
+                    { key: 'petition', label: '서명' },
                   ].find(t => t.key === activeTab)?.label}
                 </span>
                 <button
@@ -2489,6 +2502,7 @@ const handleRiskImageSelect = useCallback(async (filename) => {
                   { key: 'risk', label: 'AI안전' },
                   { key: 'cctv', label: '스마트안전장비' },
                   { key: 'antitage', label: '앙티아쥬' },
+                    { key: 'petition', label: '서명' },
                 ].map(tab => (
                   <button
                     key={tab.key}
@@ -2872,25 +2886,34 @@ activeTab === 'power' ? (
                 )}
               </AnimatePresence>
             </motion.div>
+  ) : activeTab === 'petition' ? (
 
-          ) : activeTab === 'antitage' ? (
-
-            <AntiageTab
-    isMobile={isMobile}
-    smartEquipmentItems={SMART_EQUIPMENT_ITEMS}
-    onSmartEquipmentClick={handleSmartEquipmentClick}
-    riskGrid={RISK_GRID}
-    ImageGrid={ImageGrid}
-    onRiskImageSelect={handleRiskImageSelect}
-    loading={loading}
-    LoadingUI={LoadingUI}
-    ActionUI={ActionUI}
-    PhoneMockup={PhoneMockup}
-    analyze={analyze3}      
-setPreview={setPreview} 
-  />
+           <PetitionTab
+      isMobile={isMobile}
+      loading={loading}
+      LoadingUI={LoadingUI}
+      submitSign={analyze3}   // 서명 저장 API 있으면 연결, 없으면 생략 가능
+    />
 
           ) : (
+//           ) : activeTab === 'antitage' ? (
+
+//             <AntiageTab
+//     isMobile={isMobile}
+//     smartEquipmentItems={SMART_EQUIPMENT_ITEMS}
+//     onSmartEquipmentClick={handleSmartEquipmentClick}
+//     riskGrid={RISK_GRID}
+//     ImageGrid={ImageGrid}
+//     onRiskImageSelect={handleRiskImageSelect}
+//     loading={loading}
+//     LoadingUI={LoadingUI}
+//     ActionUI={ActionUI}
+//     PhoneMockup={PhoneMockup}
+//     analyze={analyze3}      
+// setPreview={setPreview} 
+//   />
+
+//           ) : (
 
             <motion.main
               key="risk"
