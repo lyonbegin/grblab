@@ -3116,9 +3116,7 @@ activeTab === 'power' ? (
 
         <div style={{ ...s.notice, padding: isMobile ? '12px 20px' : '12px 40px' }}>
           <span style={s.noticeDot} />
-          <span style={s.noticeText}>
-            본 서비스는 산업안전보건법 제36조에 따른 위험성평가 보조 도구입니다. AI 분석 결과는 참고용이며 최종 판단은 안전관리자가 확인해야 합니다.
-          </span>
+        
         </div>
 
         <footer style={{ ...s.footer, padding: isMobile ? '14px 20px' : '14px 40px', flexDirection: isMobile ? 'column' : 'row', gap: isMobile ? 4 : 14 }}>
