@@ -208,7 +208,7 @@ function SignOverlay({ onDone, onClose }) {
   const [step, setStep] = useState(1)
   const [name, setName] = useState('')
   const [phone, setPhone] = useState('')
-  const [disabled, setDisabled] = useState(false) // true = 비장애우
+  const [disabled, setDisabled] = useState(false) // true = 비장애인
   const [regNum, setRegNum] = useState('')
   const [idNum, setIdNum] = useState('')
 
@@ -256,20 +256,22 @@ function SignOverlay({ onDone, onClose }) {
                 조합 설립과 청원에 동의합니다.
               </div>
               <label style={sheetSt.label}>이름</label>
-              <input
-                style={sheetSt.input}
-                value={name}
-                onChange={e => setName(e.target.value)}
-                placeholder="이름을 입력하세요"
-              />
-              <button
-                type="button"
-                style={{ ...sheetSt.nextBtn, ...(step1ok ? sheetSt.activeBtn : sheetSt.disabledBtn) }}
-                disabled={!step1ok}
-                onClick={goNext}
-              >
-                다음
-              </button>
+              <div style={{ display: 'flex', gap: 10, alignItems: 'stretch' }}>
+                <input
+                  style={{ ...sheetSt.input, marginBottom: 0, flex: 1 }}
+                  value={name}
+                  onChange={e => setName(e.target.value)}
+                  placeholder="이름을 입력하세요"
+                />
+                <button
+                  type="button"
+                  style={{ ...sheetSt.nextBtn, width: 76, flexShrink: 0, padding: '0', ...(step1ok ? sheetSt.activeBtn : sheetSt.disabledBtn) }}
+                  disabled={!step1ok}
+                  onClick={goNext}
+                >
+                  다음
+                </button>
+              </div>
             </motion.div>
           )}
 
@@ -279,21 +281,23 @@ function SignOverlay({ onDone, onClose }) {
               <div style={sheetSt.title}>연락처</div>
               <div style={sheetSt.desc}>서명 확인을 위해 휴대폰 번호를 입력해 주세요.</div>
               <label style={sheetSt.label}>휴대폰 번호</label>
-              <input
-                style={sheetSt.input}
-                value={phone}
-                inputMode="numeric"
-                onChange={e => setPhone(e.target.value.replace(/[^0-9-]/g, ''))}
-                placeholder="010-0000-0000"
-              />
-              <button
-                type="button"
-                style={{ ...sheetSt.nextBtn, ...(step2ok ? sheetSt.activeBtn : sheetSt.disabledBtn) }}
-                disabled={!step2ok}
-                onClick={goNext}
-              >
-                다음
-              </button>
+              <div style={{ display: 'flex', gap: 10, alignItems: 'stretch' }}>
+                <input
+                  style={{ ...sheetSt.input, marginBottom: 0, flex: 1 }}
+                  value={phone}
+                  inputMode="numeric"
+                  onChange={e => setPhone(e.target.value.replace(/[^0-9-]/g, ''))}
+                  placeholder="010-0000-0000"
+                />
+                <button
+                  type="button"
+                  style={{ ...sheetSt.nextBtn, width: 76, flexShrink: 0, padding: '0', ...(step2ok ? sheetSt.activeBtn : sheetSt.disabledBtn) }}
+                  disabled={!step2ok}
+                  onClick={goNext}
+                >
+                  다음
+                </button>
+              </div>
             </motion.div>
           )}
 
@@ -302,8 +306,8 @@ function SignOverlay({ onDone, onClose }) {
               <div style={sheetSt.stepLabel}>STEP 3 / 3</div>
               <div style={sheetSt.title}>장애 여부 선택</div>
               <div style={{ display: 'flex', gap: 10, marginBottom: 24 }}>
-                <SegmentBtn label="장애우" active={!disabled} onClick={() => setDisabled(false)} />
-                <SegmentBtn label="비장애우" active={disabled} onClick={() => setDisabled(true)} />
+                <SegmentBtn label="장애인" active={!disabled} onClick={() => setDisabled(false)} />
+                <SegmentBtn label="비장애인" active={disabled} onClick={() => setDisabled(true)} />
               </div>
 
               <AnimatePresence>
@@ -314,36 +318,48 @@ function SignOverlay({ onDone, onClose }) {
                   >
                     <label style={sheetSt.label}>장애인 등록번호</label>
                     <input
-                      style={sheetSt.input}
+                      style={{ ...sheetSt.input }}
                       value={regNum}
                       onChange={e => setRegNum(e.target.value)}
                       placeholder="등록번호 입력"
                     />
                     <div style={{ textAlign: 'center', fontSize: 13, color: C.serifSoft, fontWeight: 700, margin: '0 0 14px' }}>또는</div>
                     <label style={sheetSt.label}>주민등록번호</label>
-                    <input
-                      style={sheetSt.input}
-                      value={idNum}
-                      inputMode="numeric"
-                      onChange={e => setIdNum(e.target.value.replace(/[^0-9-]/g, ''))}
-                      placeholder="주민번호 입력"
-                    />
-                    <p style={{ fontSize: 12, color: C.serifSoft, lineHeight: 1.65, margin: '0 0 20px' }}>
+                    <div style={{ display: 'flex', gap: 10, alignItems: 'stretch' }}>
+                      <input
+                        style={{ ...sheetSt.input, marginBottom: 0, flex: 1 }}
+                        value={idNum}
+                        inputMode="numeric"
+                        onChange={e => setIdNum(e.target.value.replace(/[^0-9-]/g, ''))}
+                        placeholder="주민번호 입력"
+                      />
+                      <button
+                        type="button"
+                        style={{ ...sheetSt.nextBtn, width: 76, flexShrink: 0, padding: '0', ...(step3ok ? sheetSt.activeBtn : sheetSt.disabledBtn) }}
+                        disabled={!step3ok}
+                        onClick={handleDone}
+                      >
+                        완료
+                      </button>
+                    </div>
+                    <p style={{ fontSize: 12, color: C.serifSoft, lineHeight: 1.65, margin: '10px 0 0' }}>
                       장애인 등록번호를 모르실 경우 주민번호를 기입하시면 됩니다.<br />
-                      장애우 혜택 적용을 위해 필요합니다.
+                      장애인 혜택 적용을 위해 필요합니다.
                     </p>
                   </motion.div>
                 )}
               </AnimatePresence>
 
-              <button
-                type="button"
-                style={{ ...sheetSt.nextBtn, ...(step3ok ? sheetSt.activeBtn : sheetSt.disabledBtn) }}
-                disabled={!step3ok}
-                onClick={handleDone}
-              >
-                완료
-              </button>
+              {disabled && (
+                <button
+                  type="button"
+                  style={{ ...sheetSt.nextBtn, ...(step3ok ? sheetSt.activeBtn : sheetSt.disabledBtn) }}
+                  disabled={!step3ok}
+                  onClick={handleDone}
+                >
+                  완료
+                </button>
+              )}
             </motion.div>
           )}
         </AnimatePresence>
