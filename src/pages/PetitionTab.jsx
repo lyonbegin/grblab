@@ -449,36 +449,43 @@ export default function PetitionTab({ isMobile, loading, LoadingUI, onGoSign }) 
     else setSignOpen(true)
   }, [onGoSign])
 
-  const handleDone = useCallback(async (form) => {
+  const handleDone = useCallback((form) => {
     setSubmitError(null)
-    try {
-      const res = await fetch(`${API}/api/petition/sign`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: form.name,
-          phone: form.phone,
-          is_disabled: !form.disabled,
-          reg_num: form.regNum || null,
-          id_num: form.idNum || null,
-        }),
+
+    // 1) 응답을 기다리지 않고 즉시 화면 반영 (이전 총계 + 1)
+    setLiveCount(c => c + 1)
+    setSignOpen(false)
+    setDoneOpen(true)
+
+    // 2) DB 저장은 백그라운드로 비동기 처리 (fire-and-forget)
+    fetch(`${API}/api/petition/sign`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: form.name,
+        phone: form.phone,
+        is_disabled: !form.disabled,
+        reg_num: form.regNum || null,
+        id_num: form.idNum || null,
+      }),
+    })
+      .then(async (res) => {
+        const data = await res.json().catch(() => ({}))
+        if (res.status === 409) {
+          // 이미 서명한 사람 → 낙관적 +1 되돌림
+          setLiveCount(c => Math.max(0, c - 1))
+          setSubmitError('이미 서명하셨습니다')
+          return
+        }
+        if (!res.ok) throw new Error(data.detail || '서버 오류')
+        // 서버가 실제 총계를 주면 그 값으로 보정
+        if (typeof data.total_count === 'number') setLiveCount(data.total_count)
       })
-      const data = await res.json()
-      if (res.status === 409) {
-        setSubmitError('이미 서명하셨습니다')
-        setSignOpen(false)
-        return
-      }
-      if (!res.ok) throw new Error(data.detail || '서버 오류')
-      // 서버가 반환한 실제 총계만 반영
-      setLiveCount(data.total_count)
-      setSignOpen(false)
-      setDoneOpen(true)
-    } catch (e) {
-      // 제출 실패 시 가짜로 올리지 않음 — 에러만 표시
-      setSignOpen(false)
-      setSubmitError('서명 제출에 실패했습니다. 잠시 후 다시 시도해 주세요.')
-    }
+      .catch(() => {
+        // 저장 실패 → 낙관적 +1 되돌림 + 안내
+        setLiveCount(c => Math.max(0, c - 1))
+        setSubmitError('서명 저장에 실패했습니다. 다시 시도해 주세요.')
+      })
   }, [])
 
   const handleDoneClose = useCallback(() => {
