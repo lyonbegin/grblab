@@ -6,29 +6,16 @@ import { useNavigate } from 'react-router-dom'
 const FONT = "'Noto Sans KR','Malgun Gothic',sans-serif"
 const SERIF = "'Nanum Myeongjo','Noto Sans KR',serif"
 
-// ─── 입력 검증 유틸 ──────────────────────────────────────────────────────────
 const HANGUL_NAME = /^[가-힣]{2,6}(\s[가-힣]{1,6})?$/
-function onlyHangul(v) {
-  return v.replace(/[^가-힣ㄱ-ㅎㅏ-ㅣ\s]/g, '').replace(/\s{2,}/g, ' ')
-}
-function isHangulName(v) {
-  return HANGUL_NAME.test(v.trim())
-}
-function onlyDigits(v) {
-  return v.replace(/\D/g, '')
-}
+function onlyDigits(v) { return v.replace(/\D/g, '') }
 function formatPhone(d) {
   const n = onlyDigits(d).slice(0, 11)
   if (n.length < 4) return n
   if (n.length < 8) return n.slice(0, 3) + '-' + n.slice(3)
   return n.slice(0, 3) + '-' + n.slice(3, 7) + '-' + n.slice(7)
 }
-function isPhone(v) {
-  return /^010\d{8}$/.test(onlyDigits(v))
-}
-function onlyRrn(v) {
-  return v.replace(/\D/g, '').slice(0, 13)
-}
+function isPhone(v) { return /^010\d{8}$/.test(onlyDigits(v)) }
+function onlyRrn(v) { return v.replace(/\D/g, '').slice(0, 13) }
 function formatRrn(d) {
   const n = onlyRrn(d)
   return n.length <= 6 ? n : n.slice(0, 6) + '-' + n.slice(6)
@@ -36,19 +23,16 @@ function formatRrn(d) {
 function isValidRRN(v) {
   const n = onlyRrn(v)
   if (!/^\d{13}$/.test(n)) return false
-  const yy = +n.slice(0, 2), mm = +n.slice(2, 4), dd = +n.slice(4, 6)
-  const g = +n[6]
+  const mm = +n.slice(2, 4), dd = +n.slice(4, 6), g = +n[6]
   if (g < 1 || g > 8) return false
   const century = (g === 1 || g === 2 || g === 5 || g === 6) ? 1900 : 2000
-  const year = century + yy
+  const year = century + +n.slice(0, 2)
   if (mm < 1 || mm > 12) return false
-  const last = new Date(year, mm, 0).getDate()
-  if (dd < 1 || dd > last) return false
+  if (dd < 1 || dd > new Date(year, mm, 0).getDate()) return false
   const w = [2, 3, 4, 5, 6, 7, 8, 9, 2, 3, 4, 5]
   let sum = 0
   for (let i = 0; i < 12; i++) sum += +n[i] * w[i]
-  const check = (11 - (sum % 11)) % 10
-  return check === +n[12]
+  return ((11 - (sum % 11)) % 10) === +n[12]
 }
 
 const C = {
@@ -60,21 +44,20 @@ const C = {
   ink: '#1E1E1E', inkSoft: '#4A4A4A',
   hair: '#C8D8D0',
   live: '#00A862',
+  sbux: '#00704A',
 }
 
-// ─── 카운트업 훅 ─────────────────────────────────────────────────────────────
 function useCountUp(target, duration = 700, run = true, from = 0) {
   const [display, setDisplay] = useState(from)
   const rafRef = useRef(0)
   useEffect(() => {
     if (!run) return
-    const begin = from
-    setDisplay(begin)
+    setDisplay(from)
     const start = performance.now()
     const ease = t => 1 - Math.pow(1 - t, 3)
     const tick = now => {
       const p = Math.min((now - start) / duration, 1)
-      setDisplay(Math.round(begin + (target - begin) * ease(p)))
+      setDisplay(Math.round(from + (target - from) * ease(p)))
       if (p < 1) rafRef.current = requestAnimationFrame(tick)
     }
     cancelAnimationFrame(rafRef.current)
@@ -85,7 +68,7 @@ function useCountUp(target, duration = 700, run = true, from = 0) {
 }
 
 // ─── 완료 오버레이 ───────────────────────────────────────────────────────────
-function DoneOverlay({ total, onClose }) {
+function DoneOverlay({ total, onClose, couponReady }) {
   const [run, setRun] = useState(false)
   const [checkDone, setCheckDone] = useState(false)
   const count = useCountUp(total, 700, run, Math.max(0, total - 3))
@@ -106,6 +89,7 @@ function DoneOverlay({ total, onClose }) {
         display: 'flex', flexDirection: 'column',
         alignItems: 'center', justifyContent: 'center',
         fontFamily: FONT, padding: 24,
+        overflowY: 'auto',
       }}
       onClick={onClose}
     >
@@ -125,44 +109,32 @@ function DoneOverlay({ total, onClose }) {
           boxShadow: '0 32px 80px rgba(0,0,0,0.45)',
         }}
       >
+        {/* 체크 */}
         <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 28 }}>
           <svg width="96" height="96" viewBox="0 0 96 96" fill="none">
-            <motion.circle
-              cx="48" cy="48" r="44"
-              fill={C.green}
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ type: 'spring', damping: 18, stiffness: 300, delay: 0.05 }}
-            />
-            <motion.path
-              d="M28 50 L42 64 L68 34"
-              stroke="#fff"
-              strokeWidth="6"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              fill="none"
-              initial={{ pathLength: 0 }}
-              animate={{ pathLength: 1 }}
+            <motion.circle cx="48" cy="48" r="44" fill={C.green}
+              initial={{ scale: 0 }} animate={{ scale: 1 }}
+              transition={{ type: 'spring', damping: 18, stiffness: 300, delay: 0.05 }} />
+            <motion.path d="M28 50 L42 64 L68 34" stroke="#fff" strokeWidth="6"
+              strokeLinecap="round" strokeLinejoin="round" fill="none"
+              initial={{ pathLength: 0 }} animate={{ pathLength: 1 }}
               transition={{ duration: 0.55, ease: 'easeOut', delay: 0.3 }}
-              onAnimationComplete={() => setCheckDone(true)}
-            />
+              onAnimationComplete={() => setCheckDone(true)} />
           </svg>
         </div>
 
         <div style={{ fontSize: 22, fontWeight: 900, color: C.ink, letterSpacing: '-0.5px', marginBottom: 8 }}>
           서명이 완료되었습니다
         </div>
-        <div style={{ fontSize: 14.5, color: C.inkSoft, lineHeight: 1.7, marginBottom: 32 }}>
+        <div style={{ fontSize: 14.5, color: C.inkSoft, lineHeight: 1.7, marginBottom: 28 }}>
           청원에 동참해 주셔서 감사합니다.<br />
           여러분의 서명이 변화를 만듭니다.
         </div>
 
+        {/* 카운터 */}
         <div style={{
-          background: '#f5f9f1',
-          border: `1.5px solid ${C.green}33`,
-          borderRadius: 14,
-          padding: '18px 0',
-          marginBottom: 28,
+          background: '#f5f9f1', border: `1.5px solid ${C.green}33`,
+          borderRadius: 14, padding: '18px 0', marginBottom: 20,
         }}>
           <div style={{ fontSize: 12, fontWeight: 700, color: C.greenDark, letterSpacing: '0.1em', marginBottom: 4 }}>
             현재 총 서명 인원
@@ -171,15 +143,77 @@ function DoneOverlay({ total, onClose }) {
             {count.toLocaleString()}<span style={{ fontSize: 22, fontWeight: 800 }}>명</span>
           </div>
           {checkDone && (
-            <motion.div
-              initial={{ opacity: 0, y: 4 }}
-              animate={{ opacity: 1, y: 0 }}
-              style={{ fontSize: 12.5, color: C.live, fontWeight: 700, marginTop: 6 }}
-            >
+            <motion.div initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }}
+              style={{ fontSize: 12.5, color: C.live, fontWeight: 700, marginTop: 6 }}>
               ▲ 내 서명 반영됨
             </motion.div>
           )}
         </div>
+
+        {/* 스타벅스 쿠폰 - 서버 응답 후 슬라이드업 */}
+        <AnimatePresence>
+          {couponReady && (
+            <motion.div
+              initial={{ opacity: 0, y: 24, scale: 0.96 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{ type: 'spring', damping: 22, stiffness: 280 }}
+              style={{
+                background: 'linear-gradient(135deg, #1E3932 0%, #00704A 100%)',
+                borderRadius: 16,
+                padding: '20px 22px',
+                marginBottom: 20,
+                textAlign: 'left',
+                position: 'relative',
+                overflow: 'hidden',
+              }}
+            >
+              {/* 배경 장식 원 */}
+              <div style={{
+                position: 'absolute', right: -20, top: -20,
+                width: 100, height: 100, borderRadius: '50%',
+                background: 'rgba(255,255,255,0.06)',
+              }} />
+              <div style={{
+                position: 'absolute', right: 20, bottom: -30,
+                width: 80, height: 80, borderRadius: '50%',
+                background: 'rgba(255,255,255,0.04)',
+              }} />
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                <div style={{
+                  width: 48, height: 48, borderRadius: 12,
+                  background: 'rgba(255,255,255,0.15)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  fontSize: 26, flexShrink: 0,
+                }}>
+                  ☕
+                </div>
+                <div>
+                  <div style={{ fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.65)', letterSpacing: '0.1em', marginBottom: 3 }}>
+                    서명 감사 선물
+                  </div>
+                  <div style={{ fontSize: 16, fontWeight: 900, color: '#fff', letterSpacing: '-0.3px' }}>
+                    스타벅스 아메리카노
+                  </div>
+                  <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.75)', marginTop: 3 }}>
+                    입력하신 번호로 문자 발송됩니다
+                  </div>
+                </div>
+              </div>
+
+              <div style={{
+                marginTop: 14,
+                borderTop: '1px solid rgba(255,255,255,0.15)',
+                paddingTop: 12,
+                fontSize: 11.5, color: 'rgba(255,255,255,0.6)',
+                lineHeight: 1.6,
+              }}>
+                * 쿠폰은 영업일 기준 3일 이내 발송됩니다.<br />
+                * 선착순 소진 시 조기 마감될 수 있습니다.
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         <button
           onClick={onClose}
@@ -235,20 +269,15 @@ const sheetSt = {
 
 function SegmentBtn({ label, active, onClick }) {
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      style={{
-        flex: 1, padding: '14px 0',
-        border: active ? `2px solid ${C.green}` : `2px solid ${C.hair}`,
-        borderRadius: 12,
-        background: active ? '#f0f7e8' : '#faf8f3',
-        color: active ? C.greenDark : C.inkSoft,
-        fontSize: 16, fontWeight: active ? 800 : 600,
-        fontFamily: FONT, cursor: 'pointer',
-        transition: 'all 0.15s',
-      }}
-    >
+    <button type="button" onClick={onClick} style={{
+      flex: 1, padding: '14px 0',
+      border: active ? `2px solid ${C.green}` : `2px solid ${C.hair}`,
+      borderRadius: 12,
+      background: active ? '#f0f7e8' : '#faf8f3',
+      color: active ? C.greenDark : C.inkSoft,
+      fontSize: 16, fontWeight: active ? 800 : 600,
+      fontFamily: FONT, cursor: 'pointer', transition: 'all 0.15s',
+    }}>
       {active ? '✓ ' : ''}{label}
     </button>
   )
@@ -261,32 +290,26 @@ function SignOverlay({ onDone, onClose }) {
   const [disabled, setDisabled] = useState(false)
   const [regNum, setRegNum] = useState('')
   const [idNum, setIdNum] = useState('')
+  const [submitted, setSubmitted] = useState(false)
 
   const step1ok = name.trim().length > 0
   const step2ok = isPhone(phone)
   const rrnFilled = onlyRrn(idNum).length > 0
-  const rrnOk = !rrnFilled || isValidRRN(idNum)
-  const step3ok = disabled
-    ? true
-    : (regNum.trim().length >= 4 || (rrnFilled && isValidRRN(idNum)))
+  const step3ok = disabled ? true : (regNum.trim().length >= 4 || (rrnFilled && isValidRRN(idNum)))
 
   const goNext = () => setStep(s => s + 1)
   const handleDone = () => {
+    if (submitted) return
+    setSubmitted(true)
     onDone({ name: name.trim(), phone: phone.trim(), disabled, regNum: regNum.trim(), idNum: idNum.trim() })
   }
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-      style={sheetSt.root}
-      onClick={onClose}
-    >
-      <motion.div
-        initial={{ y: '100%' }} animate={{ y: 0 }} exit={{ y: '100%' }}
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+      style={sheetSt.root} onClick={onClose}>
+      <motion.div initial={{ y: '100%' }} animate={{ y: 0 }} exit={{ y: '100%' }}
         transition={{ type: 'spring', damping: 30, stiffness: 320 }}
-        style={sheetSt.sheet}
-        onClick={e => e.stopPropagation()}
-      >
+        style={sheetSt.sheet} onClick={e => e.stopPropagation()}>
         <div style={sheetSt.grip} />
 
         <div style={{ display: 'flex', gap: 5, marginBottom: 22 }}>
@@ -310,21 +333,12 @@ function SignOverlay({ onDone, onClose }) {
               </div>
               <label style={sheetSt.label}>이름</label>
               <div style={{ display: 'flex', gap: 10, alignItems: 'stretch' }}>
-                <input
-                  value={name}
-                  autoComplete="name"
-                  onChange={e => setName(e.target.value)}
-                  placeholder="이름"
-                  style={{ ...sheetSt.input, marginBottom: 0, flex: 1 }}
-                />
-                <button
-                  type="button"
+                <input value={name} autoComplete="name"
+                  onChange={e => setName(e.target.value)} placeholder="이름"
+                  style={{ ...sheetSt.input, marginBottom: 0, flex: 1 }} />
+                <button type="button"
                   style={{ ...sheetSt.nextBtn, width: 76, flexShrink: 0, padding: '0', ...(step1ok ? sheetSt.activeBtn : sheetSt.disabledBtn) }}
-                  disabled={!step1ok}
-                  onClick={goNext}
-                >
-                  다음
-                </button>
+                  disabled={!step1ok} onClick={goNext}>다음</button>
               </div>
             </motion.div>
           )}
@@ -336,22 +350,13 @@ function SignOverlay({ onDone, onClose }) {
               <div style={sheetSt.desc}>서명 확인을 위해 휴대폰 번호를 입력해 주세요.</div>
               <label style={sheetSt.label}>휴대폰 번호</label>
               <div style={{ display: 'flex', gap: 10, alignItems: 'stretch' }}>
-                <input
-                  style={{ ...sheetSt.input, marginBottom: 0, flex: 1 }}
-                  value={phone}
-                  inputMode="numeric"
-                  maxLength={13}
+                <input style={{ ...sheetSt.input, marginBottom: 0, flex: 1 }}
+                  value={phone} inputMode="numeric" maxLength={13}
                   onChange={e => setPhone(formatPhone(e.target.value))}
-                  placeholder="숫자만 입력 (010…)"
-                />
-                <button
-                  type="button"
+                  placeholder="숫자만 입력 (010…)" />
+                <button type="button"
                   style={{ ...sheetSt.nextBtn, width: 76, flexShrink: 0, padding: '0', ...(step2ok ? sheetSt.activeBtn : sheetSt.disabledBtn) }}
-                  disabled={!step2ok}
-                  onClick={goNext}
-                >
-                  다음
-                </button>
+                  disabled={!step2ok} onClick={goNext}>다음</button>
               </div>
               {onlyDigits(phone).length > 0 && !step2ok && (
                 <p style={{ fontSize: 12, color: '#d9534f', margin: '8px 2px 0', fontWeight: 600 }}>
@@ -372,43 +377,22 @@ function SignOverlay({ onDone, onClose }) {
 
               <AnimatePresence>
                 {!disabled && (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }}
-                    style={{ overflow: 'hidden' }}
-                  >
+                  <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} style={{ overflow: 'hidden' }}>
                     <label style={sheetSt.label}>장애인 등록번호</label>
-                    <input
-                      style={{ ...sheetSt.input }}
-                      value={regNum}
-                      onChange={e => setRegNum(e.target.value)}
-                      placeholder="등록번호 입력"
-                    />
+                    <input style={{ ...sheetSt.input }} value={regNum}
+                      onChange={e => setRegNum(e.target.value)} placeholder="등록번호 입력" />
                     <div style={{ textAlign: 'center', fontSize: 13, color: C.serifSoft, fontWeight: 700, margin: '0 0 14px' }}>또는</div>
                     <label style={sheetSt.label}>주민등록번호</label>
-                    <div style={{ display: 'flex', gap: 10, alignItems: 'stretch' }}>
-                      <input
-                        style={{ ...sheetSt.input, marginBottom: 0, flex: 1 }}
-                        value={idNum}
-                        inputMode="numeric"
-                        maxLength={14}
-                        onChange={e => setIdNum(formatRrn(e.target.value))}
-                        placeholder="000000-0000000"
-                      />
-                      <button
-                        type="button"
-                        style={{ ...sheetSt.nextBtn, width: 76, flexShrink: 0, padding: '0', ...(step3ok ? sheetSt.activeBtn : sheetSt.disabledBtn) }}
-                        disabled={!step3ok}
-                        onClick={handleDone}
-                      >
-                        완료
-                      </button>
-                    </div>
+                    <input style={{ ...sheetSt.input }}
+                      value={idNum} inputMode="numeric" maxLength={14}
+                      onChange={e => setIdNum(formatRrn(e.target.value))}
+                      placeholder="000000-0000000" />
                     {onlyRrn(idNum).length === 13 && !isValidRRN(idNum) && (
-                      <p style={{ fontSize: 12, color: '#d9534f', margin: '8px 2px 0', fontWeight: 600 }}>
-                        올바른 주민등록번호가 아닙니다. 다시 입력해 주세요.
+                      <p style={{ fontSize: 12, color: '#d9534f', margin: '-12px 2px 12px', fontWeight: 600 }}>
+                        올바른 주민등록번호가 아닙니다.
                       </p>
                     )}
-                    <p style={{ fontSize: 12, color: C.serifSoft, lineHeight: 1.65, margin: '10px 0 0' }}>
+                    <p style={{ fontSize: 12, color: C.serifSoft, lineHeight: 1.65, margin: '0 0 16px' }}>
                       장애인 등록번호를 모르실 경우 주민번호를 기입하시면 됩니다.<br />
                       장애인 혜택 적용을 위해 필요합니다.
                     </p>
@@ -416,16 +400,13 @@ function SignOverlay({ onDone, onClose }) {
                 )}
               </AnimatePresence>
 
-              {disabled && (
-                <button
-                  type="button"
-                  style={{ ...sheetSt.nextBtn, ...(step3ok ? sheetSt.activeBtn : sheetSt.disabledBtn) }}
-                  disabled={!step3ok}
-                  onClick={handleDone}
-                >
-                  완료
-                </button>
-              )}
+              {/* 완료 버튼 — 항상 하나만 */}
+              <button type="button"
+                style={{ ...sheetSt.nextBtn, ...(step3ok && !submitted ? sheetSt.activeBtn : sheetSt.disabledBtn) }}
+                disabled={!step3ok || submitted}
+                onClick={handleDone}>
+                완료
+              </button>
             </motion.div>
           )}
         </AnimatePresence>
@@ -436,7 +417,6 @@ function SignOverlay({ onDone, onClose }) {
 
 // ─── Live 카운터 ─────────────────────────────────────────────────────────────
 function LiveCounter({ baseCount = 0, variant = 'float' }) {
-  const count = baseCount
   const isInline = variant === 'inline'
   const wrap = isInline
     ? { position: 'relative', width: '100%', marginBottom: 22 }
@@ -453,7 +433,7 @@ function LiveCounter({ baseCount = 0, variant = 'float' }) {
         </div>
         <div style={{ color: 'rgba(255,255,255,0.72)', fontSize: 13, marginBottom: 2 }}>현재</div>
         <div style={{ display: 'flex', alignItems: 'baseline', gap: 4 }}>
-          <span style={{ fontSize: isInline ? 40 : 50, fontWeight: 900, color: '#fff', lineHeight: 1, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.5px' }}>{count.toLocaleString()}</span>
+          <span style={{ fontSize: isInline ? 40 : 50, fontWeight: 900, color: '#fff', lineHeight: 1, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.5px' }}>{baseCount.toLocaleString()}</span>
           <span style={{ fontSize: 20, fontWeight: 800, color: '#fff' }}>명</span>
         </div>
         <div style={{ color: 'rgba(255,255,255,0.82)', fontSize: 13.5, marginTop: 6 }}>이 서명에 동참하고 있습니다</div>
@@ -483,56 +463,35 @@ const ASKS = [
   ['장애인에게 불리한 제도의 재개정', '관리급여 등 환자 부담을 과도하게 전가하는 제도를 장애인 의료 접근권 관점에서 재검토·개정해 주십시오.'],
 ]
 
-// ─── 디바이스 식별 ───────────────────────────────────────────────────────────
 function getDeviceId() {
   try {
     let id = localStorage.getItem('petition_device_id')
     if (!id) {
-      id = (window.crypto && crypto.randomUUID)
-        ? crypto.randomUUID()
-        : Date.now().toString(36) + Math.random().toString(36).slice(2, 10)
+      id = (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : Date.now().toString(36) + Math.random().toString(36).slice(2, 10)
       localStorage.setItem('petition_device_id', id)
     }
     return id
-  } catch {
-    return 'nostore-' + Math.random().toString(36).slice(2, 10)
-  }
+  } catch { return 'nostore-' + Math.random().toString(36).slice(2, 10) }
 }
 function getFingerprint() {
   try {
-    const cv = document.createElement('canvas')
-    const gl = cv.getContext('webgl') || cv.getContext('experimental-webgl')
-    const dbg = gl && gl.getExtension('WEBGL_debug_renderer_info')
-    const gpu = dbg ? gl.getParameter(dbg.UNMASKED_RENDERER_WEBGL) : ''
-    const parts = [
-      navigator.userAgent, navigator.language,
-      screen.width + 'x' + screen.height, screen.colorDepth,
-      Intl.DateTimeFormat().resolvedOptions().timeZone,
-      navigator.hardwareConcurrency || '', navigator.deviceMemory || '',
-      gpu,
-    ].join('|')
+    const parts = [navigator.userAgent, navigator.language, screen.width + 'x' + screen.height, screen.colorDepth, Intl.DateTimeFormat().resolvedOptions().timeZone, navigator.hardwareConcurrency || ''].join('|')
     let h = 0x811c9dc5
-    for (let i = 0; i < parts.length; i++) {
-      h ^= parts.charCodeAt(i)
-      h = (h + ((h << 1) + (h << 4) + (h << 7) + (h << 8) + (h << 24))) >>> 0
-    }
+    for (let i = 0; i < parts.length; i++) { h ^= parts.charCodeAt(i); h = (h + ((h << 1) + (h << 4) + (h << 7) + (h << 8) + (h << 24))) >>> 0 }
     return h.toString(16).padStart(8, '0')
-  } catch {
-    return '00000000'
-  }
+  } catch { return '00000000' }
 }
-function getPlatformTag() {
-  return /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent) ? 'm' : 'p'
-}
+function getPlatformTag() { return /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent) ? 'm' : 'p' }
 
 const API = 'https://backend-production-6b41.up.railway.app'
 
-// ─── 메인 컴포넌트 ───────────────────────────────────────────────────────────
 export default function PetitionTab({ isMobile, loading, LoadingUI, onGoSign }) {
   const navigate = useNavigate()
   const [signOpen, setSignOpen] = useState(false)
   const [doneOpen, setDoneOpen] = useState(false)
   const [liveCount, setLiveCount] = useState(0)
+  const [doneCount, setDoneCount] = useState(0)
+  const [couponReady, setCouponReady] = useState(false)
   const [submitError, setSubmitError] = useState(null)
 
   useEffect(() => {
@@ -549,7 +508,10 @@ export default function PetitionTab({ isMobile, loading, LoadingUI, onGoSign }) 
 
   const handleDone = useCallback((form) => {
     setSubmitError(null)
-    setLiveCount(c => c + 1)
+    setCouponReady(false)
+    const snap = liveCount + 1
+    setLiveCount(snap)
+    setDoneCount(snap)
     setSignOpen(false)
     setDoneOpen(true)
 
@@ -572,16 +534,21 @@ export default function PetitionTab({ isMobile, loading, LoadingUI, onGoSign }) 
           return
         }
         if (!res.ok) throw new Error(data.detail || '서버 오류')
-        if (typeof data.total_count === 'number') setLiveCount(data.total_count)
+        if (typeof data.total_count === 'number') {
+          setLiveCount(data.total_count)
+          setDoneCount(data.total_count)
+        }
+        setCouponReady(true)   // 서버 응답 성공 시 쿠폰 표시
       })
       .catch(() => {
         setLiveCount(c => Math.max(0, c - 1))
         setSubmitError('서명 저장에 실패했습니다. 다시 시도해 주세요.')
       })
-  }, [])
+  }, [liveCount])
 
   const handleDoneClose = useCallback(() => {
     setDoneOpen(false)
+    setCouponReady(false)
   }, [])
 
   const COL = isMobile ? '100%' : 860
@@ -597,7 +564,7 @@ export default function PetitionTab({ isMobile, loading, LoadingUI, onGoSign }) 
         {signOpen && <SignOverlay onDone={handleDone} onClose={() => setSignOpen(false)} />}
       </AnimatePresence>
       <AnimatePresence>
-        {doneOpen && <DoneOverlay total={liveCount} onClose={handleDoneClose} />}
+        {doneOpen && <DoneOverlay total={doneCount} onClose={handleDoneClose} couponReady={couponReady} />}
       </AnimatePresence>
       <AnimatePresence>
         {submitError && (
@@ -617,7 +584,6 @@ export default function PetitionTab({ isMobile, loading, LoadingUI, onGoSign }) 
         )}
       </AnimatePresence>
 
-      {/* ── 상단 서명 버튼 ── */}
       <div style={{ width: '100%', display: 'flex', justifyContent: 'center', padding: isMobile ? '20px 20px 16px' : '32px 40px 24px', fontFamily: FONT, boxSizing: 'border-box' }}>
         <div style={{ width: '100%', maxWidth: isMobile ? '100%' : 640 }}>
           {loading ? LoadingUI : (
@@ -632,7 +598,6 @@ export default function PetitionTab({ isMobile, loading, LoadingUI, onGoSign }) 
         </div>
       </div>
 
-      {/* ── 본문 ── */}
       <div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', background: '#fff', fontFamily: FONT }}>
         <div style={{ width: '100%', maxWidth: COL, display: 'flex', flexDirection: 'column', alignItems: 'stretch', gap: 0 }}>
 
@@ -663,15 +628,9 @@ export default function PetitionTab({ isMobile, loading, LoadingUI, onGoSign }) 
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', background: C.cream }}>
-            {/* <Ph label="이미지 자리 (현장 사진)" style={{ minHeight: isMobile ? 240 : 520, order: isMobile ? -1 : 0 }} /> */}
             <div style={{ padding: isMobile ? '40px 24px' : '60px 48px' }}>
               <h2 style={{ fontFamily: SERIF, color: C.serif, fontWeight: 800, fontSize: isMobile ? 23 : 26, lineHeight: 1.42, margin: '0 0 24px' }}>장애라는 이유로<br />줄어들지 않는 의료비 부담</h2>
               {REASONS.map(([h, b], i) => (<p key={i} style={{ color: C.serif, fontSize: 14, lineHeight: 1.95, margin: '0 0 16px' }}><b style={{ fontWeight: 700, color: C.greenDark }}>{h}</b> {b}</p>))}
-              {/* <div style={{ marginTop: 22, display: 'flex', gap: 10 }}>
-                <Ph label="사진" style={{ width: 92, height: 64, borderRadius: 3 }} />
-                <Ph label="사진" style={{ width: 92, height: 64, borderRadius: 3 }} />
-                <Ph label="사진" style={{ width: 92, height: 64, borderRadius: 3 }} />
-              </div> */}
               <p style={{ marginTop: 22, fontSize: 11.5, lineHeight: 1.7, color: C.serifSoft }}>* 도수치료 관리급여 본인부담률·횟수 제한은 2026년 7월 시행 기준이며, 의학적 사유에 따라 연 24회까지 적용됩니다.</p>
             </div>
           </div>
@@ -686,11 +645,6 @@ export default function PetitionTab({ isMobile, loading, LoadingUI, onGoSign }) 
                 </div>
               ))}
             </div>
-            {/* <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gridTemplateRows: '1.4fr 1fr', gap: 6, minHeight: isMobile ? 300 : 'auto' }}>
-              <Ph label="이미지 자리 (대표 사진)" style={{ gridColumn: '1 / 3', height: '100%' }} />
-              <Ph label="사진" style={{ height: '100%' }} />
-              <Ph label="사진" style={{ height: '100%' }} />
-            </div> */}
           </div>
 
           <div style={{ background: C.cream, padding: isMobile ? '44px 24px 52px' : '60px 40px 68px', textAlign: 'center' }}>
