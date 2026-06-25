@@ -698,15 +698,15 @@ export default function PetitionTab({ isMobile, loading, LoadingUI, onGoSign }) 
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', background: C.cream }}>
-            <Ph label="이미지 자리 (현장 사진)" style={{ minHeight: isMobile ? 240 : 520, order: isMobile ? -1 : 0 }} />
+            {/* <Ph label="이미지 자리 (현장 사진)" style={{ minHeight: isMobile ? 240 : 520, order: isMobile ? -1 : 0 }} /> */}
             <div style={{ padding: isMobile ? '40px 24px' : '60px 48px' }}>
               <h2 style={{ fontFamily: SERIF, color: C.serif, fontWeight: 800, fontSize: isMobile ? 23 : 26, lineHeight: 1.42, margin: '0 0 24px' }}>장애라는 이유로<br />줄어들지 않는 의료비 부담</h2>
               {REASONS.map(([h, b], i) => (<p key={i} style={{ color: C.serif, fontSize: 14, lineHeight: 1.95, margin: '0 0 16px' }}><b style={{ fontWeight: 700, color: '#5f5446' }}>{h}</b> {b}</p>))}
-              <div style={{ marginTop: 22, display: 'flex', gap: 10 }}>
+              {/* <div style={{ marginTop: 22, display: 'flex', gap: 10 }}>
                 <Ph label="사진" style={{ width: 92, height: 64, borderRadius: 3 }} />
                 <Ph label="사진" style={{ width: 92, height: 64, borderRadius: 3 }} />
                 <Ph label="사진" style={{ width: 92, height: 64, borderRadius: 3 }} />
-              </div>
+              </div> */}
               <p style={{ marginTop: 22, fontSize: 11.5, lineHeight: 1.7, color: C.serifSoft }}>* 도수치료 관리급여 본인부담률·횟수 제한은 2026년 7월 시행 기준이며, 의학적 사유에 따라 연 24회까지 적용됩니다.</p>
             </div>
           </div>
@@ -721,11 +721,11 @@ export default function PetitionTab({ isMobile, loading, LoadingUI, onGoSign }) 
                 </div>
               ))}
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gridTemplateRows: '1.4fr 1fr', gap: 6, minHeight: isMobile ? 300 : 'auto' }}>
+            {/* <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gridTemplateRows: '1.4fr 1fr', gap: 6, minHeight: isMobile ? 300 : 'auto' }}>
               <Ph label="이미지 자리 (대표 사진)" style={{ gridColumn: '1 / 3', height: '100%' }} />
               <Ph label="사진" style={{ height: '100%' }} />
               <Ph label="사진" style={{ height: '100%' }} />
-            </div>
+            </div> */}
           </div>
 
           <div style={{ background: C.cream, padding: isMobile ? '44px 24px 52px' : '60px 40px 68px', textAlign: 'center' }}>
