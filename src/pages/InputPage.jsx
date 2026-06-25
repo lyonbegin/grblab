@@ -2461,12 +2461,10 @@ const handleRiskImageSelect = useCallback(async (filename) => {
         {/* ── 네비 ── */}
         <nav style={s.nav}>
           <div style={{ ...s.navInner, padding: isMobile ? '0 16px' : '0 40px' }}>
-            {/* <div style={{ ...s.logo, transform: isMobile ? 'scale(0.85)' : 'none', transformOrigin: 'left center' }}>
-              <div style={s.logoMark}>G</div>
-              <span style={s.logoText}>GRB </span> */}
-
-               {/* <div style={s.logoMark}>G</div> */}
+            <div style={{ ...s.logo, transform: isMobile ? 'scale(0.85)' : 'none', transformOrigin: 'left center' }}>
+              {/* <div style={s.logoMark}>G</div> */}
               <span style={s.logoText}>부산의료복지사회적협동조합 </span>
+              
             </div>
 
             {/* PC: 탭 버튼 / 모바일: 현재 탭 이름 + 햄버거 */}
