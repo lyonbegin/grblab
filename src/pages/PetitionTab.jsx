@@ -59,8 +59,7 @@ function isValidRRN(v) {
   const check = (11 - (sum % 11)) % 10
   return check === +n[12]
 }
-
-더 보기오후 12:16Claude 응답: 이것만 기존 코드의 C 객체와 교체하면 됩니다.javascriptconst C = {
+const C = {
   green: '#00704A', greenDark: '#005C3C',
   yellow: '#1E3932', yellowText: '#ffffff',
   cream: '#D4E9E2',
