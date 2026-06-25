@@ -60,15 +60,15 @@ function isValidRRN(v) {
   return check === +n[12]
 }
 
-const C = {
-  green: '#79b043', greenDark: '#6aa036',
-  yellow: '#FAE100', yellowText: '#1a1a1a',
-  cream: '#efeae0',
-  serif: '#7d7164', serifSoft: '#9a8f80',
-  steel: '#4f8295', steelDark: '#44707f',
-  ink: '#2f2f2f', inkSoft: '#5a5a5a',
-  hair: '#e6e2da',
-  live: '#36d399',
+더 보기오후 12:16Claude 응답: 이것만 기존 코드의 C 객체와 교체하면 됩니다.javascriptconst C = {
+  green: '#00704A', greenDark: '#005C3C',
+  yellow: '#1E3932', yellowText: '#ffffff',
+  cream: '#D4E9E2',
+  serif: '#1E3932', serifSoft: '#4A6741',
+  steel: '#00704A', steelDark: '#005C3C',
+  ink: '#1E1E1E', inkSoft: '#4A4A4A',
+  hair: '#C8D8D0',
+  live: '#00A862',
 }
 
 // ─── 카운트업 훅 (run=false면 대기, from=시작값) ────────────────────────────
