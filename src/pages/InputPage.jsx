@@ -1786,7 +1786,7 @@ export default function InputPage() {
   const [preview, setPreview] = useState(null)
   const [dragOver, setDragOver] = useState(false)
   const [cameraOpen, setCameraOpen] = useState(false)
-  const [activeTab, setActiveTab] = useState('antitage')
+  const [activeTab, setActiveTab] = useState('petition')
   const [activeSubTab, setActiveSubTab] = useState('all')
   const [activeCmanageSubTab, setActiveCmanageSubTab] = useState('all')
   const [selectedSiteId, setSelectedSiteId] = useState(null)
@@ -2300,31 +2300,31 @@ const handleRiskImageSelect = useCallback(async (filename) => {
               {/* 드로어 메뉴 목록 */}
               <div style={{ flex: 1, padding: '12px 0' }}>
                 {[
-                  {
-                    key: 'power',
-                    label: 'PowerOps',
-                    subs: [],
-                  },
-                  {
-                    key: 'cmanage',
-                    label: '건설안전',
-                    subs: CMANAGE_CARDS.filter(c => c.key !== 'all').map(c => ({ key: c.key, label: c.title })),
-                  },
-                  {
-                    key: 'risk',
-                    label: 'AI안전',
-                    subs: [],
-                  },
-                  {
-                    key: 'cctv',
-                    label: '스마트안전장비',
-                    subs: CCTV_CARDS.map(c => ({ key: c.key, label: c.title })),
-                  },
-                  {
-    key: 'antitage',
-    label: '앙티아쥬',
-    subs: [],
-  },
+  //                 {
+  //                   key: 'power',
+  //                   label: 'PowerOps',
+  //                   subs: [],
+  //                 },
+  //                 {
+  //                   key: 'cmanage',
+  //                   label: '건설안전',
+  //                   subs: CMANAGE_CARDS.filter(c => c.key !== 'all').map(c => ({ key: c.key, label: c.title })),
+  //                 },
+  //                 {
+  //                   key: 'risk',
+  //                   label: 'AI안전',
+  //                   subs: [],
+  //                 },
+  //                 {
+  //                   key: 'cctv',
+  //                   label: '스마트안전장비',
+  //                   subs: CCTV_CARDS.map(c => ({ key: c.key, label: c.title })),
+  //                 },
+  //                 {
+  //   key: 'antitage',
+  //   label: '앙티아쥬',
+  //   subs: [],
+  // },
 
                     {
     key: 'petition',
@@ -2461,9 +2461,12 @@ const handleRiskImageSelect = useCallback(async (filename) => {
         {/* ── 네비 ── */}
         <nav style={s.nav}>
           <div style={{ ...s.navInner, padding: isMobile ? '0 16px' : '0 40px' }}>
-            <div style={{ ...s.logo, transform: isMobile ? 'scale(0.85)' : 'none', transformOrigin: 'left center' }}>
+            {/* <div style={{ ...s.logo, transform: isMobile ? 'scale(0.85)' : 'none', transformOrigin: 'left center' }}>
               <div style={s.logoMark}>G</div>
-              <span style={s.logoText}>GRB </span>
+              <span style={s.logoText}>GRB </span> */}
+
+               {/* <div style={s.logoMark}>G</div> */}
+              <span style={s.logoText}>부산의료복지사회적협동조합 </span>
             </div>
 
             {/* PC: 탭 버튼 / 모바일: 현재 탭 이름 + 햄버거 */}
@@ -2471,11 +2474,11 @@ const handleRiskImageSelect = useCallback(async (filename) => {
               <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                 <span style={{ fontSize: 14, fontWeight: 700, color: '#1a1a1a' }}>
                   {[
-                    { key: 'power', label: 'PowerOps' },
-                    { key: 'cmanage', label: '건설안전' },
-                    { key: 'risk', label: 'AI안전' },
-                    { key: 'cctv', label: '스마트안전장비' },
-                    { key: 'antitage', label: '앙티아쥬' },
+                    // { key: 'power', label: 'PowerOps' },
+                    // { key: 'cmanage', label: '건설안전' },
+                    // { key: 'risk', label: 'AI안전' },
+                    // { key: 'cctv', label: '스마트안전장비' },
+                    // { key: 'antitage', label: '앙티아쥬' },
 
                     { key: 'petition', label: '서명' },
                   ].find(t => t.key === activeTab)?.label}
@@ -2497,11 +2500,11 @@ const handleRiskImageSelect = useCallback(async (filename) => {
             ) : (
               <div style={s.tabs}>
                 {[
-                  { key: 'power', label: 'PowerOps' },
-                  { key: 'cmanage', label: '건설안전' },
-                  { key: 'risk', label: 'AI안전' },
-                  { key: 'cctv', label: '스마트안전장비' },
-                  { key: 'antitage', label: '앙티아쥬' },
+                  // { key: 'power', label: 'PowerOps' },
+                  // { key: 'cmanage', label: '건설안전' },
+                  // { key: 'risk', label: 'AI안전' },
+                  // { key: 'cctv', label: '스마트안전장비' },
+                  // { key: 'antitage', label: '앙티아쥬' },
                     { key: 'petition', label: '서명' },
                 ].map(tab => (
                   <button
