@@ -2462,7 +2462,7 @@ const handleRiskImageSelect = useCallback(async (filename) => {
         <nav style={s.nav}>
           <div style={{ ...s.navInner, padding: isMobile ? '0 16px' : '0 40px' }}>
             <div style={{ ...s.logo, transform: isMobile ? 'scale(0.85)' : 'none', transformOrigin: 'left center' }}>
-              {/* <div style={s.logoMark}>G</div> */}
+              <div style={s.logoMark}>G</div>
               <span style={s.logoText}>부산의료복지사회적협동조합 </span>
               
             </div>
