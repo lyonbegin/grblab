@@ -673,7 +673,7 @@ export default function PetitionTab({ isMobile, loading, LoadingUI, onGoSign }) 
           <div style={{ position: 'relative', minHeight: isMobile ? 460 : 520, display: 'flex', alignItems: 'center', overflow: 'hidden' }}>
             <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(120deg,#d8cdbf 0%,#c9bdac 40%,#b9ac99 100%)' }} />
             <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(90deg,rgba(40,33,25,0.66) 0%,rgba(40,33,25,0.40) 52%,rgba(40,33,25,0.12) 88%)' }} />
-            <span style={{ position: 'absolute', right: 16, bottom: 14, background: 'rgba(255,255,255,0.7)', color: '#8b8474', fontSize: 11, padding: '4px 10px', borderRadius: 2, zIndex: 2 }}>이미지 자리 (Hero)</span>
+            {/* <span style={{ position: 'absolute', right: 16, bottom: 14, background: 'rgba(255,255,255,0.7)', color: '#8b8474', fontSize: 11, padding: '4px 10px', borderRadius: 2, zIndex: 2 }}>이미지 자리 (Hero)</span> */}
             {!isMobile && <LiveCounter baseCount={liveCount} variant="float" />}
             <div style={{ position: 'relative', zIndex: 3, padding: isMobile ? '28px 24px' : '0 48px', width: isMobile ? '100%' : 'auto' }}>
               {isMobile && <LiveCounter baseCount={liveCount} variant="inline" />}
