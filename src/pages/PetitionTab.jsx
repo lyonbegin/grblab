@@ -35,16 +35,21 @@ function isValidRRN(v) {
   return ((11 - (sum % 11)) % 10) === +n[12]
 }
 
+// ─── 컬러 토큰 (네이비 + 옐로 + 레드 경고 톤) ────────────────────────────────
 const C = {
-  green: '#00704A', greenDark: '#005C3C',
-  yellow: '#00704A', yellowText: '#ffffff',
-  cream: '#F1F8F5',
-  serif: '#1E3932', serifSoft: '#4A6741',
-  steel: '#00704A', steelDark: '#005C3C',
-  ink: '#1E1E1E', inkSoft: '#4A4A4A',
-  hair: '#C8D8D0',
-  live: '#00A862',
-  sbux: '#00704A',
+  navy: '#16215C',
+  navyDark: '#0E1640',
+  navySoft: '#283875',
+  yellow: '#FFD400',
+  yellowDeep: '#F5B700',
+  red: '#E63946',
+  redSoft: '#FDEAEC',
+  cream: '#F4F5FA',
+  ink: '#16182B',
+  inkSoft: '#54577A',
+  hair: '#D9DBEC',
+  live: '#22C55E',
+  white: '#ffffff',
 }
 
 function useCountUp(target, duration = 700, run = true, from = 0) {
@@ -85,7 +90,7 @@ function DoneOverlay({ total, onClose, couponReady }) {
       exit={{ opacity: 0 }}
       style={{
         position: 'fixed', inset: 0, zIndex: 10000,
-        background: 'rgba(10,12,10,0.82)',
+        background: 'rgba(10,12,24,0.82)',
         display: 'flex', flexDirection: 'column',
         alignItems: 'center', justifyContent: 'center',
         fontFamily: FONT, padding: 24,
@@ -112,10 +117,10 @@ function DoneOverlay({ total, onClose, couponReady }) {
         {/* 체크 */}
         <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 28 }}>
           <svg width="96" height="96" viewBox="0 0 96 96" fill="none">
-            <motion.circle cx="48" cy="48" r="44" fill={C.green}
+            <motion.circle cx="48" cy="48" r="44" fill={C.navy}
               initial={{ scale: 0 }} animate={{ scale: 1 }}
               transition={{ type: 'spring', damping: 18, stiffness: 300, delay: 0.05 }} />
-            <motion.path d="M28 50 L42 64 L68 34" stroke="#fff" strokeWidth="6"
+            <motion.path d="M28 50 L42 64 L68 34" stroke={C.yellow} strokeWidth="6"
               strokeLinecap="round" strokeLinejoin="round" fill="none"
               initial={{ pathLength: 0 }} animate={{ pathLength: 1 }}
               transition={{ duration: 0.55, ease: 'easeOut', delay: 0.3 }}
@@ -133,14 +138,13 @@ function DoneOverlay({ total, onClose, couponReady }) {
 
         {/* 카운터 */}
         <div style={{
-          background: '#f5f9f1', border: `1.5px solid ${C.green}33`,
-          borderRadius: 14, padding: '18px 0', marginBottom: 20,
+          background: C.navy, borderRadius: 14, padding: '18px 0', marginBottom: 20,
         }}>
-          <div style={{ fontSize: 12, fontWeight: 700, color: C.greenDark, letterSpacing: '0.1em', marginBottom: 4 }}>
+          <div style={{ fontSize: 12, fontWeight: 700, color: 'rgba(255,255,255,0.65)', letterSpacing: '0.1em', marginBottom: 4 }}>
             현재 총 서명 인원
           </div>
-          <div style={{ fontSize: 48, fontWeight: 900, color: C.green, lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>
-            {count.toLocaleString()}<span style={{ fontSize: 22, fontWeight: 800 }}>명</span>
+          <div style={{ fontSize: 48, fontWeight: 900, color: C.yellow, lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>
+            {count.toLocaleString()}<span style={{ fontSize: 22, fontWeight: 800, color: '#fff' }}>명</span>
           </div>
           {checkDone && (
             <motion.div initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }}
@@ -150,7 +154,7 @@ function DoneOverlay({ total, onClose, couponReady }) {
           )}
         </div>
 
-        {/* 스타벅스 쿠폰 - 서버 응답 후 슬라이드업 */}
+        {/* 감사 쿠폰 - 서버 응답 후 슬라이드업 */}
         <AnimatePresence>
           {couponReady && (
             <motion.div
@@ -158,7 +162,7 @@ function DoneOverlay({ total, onClose, couponReady }) {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               transition={{ type: 'spring', damping: 22, stiffness: 280 }}
               style={{
-                background: 'linear-gradient(135deg, #1E3932 0%, #00704A 100%)',
+                background: `linear-gradient(135deg, ${C.navyDark} 0%, ${C.navy} 100%)`,
                 borderRadius: 16,
                 padding: '20px 22px',
                 marginBottom: 20,
@@ -171,25 +175,25 @@ function DoneOverlay({ total, onClose, couponReady }) {
               <div style={{
                 position: 'absolute', right: -20, top: -20,
                 width: 100, height: 100, borderRadius: '50%',
-                background: 'rgba(255,255,255,0.06)',
+                background: 'rgba(255,212,0,0.08)',
               }} />
               <div style={{
                 position: 'absolute', right: 20, bottom: -30,
                 width: 80, height: 80, borderRadius: '50%',
-                background: 'rgba(255,255,255,0.04)',
+                background: 'rgba(255,212,0,0.05)',
               }} />
 
               <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                 <div style={{
                   width: 48, height: 48, borderRadius: 12,
-                  background: 'rgba(255,255,255,0.15)',
+                  background: 'rgba(255,212,0,0.18)',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                   fontSize: 26, flexShrink: 0,
                 }}>
                   ☕
                 </div>
                 <div>
-                  <div style={{ fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.65)', letterSpacing: '0.1em', marginBottom: 3 }}>
+                  <div style={{ fontSize: 11, fontWeight: 700, color: C.yellow, letterSpacing: '0.1em', marginBottom: 3 }}>
                     서명 감사 선물
                   </div>
                   <div style={{ fontSize: 16, fontWeight: 900, color: '#fff', letterSpacing: '-0.3px' }}>
@@ -219,7 +223,7 @@ function DoneOverlay({ total, onClose, couponReady }) {
           onClick={onClose}
           style={{
             width: '100%', padding: '15px', border: 'none', borderRadius: 12,
-            background: C.green, color: '#fff', fontSize: 16, fontWeight: 800,
+            background: C.navy, color: '#fff', fontSize: 16, fontWeight: 800,
             fontFamily: FONT, cursor: 'pointer', letterSpacing: '-0.3px',
           }}
         >
@@ -234,7 +238,7 @@ function DoneOverlay({ total, onClose, couponReady }) {
 const sheetSt = {
   root: {
     position: 'fixed', inset: 0, zIndex: 9999,
-    background: 'rgba(20,18,14,0.55)',
+    background: 'rgba(14,16,30,0.6)',
     display: 'flex', alignItems: 'flex-end', justifyContent: 'center',
     fontFamily: FONT,
   },
@@ -246,8 +250,8 @@ const sheetSt = {
     boxShadow: '0 -12px 48px rgba(0,0,0,0.28)',
     boxSizing: 'border-box',
   },
-  grip: { width: 40, height: 4, borderRadius: 99, background: '#dcd7cd', margin: '0 auto 18px' },
-  stepLabel: { fontSize: 12, fontWeight: 700, letterSpacing: '0.14em', color: C.greenDark, marginBottom: 6 },
+  grip: { width: 40, height: 4, borderRadius: 99, background: '#dcdcec', margin: '0 auto 18px' },
+  stepLabel: { fontSize: 12, fontWeight: 700, letterSpacing: '0.14em', color: C.navy, marginBottom: 6 },
   title: { fontSize: 19, fontWeight: 900, color: C.ink, letterSpacing: '-0.4px', marginBottom: 6 },
   desc: { fontSize: 13.5, color: C.inkSoft, lineHeight: 1.65, marginBottom: 26 },
   label: { fontSize: 12.5, fontWeight: 700, color: C.inkSoft, marginBottom: 7, display: 'block' },
@@ -255,7 +259,7 @@ const sheetSt = {
     width: '100%', boxSizing: 'border-box',
     padding: '16px 18px', border: `1.5px solid ${C.hair}`,
     borderRadius: 12, fontSize: 18, fontFamily: FONT,
-    color: C.ink, outline: 'none', background: '#faf8f3',
+    color: C.ink, outline: 'none', background: C.cream,
     marginBottom: 20,
   },
   nextBtn: {
@@ -263,18 +267,18 @@ const sheetSt = {
     fontSize: 17, fontWeight: 900, fontFamily: FONT,
     cursor: 'pointer', letterSpacing: '-0.4px', transition: 'background 0.15s',
   },
-  disabledBtn: { background: '#d8d4c9', color: '#aaa7a0', cursor: 'not-allowed' },
-  activeBtn: { background: C.green, color: '#fff' },
+  disabledBtn: { background: '#e2e3ef', color: '#a4a6c0', cursor: 'not-allowed' },
+  activeBtn: { background: C.navy, color: C.yellow },
 }
 
 function SegmentBtn({ label, active, onClick }) {
   return (
     <button type="button" onClick={onClick} style={{
       flex: 1, padding: '14px 0',
-      border: active ? `2px solid ${C.green}` : `2px solid ${C.hair}`,
+      border: active ? `2px solid ${C.navy}` : `2px solid ${C.hair}`,
       borderRadius: 12,
-      background: active ? '#f0f7e8' : '#faf8f3',
-      color: active ? C.greenDark : C.inkSoft,
+      background: active ? C.navy : C.cream,
+      color: active ? C.yellow : C.inkSoft,
       fontSize: 16, fontWeight: active ? 800 : 600,
       fontFamily: FONT, cursor: 'pointer', transition: 'all 0.15s',
     }}>
@@ -316,7 +320,7 @@ function SignOverlay({ onDone, onClose }) {
           {[1, 2, 3].map(n => (
             <div key={n} style={{
               flex: 1, height: 4, borderRadius: 99,
-              background: n <= step ? C.green : C.hair,
+              background: n <= step ? C.navy : C.hair,
               transition: 'background 0.3s',
             }} />
           ))}
@@ -359,7 +363,7 @@ function SignOverlay({ onDone, onClose }) {
                   disabled={!step2ok} onClick={goNext}>다음</button>
               </div>
               {onlyDigits(phone).length > 0 && !step2ok && (
-                <p style={{ fontSize: 12, color: '#d9534f', margin: '8px 2px 0', fontWeight: 600 }}>
+                <p style={{ fontSize: 12, color: C.red, margin: '8px 2px 0', fontWeight: 600 }}>
                   010으로 시작하는 11자리 숫자를 입력해 주세요.
                 </p>
               )}
@@ -381,18 +385,18 @@ function SignOverlay({ onDone, onClose }) {
                     <label style={sheetSt.label}>장애인 등록번호</label>
                     <input style={{ ...sheetSt.input }} value={regNum}
                       onChange={e => setRegNum(e.target.value)} placeholder="등록번호 입력" />
-                    <div style={{ textAlign: 'center', fontSize: 13, color: C.serifSoft, fontWeight: 700, margin: '0 0 14px' }}>또는</div>
+                    <div style={{ textAlign: 'center', fontSize: 13, color: C.navySoft, fontWeight: 700, margin: '0 0 14px' }}>또는</div>
                     <label style={sheetSt.label}>주민등록번호</label>
                     <input style={{ ...sheetSt.input }}
                       value={idNum} inputMode="numeric" maxLength={14}
                       onChange={e => setIdNum(formatRrn(e.target.value))}
                       placeholder="000000-0000000" />
                     {onlyRrn(idNum).length === 13 && !isValidRRN(idNum) && (
-                      <p style={{ fontSize: 12, color: '#d9534f', margin: '-12px 2px 12px', fontWeight: 600 }}>
+                      <p style={{ fontSize: 12, color: C.red, margin: '-12px 2px 12px', fontWeight: 600 }}>
                         올바른 주민등록번호가 아닙니다.
                       </p>
                     )}
-                    <p style={{ fontSize: 12, color: C.serifSoft, lineHeight: 1.65, margin: '0 0 16px' }}>
+                    <p style={{ fontSize: 12, color: C.navySoft, lineHeight: 1.65, margin: '0 0 16px' }}>
                       장애인 등록번호를 모르실 경우 주민번호를 기입하시면 됩니다.<br />
                       장애인 혜택 적용을 위해 필요합니다.
                     </p>
@@ -423,29 +427,21 @@ function LiveCounter({ baseCount = 0, variant = 'float' }) {
     : { position: 'absolute', right: 40, top: '50%', transform: 'translateY(-50%)', zIndex: 4, minWidth: 248 }
   return (
     <div style={wrap}>
-      <div style={{ background: 'rgba(18,16,12,0.42)', backdropFilter: 'blur(9px)', WebkitBackdropFilter: 'blur(9px)', border: '1px solid rgba(255,255,255,0.24)', borderRadius: 16, padding: isInline ? '16px 18px' : '20px 24px', boxShadow: '0 12px 40px rgba(0,0,0,0.32)', fontFamily: FONT }}>
+      <div style={{ background: 'rgba(255,255,255,0.08)', backdropFilter: 'blur(9px)', WebkitBackdropFilter: 'blur(9px)', border: '1px solid rgba(255,255,255,0.22)', borderRadius: 16, padding: isInline ? '16px 18px' : '20px 24px', boxShadow: '0 12px 40px rgba(0,0,0,0.32)', fontFamily: FONT }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
           <span style={{ position: 'relative', width: 8, height: 8 }}>
-            <span style={{ position: 'absolute', inset: 0, borderRadius: '50%', background: C.live }} />
-            <span style={{ position: 'absolute', inset: 0, borderRadius: '50%', background: C.live, animation: 'petPulse 1.8s ease-out infinite' }} />
+            <span style={{ position: 'absolute', inset: 0, borderRadius: '50%', background: C.yellow }} />
+            <span style={{ position: 'absolute', inset: 0, borderRadius: '50%', background: C.yellow, animation: 'petPulse 1.8s ease-out infinite' }} />
           </span>
           <span style={{ fontSize: 11.5, fontWeight: 700, letterSpacing: '0.12em', color: 'rgba(255,255,255,0.82)' }}>LIVE · 실시간 청원 현황</span>
         </div>
         <div style={{ color: 'rgba(255,255,255,0.72)', fontSize: 13, marginBottom: 2 }}>현재</div>
         <div style={{ display: 'flex', alignItems: 'baseline', gap: 4 }}>
-          <span style={{ fontSize: isInline ? 40 : 50, fontWeight: 900, color: '#fff', lineHeight: 1, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.5px' }}>{baseCount.toLocaleString()}</span>
+          <span style={{ fontSize: isInline ? 40 : 50, fontWeight: 900, color: C.yellow, lineHeight: 1, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.5px' }}>{baseCount.toLocaleString()}</span>
           <span style={{ fontSize: 20, fontWeight: 800, color: '#fff' }}>명</span>
         </div>
         <div style={{ color: 'rgba(255,255,255,0.82)', fontSize: 13.5, marginTop: 6 }}>이 서명에 동참하고 있습니다</div>
       </div>
-    </div>
-  )
-}
-
-function Ph({ label, style }) {
-  return (
-    <div style={{ position: 'relative', background: 'repeating-linear-gradient(45deg,#e9e6df,#e9e6df 12px,#e2ded6 12px,#e2ded6 24px),#e9e6df', color: '#9b9486', fontSize: 12, letterSpacing: '0.06em', display: 'flex', alignItems: 'center', justifyContent: 'center', textAlign: 'center', overflow: 'hidden', fontFamily: FONT, ...style }}>
-      <span style={{ background: 'rgba(255,255,255,0.78)', padding: '4px 10px', borderRadius: 2, fontWeight: 500 }}>{label}</span>
     </div>
   )
 }
@@ -573,7 +569,7 @@ export default function PetitionTab({ isMobile, loading, LoadingUI, onGoSign }) 
             onAnimationComplete={() => setTimeout(() => setSubmitError(null), 2500)}
             style={{
               position: 'fixed', bottom: 32, left: '50%', transform: 'translateX(-50%)',
-              background: '#2f2f2f', color: '#fff', borderRadius: 12,
+              background: C.navyDark, color: '#fff', borderRadius: 12,
               padding: '14px 24px', fontSize: 14, fontWeight: 700,
               fontFamily: FONT, zIndex: 20000, whiteSpace: 'nowrap',
               boxShadow: '0 8px 24px rgba(0,0,0,0.3)',
@@ -584,14 +580,15 @@ export default function PetitionTab({ isMobile, loading, LoadingUI, onGoSign }) 
         )}
       </AnimatePresence>
 
+      {/* 상단 고정형 서명 CTA 바 */}
       <div style={{ width: '100%', display: 'flex', justifyContent: 'center', padding: isMobile ? '20px 20px 16px' : '32px 40px 24px', fontFamily: FONT, boxSizing: 'border-box' }}>
         <div style={{ width: '100%', maxWidth: isMobile ? '100%' : 640 }}>
           {loading ? LoadingUI : (
             <button type="button" onClick={goSign}
-              style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, width: '100%', padding: isMobile ? '15px 24px' : '17px 32px', background: C.yellow, color: C.yellowText, border: 'none', borderRadius: 12, fontSize: isMobile ? 16 : 18, fontWeight: 800, fontFamily: FONT, letterSpacing: '-0.5px', cursor: 'pointer', boxShadow: '0 4px 20px rgba(0,112,74,0.35)', transition: 'transform 0.15s, box-shadow 0.15s' }}
-              onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 8px 28px rgba(0,112,74,0.45)' }}
-              onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 4px 20px rgba(0,112,74,0.35)' }}>
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={C.yellowText} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9" /><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z" /></svg>
+              style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, width: '100%', padding: isMobile ? '15px 24px' : '17px 32px', background: C.yellow, color: C.navyDark, border: 'none', borderRadius: 12, fontSize: isMobile ? 16 : 18, fontWeight: 900, fontFamily: FONT, letterSpacing: '-0.5px', cursor: 'pointer', boxShadow: '0 4px 20px rgba(255,212,0,0.45)', transition: 'transform 0.15s, box-shadow 0.15s' }}
+              onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 8px 28px rgba(255,212,0,0.55)' }}
+              onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 4px 20px rgba(255,212,0,0.45)' }}>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={C.navyDark} strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9" /><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z" /></svg>
               청원 서명 참여하기
             </button>
           )}
@@ -601,61 +598,121 @@ export default function PetitionTab({ isMobile, loading, LoadingUI, onGoSign }) 
       <div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', background: '#fff', fontFamily: FONT }}>
         <div style={{ width: '100%', maxWidth: COL, display: 'flex', flexDirection: 'column', alignItems: 'stretch', gap: 0 }}>
 
-          <div style={{ position: 'relative', minHeight: isMobile ? 460 : 520, display: 'flex', alignItems: 'center', overflow: 'hidden' }}>
-            <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg,#1E3932 0%,#00704A 60%,#00A862 100%)' }} />
-            <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(90deg,rgba(0,0,0,0.45) 0%,rgba(0,0,0,0.15) 60%,rgba(0,0,0,0) 100%)' }} />
+          {/* ── 히어로: 네이비 배경 + 옐로 강조 헤드라인 ── */}
+          <div style={{ position: 'relative', minHeight: isMobile ? 480 : 540, display: 'flex', alignItems: 'center', overflow: 'hidden' }}>
+            <div style={{ position: 'absolute', inset: 0, background: `linear-gradient(135deg, ${C.navyDark} 0%, ${C.navy} 55%, ${C.navySoft} 100%)` }} />
+            {/* 장식: 우상단 옐로 글로우 */}
+            <div style={{ position: 'absolute', right: -60, top: -60, width: 280, height: 280, borderRadius: '50%', background: 'radial-gradient(circle, rgba(255,212,0,0.16) 0%, rgba(255,212,0,0) 70%)' }} />
+
             {!isMobile && <LiveCounter baseCount={liveCount} variant="float" />}
-            <div style={{ position: 'relative', zIndex: 3, padding: isMobile ? '28px 24px' : '0 48px', width: isMobile ? '100%' : 'auto' }}>
+            <div style={{ position: 'relative', zIndex: 3, padding: isMobile ? '32px 24px' : '0 48px', width: isMobile ? '100%' : 'auto' }}>
               {isMobile && <LiveCounter baseCount={liveCount} variant="inline" />}
-              <div style={{ color: '#D4E9E2', fontSize: 13, marginBottom: 18, opacity: 0.95 }}>장애인 의료비 부담 경감·재활치료 접근권 보장 청원</div>
-              <h1 style={{ color: '#fff', fontWeight: 700, fontSize: isMobile ? 28 : 42, lineHeight: 1.33, letterSpacing: '-0.01em', textShadow: '0 2px 18px rgba(0,0,0,0.25)', margin: 0 }}>치료받을 권리가<br />비용과 횟수에<br />막혀서는 안 됩니다</h1>
-              <p style={{ marginTop: 20, color: '#D4E9E2', fontSize: 14.5, lineHeight: 1.85, fontWeight: 300, maxWidth: 440 }}>
-                <span style={{ display: 'block', color: '#A8D5BE', fontSize: 13, marginBottom: 6 }}>청원인 (가칭) 부산의료복지사회적협동조합 및 조합원 일동</span>
+              <div style={{
+                display: 'inline-flex', alignItems: 'center', gap: 8,
+                background: 'rgba(255,212,0,0.14)', border: '1px solid rgba(255,212,0,0.4)',
+                borderRadius: 999, padding: '6px 14px', marginBottom: 20,
+              }}>
+                <span style={{ width: 6, height: 6, borderRadius: '50%', background: C.yellow }} />
+                <span style={{ color: C.yellow, fontSize: 12.5, fontWeight: 700, letterSpacing: '0.04em' }}>
+                  장애인 의료비 부담 경감 · 재활치료 접근권 보장 청원
+                </span>
+              </div>
+              <h1 style={{ color: '#fff', fontWeight: 800, fontSize: isMobile ? 28 : 42, lineHeight: 1.32, letterSpacing: '-0.01em', margin: 0 }}>
+                치료받을 권리가<br />
+                <span style={{ color: C.yellow }}>비용과 횟수</span>에<br />
+                막혀서는 안 됩니다
+              </h1>
+              <p style={{ marginTop: 22, color: 'rgba(255,255,255,0.78)', fontSize: 14.5, lineHeight: 1.85, fontWeight: 300, maxWidth: 440 }}>
+                <span style={{ display: 'block', color: C.yellow, fontSize: 13, fontWeight: 700, marginBottom: 8 }}>
+                  청원인 (가칭) 부산의료복지사회적협동조합 및 조합원 일동
+                </span>
                 장애인은 더 자주, 더 오래 치료받아야 하지만,<br />본인부담은 비장애인과 다르지 않습니다.
               </p>
-              <button onClick={goSign} style={{ marginTop: 26, display: 'inline-flex', alignItems: 'center', gap: 36, background: '#fff', border: 'none', borderRadius: 4, padding: '12px 22px', fontSize: 14, fontWeight: 800, color: C.green, cursor: 'pointer', fontFamily: FONT }}>
-                서명하기 <span style={{ fontSize: 16 }}>→</span>
+              <button onClick={goSign} style={{ marginTop: 28, display: 'inline-flex', alignItems: 'center', gap: 10, background: C.yellow, border: 'none', borderRadius: 8, padding: '14px 26px', fontSize: 15, fontWeight: 900, color: C.navyDark, cursor: 'pointer', fontFamily: FONT, letterSpacing: '-0.2px' }}>
+                서명하기 <span style={{ fontSize: 17 }}>→</span>
               </button>
             </div>
           </div>
 
+          {/* ── 청원 취지 ── */}
           <div style={{ background: '#fff', padding: isMobile ? '48px 24px 40px' : '60px 40px 52px' }}>
             <div style={{ maxWidth: 660, margin: '0 auto', textAlign: 'center' }}>
-              <span style={{ display: 'inline-block', fontSize: 12, fontWeight: 700, letterSpacing: '0.18em', color: C.greenDark, border: '1px solid ' + C.green, borderRadius: 999, padding: '4px 14px', marginBottom: 18 }}>청원 취지</span>
+              <span style={{ display: 'inline-block', fontSize: 12, fontWeight: 800, letterSpacing: '0.18em', color: C.navy, background: C.cream, border: `1px solid ${C.hair}`, borderRadius: 999, padding: '5px 16px', marginBottom: 20 }}>청원 취지</span>
               <p style={{ fontSize: 15, color: C.inkSoft, lineHeight: 1.95, margin: 0 }}>장애인은 진료·재활·검진 등 의료 수요가 비장애인보다 크지만, 의료비 본인부담은 거의 같거나 오히려 더 무겁습니다. 특히 재활치료와 치과 진료 영역에서 제도가 장애인에게 불리하게 작동하고 있습니다. 이에 장애인 당사자들이 조합 단체로서, 의료비 부담 경감과 의료 접근권 보장을 위한 법·제도 개선을 청원합니다.</p>
-              <div style={{ marginTop: 18, fontSize: 12.5, color: '#9a9a9a' }}>청원 대상 · 국회 / 보건복지부 / 부산광역시</div>
+              <div style={{ marginTop: 18, fontSize: 12.5, color: '#9a9aab', fontWeight: 600 }}>청원 대상 · 국회 / 보건복지부 / 부산광역시</div>
             </div>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', background: C.cream }}>
-            <div style={{ padding: isMobile ? '40px 24px' : '60px 48px' }}>
-              <h2 style={{ fontFamily: SERIF, color: C.serif, fontWeight: 800, fontSize: isMobile ? 23 : 26, lineHeight: 1.42, margin: '0 0 24px' }}>장애라는 이유로<br />줄어들지 않는 의료비 부담</h2>
-              {REASONS.map(([h, b], i) => (<p key={i} style={{ color: C.serif, fontSize: 14, lineHeight: 1.95, margin: '0 0 16px' }}><b style={{ fontWeight: 700, color: C.greenDark }}>{h}</b> {b}</p>))}
-              <p style={{ marginTop: 22, fontSize: 11.5, lineHeight: 1.7, color: C.serifSoft }}>* 도수치료 관리급여 본인부담률·횟수 제한은 2026년 7월 시행 기준이며, 의학적 사유에 따라 연 24회까지 적용됩니다.</p>
-            </div>
-          </div>
-
-          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', background: '#fff' }}>
-            <div style={{ padding: isMobile ? '40px 24px' : '64px 48px' }}>
-              <h2 style={{ color: C.steel, fontWeight: 700, fontSize: isMobile ? 22 : 25, lineHeight: 1.42, margin: '0 0 26px' }}>치료받을 권리를<br />비용이 막지 않도록</h2>
-              {ASKS.map(([h, b], i) => (
-                <div key={i} style={{ display: 'flex', gap: 14, marginBottom: 18 }}>
-                  <div style={{ flex: '0 0 26px', height: 26, borderRadius: '50%', background: C.steel, color: '#fff', fontSize: 13, fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: 2 }}>{i + 1}</div>
-                  <div style={{ fontSize: 14, lineHeight: 1.85, color: '#4a4a4a' }}><b style={{ color: C.steelDark, fontWeight: 700 }}>{h}</b> — {b}</div>
+          {/* ── 문제 제기: 네이비 카드 + 옐로 넘버 칩 ── */}
+          <div style={{ background: C.cream, padding: isMobile ? '40px 24px' : '60px 48px' }}>
+            <h2 style={{ fontFamily: SERIF, color: C.navyDark, fontWeight: 800, fontSize: isMobile ? 23 : 27, lineHeight: 1.42, margin: '0 0 28px', textAlign: isMobile ? 'left' : 'left' }}>
+              장애라는 이유로<br />줄어들지 않는 의료비 부담
+            </h2>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+              {REASONS.map(([h, b], i) => (
+                <div key={i} style={{
+                  background: '#fff', borderRadius: 14, padding: isMobile ? '18px 18px' : '20px 24px',
+                  display: 'flex', gap: 16, alignItems: 'flex-start',
+                  border: `1px solid ${C.hair}`,
+                }}>
+                  <div style={{
+                    flex: '0 0 30px', height: 30, borderRadius: 8,
+                    background: C.navy, color: C.yellow,
+                    fontSize: 13, fontWeight: 900, fontFamily: FONT,
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  }}>
+                    {String(i + 1).padStart(2, '0')}
+                  </div>
+                  <div>
+                    <div style={{ fontWeight: 800, color: C.ink, fontSize: 14.5, marginBottom: 4, lineHeight: 1.6 }}>{h}</div>
+                    <div style={{ color: C.inkSoft, fontSize: 13.5, lineHeight: 1.85 }}>{b}</div>
+                  </div>
                 </div>
               ))}
             </div>
+            <p style={{ marginTop: 18, fontSize: 11.5, lineHeight: 1.7, color: '#9a9aab' }}>* 도수치료 관리급여 본인부담률·횟수 제한은 2026년 7월 시행 기준이며, 의학적 사유에 따라 연 24회까지 적용됩니다.</p>
           </div>
 
-          <div style={{ background: C.cream, padding: isMobile ? '44px 24px 52px' : '60px 40px 68px', textAlign: 'center' }}>
-            <p style={{ fontFamily: SERIF, color: C.serif, fontSize: isMobile ? 20 : 24, fontWeight: 800, lineHeight: 1.45, margin: '0 0 24px' }}>치료받을 권리가 비용과 횟수에<br />막혀서는 안 됩니다</p>
+          {/* ── 경고 강조 배너: 레드 ── */}
+          <div style={{ background: C.redSoft, padding: isMobile ? '28px 24px' : '32px 48px', display: 'flex', alignItems: 'center', gap: 16, borderTop: `1px solid ${C.hair}`, borderBottom: `1px solid ${C.hair}` }}>
+            <div style={{
+              flex: '0 0 44px', height: 44, borderRadius: '50%', background: C.red,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontSize: 22, color: '#fff', fontWeight: 900,
+            }}>!</div>
+            <div>
+              <div style={{ color: C.red, fontWeight: 800, fontSize: isMobile ? 15.5 : 17, marginBottom: 4 }}>
+                치료가 더 필요한 사람이 더 큰 비용을 떠안고 있습니다
+              </div>
+              <div style={{ color: '#8a3a40', fontSize: 13, lineHeight: 1.7 }}>
+                제도가 바뀌지 않으면, 같은 부담은 계속 반복됩니다.
+              </div>
+            </div>
+          </div>
+
+          {/* ── 청원 요구사항 ── */}
+          <div style={{ background: '#fff', padding: isMobile ? '40px 24px' : '64px 48px' }}>
+            <h2 style={{ color: C.navyDark, fontWeight: 800, fontSize: isMobile ? 22 : 25, lineHeight: 1.42, margin: '0 0 28px' }}>치료받을 권리를<br />비용이 막지 않도록</h2>
+            {ASKS.map(([h, b], i) => (
+              <div key={i} style={{ display: 'flex', gap: 14, marginBottom: 18 }}>
+                <div style={{ flex: '0 0 26px', height: 26, borderRadius: '50%', background: C.navy, color: C.yellow, fontSize: 13, fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: 2 }}>{i + 1}</div>
+                <div style={{ fontSize: 14, lineHeight: 1.85, color: '#4a4a4a' }}><b style={{ color: C.navyDark, fontWeight: 700 }}>{h}</b> — {b}</div>
+              </div>
+            ))}
+          </div>
+
+          {/* ── 클로징 CTA: 네이비 + 옐로 ── */}
+          <div style={{ background: `linear-gradient(135deg, ${C.navyDark} 0%, ${C.navy} 100%)`, padding: isMobile ? '44px 24px 52px' : '60px 40px 68px', textAlign: 'center' }}>
+            <p style={{ fontFamily: SERIF, color: '#fff', fontSize: isMobile ? 20 : 24, fontWeight: 800, lineHeight: 1.45, margin: '0 0 24px' }}>
+              치료받을 권리가 <span style={{ color: C.yellow }}>비용과 횟수</span>에<br />막혀서는 안 됩니다
+            </p>
             <button onClick={goSign}
-              style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 12, width: '100%', maxWidth: 440, padding: isMobile ? '18px 28px' : '20px 40px', background: C.green, color: '#fff', border: 'none', borderRadius: 14, fontSize: isMobile ? 17 : 20, fontWeight: 800, fontFamily: FONT, letterSpacing: '-0.4px', cursor: 'pointer', boxShadow: '0 8px 28px rgba(0,112,74,0.40)', transition: 'transform 0.15s, box-shadow 0.15s' }}
-              onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 12px 36px rgba(0,112,74,0.5)' }}
-              onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 8px 28px rgba(0,112,74,0.4)' }}>
+              style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 12, width: '100%', maxWidth: 440, padding: isMobile ? '18px 28px' : '20px 40px', background: C.yellow, color: C.navyDark, border: 'none', borderRadius: 14, fontSize: isMobile ? 17 : 20, fontWeight: 900, fontFamily: FONT, letterSpacing: '-0.4px', cursor: 'pointer', boxShadow: '0 8px 28px rgba(255,212,0,0.35)', transition: 'transform 0.15s, box-shadow 0.15s' }}
+              onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 12px 36px rgba(255,212,0,0.45)' }}
+              onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 8px 28px rgba(255,212,0,0.35)' }}>
               서명 페이지로 이동 <span style={{ fontSize: 20 }}>→</span>
             </button>
-            <p style={{ marginTop: 16, fontSize: 13, color: C.inkSoft, lineHeight: 1.7 }}>위 청원이 입법과 정책에 반영될 수 있도록 시민 여러분의 동참을 청원합니다.</p>
+            <p style={{ marginTop: 16, fontSize: 13, color: 'rgba(255,255,255,0.65)', lineHeight: 1.7 }}>위 청원이 입법과 정책에 반영될 수 있도록 시민 여러분의 동참을 청원합니다.</p>
           </div>
 
         </div>
