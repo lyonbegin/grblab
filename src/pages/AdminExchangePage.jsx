@@ -130,10 +130,27 @@ export default function AdminExchangePage() {
     setError(null)
     setConfirmed(false)
     setManualId('')
+    setSentCode(null)
   }, [])
 
   // 이름에서 부가정보(::::) 제거
   const displayName = info ? String(info.name || '').split('::::')[0] : ''
+
+  // 담당자 폰의 문자 앱을 열어 인증번호를 발송 (외부 SMS 서비스 불필요)
+  const [sentCode, setSentCode] = useState(null)
+  const sendVerifySms = useCallback(() => {
+    if (!info || !info.phone) {
+      setError('전화번호 정보가 없습니다.')
+      return
+    }
+    const code = String(Math.floor(10 + Math.random() * 90)) // 2자리 (10~99)
+    setSentCode(code)
+    const body = encodeURIComponent(`[부산의료복지사회적협동조합] 본인확인 인증번호 ${code}`)
+    const phone = String(info.phone).replace(/\D/g, '')
+    // iOS는 sms:번호&body=, 그 외는 sms:번호?body= 를 더 잘 처리하지만
+    // 대부분의 모바일에서 ? 형식이 동작합니다.
+    window.location.href = `sms:${phone}?body=${body}`
+  }, [info])
 
   return (
     <div style={{ minHeight: '100vh', background: C.cream, fontFamily: FONT, padding: '20px 16px 40px' }}>
@@ -265,6 +282,25 @@ export default function AdminExchangePage() {
                   기프트카드 지급 후 아래 버튼을 눌러 주세요.
                 </div>
               </div>
+            )}
+
+            {/* 인증번호 발송 (담당자 폰 문자 앱) */}
+            {!info.exchanged && (
+              <>
+                <button onClick={sendVerifySms} disabled={loading}
+                  style={{ width: '100%', padding: 15, border: `2px solid ${C.navy}`, borderRadius: 12, background: '#fff', color: C.navy, fontSize: 15.5, fontWeight: 900, fontFamily: FONT, cursor: 'pointer', marginBottom: 10 }}>
+                  📩 본인확인 인증문자 보내기
+                </button>
+                {sentCode && (
+                  <div style={{ background: '#FFF6E0', border: `1px solid ${C.yellow}66`, borderRadius: 10, padding: '12px 14px', marginBottom: 12, textAlign: 'center' }}>
+                    <div style={{ fontSize: 12, color: C.inkSoft, fontWeight: 700, marginBottom: 2 }}>발송한 인증번호</div>
+                    <div style={{ fontSize: 22, fontWeight: 900, color: C.ink, letterSpacing: '0.2em', fontVariantNumeric: 'tabular-nums' }}>{sentCode}</div>
+                    <div style={{ fontSize: 11.5, color: C.inkSoft, marginTop: 4, lineHeight: 1.5 }}>
+                      참여자가 받은 문자의 번호와 같은지 확인하세요.
+                    </div>
+                  </div>
+                )}
+              </>
             )}
 
             {/* 버튼 */}
