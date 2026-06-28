@@ -299,15 +299,22 @@ function SignOverlay({ onDone, onClose }) {
   const [idNum, setIdNum] = useState('')
   const [submitted, setSubmitted] = useState(false)
 
-  const step1ok = name.trim().length > 0
-  const step2ok = isPhone(phone)
+  // STEP1: 이름 + 전화번호를 한 화면에 함께 노출 → 둘 사이는 키보드가 안 내려감
+  const step1ok = name.trim().length > 0 && isPhone(phone)
+  // STEP2: 장애여부
   const rrnFilled = onlyRrn(idNum).length > 0
-  const step3ok = disabled ? true : (regNum.trim().length >= 4 || (rrnFilled && isValidRRN(idNum)))
+  const step2ok = disabled ? true : (regNum.trim().length >= 4 || (rrnFilled && isValidRRN(idNum)))
 
-  const goNext = () => setStep(s => s + 1)
+  // STEP1 → STEP2 전환 시점에만 키보드가 한 번 내려갑니다(장애여부는 입력칸이 아니라 선택).
+  const goNext = () => {
+    if (document.activeElement && typeof document.activeElement.blur === 'function') {
+      document.activeElement.blur()
+    }
+    setStep(2)
+  }
+
   const handleDone = () => {
     if (submitted) return
-    // 시트를 닫기 전에 포커스를 명시적으로 해제해 키보드를 먼저 내립니다.
     if (document.activeElement && typeof document.activeElement.blur === 'function') {
       document.activeElement.blur()
     }
@@ -323,8 +330,9 @@ function SignOverlay({ onDone, onClose }) {
         style={sheetSt.sheet} onClick={e => e.stopPropagation()}>
         <div style={sheetSt.grip} />
 
+        {/* 진행바 2칸 */}
         <div style={{ display: 'flex', gap: 5, marginBottom: 22 }}>
-          {[1, 2, 3].map(n => (
+          {[1, 2].map(n => (
             <div key={n} style={{
               flex: 1, height: 4, borderRadius: 99,
               background: n <= step ? C.navy : C.hair,
@@ -333,56 +341,41 @@ function SignOverlay({ onDone, onClose }) {
           ))}
         </div>
 
-        {/* 세 스텝을 모두 항상 마운트해 두고 display로만 전환합니다.
-            이렇게 하면 input이 한 번도 unmount되지 않아서,
-            스텝을 넘길 때마다 포커스가 끊기고 키보드가 깜빡이는 문제가 없어집니다. */}
+        {/* 두 스텝 모두 항상 마운트, display로만 전환 (input 재생성 없음) */}
+
+        {/* STEP 1 — 이름 + 전화번호 한 화면 */}
         <div style={{ display: step === 1 ? 'block' : 'none' }}>
-          <div style={sheetSt.stepLabel}>STEP 1 / 3</div>
+          <div style={sheetSt.stepLabel}>STEP 1 / 2</div>
           <div style={sheetSt.title}>청원 서명 참여</div>
           <div style={sheetSt.desc}>
             이 청원은 <b style={{ color: C.ink }}>(가칭) 부산의료복지사회적협동조합</b> 이름으로 진행합니다.<br />
             조합 설립과 청원에 동의합니다.
           </div>
-          <label style={sheetSt.label}>이름</label>
-          <div style={{ display: 'flex', gap: 10, alignItems: 'stretch' }}>
-            <input value={name} autoComplete="name"
-              onChange={e => setName(e.target.value)} placeholder="이름"
-              style={{ ...sheetSt.input, marginBottom: 0, flex: 1 }} />
-            <button type="button"
-              style={{ ...sheetSt.nextBtn, width: 76, flexShrink: 0, padding: '0', ...(step1ok ? sheetSt.activeBtn : sheetSt.disabledBtn) }}
-              disabled={!step1ok}
-              onMouseDown={e => e.preventDefault()}
-              onTouchStart={e => e.preventDefault()}
-              onClick={goNext}>다음</button>
-          </div>
-        </div>
 
-        <div style={{ display: step === 2 ? 'block' : 'none' }}>
-          <div style={sheetSt.stepLabel}>STEP 2 / 3</div>
-          <div style={sheetSt.title}>연락처</div>
-          <div style={sheetSt.desc}>서명 확인을 위해 휴대폰 번호를 입력해 주세요.</div>
+          <label style={sheetSt.label}>이름</label>
+          <input value={name} autoComplete="name"
+            onChange={e => setName(e.target.value)} placeholder="이름"
+            style={{ ...sheetSt.input }} />
+
           <label style={sheetSt.label}>휴대폰 번호</label>
-          <div style={{ display: 'flex', gap: 10, alignItems: 'stretch' }}>
-            <input style={{ ...sheetSt.input, marginBottom: 0, flex: 1 }}
-              value={phone} inputMode="numeric" maxLength={13}
-              onChange={e => setPhone(formatPhone(e.target.value))}
-              placeholder="숫자만 입력 (010…)" />
-            <button type="button"
-              style={{ ...sheetSt.nextBtn, width: 76, flexShrink: 0, padding: '0', ...(step2ok ? sheetSt.activeBtn : sheetSt.disabledBtn) }}
-              disabled={!step2ok}
-              onMouseDown={e => e.preventDefault()}
-              onTouchStart={e => e.preventDefault()}
-              onClick={goNext}>다음</button>
-          </div>
-          {onlyDigits(phone).length > 0 && !step2ok && (
-            <p style={{ fontSize: 12, color: C.red, margin: '8px 2px 0', fontWeight: 600 }}>
+          <input style={{ ...sheetSt.input, marginBottom: 8 }}
+            value={phone} inputMode="numeric" maxLength={13}
+            onChange={e => setPhone(formatPhone(e.target.value))}
+            placeholder="숫자만 입력 (010…)" />
+          {onlyDigits(phone).length > 0 && !isPhone(phone) && (
+            <p style={{ fontSize: 12, color: C.red, margin: '0 2px 14px', fontWeight: 600 }}>
               010으로 시작하는 11자리 숫자를 입력해 주세요.
             </p>
           )}
+
+          <button type="button"
+            style={{ ...sheetSt.nextBtn, marginTop: 12, ...(step1ok ? sheetSt.activeBtn : sheetSt.disabledBtn) }}
+            disabled={!step1ok} onClick={goNext}>다음</button>
         </div>
 
-        <div style={{ display: step === 3 ? 'block' : 'none' }}>
-          <div style={sheetSt.stepLabel}>STEP 3 / 3</div>
+        {/* STEP 2 — 장애 여부 + 완료 */}
+        <div style={{ display: step === 2 ? 'block' : 'none' }}>
+          <div style={sheetSt.stepLabel}>STEP 2 / 2</div>
           <div style={sheetSt.title}>장애 여부 선택</div>
           <div style={{ display: 'flex', gap: 10, marginBottom: 24 }}>
             <SegmentBtn label="장애인" active={!disabled} onClick={() => setDisabled(false)} />
@@ -392,7 +385,8 @@ function SignOverlay({ onDone, onClose }) {
           {/* 장애인/비장애인 토글도 input을 unmount하지 않고 display로만 숨깁니다 */}
           <div style={{ display: disabled ? 'none' : 'block' }}>
             <label style={sheetSt.label}>장애인 등록번호</label>
-            <input style={{ ...sheetSt.input }} value={regNum}
+            <input style={{ ...sheetSt.input }}
+              value={regNum}
               onChange={e => setRegNum(e.target.value)} placeholder="등록번호 입력" />
             <div style={{ textAlign: 'center', fontSize: 13, color: C.navySoft, fontWeight: 700, margin: '0 0 14px' }}>또는</div>
             <label style={sheetSt.label}>주민등록번호</label>
@@ -413,8 +407,8 @@ function SignOverlay({ onDone, onClose }) {
 
           {/* 완료 버튼 — 항상 하나만 */}
           <button type="button"
-            style={{ ...sheetSt.nextBtn, ...(step3ok && !submitted ? sheetSt.activeBtn : sheetSt.disabledBtn) }}
-            disabled={!step3ok || submitted}
+            style={{ ...sheetSt.nextBtn, ...(step2ok && !submitted ? sheetSt.activeBtn : sheetSt.disabledBtn) }}
+            disabled={!step2ok || submitted}
             onClick={handleDone}>
             완료
           </button>
