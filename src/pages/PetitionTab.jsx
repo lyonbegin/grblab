@@ -280,9 +280,9 @@ function DoneOverlay({ total, onClose, couponReady, signatureId, isNew, exchange
     {String(signatureId)}
   </div>
 </div>
-              <div style={{ marginTop: 12, fontSize: 11.5, color: 'rgba(255,255,255,0.72)', lineHeight: 1.6 }}>
-                이 화면을 <b style={{ color: C.yellow }}>현장 담당자</b>에게 보여주세요.
-              </div>
+<div style={{ marginTop: 12, fontSize: 16, color: '#fff', lineHeight: 1.6, fontWeight: 700, background: 'rgba(255,255,255,0.12)', borderRadius: 10, padding: '10px 14px', textAlign: 'center' }}>
+  이 화면을 <b style={{ color: C.yellow, fontSize: 18 }}>서명 도우미</b>에게 보여주세요.
+</div>
 
               {/* Web OTP로 받은 인증번호 자동 표시 */}
               {otpCode && (
