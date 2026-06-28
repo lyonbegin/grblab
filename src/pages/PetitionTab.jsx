@@ -357,6 +357,93 @@ function SegmentBtn({ label, active, onClick }) {
   )
 }
 
+// ─── 청원 전문 모달 ──────────────────────────────────────────────────────────
+function PetitionTextModal({ onClose }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+      onClick={onClose}
+      style={{
+        position: 'fixed', inset: 0, zIndex: 11000,
+        background: 'rgba(10,12,24,0.7)',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        fontFamily: FONT, padding: 18,
+      }}>
+      <motion.div
+        initial={{ scale: 0.94, opacity: 0, y: 20 }} animate={{ scale: 1, opacity: 1, y: 0 }} exit={{ scale: 0.95, opacity: 0 }}
+        transition={{ type: 'spring', damping: 26, stiffness: 300 }}
+        onClick={e => e.stopPropagation()}
+        style={{
+          background: '#fff', borderRadius: 18, width: '100%', maxWidth: 460,
+          maxHeight: '85vh', display: 'flex', flexDirection: 'column', overflow: 'hidden',
+          boxShadow: '0 32px 80px rgba(0,0,0,0.45)',
+        }}>
+        {/* 헤더 */}
+        <div style={{ background: C.navy, padding: '20px 22px', flexShrink: 0 }}>
+          <div style={{ fontSize: 12, fontWeight: 700, color: C.yellow, letterSpacing: '0.06em', marginBottom: 5 }}>
+            장애인의료지원법 제정 청원
+          </div>
+          <div style={{ fontSize: 16.5, fontWeight: 900, color: '#fff', lineHeight: 1.4, letterSpacing: '-0.3px' }}>
+            장애인 의료비 부담 경감 및<br />재활치료 접근권 보장을 위한 청원
+          </div>
+          <div style={{ fontSize: 11.5, color: 'rgba(255,255,255,0.7)', marginTop: 8, lineHeight: 1.6 }}>
+            청원인 부산의료복지사회적협동조합 및 조합원 일동<br />
+            청원 대상 국회 / 보건복지부 / 부산광역시
+          </div>
+        </div>
+
+        {/* 본문 (스크롤) */}
+        <div style={{ padding: '22px 22px 8px', overflowY: 'auto', flex: 1 }}>
+          <PetitionSection title="청원 취지">
+            장애인은 진료·재활·검진 등 의료 수요가 비장애인보다 크지만, 의료비 본인부담은 거의 같거나 오히려 더 무겁습니다. 특히 재활치료와 치과 진료 영역에서 제도가 장애인에게 불리하게 작동하고 있습니다. 이에 장애인 당사자들이 조합 단체로서, 의료비 부담 경감과 의료 접근권 보장을 위한 법·제도 개선을 청원합니다.
+          </PetitionSection>
+
+          <PetitionSection title="청원 이유">
+            <p style={pStyle}><b>첫째, 장애인 의료비 부담이 비장애인과 다르지 않습니다.</b> 장애인이라는 이유로 본인부담이 줄어드는 경우는 제한적입니다. 정작 장애로 인해 더 자주, 더 오래 치료받아야 하는 현실은 반영되지 못하고 있습니다.</p>
+            <p style={pStyle}><b>둘째, 재활치료가 비용과 횟수에 가로막혀 있습니다.</b> 대표적 재활인 도수치료는 그동안 비급여로 1회 약 10만 원을 전액 본인이 부담해 왔습니다. 2026년 7월 ‘관리급여’로 편입되었으나, 본인부담률이 95%에 이르고 연 15회(의학적 사유 시 24회)로 횟수가 제한됩니다. 수술 후 회복에 재활이 절실한 장애인이, 비용과 횟수 제한 때문에 치료를 중단해야 하는 상황이 발생합니다.</p>
+            <p style={pStyle}><b>셋째, 치과 진료에서 장애인의 부담이 특히 큽니다.</b> 장애인은 구강 관리와 치과 치료의 필요가 비장애인보다 큰 경우가 많지만, 급여 진료의 본인부담은 물론, 임플란트 등 고액 비급여 진료까지 더해져 부담이 가중됩니다. 정작 더 많은 치과 진료가 필요한 장애인이 비용 때문에 치료를 미루거나 포기하게 됩니다.</p>
+            <p style={pStyle}><b>넷째, 이름만 급여인 제도가 장애인에게 불리하게 작동합니다.</b> 관리급여처럼 명칭은 급여이나 사실상 부담을 환자에게 그대로 떠안기는 제도는, 의료 의존도가 높은 장애인에게 더 큰 부담으로 돌아옵니다. 제도의 취지가 장애인의 실제 치료권을 보장하는 방향으로 재정비되어야 합니다.</p>
+          </PetitionSection>
+
+          <PetitionSection title="청원 사항">
+            <p style={pStyle}><b>1. 장애인 의료 본인부담 경감</b> — 진료·재활·검진 등 장애인의 의료 본인부담을 장애 특성에 맞게 경감하는 법적 근거를 마련해 주십시오.</p>
+            <p style={pStyle}><b>2. 재활치료 횟수·부담 제한 완화</b> — 도수치료 등 재활치료의 본인부담률과 연간 횟수 제한을, 재활이 필요한 장애인에게 실질적 치료가 가능한 수준으로 완화해 주십시오.</p>
+            <p style={pStyle}><b>3. 장애인 치과 진료비 지원 법제화</b> — 더 많은 치과 진료가 필요한 장애인을 위해, 급여 진료는 물론 임플란트 등 비급여 진료까지 포함하여 치과 의료비를 지원하는 법적 근거를 마련해 주십시오.</p>
+            <p style={pStyle}><b>4. 장애인에게 불리한 제도의 재개정</b> — 관리급여 등 환자 부담을 과도하게 전가하는 제도를 장애인 의료 접근권 관점에서 재검토·개정해 주십시오.</p>
+          </PetitionSection>
+
+          <p style={{ ...pStyle, color: C.navy, fontWeight: 700, marginTop: 18, marginBottom: 18 }}>
+            장애인이 치료받을 권리가 비용과 횟수에 막혀서는 안 됩니다. 위 청원이 입법과 정책에 반영될 수 있도록 시민 여러분의 동참을 청원합니다.
+          </p>
+        </div>
+
+        {/* 닫기 */}
+        <div style={{ padding: '12px 22px 18px', flexShrink: 0, borderTop: `1px solid ${C.hair}` }}>
+          <button type="button" onClick={onClose}
+            style={{ width: '100%', padding: 14, border: 'none', borderRadius: 12, background: C.navy, color: '#fff', fontSize: 15.5, fontWeight: 800, fontFamily: FONT, cursor: 'pointer' }}>
+            닫기
+          </button>
+        </div>
+      </motion.div>
+    </motion.div>
+  )
+}
+
+const pStyle = { fontSize: 13, lineHeight: 1.8, color: C.inkSoft, margin: '0 0 12px' }
+
+function PetitionSection({ title, children }) {
+  return (
+    <div style={{ marginBottom: 18 }}>
+      <div style={{ fontSize: 14, fontWeight: 900, color: C.navy, marginBottom: 10, paddingBottom: 6, borderBottom: `2px solid ${C.hair}` }}>
+        {title}
+      </div>
+      {typeof children === 'string'
+        ? <p style={pStyle}>{children}</p>
+        : children}
+    </div>
+  )
+}
+
 function CheckRow({ checked, onToggle, children }) {
   return (
     <button type="button" onClick={onToggle}
@@ -397,6 +484,7 @@ function SignOverlay({ onDone, onClose }) {
   const [agreeCampaign, setAgreeCampaign] = useState(true)   // 조합설립·청원 동의 (디폴트 ON)
   const [agreePrivacy, setAgreePrivacy] = useState(false)    // 개인정보 수집·이용 (디폴트 OFF)
   const [privacyOpen, setPrivacyOpen] = useState(false)      // 개인정보 상세 펼침
+  const [petitionOpen, setPetitionOpen] = useState(false)    // 청원 전문 모달
 
   // STEP1: 이름 + 전화번호 + 청원 동의 체크
   const step1ok = name.trim().length > 0 && isPhone(phone) && agreeCampaign
@@ -424,6 +512,10 @@ function SignOverlay({ onDone, onClose }) {
   }
 
   return (
+    <>
+    <AnimatePresence>
+      {petitionOpen && <PetitionTextModal onClose={() => setPetitionOpen(false)} />}
+    </AnimatePresence>
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
       style={sheetSt.root} onClick={onClose}>
       <motion.div initial={{ y: '100%' }} animate={{ y: 0 }} exit={{ y: '100%' }}
@@ -454,6 +546,15 @@ function SignOverlay({ onDone, onClose }) {
             <CheckRow checked={agreeCampaign} onToggle={() => setAgreeCampaign(v => !v)}>
               이 청원은 <b style={{ color: C.navy }}>(가칭) 부산의료복지사회적협동조합</b> 이름으로 진행하며, 조합 설립과 청원에 동의합니다.
             </CheckRow>
+            <button type="button"
+              onClick={() => setPetitionOpen(true)}
+              style={{
+                background: 'transparent', border: 'none', cursor: 'pointer',
+                color: C.navy, fontSize: 12.5, fontWeight: 700, fontFamily: FONT,
+                marginTop: 10, marginLeft: 32, padding: 0, textDecoration: 'underline',
+              }}>
+              청원 내용 보기
+            </button>
           </div>
 
           <label style={sheetSt.label}>이름</label>
@@ -561,6 +662,7 @@ function SignOverlay({ onDone, onClose }) {
         </div>
       </motion.div>
     </motion.div>
+    </>
   )
 }
 
