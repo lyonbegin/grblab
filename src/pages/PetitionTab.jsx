@@ -130,17 +130,8 @@ function Barcode({ value, height = 90, barWidth = 2.4 }) {
 
 // ─── 완료 오버레이 ───────────────────────────────────────────────────────────
 function DoneOverlay({ total, onClose, couponReady, signatureId, isNew, exchanged }) {
-  const [run, setRun] = useState(false)
-  const [checkDone, setCheckDone] = useState(false)
-  const count = useCountUp(total, 700, run, Math.max(0, total - 3))
-
-  // 이미 교환완료된 사람이면 카드 대신 안내만, 그 외(신규/미교환)는 카드+바코드 노출
+  // 이미 교환완료된 사람이면 카드 대신 안내만, 그 외(신규/미교환)는 바코드 노출
   const showCard = couponReady && !exchanged
-
-  useEffect(() => {
-    const t = setTimeout(() => setRun(true), 650)
-    return () => clearTimeout(t)
-  }, [])
 
   return (
     <motion.div
@@ -152,150 +143,120 @@ function DoneOverlay({ total, onClose, couponReady, signatureId, isNew, exchange
         background: 'rgba(10,12,24,0.82)',
         display: 'flex', flexDirection: 'column',
         alignItems: 'center', justifyContent: 'center',
-        fontFamily: FONT, padding: 24,
-        overflowY: 'auto',
+        fontFamily: FONT, padding: 20,
       }}
       onClick={onClose}
     >
       <motion.div
-        initial={{ scale: 0.85, opacity: 0 }}
+        initial={{ scale: 0.88, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.9, opacity: 0 }}
         transition={{ type: 'spring', damping: 22, stiffness: 280 }}
         onClick={e => e.stopPropagation()}
         style={{
-          background: '#fff',
-          borderRadius: 24,
-          padding: '48px 36px 40px',
-          maxWidth: 360,
+          position: 'relative',
+          borderRadius: 22,
+          maxWidth: 340,
           width: '100%',
           textAlign: 'center',
-          boxShadow: '0 32px 80px rgba(0,0,0,0.45)',
+          overflow: 'hidden',
+          boxShadow: '0 32px 80px rgba(0,0,0,0.5)',
         }}
       >
-        {/* 체크 */}
-        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 28 }}>
-          <svg width="96" height="96" viewBox="0 0 96 96" fill="none">
-            <motion.circle cx="48" cy="48" r="44" fill={C.navy}
-              initial={{ scale: 0 }} animate={{ scale: 1 }}
-              transition={{ type: 'spring', damping: 18, stiffness: 300, delay: 0.05 }} />
-            <motion.path d="M28 50 L42 64 L68 34" stroke={C.yellow} strokeWidth="6"
-              strokeLinecap="round" strokeLinejoin="round" fill="none"
-              initial={{ pathLength: 0 }} animate={{ pathLength: 1 }}
-              transition={{ duration: 0.55, ease: 'easeOut', delay: 0.3 }}
-              onAnimationComplete={() => setCheckDone(true)} />
-          </svg>
-        </div>
-
-        <div style={{ fontSize: 22, fontWeight: 900, color: C.ink, letterSpacing: '-0.5px', marginBottom: 8 }}>
-          서명이 완료되었습니다
-        </div>
-        <div style={{ fontSize: 14.5, color: C.inkSoft, lineHeight: 1.7, marginBottom: 28 }}>
-          청원에 동참해 주셔서 감사합니다.<br />
-          여러분의 서명이 변화를 만듭니다.
-        </div>
-
-        {/* 카운터 */}
+        {/* CU 카드 이미지를 모달 전체 배경으로 */}
         <div style={{
-          background: C.navy, borderRadius: 14, padding: '18px 0', marginBottom: 20,
-        }}>
-          <div style={{ fontSize: 12, fontWeight: 700, color: 'rgba(255,255,255,0.65)', letterSpacing: '0.1em', marginBottom: 4 }}>
-            현재 총 서명 인원
-          </div>
-          <div style={{ fontSize: 48, fontWeight: 900, color: C.yellow, lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>
-            {count.toLocaleString()}<span style={{ fontSize: 22, fontWeight: 800, color: '#fff' }}>명</span>
-          </div>
-          {checkDone && (
-            <motion.div initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }}
-              style={{ fontSize: 12.5, color: C.live, fontWeight: 700, marginTop: 6 }}>
-              ▲ 내 서명 반영됨
-            </motion.div>
-          )}
-        </div>
+          position: 'absolute', inset: 0,
+          backgroundImage: 'url(/cu.png)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }} />
+        {/* 가독성용 반투명 남색 오버레이 */}
+        <div style={{
+          position: 'absolute', inset: 0,
+          background: `linear-gradient(180deg, rgba(14,22,64,0.86) 0%, rgba(22,33,92,0.92) 45%, rgba(14,22,64,0.96) 100%)`,
+        }} />
 
-        {/* ── 교환 화면: 이미 교환된 사람이면 안내, 아니면 CU 카드 + 바코드 ── */}
-        <AnimatePresence>
+        {/* 실제 내용 */}
+        <div style={{ position: 'relative', padding: '26px 24px 22px' }}>
+          {/* 체크 (작게) */}
+          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 14 }}>
+            <svg width="56" height="56" viewBox="0 0 96 96" fill="none">
+              <motion.circle cx="48" cy="48" r="44" fill={C.yellow}
+                initial={{ scale: 0 }} animate={{ scale: 1 }}
+                transition={{ type: 'spring', damping: 18, stiffness: 300, delay: 0.05 }} />
+              <motion.path d="M28 50 L42 64 L68 34" stroke={C.navyDark} strokeWidth="7"
+                strokeLinecap="round" strokeLinejoin="round" fill="none"
+                initial={{ pathLength: 0 }} animate={{ pathLength: 1 }}
+                transition={{ duration: 0.5, ease: 'easeOut', delay: 0.25 }} />
+            </svg>
+          </div>
+
+          <div style={{ fontSize: 19, fontWeight: 900, color: '#fff', letterSpacing: '-0.5px', marginBottom: 4 }}>
+            서명이 완료되었습니다
+          </div>
+          <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.72)', lineHeight: 1.6, marginBottom: 18 }}>
+            청원에 동참해 주셔서 감사합니다.
+          </div>
+
+          {/* ── 이미 교환됨 안내 ── */}
           {couponReady && exchanged && (
             <motion.div
-              initial={{ opacity: 0, y: 16 }}
+              initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ type: 'spring', damping: 24, stiffness: 280 }}
               style={{
-                background: C.cream,
-                border: `1px solid ${C.hair}`,
-                borderRadius: 16,
-                padding: '22px 20px',
-                marginBottom: 20,
-                textAlign: 'center',
+                background: 'rgba(255,255,255,0.1)',
+                border: '1px solid rgba(255,255,255,0.18)',
+                borderRadius: 14,
+                padding: '18px 16px',
+                marginBottom: 16,
               }}
             >
-              <div style={{ fontSize: 30, marginBottom: 8 }}>✅</div>
-              <div style={{ fontSize: 16, fontWeight: 900, color: C.ink, marginBottom: 6 }}>
-                이미 교환이 완료된 서명입니다
+              <div style={{ fontSize: 26, marginBottom: 6 }}>✅</div>
+              <div style={{ fontSize: 15, fontWeight: 900, color: '#fff', marginBottom: 4 }}>
+                이미 교환이 완료되었습니다
               </div>
-              <div style={{ fontSize: 13, color: C.inkSoft, lineHeight: 1.7 }}>
-                기프트카드는 1인 1회만 지급됩니다.<br />
-                추가 지급은 어렵습니다.
+              <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.7)', lineHeight: 1.6 }}>
+                기프트카드는 1인 1회만 지급됩니다.
               </div>
             </motion.div>
           )}
 
+          {/* ── 신규/미교환: 바코드 ── */}
           {showCard && (
             <motion.div
-              initial={{ opacity: 0, y: 24, scale: 0.96 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ type: 'spring', damping: 22, stiffness: 280 }}
-              style={{
-                background: `linear-gradient(135deg, ${C.navyDark} 0%, ${C.navy} 100%)`,
-                borderRadius: 16,
-                padding: '20px 18px 18px',
-                marginBottom: 20,
-                position: 'relative',
-                overflow: 'hidden',
-              }}
+              style={{ marginBottom: 16 }}
             >
-              <div style={{ fontSize: 11, fontWeight: 700, color: C.yellow, letterSpacing: '0.1em', marginBottom: 12, textAlign: 'center' }}>
+              <div style={{ fontSize: 11, fontWeight: 700, color: C.yellow, letterSpacing: '0.08em', marginBottom: 10 }}>
                 서명 감사 선물 · CU 모바일 상품권
               </div>
-
-              {/* CU 카드 이미지 (public/cu.png) */}
-              <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 14 }}>
-                <img src="/cu.png" alt="CU 기프트카드"
-                  style={{ width: 150, height: 'auto', borderRadius: 12, boxShadow: '0 8px 24px rgba(0,0,0,0.35)' }} />
-              </div>
-
-              {/* 바코드 카드 */}
-              <div style={{ background: '#fff', borderRadius: 12, padding: '14px 14px 10px' }}>
-                <Barcode value={signatureId} height={84} />
-                <div style={{ textAlign: 'center', fontSize: 13, fontWeight: 700, color: C.ink, letterSpacing: '0.18em', marginTop: 6, fontVariantNumeric: 'tabular-nums' }}>
+              {/* 바코드 (높이 축소) */}
+              <div style={{ background: '#fff', borderRadius: 12, padding: '12px 12px 8px' }}>
+                <Barcode value={signatureId} height={52} />
+                <div style={{ fontSize: 12.5, fontWeight: 700, color: C.ink, letterSpacing: '0.18em', marginTop: 4, fontVariantNumeric: 'tabular-nums' }}>
                   {String(signatureId)}
                 </div>
               </div>
-
-              <div style={{
-                marginTop: 14,
-                borderTop: '1px solid rgba(255,255,255,0.15)',
-                paddingTop: 12,
-                fontSize: 11.5, color: 'rgba(255,255,255,0.7)',
-                lineHeight: 1.65, textAlign: 'center',
-              }}>
-                이 화면을 <b style={{ color: C.yellow }}>현장 담당자</b>에게 보여주세요.<br />
-                담당자가 바코드를 확인하면 교환이 완료됩니다.
+              <div style={{ marginTop: 12, fontSize: 11.5, color: 'rgba(255,255,255,0.72)', lineHeight: 1.6 }}>
+                이 화면을 <b style={{ color: C.yellow }}>현장 담당자</b>에게 보여주세요.
               </div>
             </motion.div>
           )}
-        </AnimatePresence>
 
-        <button
-          onClick={onClose}
-          style={{
-            width: '100%', padding: '15px', border: 'none', borderRadius: 12,
-            background: C.navy, color: '#fff', fontSize: 16, fontWeight: 800,
-            fontFamily: FONT, cursor: 'pointer', letterSpacing: '-0.3px',
-          }}
-        >
-          확인
-        </button>
+          <button
+            onClick={onClose}
+            style={{
+              width: '100%', padding: '14px', border: 'none', borderRadius: 12,
+              background: C.yellow, color: C.navyDark, fontSize: 15.5, fontWeight: 900,
+              fontFamily: FONT, cursor: 'pointer', letterSpacing: '-0.3px',
+            }}
+          >
+            확인
+          </button>
+        </div>
       </motion.div>
     </motion.div>
   )
