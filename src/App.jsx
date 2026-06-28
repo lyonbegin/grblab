@@ -22,6 +22,8 @@ import PpeDetailPage from './pages/PpeDetailPage'
 import SafetyEduDetailPage from './pages/SafetyEduDetailPage'
 import SafetyEduListPage   from './pages/SafetyEduListPage'
 import GrbLabPage from './pages/GrbLabPage'
+// ✅ 기프트카드 교환 (담당자용)
+import AdminExchangePage from './pages/AdminExchangePage'
 // import PartnerPage   from './pages/PartnerPage'
 // 임시 Stub (아직 구현 안 된 탭용)
 const Stub = ({ title }) => (
@@ -69,6 +71,8 @@ export default function App() {
 
 {/* <Route path="/partner" element={<PartnerPage />} /> */}
 <Route path="/pt" element={<GrbLabPage />} />
+{/* ✅ 기프트카드 교환 (담당자가 참여자 바코드를 스캔) */}
+<Route path="/admin/exchange" element={<AdminExchangePage />} />
 <Route path="/emergency"            element={<EmergencyListPage />} />
 <Route path="/emergency/:postId"    element={<EmergencyDetailPage />} />
  <Route path="ppe"       element={<PpeListPage />} />
