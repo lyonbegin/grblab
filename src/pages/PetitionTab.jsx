@@ -72,11 +72,70 @@ function useCountUp(target, duration = 700, run = true, from = 0) {
   return display
 }
 
+// ─── CODE128 바코드 (외부 라이브러리 없이 SVG로 직접 렌더) ───────────────────
+// 숫자 문자열을 Code C로 인코딩합니다. 휴대폰 카메라/바코드 스캐너로 읽힙니다.
+const C128_PATTERNS = [
+  "11011001100","11001101100","11001100110","10010011000","10010001100","10001001100","10011001000","10011000100","10001100100","11001001000",
+  "11001000100","11000100100","10110011100","10011011100","10011001110","10111001100","10011101100","10011100110","11001110010","11001011100",
+  "11001001110","11011100100","11001110100","11101101110","11101001100","11100101100","11100100110","11101100100","11100110100","11100110010",
+  "11011011000","11011000110","11000110110","10100011000","10001011000","10001000110","10110001000","10001101000","10001100010","11010001000",
+  "11000101000","11000100010","10110111000","10110001110","10001101110","10111011000","10111000110","10001110110","11101110110","11010001110",
+  "11000101110","11011101000","11011100010","11011101110","11101011000","11101000110","11100010110","11101101000","11101100010","11100011010",
+  "11101111010","11001000010","11110001010","10100110000","10100001100","10010110000","10010000110","10000101100","10000100110","10110010000",
+  "10110000100","10011010000","10011000010","10000110100","10000110010","11000010010","11001010000","11110111010","11000010100","10001111010",
+  "10100111100","10010111100","10010011110","10111100100","10011110100","10011110010","11110100100","11110010100","11110010010","11011011110",
+  "11011110110","11110110110","10101111000","10100011110","10001011110","10111101000","10111100010","11110101000","11110100010","10111011110",
+  "10111101110","11101011110","11110101110","11010000100","11010010000","11010011100","11000111010"
+]
+const C128_STOP = "1100011101011"
+
+function code128CBits(numStr) {
+  let s = String(numStr == null ? '' : numStr).replace(/\D/g, '')
+  if (s.length === 0) s = '0'
+  if (s.length % 2 !== 0) s = '0' + s // 짝수 자리 보정
+  const START_C = 105
+  const codes = [START_C]
+  for (let i = 0; i < s.length; i += 2) codes.push(parseInt(s.substr(i, 2), 10))
+  let sum = START_C
+  for (let i = 1; i < codes.length; i++) sum += codes[i] * i
+  codes.push(sum % 103) // checksum
+  return codes.map(c => C128_PATTERNS[c]).join('') + C128_STOP
+}
+
+function Barcode({ value, height = 90, barWidth = 2.4 }) {
+  const bits = code128CBits(value)
+  const width = bits.length * barWidth
+  // 연속된 1을 한 개의 막대(rect)로 묶어 그림
+  const bars = []
+  let x = 0
+  let i = 0
+  while (i < bits.length) {
+    let run = 1
+    while (i + run < bits.length && bits[i + run] === bits[i]) run++
+    if (bits[i] === '1') {
+      bars.push(<rect key={i} x={x} y={0} width={run * barWidth} height={height} fill="#111" />)
+    }
+    x += run * barWidth
+    i += run
+  }
+  return (
+    <svg width="100%" viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="xMidYMid meet"
+      style={{ display: 'block' }} shapeRendering="crispEdges">
+      <rect x={0} y={0} width={width} height={height} fill="#fff" />
+      {bars}
+    </svg>
+  )
+}
+
+
 // ─── 완료 오버레이 ───────────────────────────────────────────────────────────
-function DoneOverlay({ total, onClose, couponReady }) {
+function DoneOverlay({ total, onClose, couponReady, signatureId, isNew, exchanged }) {
   const [run, setRun] = useState(false)
   const [checkDone, setCheckDone] = useState(false)
   const count = useCountUp(total, 700, run, Math.max(0, total - 3))
+
+  // 이미 교환완료된 사람이면 카드 대신 안내만, 그 외(신규/미교환)는 카드+바코드 노출
+  const showCard = couponReady && !exchanged
 
   useEffect(() => {
     const t = setTimeout(() => setRun(true), 650)
@@ -154,9 +213,34 @@ function DoneOverlay({ total, onClose, couponReady }) {
           )}
         </div>
 
-        {/* 감사 쿠폰 - 서버 응답 후 슬라이드업 */}
+        {/* ── 교환 화면: 이미 교환된 사람이면 안내, 아니면 CU 카드 + 바코드 ── */}
         <AnimatePresence>
-          {couponReady && (
+          {couponReady && exchanged && (
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ type: 'spring', damping: 24, stiffness: 280 }}
+              style={{
+                background: C.cream,
+                border: `1px solid ${C.hair}`,
+                borderRadius: 16,
+                padding: '22px 20px',
+                marginBottom: 20,
+                textAlign: 'center',
+              }}
+            >
+              <div style={{ fontSize: 30, marginBottom: 8 }}>✅</div>
+              <div style={{ fontSize: 16, fontWeight: 900, color: C.ink, marginBottom: 6 }}>
+                이미 교환이 완료된 서명입니다
+              </div>
+              <div style={{ fontSize: 13, color: C.inkSoft, lineHeight: 1.7 }}>
+                기프트카드는 1인 1회만 지급됩니다.<br />
+                추가 지급은 어렵습니다.
+              </div>
+            </motion.div>
+          )}
+
+          {showCard && (
             <motion.div
               initial={{ opacity: 0, y: 24, scale: 0.96 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -164,44 +248,27 @@ function DoneOverlay({ total, onClose, couponReady }) {
               style={{
                 background: `linear-gradient(135deg, ${C.navyDark} 0%, ${C.navy} 100%)`,
                 borderRadius: 16,
-                padding: '20px 22px',
+                padding: '20px 18px 18px',
                 marginBottom: 20,
-                textAlign: 'left',
                 position: 'relative',
                 overflow: 'hidden',
               }}
             >
-              {/* 배경 장식 원 */}
-              <div style={{
-                position: 'absolute', right: -20, top: -20,
-                width: 100, height: 100, borderRadius: '50%',
-                background: 'rgba(255,212,0,0.08)',
-              }} />
-              <div style={{
-                position: 'absolute', right: 20, bottom: -30,
-                width: 80, height: 80, borderRadius: '50%',
-                background: 'rgba(255,212,0,0.05)',
-              }} />
+              <div style={{ fontSize: 11, fontWeight: 700, color: C.yellow, letterSpacing: '0.1em', marginBottom: 12, textAlign: 'center' }}>
+                서명 감사 선물 · CU 모바일 상품권
+              </div>
 
-              <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                <div style={{
-                  width: 48, height: 48, borderRadius: 12,
-                  background: 'rgba(255,212,0,0.18)',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  fontSize: 26, flexShrink: 0,
-                }}>
-                  ☕
-                </div>
-                <div>
-                  <div style={{ fontSize: 11, fontWeight: 700, color: C.yellow, letterSpacing: '0.1em', marginBottom: 3 }}>
-                    서명 감사 선물
-                  </div>
-                  <div style={{ fontSize: 16, fontWeight: 900, color: '#fff', letterSpacing: '-0.3px' }}>
-                    스타벅스 아메리카노
-                  </div>
-                  <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.75)', marginTop: 3 }}>
-                    입력하신 번호로 문자 발송됩니다
-                  </div>
+              {/* CU 카드 이미지 (public/cu.png) */}
+              <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 14 }}>
+                <img src="/cu.png" alt="CU 기프트카드"
+                  style={{ width: 150, height: 'auto', borderRadius: 12, boxShadow: '0 8px 24px rgba(0,0,0,0.35)' }} />
+              </div>
+
+              {/* 바코드 카드 */}
+              <div style={{ background: '#fff', borderRadius: 12, padding: '14px 14px 10px' }}>
+                <Barcode value={signatureId} height={84} />
+                <div style={{ textAlign: 'center', fontSize: 13, fontWeight: 700, color: C.ink, letterSpacing: '0.18em', marginTop: 6, fontVariantNumeric: 'tabular-nums' }}>
+                  {String(signatureId)}
                 </div>
               </div>
 
@@ -209,11 +276,11 @@ function DoneOverlay({ total, onClose, couponReady }) {
                 marginTop: 14,
                 borderTop: '1px solid rgba(255,255,255,0.15)',
                 paddingTop: 12,
-                fontSize: 11.5, color: 'rgba(255,255,255,0.6)',
-                lineHeight: 1.6,
+                fontSize: 11.5, color: 'rgba(255,255,255,0.7)',
+                lineHeight: 1.65, textAlign: 'center',
               }}>
-                * 쿠폰은 영업일 기준 3일 이내 발송됩니다.<br />
-                * 선착순 소진 시 조기 마감될 수 있습니다.
+                이 화면을 <b style={{ color: C.yellow }}>현장 담당자</b>에게 보여주세요.<br />
+                담당자가 바코드를 확인하면 교환이 완료됩니다.
               </div>
             </motion.div>
           )}
@@ -487,6 +554,9 @@ export default function PetitionTab({ isMobile, loading, LoadingUI, onGoSign }) 
   const [liveCount, setLiveCount] = useState(0)
   const [doneCount, setDoneCount] = useState(0)
   const [couponReady, setCouponReady] = useState(false)
+  const [sigId, setSigId] = useState(null)
+  const [isNew, setIsNew] = useState(true)
+  const [exchanged, setExchanged] = useState(false)
   const [submitError, setSubmitError] = useState(null)
 
   useEffect(() => {
@@ -504,6 +574,9 @@ export default function PetitionTab({ isMobile, loading, LoadingUI, onGoSign }) 
   const handleDone = useCallback((form) => {
     setSubmitError(null)
     setCouponReady(false)
+    setSigId(null)
+    setIsNew(true)
+    setExchanged(false)
     const snap = liveCount + 1
     setLiveCount(snap)
     setDoneCount(snap)
@@ -523,17 +596,23 @@ export default function PetitionTab({ isMobile, loading, LoadingUI, onGoSign }) 
     })
       .then(async (res) => {
         const data = await res.json().catch(() => ({}))
-        if (res.status === 409) {
-          setLiveCount(c => Math.max(0, c - 1))
-          setSubmitError('이미 서명하셨습니다')
-          return
-        }
         if (!res.ok) throw new Error(data.detail || '서버 오류')
+
+        // 기존자(중복)면 카운트는 올리지 않음 → 낙관적 +1 되돌림
+        if (data.is_new === false) {
+          setLiveCount(c => Math.max(0, c - 1))
+        }
         if (typeof data.total_count === 'number') {
           setLiveCount(data.total_count)
           setDoneCount(data.total_count)
         }
-        setCouponReady(true)   // 서버 응답 성공 시 쿠폰 표시
+
+        // 교환 화면 제어용 값 저장
+        if (typeof data.signature_id !== 'undefined') setSigId(data.signature_id)
+        setIsNew(data.is_new !== false)
+        setExchanged(data.exchanged === true)
+
+        setCouponReady(true)   // 서버 응답 성공 시 교환 화면 표시
       })
       .catch(() => {
         setLiveCount(c => Math.max(0, c - 1))
@@ -559,7 +638,7 @@ export default function PetitionTab({ isMobile, loading, LoadingUI, onGoSign }) 
         {signOpen && <SignOverlay onDone={handleDone} onClose={() => setSignOpen(false)} />}
       </AnimatePresence>
       <AnimatePresence>
-        {doneOpen && <DoneOverlay total={doneCount} onClose={handleDoneClose} couponReady={couponReady} />}
+        {doneOpen && <DoneOverlay total={doneCount} onClose={handleDoneClose} couponReady={couponReady} signatureId={sigId} isNew={isNew} exchanged={exchanged} />}
       </AnimatePresence>
       <AnimatePresence>
         {submitError && (
