@@ -94,7 +94,7 @@ export default function AdminExchangePage() {
         qrRef.current = inst
         await inst.start(
           { facingMode: 'environment' },          // 후면 카메라
-          { fps: 10, qrbox: { width: 260, height: 160 } },
+        { fps: 10, qrbox: { width: 220, height: 220 } },
           onScanned,
           () => { /* 인식 실패 프레임은 무시 */ }
         )
@@ -170,11 +170,11 @@ export default function AdminExchangePage() {
             현장 담당자 · 기프트카드 교환
           </div>
           <div style={{ fontSize: 20, fontWeight: 900, letterSpacing: '-0.4px' }}>
-            서명 바코드 확인
+            서명 QR코드 확인
           </div>
           <div style={{ fontSize: 12.5, color: 'rgba(255,255,255,0.7)', marginTop: 6, lineHeight: 1.6 }}>
-            참여자 화면의 바코드를 스캔해 교환 여부를 확인하고,<br />
-            지급 후 ‘교환 확정’을 눌러 주세요.
+            참여자 화면의 QR코드를 스캔해 교환 여부를 확인하고,<br />
+지급 후 '교환 확정'을 눌러 주세요
           </div>
         </div>
 
@@ -200,11 +200,11 @@ export default function AdminExchangePage() {
                     <path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2" />
                     <line x1="7" y1="12" x2="17" y2="12" />
                   </svg>
-                  <span style={{ fontSize: 13 }}>카메라로 바코드를 스캔하세요</span>
+                  <span style={{ fontSize: 13 }}>카메라로 QR코드를 스캔하세요</span>
                 </div>
                 <button onClick={startScanner}
                   style={{ width: '100%', marginTop: 14, padding: 15, border: 'none', borderRadius: 12, background: C.navy, color: '#fff', fontSize: 16, fontWeight: 900, fontFamily: FONT, cursor: 'pointer' }}>
-                  바코드 스캔 시작
+                  QR코드 스캔 시작
                 </button>
 
                 {/* 수동 입력 (카메라 안 될 때 대비) */}
@@ -213,7 +213,7 @@ export default function AdminExchangePage() {
                   <div style={{ display: 'flex', gap: 8 }}>
                     <input value={manualId} inputMode="numeric"
                       onChange={e => setManualId(e.target.value.replace(/\D/g, ''))}
-                      placeholder="바코드 번호"
+                      placeholder="QR 번호"
                       style={{ flex: 1, padding: '13px 14px', border: `1.5px solid ${C.hair}`, borderRadius: 10, fontSize: 16, fontFamily: FONT, outline: 'none', background: C.cream, color: C.ink }} />
                     <button onClick={() => manualId && fetchStatus(manualId)} disabled={!manualId}
                       style={{ flexShrink: 0, padding: '0 18px', border: 'none', borderRadius: 10, background: manualId ? C.navy : C.hair, color: manualId ? '#fff' : '#a4a6c0', fontSize: 15, fontWeight: 800, fontFamily: FONT, cursor: manualId ? 'pointer' : 'not-allowed' }}>
@@ -314,7 +314,7 @@ export default function AdminExchangePage() {
 
             <button onClick={() => { reset(); startScanner() }}
               style={{ width: '100%', padding: 14, border: `1.5px solid ${C.hair}`, borderRadius: 12, background: '#fff', color: C.navy, fontSize: 15, fontWeight: 800, fontFamily: FONT, cursor: 'pointer' }}>
-              다음 바코드 스캔
+              다음 QR 코드 스캔
             </button>
           </div>
         )}

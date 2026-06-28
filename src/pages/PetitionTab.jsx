@@ -74,7 +74,7 @@ function useCountUp(target, duration = 700, run = true, from = 0) {
 
 
 // ─── QR 코드 (qrcode.js via CDN) ────────────────────────────────────────────
-import { useEffect, useRef } from 'react'
+// import { useEffect, useRef } from 'react'
 
 function QRCode({ value, size = 180 }) {
   const canvasRef = useRef(null)
