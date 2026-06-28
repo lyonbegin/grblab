@@ -558,7 +558,7 @@ function SignOverlay({ onDone, onClose }) {
           </div>
 
           <label style={sheetSt.label}>이름</label>
-          <input value={name} autoComplete="name"
+          <input value={name} type="text" lang="ko" autoComplete="off"
             onChange={e => setName(e.target.value)} placeholder="이름"
             style={{ ...sheetSt.input }} />
 
