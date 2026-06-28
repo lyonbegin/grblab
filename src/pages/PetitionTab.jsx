@@ -2,7 +2,7 @@
 import { useState, useCallback, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
-
+import QRCodeLib from 'qrcode'
 const FONT = "'Noto Sans KR','Malgun Gothic',sans-serif"
 const SERIF = "'Nanum Myeongjo','Noto Sans KR',serif"
 
@@ -80,32 +80,15 @@ function QRCode({ value, size = 180 }) {
   const canvasRef = useRef(null)
 
   useEffect(() => {
-    if (!value) return
-    const load = () => {
-      if (window.QRCode) {
-        // 기존 캔버스 초기화
-        const canvas = canvasRef.current
-        if (!canvas) return
-        window.QRCode.toCanvas(canvas, String(value), {
-          width: size,
-          margin: 2,
-          color: { dark: '#111111', light: '#ffffff' },
-        }, (err) => { if (err) console.error(err) })
-      }
-    }
-    if (window.QRCode) {
-      load()
-    } else {
-      const script = document.createElement('script')
-      script.src = 'https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js'
-      script.onload = load
-      document.head.appendChild(script)
-    }
+    if (!canvasRef.current || !value) return
+    QRCodeLib.toCanvas(canvasRef.current, String(value), {
+      width: size,
+      margin: 2,
+      color: { dark: '#111111', light: '#ffffff' },
+    })
   }, [value, size])
 
-  return (
-    <canvas ref={canvasRef} style={{ display: 'block', borderRadius: 8 }} />
-  )
+  return <canvas ref={canvasRef} style={{ display: 'block', borderRadius: 8 }} />
 }
 
 // // ─── CODE128 바코드 (외부 라이브러리 없이 SVG로 직접 렌더) ───────────────────
