@@ -194,8 +194,14 @@ function DoneOverlay({ total, onClose, couponReady, signatureId, isNew, exchange
           <div style={{ fontSize: 19, fontWeight: 900, color: '#fff', letterSpacing: '-0.5px', marginBottom: 4 }}>
             서명이 완료되었습니다
           </div>
-          <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.72)', lineHeight: 1.6, marginBottom: 18 }}>
+          <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.72)', lineHeight: 1.6, marginBottom: 14 }}>
             청원에 동참해 주셔서 감사합니다.
+          </div>
+
+          {/* CU 카드 이미지 */}
+          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 16 }}>
+            <img src="/cu.png" alt="CU 기프트카드"
+              style={{ width: 110, height: 'auto', borderRadius: 10, boxShadow: '0 8px 22px rgba(0,0,0,0.4)' }} />
           </div>
 
           {/* ── 이미 교환됨 안내 ── */}
@@ -233,9 +239,9 @@ function DoneOverlay({ total, onClose, couponReady, signatureId, isNew, exchange
               <div style={{ fontSize: 11, fontWeight: 700, color: C.yellow, letterSpacing: '0.08em', marginBottom: 10 }}>
                 서명 감사 선물 · CU 모바일 상품권
               </div>
-              {/* 바코드 (높이 축소) */}
+              {/* 바코드 (세로 낮게, 가로 길게) */}
               <div style={{ background: '#fff', borderRadius: 12, padding: '12px 12px 8px' }}>
-                <Barcode value={signatureId} height={52} />
+                <Barcode value={signatureId} height={38} />
                 <div style={{ fontSize: 12.5, fontWeight: 700, color: C.ink, letterSpacing: '0.18em', marginTop: 4, fontVariantNumeric: 'tabular-nums' }}>
                   {String(signatureId)}
                 </div>
