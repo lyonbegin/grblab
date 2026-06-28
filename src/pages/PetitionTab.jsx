@@ -304,6 +304,10 @@ function SignOverlay({ onDone, onClose }) {
   const goNext = () => setStep(s => s + 1)
   const handleDone = () => {
     if (submitted) return
+    // 시트를 닫기 전에 포커스를 명시적으로 해제해 키보드를 먼저 내립니다.
+    if (document.activeElement && typeof document.activeElement.blur === 'function') {
+      document.activeElement.blur()
+    }
     setSubmitted(true)
     onDone({ name: name.trim(), phone: phone.trim(), disabled, regNum: regNum.trim(), idNum: idNum.trim() })
   }
@@ -326,94 +330,86 @@ function SignOverlay({ onDone, onClose }) {
           ))}
         </div>
 
-        <AnimatePresence mode="wait">
-          {step === 1 && (
-            <motion.div key="s1" initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }} transition={{ duration: 0.2 }}>
-              <div style={sheetSt.stepLabel}>STEP 1 / 3</div>
-              <div style={sheetSt.title}>청원 서명 참여</div>
-              <div style={sheetSt.desc}>
-                이 청원은 <b style={{ color: C.ink }}>(가칭) 부산의료복지사회적협동조합</b> 이름으로 진행합니다.<br />
-                조합 설립과 청원에 동의합니다.
-              </div>
-              <label style={sheetSt.label}>이름</label>
-              <div style={{ display: 'flex', gap: 10, alignItems: 'stretch' }}>
-                <input value={name} autoComplete="name"
-                  onChange={e => setName(e.target.value)} placeholder="이름"
-                  style={{ ...sheetSt.input, marginBottom: 0, flex: 1 }} />
-                <button type="button"
-                  style={{ ...sheetSt.nextBtn, width: 76, flexShrink: 0, padding: '0', ...(step1ok ? sheetSt.activeBtn : sheetSt.disabledBtn) }}
-                  disabled={!step1ok} onClick={goNext}>다음</button>
-              </div>
-            </motion.div>
+        {/* 세 스텝을 모두 항상 마운트해 두고 display로만 전환합니다.
+            이렇게 하면 input이 한 번도 unmount되지 않아서,
+            스텝을 넘길 때마다 포커스가 끊기고 키보드가 깜빡이는 문제가 없어집니다. */}
+        <div style={{ display: step === 1 ? 'block' : 'none' }}>
+          <div style={sheetSt.stepLabel}>STEP 1 / 3</div>
+          <div style={sheetSt.title}>청원 서명 참여</div>
+          <div style={sheetSt.desc}>
+            이 청원은 <b style={{ color: C.ink }}>(가칭) 부산의료복지사회적협동조합</b> 이름으로 진행합니다.<br />
+            조합 설립과 청원에 동의합니다.
+          </div>
+          <label style={sheetSt.label}>이름</label>
+          <div style={{ display: 'flex', gap: 10, alignItems: 'stretch' }}>
+            <input value={name} autoComplete="name"
+              onChange={e => setName(e.target.value)} placeholder="이름"
+              style={{ ...sheetSt.input, marginBottom: 0, flex: 1 }} />
+            <button type="button"
+              style={{ ...sheetSt.nextBtn, width: 76, flexShrink: 0, padding: '0', ...(step1ok ? sheetSt.activeBtn : sheetSt.disabledBtn) }}
+              disabled={!step1ok} onClick={goNext}>다음</button>
+          </div>
+        </div>
+
+        <div style={{ display: step === 2 ? 'block' : 'none' }}>
+          <div style={sheetSt.stepLabel}>STEP 2 / 3</div>
+          <div style={sheetSt.title}>연락처</div>
+          <div style={sheetSt.desc}>서명 확인을 위해 휴대폰 번호를 입력해 주세요.</div>
+          <label style={sheetSt.label}>휴대폰 번호</label>
+          <div style={{ display: 'flex', gap: 10, alignItems: 'stretch' }}>
+            <input style={{ ...sheetSt.input, marginBottom: 0, flex: 1 }}
+              value={phone} inputMode="numeric" maxLength={13}
+              onChange={e => setPhone(formatPhone(e.target.value))}
+              placeholder="숫자만 입력 (010…)" />
+            <button type="button"
+              style={{ ...sheetSt.nextBtn, width: 76, flexShrink: 0, padding: '0', ...(step2ok ? sheetSt.activeBtn : sheetSt.disabledBtn) }}
+              disabled={!step2ok} onClick={goNext}>다음</button>
+          </div>
+          {onlyDigits(phone).length > 0 && !step2ok && (
+            <p style={{ fontSize: 12, color: C.red, margin: '8px 2px 0', fontWeight: 600 }}>
+              010으로 시작하는 11자리 숫자를 입력해 주세요.
+            </p>
           )}
+        </div>
 
-          {step === 2 && (
-            <motion.div key="s2" initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }} transition={{ duration: 0.2 }}>
-              <div style={sheetSt.stepLabel}>STEP 2 / 3</div>
-              <div style={sheetSt.title}>연락처</div>
-              <div style={sheetSt.desc}>서명 확인을 위해 휴대폰 번호를 입력해 주세요.</div>
-              <label style={sheetSt.label}>휴대폰 번호</label>
-              <div style={{ display: 'flex', gap: 10, alignItems: 'stretch' }}>
-                <input style={{ ...sheetSt.input, marginBottom: 0, flex: 1 }}
-                  value={phone} inputMode="numeric" maxLength={13}
-                  onChange={e => setPhone(formatPhone(e.target.value))}
-                  placeholder="숫자만 입력 (010…)" />
-                <button type="button"
-                  style={{ ...sheetSt.nextBtn, width: 76, flexShrink: 0, padding: '0', ...(step2ok ? sheetSt.activeBtn : sheetSt.disabledBtn) }}
-                  disabled={!step2ok} onClick={goNext}>다음</button>
-              </div>
-              {onlyDigits(phone).length > 0 && !step2ok && (
-                <p style={{ fontSize: 12, color: C.red, margin: '8px 2px 0', fontWeight: 600 }}>
-                  010으로 시작하는 11자리 숫자를 입력해 주세요.
-                </p>
-              )}
-            </motion.div>
-          )}
+        <div style={{ display: step === 3 ? 'block' : 'none' }}>
+          <div style={sheetSt.stepLabel}>STEP 3 / 3</div>
+          <div style={sheetSt.title}>장애 여부 선택</div>
+          <div style={{ display: 'flex', gap: 10, marginBottom: 24 }}>
+            <SegmentBtn label="장애인" active={!disabled} onClick={() => setDisabled(false)} />
+            <SegmentBtn label="비장애인" active={disabled} onClick={() => setDisabled(true)} />
+          </div>
 
-          {step === 3 && (
-            <motion.div key="s3" initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }} transition={{ duration: 0.2 }}>
-              <div style={sheetSt.stepLabel}>STEP 3 / 3</div>
-              <div style={sheetSt.title}>장애 여부 선택</div>
-              <div style={{ display: 'flex', gap: 10, marginBottom: 24 }}>
-                <SegmentBtn label="장애인" active={!disabled} onClick={() => setDisabled(false)} />
-                <SegmentBtn label="비장애인" active={disabled} onClick={() => setDisabled(true)} />
-              </div>
+          {/* 장애인/비장애인 토글도 input을 unmount하지 않고 display로만 숨깁니다 */}
+          <div style={{ display: disabled ? 'none' : 'block' }}>
+            <label style={sheetSt.label}>장애인 등록번호</label>
+            <input style={{ ...sheetSt.input }} value={regNum}
+              onChange={e => setRegNum(e.target.value)} placeholder="등록번호 입력" />
+            <div style={{ textAlign: 'center', fontSize: 13, color: C.navySoft, fontWeight: 700, margin: '0 0 14px' }}>또는</div>
+            <label style={sheetSt.label}>주민등록번호</label>
+            <input style={{ ...sheetSt.input }}
+              value={idNum} inputMode="numeric" maxLength={14}
+              onChange={e => setIdNum(formatRrn(e.target.value))}
+              placeholder="000000-0000000" />
+            {onlyRrn(idNum).length === 13 && !isValidRRN(idNum) && (
+              <p style={{ fontSize: 12, color: C.red, margin: '-12px 2px 12px', fontWeight: 600 }}>
+                올바른 주민등록번호가 아닙니다.
+              </p>
+            )}
+            <p style={{ fontSize: 12, color: C.navySoft, lineHeight: 1.65, margin: '0 0 16px' }}>
+              장애인 등록번호를 모르실 경우 주민번호를 기입하시면 됩니다.<br />
+              장애인 혜택 적용을 위해 필요합니다.
+            </p>
+          </div>
 
-              <AnimatePresence>
-                {!disabled && (
-                  <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} style={{ overflow: 'hidden' }}>
-                    <label style={sheetSt.label}>장애인 등록번호</label>
-                    <input style={{ ...sheetSt.input }} value={regNum}
-                      onChange={e => setRegNum(e.target.value)} placeholder="등록번호 입력" />
-                    <div style={{ textAlign: 'center', fontSize: 13, color: C.navySoft, fontWeight: 700, margin: '0 0 14px' }}>또는</div>
-                    <label style={sheetSt.label}>주민등록번호</label>
-                    <input style={{ ...sheetSt.input }}
-                      value={idNum} inputMode="numeric" maxLength={14}
-                      onChange={e => setIdNum(formatRrn(e.target.value))}
-                      placeholder="000000-0000000" />
-                    {onlyRrn(idNum).length === 13 && !isValidRRN(idNum) && (
-                      <p style={{ fontSize: 12, color: C.red, margin: '-12px 2px 12px', fontWeight: 600 }}>
-                        올바른 주민등록번호가 아닙니다.
-                      </p>
-                    )}
-                    <p style={{ fontSize: 12, color: C.navySoft, lineHeight: 1.65, margin: '0 0 16px' }}>
-                      장애인 등록번호를 모르실 경우 주민번호를 기입하시면 됩니다.<br />
-                      장애인 혜택 적용을 위해 필요합니다.
-                    </p>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-
-              {/* 완료 버튼 — 항상 하나만 */}
-              <button type="button"
-                style={{ ...sheetSt.nextBtn, ...(step3ok && !submitted ? sheetSt.activeBtn : sheetSt.disabledBtn) }}
-                disabled={!step3ok || submitted}
-                onClick={handleDone}>
-                완료
-              </button>
-            </motion.div>
-          )}
-        </AnimatePresence>
+          {/* 완료 버튼 — 항상 하나만 */}
+          <button type="button"
+            style={{ ...sheetSt.nextBtn, ...(step3ok && !submitted ? sheetSt.activeBtn : sheetSt.disabledBtn) }}
+            disabled={!step3ok || submitted}
+            onClick={handleDone}>
+            완료
+          </button>
+        </div>
       </motion.div>
     </motion.div>
   )
