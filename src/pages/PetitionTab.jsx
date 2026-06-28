@@ -273,7 +273,10 @@ const sheetSt = {
 
 function SegmentBtn({ label, active, onClick }) {
   return (
-    <button type="button" onClick={onClick} style={{
+    <button type="button" onClick={onClick}
+      onMouseDown={e => e.preventDefault()}
+      onTouchStart={e => e.preventDefault()}
+      style={{
       flex: 1, padding: '14px 0',
       border: active ? `2px solid ${C.navy}` : `2px solid ${C.hair}`,
       borderRadius: 12,
@@ -347,7 +350,10 @@ function SignOverlay({ onDone, onClose }) {
               style={{ ...sheetSt.input, marginBottom: 0, flex: 1 }} />
             <button type="button"
               style={{ ...sheetSt.nextBtn, width: 76, flexShrink: 0, padding: '0', ...(step1ok ? sheetSt.activeBtn : sheetSt.disabledBtn) }}
-              disabled={!step1ok} onClick={goNext}>다음</button>
+              disabled={!step1ok}
+              onMouseDown={e => e.preventDefault()}
+              onTouchStart={e => e.preventDefault()}
+              onClick={goNext}>다음</button>
           </div>
         </div>
 
@@ -363,7 +369,10 @@ function SignOverlay({ onDone, onClose }) {
               placeholder="숫자만 입력 (010…)" />
             <button type="button"
               style={{ ...sheetSt.nextBtn, width: 76, flexShrink: 0, padding: '0', ...(step2ok ? sheetSt.activeBtn : sheetSt.disabledBtn) }}
-              disabled={!step2ok} onClick={goNext}>다음</button>
+              disabled={!step2ok}
+              onMouseDown={e => e.preventDefault()}
+              onTouchStart={e => e.preventDefault()}
+              onClick={goNext}>다음</button>
           </div>
           {onlyDigits(phone).length > 0 && !step2ok && (
             <p style={{ fontSize: 12, color: C.red, margin: '8px 2px 0', fontWeight: 600 }}>
