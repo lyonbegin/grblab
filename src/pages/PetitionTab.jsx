@@ -72,60 +72,96 @@ function useCountUp(target, duration = 700, run = true, from = 0) {
   return display
 }
 
-// ─── CODE128 바코드 (외부 라이브러리 없이 SVG로 직접 렌더) ───────────────────
-// 숫자 문자열을 Code C로 인코딩합니다. 휴대폰 카메라/바코드 스캐너로 읽힙니다.
-const C128_PATTERNS = [
-  "11011001100","11001101100","11001100110","10010011000","10010001100","10001001100","10011001000","10011000100","10001100100","11001001000",
-  "11001000100","11000100100","10110011100","10011011100","10011001110","10111001100","10011101100","10011100110","11001110010","11001011100",
-  "11001001110","11011100100","11001110100","11101101110","11101001100","11100101100","11100100110","11101100100","11100110100","11100110010",
-  "11011011000","11011000110","11000110110","10100011000","10001011000","10001000110","10110001000","10001101000","10001100010","11010001000",
-  "11000101000","11000100010","10110111000","10110001110","10001101110","10111011000","10111000110","10001110110","11101110110","11010001110",
-  "11000101110","11011101000","11011100010","11011101110","11101011000","11101000110","11100010110","11101101000","11101100010","11100011010",
-  "11101111010","11001000010","11110001010","10100110000","10100001100","10010110000","10010000110","10000101100","10000100110","10110010000",
-  "10110000100","10011010000","10011000010","10000110100","10000110010","11000010010","11001010000","11110111010","11000010100","10001111010",
-  "10100111100","10010111100","10010011110","10111100100","10011110100","10011110010","11110100100","11110010100","11110010010","11011011110",
-  "11011110110","11110110110","10101111000","10100011110","10001011110","10111101000","10111100010","11110101000","11110100010","10111011110",
-  "10111101110","11101011110","11110101110","11010000100","11010010000","11010011100","11000111010"
-]
-const C128_STOP = "1100011101011"
 
-function code128CBits(numStr) {
-  let s = String(numStr == null ? '' : numStr).replace(/\D/g, '')
-  if (s.length === 0) s = '0'
-  if (s.length % 2 !== 0) s = '0' + s // 짝수 자리 보정
-  const START_C = 105
-  const codes = [START_C]
-  for (let i = 0; i < s.length; i += 2) codes.push(parseInt(s.substr(i, 2), 10))
-  let sum = START_C
-  for (let i = 1; i < codes.length; i++) sum += codes[i] * i
-  codes.push(sum % 103) // checksum
-  return codes.map(c => C128_PATTERNS[c]).join('') + C128_STOP
-}
+// ─── QR 코드 (qrcode.js via CDN) ────────────────────────────────────────────
+import { useEffect, useRef } from 'react'
 
-function Barcode({ value, height = 90, barWidth = 2.4 }) {
-  const bits = code128CBits(value)
-  const width = bits.length * barWidth
-  // 연속된 1을 한 개의 막대(rect)로 묶어 그림
-  const bars = []
-  let x = 0
-  let i = 0
-  while (i < bits.length) {
-    let run = 1
-    while (i + run < bits.length && bits[i + run] === bits[i]) run++
-    if (bits[i] === '1') {
-      bars.push(<rect key={i} x={x} y={0} width={run * barWidth} height={height} fill="#111" />)
+function QRCode({ value, size = 180 }) {
+  const canvasRef = useRef(null)
+
+  useEffect(() => {
+    if (!value) return
+    const load = () => {
+      if (window.QRCode) {
+        // 기존 캔버스 초기화
+        const canvas = canvasRef.current
+        if (!canvas) return
+        window.QRCode.toCanvas(canvas, String(value), {
+          width: size,
+          margin: 2,
+          color: { dark: '#111111', light: '#ffffff' },
+        }, (err) => { if (err) console.error(err) })
+      }
     }
-    x += run * barWidth
-    i += run
-  }
+    if (window.QRCode) {
+      load()
+    } else {
+      const script = document.createElement('script')
+      script.src = 'https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js'
+      script.onload = load
+      document.head.appendChild(script)
+    }
+  }, [value, size])
+
   return (
-    <svg width="100%" viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="xMidYMid meet"
-      style={{ display: 'block' }} shapeRendering="crispEdges">
-      <rect x={0} y={0} width={width} height={height} fill="#fff" />
-      {bars}
-    </svg>
+    <canvas ref={canvasRef} style={{ display: 'block', borderRadius: 8 }} />
   )
 }
+
+// // ─── CODE128 바코드 (외부 라이브러리 없이 SVG로 직접 렌더) ───────────────────
+// // 숫자 문자열을 Code C로 인코딩합니다. 휴대폰 카메라/바코드 스캐너로 읽힙니다.
+// const C128_PATTERNS = [
+//   "11011001100","11001101100","11001100110","10010011000","10010001100","10001001100","10011001000","10011000100","10001100100","11001001000",
+//   "11001000100","11000100100","10110011100","10011011100","10011001110","10111001100","10011101100","10011100110","11001110010","11001011100",
+//   "11001001110","11011100100","11001110100","11101101110","11101001100","11100101100","11100100110","11101100100","11100110100","11100110010",
+//   "11011011000","11011000110","11000110110","10100011000","10001011000","10001000110","10110001000","10001101000","10001100010","11010001000",
+//   "11000101000","11000100010","10110111000","10110001110","10001101110","10111011000","10111000110","10001110110","11101110110","11010001110",
+//   "11000101110","11011101000","11011100010","11011101110","11101011000","11101000110","11100010110","11101101000","11101100010","11100011010",
+//   "11101111010","11001000010","11110001010","10100110000","10100001100","10010110000","10010000110","10000101100","10000100110","10110010000",
+//   "10110000100","10011010000","10011000010","10000110100","10000110010","11000010010","11001010000","11110111010","11000010100","10001111010",
+//   "10100111100","10010111100","10010011110","10111100100","10011110100","10011110010","11110100100","11110010100","11110010010","11011011110",
+//   "11011110110","11110110110","10101111000","10100011110","10001011110","10111101000","10111100010","11110101000","11110100010","10111011110",
+//   "10111101110","11101011110","11110101110","11010000100","11010010000","11010011100","11000111010"
+// ]
+// const C128_STOP = "1100011101011"
+
+// function code128CBits(numStr) {
+//   let s = String(numStr == null ? '' : numStr).replace(/\D/g, '')
+//   if (s.length === 0) s = '0'
+//   if (s.length % 2 !== 0) s = '0' + s // 짝수 자리 보정
+//   const START_C = 105
+//   const codes = [START_C]
+//   for (let i = 0; i < s.length; i += 2) codes.push(parseInt(s.substr(i, 2), 10))
+//   let sum = START_C
+//   for (let i = 1; i < codes.length; i++) sum += codes[i] * i
+//   codes.push(sum % 103) // checksum
+//   return codes.map(c => C128_PATTERNS[c]).join('') + C128_STOP
+// }
+
+// function Barcode({ value, height = 90, barWidth = 2.4 }) {
+//   const bits = code128CBits(value)
+//   const width = bits.length * barWidth
+//   // 연속된 1을 한 개의 막대(rect)로 묶어 그림
+//   const bars = []
+//   let x = 0
+//   let i = 0
+//   while (i < bits.length) {
+//     let run = 1
+//     while (i + run < bits.length && bits[i + run] === bits[i]) run++
+//     if (bits[i] === '1') {
+//       bars.push(<rect key={i} x={x} y={0} width={run * barWidth} height={height} fill="#111" />)
+//     }
+//     x += run * barWidth
+//     i += run
+//   }
+//   return (
+//     <svg width="100%" viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="xMidYMid meet"
+//       style={{ display: 'block' }} shapeRendering="crispEdges">
+//       <rect x={0} y={0} width={width} height={height} fill="#fff" />
+//       {bars}
+//     </svg>
+//   )
+// }
 
 
 // ─── 완료 오버레이 ───────────────────────────────────────────────────────────
@@ -255,12 +291,12 @@ function DoneOverlay({ total, onClose, couponReady, signatureId, isNew, exchange
                 서명 감사 선물 · CU 모바일 상품권
               </div>
               {/* 바코드 (세로 낮게, 가로 길게) */}
-              <div style={{ background: '#fff', borderRadius: 12, padding: '12px 12px 8px' }}>
-                <Barcode value={signatureId} height={38} />
-                <div style={{ fontSize: 12.5, fontWeight: 700, color: C.ink, letterSpacing: '0.18em', marginTop: 4, fontVariantNumeric: 'tabular-nums' }}>
-                  {String(signatureId)}
-                </div>
-              </div>
+              <div style={{ background: '#fff', borderRadius: 12, padding: '16px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10 }}>
+  <QRCode value={signatureId} size={180} />
+  <div style={{ fontSize: 12.5, fontWeight: 700, color: C.ink, letterSpacing: '0.18em', fontVariantNumeric: 'tabular-nums' }}>
+    {String(signatureId)}
+  </div>
+</div>
               <div style={{ marginTop: 12, fontSize: 11.5, color: 'rgba(255,255,255,0.72)', lineHeight: 1.6 }}>
                 이 화면을 <b style={{ color: C.yellow }}>현장 담당자</b>에게 보여주세요.
               </div>
@@ -284,7 +320,7 @@ function DoneOverlay({ total, onClose, couponReady, signatureId, isNew, exchange
               )}
             </motion.div>
           )}
-
+{/* 
           <button
             onClick={onClose}
             style={{
@@ -294,7 +330,7 @@ function DoneOverlay({ total, onClose, couponReady, signatureId, isNew, exchange
             }}
           >
             확인
-          </button>
+          </button> */}
         </div>
       </motion.div>
     </motion.div>
