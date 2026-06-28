@@ -3121,11 +3121,11 @@ activeTab === 'power' ? (
         </div>
 
         <footer style={{ ...s.footer, padding: isMobile ? '14px 20px' : '14px 40px', flexDirection: isMobile ? 'column' : 'row', gap: isMobile ? 4 : 14 }}>
-          <span>© 2026 GRBlab AI 위험성평가 산업안전관리 시스템</span>
-          {!isMobile && <span style={s.footerDiv}>|</span>}
+          <span>© 부산의료복지사회적협동조합</span>
+          {/* {!isMobile && <span style={s.footerDiv}>|</span>}
           <span>고용노동부 · 안전보건공단 의 KRAS채계와 호환</span>
           {!isMobile && <span style={s.footerDiv}>|</span>}
-          <span>sky011900@gmail.com</span>
+          <span>sky011900@gmail.com</span> */}
         </footer>
       </div>
 
