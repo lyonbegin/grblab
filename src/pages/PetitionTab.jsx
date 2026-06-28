@@ -324,6 +324,33 @@ function SegmentBtn({ label, active, onClick }) {
   )
 }
 
+function CheckRow({ checked, onToggle, children }) {
+  return (
+    <button type="button" onClick={onToggle}
+      onMouseDown={e => e.preventDefault()}
+      style={{
+        display: 'flex', alignItems: 'flex-start', gap: 10, width: '100%',
+        background: 'transparent', border: 'none', padding: 0, margin: 0,
+        cursor: 'pointer', textAlign: 'left', fontFamily: FONT,
+      }}>
+      <span style={{
+        flex: '0 0 22px', width: 22, height: 22, borderRadius: 6, marginTop: 1,
+        background: checked ? C.navy : '#fff',
+        border: `2px solid ${checked ? C.navy : C.hair}`,
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        transition: 'all 0.15s',
+      }}>
+        {checked && (
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={C.yellow} strokeWidth="3.4" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M20 6 L9 17 L4 12" />
+          </svg>
+        )}
+      </span>
+      <span style={{ flex: 1, fontSize: 13, lineHeight: 1.55, color: C.ink }}>{children}</span>
+    </button>
+  )
+}
+
 function SignOverlay({ onDone, onClose }) {
   const [step, setStep] = useState(1)
   const [name, setName] = useState('')
@@ -333,11 +360,18 @@ function SignOverlay({ onDone, onClose }) {
   const [idNum, setIdNum] = useState('')
   const [submitted, setSubmitted] = useState(false)
 
-  // STEP1: 이름 + 전화번호를 한 화면에 함께 노출 → 둘 사이는 키보드가 안 내려감
-  const step1ok = name.trim().length > 0 && isPhone(phone)
-  // STEP2: 장애여부
+  // 동의 체크박스
+  const [agreeCampaign, setAgreeCampaign] = useState(true)   // 조합설립·청원 동의 (디폴트 ON)
+  const [agreePrivacy, setAgreePrivacy] = useState(false)    // 개인정보 수집·이용 (디폴트 OFF)
+  const [privacyOpen, setPrivacyOpen] = useState(false)      // 개인정보 상세 펼침
+
+  // STEP1: 이름 + 전화번호 + 청원 동의 체크
+  const step1ok = name.trim().length > 0 && isPhone(phone) && agreeCampaign
+  // STEP2: 장애인 본인확인 정보 입력 (비장애인은 참여 불가)
   const rrnFilled = onlyRrn(idNum).length > 0
-  const step2ok = disabled ? true : (regNum.trim().length >= 4 || (rrnFilled && isValidRRN(idNum)))
+  const idInfoOk = regNum.trim().length >= 4 || (rrnFilled && isValidRRN(idNum))
+  // 장애인이고(=!disabled) + 본인확인 정보 + 개인정보 동의가 있어야 완료 가능
+  const step2ok = !disabled && idInfoOk && agreePrivacy
 
   // STEP1 → STEP2 전환 시점에만 키보드가 한 번 내려갑니다(장애여부는 입력칸이 아니라 선택).
   const goNext = () => {
@@ -381,9 +415,12 @@ function SignOverlay({ onDone, onClose }) {
         <div style={{ display: step === 1 ? 'block' : 'none' }}>
           <div style={sheetSt.stepLabel}>STEP 1 / 2</div>
           <div style={sheetSt.title}>청원 서명 참여</div>
-          <div style={sheetSt.desc}>
-            이 청원은 <b style={{ color: C.ink }}>(가칭) 부산의료복지사회적협동조합</b> 이름으로 진행합니다.<br />
-            조합 설립과 청원에 동의합니다.
+
+          {/* 조합설립·청원 동의 체크 */}
+          <div style={{ background: C.cream, borderRadius: 12, padding: '14px 16px', marginBottom: 22 }}>
+            <CheckRow checked={agreeCampaign} onToggle={() => setAgreeCampaign(v => !v)}>
+              이 청원은 <b style={{ color: C.navy }}>(가칭) 부산의료복지사회적협동조합</b> 이름으로 진행하며, 조합 설립과 청원에 동의합니다.
+            </CheckRow>
           </div>
 
           <label style={sheetSt.label}>이름</label>
@@ -411,17 +448,36 @@ function SignOverlay({ onDone, onClose }) {
         <div style={{ display: step === 2 ? 'block' : 'none' }}>
           <div style={sheetSt.stepLabel}>STEP 2 / 2</div>
           <div style={sheetSt.title}>장애 여부 선택</div>
-          <div style={{ display: 'flex', gap: 10, marginBottom: 24 }}>
+          <div style={{ ...sheetSt.desc, marginBottom: 18 }}>
+            이 청원은 장애인의 의료 접근권 보장을 요구하는 캠페인입니다. 청원의 취지에 따라 장애인 당사자에 한해 참여가 가능하며, 본인확인을 위해 문서확인번호 또는 주민등록번호를 입력해 주세요.
+          </div>
+          <div style={{ display: 'flex', gap: 10, marginBottom: 20 }}>
             <SegmentBtn label="장애인" active={!disabled} onClick={() => setDisabled(false)} />
             <SegmentBtn label="비장애인" active={disabled} onClick={() => setDisabled(true)} />
           </div>
 
-          {/* 장애인/비장애인 토글도 input을 unmount하지 않고 display로만 숨깁니다 */}
+          {/* 비장애인 선택 시 안내 (참여 불가) */}
+          <div style={{ display: disabled ? 'block' : 'none' }}>
+            <div style={{
+              background: C.cream, border: `1px solid ${C.hair}`, borderRadius: 12,
+              padding: '18px 16px', marginBottom: 20, textAlign: 'center',
+            }}>
+              <div style={{ fontSize: 14, fontWeight: 800, color: C.navy, marginBottom: 6 }}>
+                본 청원은 장애인 당사자만 참여하실 수 있습니다
+              </div>
+              <div style={{ fontSize: 12.5, color: C.inkSoft, lineHeight: 1.7 }}>
+                본 청원은 장애인 당사자의 목소리를 모으는 캠페인입니다.<br />
+                그 취지를 살리기 위해 장애인에 한해 서명에 참여하실 수 있습니다.
+              </div>
+            </div>
+          </div>
+
+          {/* 장애인 선택 시 본인확인 입력 */}
           <div style={{ display: disabled ? 'none' : 'block' }}>
-            <label style={sheetSt.label}>장애인 등록번호</label>
+            <label style={sheetSt.label}>장애인증명서 문서확인번호(12자리)</label>
             <input style={{ ...sheetSt.input }}
               value={regNum}
-              onChange={e => setRegNum(e.target.value)} placeholder="등록번호 입력" />
+              onChange={e => setRegNum(e.target.value)} placeholder="문서확인번호 입력" />
             <div style={{ textAlign: 'center', fontSize: 13, color: C.navySoft, fontWeight: 700, margin: '0 0 14px' }}>또는</div>
             <label style={sheetSt.label}>주민등록번호</label>
             <input style={{ ...sheetSt.input }}
@@ -433,10 +489,33 @@ function SignOverlay({ onDone, onClose }) {
                 올바른 주민등록번호가 아닙니다.
               </p>
             )}
-            <p style={{ fontSize: 12, color: C.navySoft, lineHeight: 1.65, margin: '0 0 16px' }}>
-              장애인 등록번호를 모르실 경우 주민번호를 기입하시면 됩니다.<br />
+            <p style={{ fontSize: 12, color: C.navySoft, lineHeight: 1.65, margin: '0 0 18px' }}>
+              문서확인번호를 모르실 경우 주민등록번호를 입력하시면 됩니다.<br />
               장애인 혜택 적용을 위해 필요합니다.
             </p>
+
+            {/* 개인정보 수집·이용 동의 */}
+            <div style={{ background: C.cream, borderRadius: 12, padding: '14px 16px', marginBottom: 18 }}>
+              <CheckRow checked={agreePrivacy} onToggle={() => setAgreePrivacy(v => !v)}>
+                <b style={{ color: C.navy }}>[필수]</b> 개인정보 수집·이용에 동의합니다.
+              </CheckRow>
+              <button type="button"
+                onClick={() => setPrivacyOpen(v => !v)}
+                style={{
+                  background: 'transparent', border: 'none', cursor: 'pointer',
+                  color: C.navySoft, fontSize: 12, fontWeight: 700, fontFamily: FONT,
+                  marginTop: 8, marginLeft: 32, padding: 0, textDecoration: 'underline',
+                }}>
+                {privacyOpen ? '접기' : '펼쳐보기'}
+              </button>
+              {privacyOpen && (
+                <div style={{ marginTop: 10, marginLeft: 32, fontSize: 11.5, color: C.inkSoft, lineHeight: 1.75 }}>
+                  · 수집 항목: 이름, 휴대폰 번호, 장애 여부, 장애인증명서 문서확인번호 또는 주민등록번호<br />
+                  · 수집 목적: 청원 서명 본인확인, 장애인 여부 확인, 조합 설립 동의 및 기프트카드 지급<br />
+                  · 보유 기간: 청원 종료 및 기프트카드 지급 완료 후 6개월 이내 파기
+                </div>
+              )}
+            </div>
           </div>
 
           {/* 완료 버튼 — 항상 하나만 */}
