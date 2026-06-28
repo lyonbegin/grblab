@@ -133,6 +133,21 @@ function DoneOverlay({ total, onClose, couponReady, signatureId, isNew, exchange
   // 이미 교환완료된 사람이면 카드 대신 안내만, 그 외(신규/미교환)는 바코드 노출
   const showCard = couponReady && !exchanged
 
+  // Web OTP: 담당자가 보낸 인증문자(@grblab.co.kr #코드)를 자동 수신해 표시
+  const [otpCode, setOtpCode] = useState(null)
+  useEffect(() => {
+    if (!showCard) return
+    if (!('OTPCredential' in window)) return // 미지원 브라우저(iOS 등)는 그냥 패스
+    const ac = new AbortController()
+    navigator.credentials.get({
+      otp: { transport: ['sms'] },
+      signal: ac.signal,
+    }).then(otp => {
+      if (otp && otp.code) setOtpCode(otp.code)
+    }).catch(() => { /* 취소/실패 무시 */ })
+    return () => ac.abort()
+  }, [showCard])
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -249,6 +264,24 @@ function DoneOverlay({ total, onClose, couponReady, signatureId, isNew, exchange
               <div style={{ marginTop: 12, fontSize: 11.5, color: 'rgba(255,255,255,0.72)', lineHeight: 1.6 }}>
                 이 화면을 <b style={{ color: C.yellow }}>현장 담당자</b>에게 보여주세요.
               </div>
+
+              {/* Web OTP로 받은 인증번호 자동 표시 */}
+              {otpCode && (
+                <motion.div
+                  initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
+                  style={{
+                    marginTop: 12, background: 'rgba(255,212,0,0.15)',
+                    border: `1px solid ${C.yellow}66`, borderRadius: 10, padding: '12px 14px',
+                  }}>
+                  <div style={{ fontSize: 11, color: C.yellow, fontWeight: 700, marginBottom: 3 }}>받은 인증번호</div>
+                  <div style={{ fontSize: 24, fontWeight: 900, color: '#fff', letterSpacing: '0.2em', fontVariantNumeric: 'tabular-nums' }}>
+                    {otpCode}
+                  </div>
+                  <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.7)', marginTop: 3 }}>
+                    담당자에게 이 번호를 확인시켜 주세요.
+                  </div>
+                </motion.div>
+              )}
             </motion.div>
           )}
 

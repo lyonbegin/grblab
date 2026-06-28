@@ -137,6 +137,7 @@ export default function AdminExchangePage() {
   const displayName = info ? String(info.name || '').split('::::')[0] : ''
 
   // 담당자 폰의 문자 앱을 열어 인증번호를 발송 (외부 SMS 서비스 불필요)
+  // Web OTP 자동입력을 위해 본문 마지막 줄을 "@도메인 #코드" 규격으로 맞춥니다.
   const [sentCode, setSentCode] = useState(null)
   const sendVerifySms = useCallback(() => {
     if (!info || !info.phone) {
@@ -145,10 +146,10 @@ export default function AdminExchangePage() {
     }
     const code = String(Math.floor(10 + Math.random() * 90)) // 2자리 (10~99)
     setSentCode(code)
-    const body = encodeURIComponent(`[부산의료복지사회적협동조합] 본인확인 인증번호 ${code}`)
+    // Web OTP 규격: 안내문 + 빈 줄 + "@도메인 #코드"
+    const text = `[부산의료복지사회적협동조합] 본인확인 인증번호 ${code}\n\n@grblab.co.kr #${code}`
+    const body = encodeURIComponent(text)
     const phone = String(info.phone).replace(/\D/g, '')
-    // iOS는 sms:번호&body=, 그 외는 sms:번호?body= 를 더 잘 처리하지만
-    // 대부분의 모바일에서 ? 형식이 동작합니다.
     window.location.href = `sms:${phone}?body=${body}`
   }, [info])
 
