@@ -2,9 +2,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import { GOALS_DATA, BOOKS_DATA ,SYSTEM_PROMPT } from './constants';
 
 export default function SceneGeneratorEngine() {
-  const GEMINI_API_KEY = "AQ.Ab8RN6JzbpV_y9aVsJdMTJoCzEJhP3CLMC0myUIuFFmKlfCK_Q";
+  const GEMINI_API_KEY = "AQ.Ab8RN6Jwrwo7TruQDJhlsuTuEg5v6AJmeI7hCvdLcijHwIGNig";
 
-  
+
 
   // ===========================================================
   // UI 상태
@@ -147,7 +147,7 @@ export default function SceneGeneratorEngine() {
   // contents는 {role:'user'|'model', parts:[{text}]} 형식으로 매핑)
   // ===========================================================
   const callGeminiAPI = async (messages) => {
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${GEMINI_API_KEY}`;
 
     const contents = messages.map(m => ({
       role: m.role === 'assistant' ? 'model' : 'user',
