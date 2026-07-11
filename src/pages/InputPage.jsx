@@ -2897,25 +2897,25 @@ activeTab === 'power' ? (
       submitSign={analyze3}   // 서명 저장 API 있으면 연결, 없으면 생략 가능
     />
 
+          // ) : (
+          ) : activeTab === 'antitage' ? (
+
+            <AntiageTab
+    isMobile={isMobile}
+    smartEquipmentItems={SMART_EQUIPMENT_ITEMS}
+    onSmartEquipmentClick={handleSmartEquipmentClick}
+    riskGrid={RISK_GRID}
+    ImageGrid={ImageGrid}
+    onRiskImageSelect={handleRiskImageSelect}
+    loading={loading}
+    LoadingUI={LoadingUI}
+    ActionUI={ActionUI}
+    PhoneMockup={PhoneMockup}
+    analyze={analyze3}      
+setPreview={setPreview} 
+  />
+
           ) : (
-//           ) : activeTab === 'antitage' ? (
-
-//             <AntiageTab
-//     isMobile={isMobile}
-//     smartEquipmentItems={SMART_EQUIPMENT_ITEMS}
-//     onSmartEquipmentClick={handleSmartEquipmentClick}
-//     riskGrid={RISK_GRID}
-//     ImageGrid={ImageGrid}
-//     onRiskImageSelect={handleRiskImageSelect}
-//     loading={loading}
-//     LoadingUI={LoadingUI}
-//     ActionUI={ActionUI}
-//     PhoneMockup={PhoneMockup}
-//     analyze={analyze3}      
-// setPreview={setPreview} 
-//   />
-
-//           ) : (
 
             <motion.main
               key="risk"
