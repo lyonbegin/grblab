@@ -2,19 +2,44 @@ import React, { useState, useEffect, useRef } from 'react';
 import {
   GOALS_DATA,
   BOOKS_DATA,
-  SYSTEM_PROMPT_COMMON,
-  SYSTEM_PROMPT_KOR,
-  SYSTEM_PROMPT_ENG,
-  SYSTEM_PROMPT_MATH
+  SYSTEM_PROMPT_COMMON_BASE,
+  SYSTEM_PROMPT_TURNS_DISCOVERY,
+  SYSTEM_PROMPT_TURNS_PROBLEM,
+  SYSTEM_PROMPT_KOR_DISCOVERY,
+  SYSTEM_PROMPT_KOR_PROBLEM,
+  SYSTEM_PROMPT_ENG_PROBLEM,
+  SYSTEM_PROMPT_MATH_PROBLEM,
+  KOR_DISCOVERY_MIDS
 } from './constants';
 
-// 과목 진행 순서와, 과목별 프롬프트 모듈 / 목표 키 / 표시 이름 매핑.
+// 과목 진행 순서와, 과목별 목표 키 / 표시 이름 매핑.
+// 프롬프트 모듈은 과목마다 고정이 아니라 "모드"(발견형/문제유형형)에 따라 달라지므로
+// getSubjectPromptModule()에서 그때그때 계산한다.
 const SUBJECT_ORDER = ['korean', 'english', 'math'];
 const SUBJECT_META = {
-  korean: { label: '국어', goalKey: 'kor', prompt: SYSTEM_PROMPT_KOR },
-  english: { label: '영어', goalKey: 'eng', prompt: SYSTEM_PROMPT_ENG },
-  math: { label: '수학', goalKey: 'math', prompt: SYSTEM_PROMPT_MATH }
+  korean: { label: '국어', goalKey: 'kor' },
+  english: { label: '영어', goalKey: 'eng' },
+  math: { label: '수학', goalKey: 'math' }
 };
+
+// 영어·수학은 항상 문제유형형이다. 국어만 목표(mid)에 따라 발견형/문제유형형으로 갈린다.
+function computeSubjectMode(subject, goalsSnapshot) {
+  if (subject !== 'korean') return 'problem';
+  const midValue = GOALS_DATA.kor[goalsSnapshot.kor]?.mid || '';
+  return KOR_DISCOVERY_MIDS.has(midValue) ? 'discovery' : 'problem';
+}
+
+// 발견형은 원인진단→해결확인의 2단계, 문제유형형은 정답판별→이유판별→접근전략의 3단계.
+function maxTurnsForMode(mode) {
+  return mode === 'discovery' ? 2 : 3;
+}
+
+function getSubjectPromptModule(subject, mode) {
+  if (subject === 'korean') return mode === 'discovery' ? SYSTEM_PROMPT_KOR_DISCOVERY : SYSTEM_PROMPT_KOR_PROBLEM;
+  if (subject === 'english') return SYSTEM_PROMPT_ENG_PROBLEM;
+  if (subject === 'math') return SYSTEM_PROMPT_MATH_PROBLEM;
+  return '';
+}
 
 // Gemini 구조 강제용 JSON 스키마. track_status는 더 이상 모델이 자체 보고하지 않는다 —
 // 턴 진행(완료 여부)은 코드가 "선택 인덱스 === correct_index" 비교로 직접 판정한다.
@@ -70,6 +95,9 @@ export default function SceneGeneratorEngine() {
   const trackAttemptsRef = useRef(trackAttempts);
   // 체크된 과목만 담긴 이번 장면의 실제 진행 순서. startScene에서 채워진다.
   const subjectOrderRef = useRef(SUBJECT_ORDER);
+  // 과목별 모드(발견형/문제유형형). 영어·수학은 항상 'problem', 국어는 선택된 목표의 mid에 따라 결정.
+  // startScene에서 채워지고 이후 장면 내내 고정된다.
+  const subjectModesRef = useRef({ korean: 'problem', english: 'problem', math: 'problem' });
   useEffect(() => { trackCompletedTurnsRef.current = trackCompletedTurns; }, [trackCompletedTurns]);
   useEffect(() => { trackAttemptsRef.current = trackAttempts; }, [trackAttempts]);
 
@@ -125,35 +153,84 @@ export default function SceneGeneratorEngine() {
   // "지금 담당할 과목"은 completedTurns가 2 미만인 것 중 순서상 첫 번째.
   // ===========================================================
   function getActiveSubject(completed) {
-    return subjectOrderRef.current.find(s => completed[s] < 2) || null; // null이면 체크된 과목 모두 완주
+    return subjectOrderRef.current.find(s => completed[s] < maxTurnsForMode(subjectModesRef.current[s])) || null; // null이면 체크된 과목 모두 완주
   }
 
   // ===========================================================
-  // 이번 호출의 맥락(어느 과목·어떤 단계·어떤 지시문)을 코드가 계산한다.
+  // 발견형 단계 지시문 (원인 진단턴 c=0 → 해결 확인턴 c=1, 성공하면 완주)
+  // ===========================================================
+  function discoveryStageLabel(c, a) {
+    const isDeficitPhase = c === 0;
+    if (isDeficitPhase) {
+      return a === 0
+        ? '원인 진단턴 — narration 끝에서 "왜 이런 일이 벌어졌을까?"를 명확히 물어라. choices에는 그 상황의 원인을 설명하는 완전한 문장 3개("~때문에 그렇다" 형태)를 제시하고, 하나만 실제 원인이어야 한다. 전문 용어·공식 이름은 쓰지 말고 평이한 말로 풀어써라. 세 선택지 모두 반드시 같은 지점(같은 원인)에 대한 것이어야 하며, 서로 관련 없는 주제로 흩어지면 안 된다.'
+        : `원인 진단턴 재시도 ${a}회째 — 아이는 방금 틀린 원인을 골랐다. 그 오답이 왜 진짜 원인이 아닌지 직접 설명하지 말고, 그 오답을 사실이라 믿고 시도했을 때 벌어지는 구체적 결과를 사건으로 보여준 뒤, 같은 질문("왜 이런 일이 벌어졌을까?")에 다시 답하게 하라. 선택지는 여전히 같은 지점에 대한 원인 설명 문장 3개여야 한다.${a >= 2 ? ' 이미 여러 번 실패했으니 이번 선택지 중 하나는 확실히 진짜 원인으로 이어지도록 설계하라 (그래도 노골적으로 티내지는 마라).' : ''}`;
+    }
+    return a === 0
+      ? '해결 확인턴 — 원인 진단에 막 성공했다. narration 끝에서 "이 상황을 어떻게 해결하면 될까?"를 명확히 물어라. choices에는 해결 방법을 설명하는 완전한 문장 3개("~하면 해결된다" 형태)를 제시하고, 하나만 실제로 통하는 해결책이어야 한다. 이 선택지들은 반드시 이번 학습목표가 요구하는 판단과 직접 연결되어야 하며, 세 선택지 모두 같은 지점(같은 해결 대상)에 대한 것이어야 한다.'
+      : `해결 확인턴 재시도 ${a}회째 — 아이는 방금 틀린 해결책을 골랐다. 그 해결책이 왜 안 통하는지 직접 설명하지 말고, 그것을 시도했을 때 벌어지는 구체적 실패 사건을 보여준 뒤, 같은 질문("이 상황을 어떻게 해결하면 될까?")에 다시 답하게 하라. 선택지는 여전히 같은 지점에 대한 해결 문장 3개여야 한다.${a >= 2 ? ' 이미 여러 번 실패했으니 이번엔 반드시 성공으로 이어지도록 선택지를 설계하라.' : ''}`;
+  }
+
+  // ===========================================================
+  // 문제유형형 단계 지시문 (정답판별턴 c=0 → 이유판별턴 c=1 → 접근전략턴 c=2, 성공하면 완주)
+  // ===========================================================
+  function problemStageLabel(c, a) {
+    if (c === 0) {
+      return a === 0
+        ? '정답판별턴 — 먼저 이번 학습목표에 해당하는 대표적인 실전 문제 유형을 하나 정하고, 그 유형의 정답 후보 1개와 그럴듯한 오답 후보 2개를 준비해 지금 세계관 상황에 자연스럽게 입혀라. narration 끝에서 "이 상황에서 어떤 것이 맞을까?"류의 질문을 명확히 던지고, choices에는 준비한 후보 3개(정답 1 + 오답 2)를 완성된 형태 그대로 제시하라 — 이 턴에서는 완성된 문장·형태·값을 노출하는 것이 정상이다.'
+        : `정답판별턴 재시도 ${a}회째 — 아이는 방금 오답을 골랐다. 왜 틀렸는지 직접 설명하지 말고, 그 선택대로 진행했을 때 벌어지는 구체적 사건을 보여준 뒤 같은 질문에 다시 답하게 하라. 선택지는 같은 지점(같은 문제 유형)에 대한 후보 3개여야 한다.${a >= 2 ? ' 이미 여러 번 실패했으니 이번 선택지 중 하나는 확실히 정답으로 이어지도록 설계하라 (노골적으로 티내지는 마라).' : ''}`;
+    }
+    if (c === 1) {
+      return a === 0
+        ? '이유판별턴 — 방금 통과한 정답에 대해, narration 끝에서 "왜 그게 맞고 나머지는 왜 아닐까?"류의 질문을 명확히 던져라. choices에는 정답이 맞는 이유(또는 오답이 틀린 이유)를 설명하는 완전한 문장 3개를 제시하고, 하나만 실제로 정확한 이유여야 한다. 문법 용어·공식 명칭은 쓰지 말고 평이한 말로 풀어써라. 세 선택지 모두 같은 지점(같은 이유 판별)에 대한 것이어야 한다.'
+        : `이유판별턴 재시도 ${a}회째 — 아이는 방금 틀린 이유를 골랐다. 그 이유가 왜 안 맞는지 직접 설명하지 말고, 그 오해를 사실이라 믿고 행동했을 때 벌어지는 사건을 보여준 뒤 같은 질문에 다시 답하게 하라.${a >= 2 ? ' 이미 여러 번 실패했으니 이번엔 반드시 성공으로 이어지도록 선택지를 설계하라.' : ''}`;
+    }
+    return a === 0
+      ? '접근전략턴 — 방금 통과한 이유 판별 직후, narration 끝에서 "이런 유형은 앞으로 어떻게 접근하면 정답을 잘 찾을 수 있을까?"류의 질문을 명확히 던져라. choices에는 이번 문제 하나가 아니라 이 유형 전체에 재사용 가능한 풀이 전략을 설명하는 완전한 문장 3개를 제시하고, 하나만 실제로 효과적인 전략이어야 한다. 이 턴을 통과하면 이 과목이 완주된다.'
+      : `접근전략턴 재시도 ${a}회째 — 아이는 방금 비효율적인 전략을 골랐다. 그 전략대로 다음 상황에 시도했을 때 여전히 헤매는 구체적 사건을 보여준 뒤 같은 질문을 다시 던져라.${a >= 2 ? ' 이미 여러 번 실패했으니 이번엔 반드시 성공으로 이어지도록 선택지를 설계하라.' : ''}`;
+  }
+
+  function stageLabelForMode(mode, c, a) {
+    return mode === 'discovery' ? discoveryStageLabel(c, a) : problemStageLabel(c, a);
+  }
+
+  // 다음 과목을 새로 여는 시점의 첫 단계(0회째, 재시도 아님) 지시문.
+  function openingStageLabel(mode) {
+    return mode === 'discovery'
+      ? '원인 진단턴 — narration 끝에서 "왜 이런 일이 벌어졌을까?"를 명확히 묻고, choices에는 그 원인을 설명하는 완전한 문장 3개("~때문에 그렇다" 형태, 하나만 진짜 원인, 세 선택지 모두 같은 지점에 대한 것)를 제시하라. 개념 이름·공식·정답 형태는 절대 등장시키지 마라.'
+      : '정답판별턴 — 먼저 이번 학습목표에 해당하는 대표적인 실전 문제 유형을 하나 정하고, 그 유형의 정답 후보 1개와 그럴듯한 오답 후보 2개를 준비해 지금 세계관 상황에 자연스럽게 입혀라. narration 끝에서 "이 상황에서 어떤 것이 맞을까?"류의 질문을 명확히 던지고, choices에는 준비한 후보 3개(정답 1 + 오답 2)를 완성된 형태 그대로 제시하라.';
+  }
+
+  // ===========================================================
+  // 이번 호출의 맥락(어느 과목·어떤 모드·어떤 단계·어떤 지시문)을 코드가 계산한다.
   // subjectJustResolved: 방금 아이가 선택을 한 과목 (최초 호출이면 undefined).
   // ===========================================================
   function buildTurnContext(subjectJustResolved) {
     const completed = trackCompletedTurnsRef.current;
     const attempts = trackAttemptsRef.current;
+    const modes = subjectModesRef.current;
 
-    // 방금 그 과목이 완전히 완주(2턴 성공)된 경우
-    if (subjectJustResolved && completed[subjectJustResolved] >= 2) {
+    // 방금 그 과목이 완전히 완주된 경우 (발견형=2턴, 문제유형형=3턴 성공)
+    if (subjectJustResolved && completed[subjectJustResolved] >= maxTurnsForMode(modes[subjectJustResolved])) {
       const next = getActiveSubject(completed);
       if (next) {
+        const nextMode = modes[next];
         return {
           activeTrack: next,
           subjectForModule: next,
+          mode: nextMode,
           isDeficitPhase: true,
           sceneComplete: false,
-          instruction: `"${SUBJECT_META[subjectJustResolved].label}" 과목이 방금 완주되었다. narration 안에서 그 완주를 짧게 매듭짓고, 곧바로 다음 과목인 "${SUBJECT_META[next].label}"의 결핍 상황(막힘)을 새로 열어라. active_track에는 "${next}"를 넣어라.
+          instruction: `"${SUBJECT_META[subjectJustResolved].label}" 과목이 방금 완주되었다. narration 안에서 그 완주를 짧게 매듭짓고, 곧바로 다음 과목인 "${SUBJECT_META[next].label}"의 새 단계를 열어라. active_track에는 "${next}"를 넣어라.
 이번 "${SUBJECT_META[next].label}" 과목의 학습목표는 정확히 다음과 같다: ${sceneInfoRef.current.goalTexts[SUBJECT_META[next].goalKey]}
 narration·origin_reason·choices는 반드시 이 학습목표를 다뤄야 한다. 프롬프트 속 모범 예시의 소재를 그대로 재사용하지 말고 이번 목표에 맞는 새로운 상황을 만들어라.
-narration 끝에서 "왜 이런 일이 벌어졌을까?"를 명확히 묻고, choices에는 그 원인을 설명하는 완전한 문장 3개("~때문에 그렇다" 형태, 하나만 진짜 원인, 세 선택지 모두 같은 지점에 대한 것)를 제시하라. 개념 이름·공식·정답 형태는 절대 등장시키지 마라. ${next !== 'english' ? 'narration과 선택지는 반드시 한국어로 작성하라 (직전 과목이 영어였더라도 지금은 한국어로 전환).' : 'narration과 선택지는 반드시 영어로 작성하라.'}`
+이번 턴: ${openingStageLabel(nextMode)} ${next !== 'english' ? 'narration과 선택지는 반드시 한국어로 작성하라 (직전 과목이 영어였더라도 지금은 한국어로 전환).' : 'narration과 선택지는 반드시 영어로 작성하라.'}`
         };
       }
       return {
         activeTrack: subjectJustResolved,
         subjectForModule: null,
+        mode: null,
         isDeficitPhase: false,
         sceneComplete: true,
         instruction: `"${SUBJECT_META[subjectJustResolved].label}" 과목이 방금 완주되어 국어·영어·수학 세 과목이 모두 완주되었다. scene_complete를 true로 하고, 세 과목이 함께 마무리되는 짧은 결말 narration을 작성하라. choices는 빈 배열로 둬라.`
@@ -161,44 +238,41 @@ narration 끝에서 "왜 이런 일이 벌어졌을까?"를 명확히 묻고, ch
     }
 
     const subject = subjectJustResolved || getActiveSubject(completed);
+    const mode = modes[subject];
     const c = completed[subject];
     const a = attempts[subject];
-    const isDeficitPhase = c === 0;
-
-    let stageLabel;
-    if (isDeficitPhase) {
-      stageLabel = a === 0
-        ? '원인 진단턴 — narration 끝에서 "왜 이런 일이 벌어졌을까?"를 명확히 물어라. choices에는 그 상황의 원인을 설명하는 완전한 문장 3개("~때문에 그렇다" 형태)를 제시하고, 하나만 실제 원인이어야 한다. 전문 용어·공식 이름은 쓰지 말고 평이한 말로 풀어써라. 세 선택지 모두 반드시 같은 지점(같은 원인)에 대한 것이어야 하며, 서로 관련 없는 주제로 흩어지면 안 된다.'
-        : `원인 진단턴 재시도 ${a}회째 — 아이는 방금 틀린 원인을 골랐다. 그 오답이 왜 진짜 원인이 아닌지 직접 설명하지 말고, 그 오답을 사실이라 믿고 시도했을 때 벌어지는 구체적 결과를 사건으로 보여준 뒤, 같은 질문("왜 이런 일이 벌어졌을까?")에 다시 답하게 하라. 선택지는 여전히 같은 지점에 대한 원인 설명 문장 3개여야 한다.${a >= 2 ? ' 이미 여러 번 실패했으니 이번 선택지 중 하나는 확실히 진짜 원인으로 이어지도록 설계하라 (그래도 노골적으로 티내지는 마라).' : ''}`;
-    } else {
-      stageLabel = a === 0
-        ? '해결 확인턴 — 원인 진단에 막 성공했다. narration 끝에서 "이 상황을 어떻게 해결하면 될까?"를 명확히 물어라. choices에는 해결 방법을 설명하는 완전한 문장 3개("~하면 해결된다" 형태)를 제시하고, 하나만 실제로 통하는 해결책이어야 한다. 이 선택지들은 반드시 이번 학습목표가 요구하는 판단과 직접 연결되어야 하며, 세 선택지 모두 같은 지점(같은 해결 대상)에 대한 것이어야 한다.'
-        : `해결 확인턴 재시도 ${a}회째 — 아이는 방금 틀린 해결책을 골랐다. 그 해결책이 왜 안 통하는지 직접 설명하지 말고, 그것을 시도했을 때 벌어지는 구체적 실패 사건을 보여준 뒤, 같은 질문("이 상황을 어떻게 해결하면 될까?")에 다시 답하게 하라. 선택지는 여전히 같은 지점에 대한 해결 문장 3개여야 한다.${a >= 2 ? ' 이미 여러 번 실패했으니 이번엔 반드시 성공으로 이어지도록 선택지를 설계하라.' : ''}`;
-    }
+    // 수학의 "결핍턴 선택지가 완성된 숫자여서는 안 된다" 검증은 발견형 원인진단턴에만 해당한다.
+    // 문제유형형 정답판별턴에서는 완성된 값을 선택지로 주는 것이 정상이므로 여기서는 항상 false.
+    const isDeficitPhase = mode === 'discovery' && c === 0;
+    const stageLabel = stageLabelForMode(mode, c, a);
 
     return {
       activeTrack: subject,
       subjectForModule: subject,
+      mode,
       isDeficitPhase,
       sceneComplete: false,
       instruction: `지금 담당할 과목은 "${SUBJECT_META[subject].label}"이다. active_track 필드에는 반드시 "${subject}"를 넣어라.
 이번 "${SUBJECT_META[subject].label}" 과목의 학습목표는 정확히 다음과 같다: ${sceneInfoRef.current.goalTexts[SUBJECT_META[subject].goalKey]}
-narration·origin_reason·choices는 반드시 이 학습목표를 다뤄야 한다. 이 목표와 무관한 다른 문법·개념·주제를 다루면 안 된다. 프롬프트 안에 참고용으로 실린 모범 예시(예: 조사 생략, 비교급 등)는 서술 스타일과 밀도를 보여주기 위한 것일 뿐이니, 그 예시의 소재나 상황을 그대로 재사용하지 말고 이번 학습목표에 맞는 완전히 새로운 상황을 만들어라.
+narration·origin_reason·choices는 반드시 이 학습목표를 다뤄야 한다. 이 목표와 무관한 다른 문법·개념·주제를 다루면 안 된다. 프롬프트 안에 참고용으로 실린 모범 예시는 서술 스타일과 밀도를 보여주기 위한 것일 뿐이니, 그 예시의 소재나 상황을 그대로 재사용하지 말고 이번 학습목표에 맞는 완전히 새로운 상황을 만들어라.
 이번 턴: ${stageLabel} ${subject !== 'english' ? `(narration과 선택지는 반드시 한국어로 작성하라. 직전 턴이 영어였더라도 지금은 한국어로 전환하라.)` : ''}`
     };
   }
 
   function buildSystemInstruction(ctx) {
     if (!ctx.subjectForModule) {
-      return `${SYSTEM_PROMPT_COMMON}
+      return `${SYSTEM_PROMPT_COMMON_BASE}
 
 [지금 이 턴의 지시]
 ${ctx.instruction}`;
     }
-    const meta = SUBJECT_META[ctx.subjectForModule];
-    return `${SYSTEM_PROMPT_COMMON}
+    const turnsBlock = ctx.mode === 'discovery' ? SYSTEM_PROMPT_TURNS_DISCOVERY : SYSTEM_PROMPT_TURNS_PROBLEM;
+    const subjectModule = getSubjectPromptModule(ctx.subjectForModule, ctx.mode);
+    return `${SYSTEM_PROMPT_COMMON_BASE}
 
-${meta.prompt}
+${turnsBlock}
+
+${subjectModule}
 
 [지금 이 턴의 지시]
 ${ctx.instruction}`;
@@ -447,8 +521,19 @@ ${ctx.instruction}`;
       sceneComplete: !!result.scene_complete,
       selectedChoiceIndex: null,
       completedTurnsSnapshot: trackCompletedTurnsRef.current[result.active_track] ?? 0,
-      attemptsSnapshot: trackAttemptsRef.current[result.active_track] ?? 0
+      attemptsSnapshot: trackAttemptsRef.current[result.active_track] ?? 0,
+      maxTurnsSnapshot: maxTurnsForMode(subjectModesRef.current[result.active_track])
     }]);
+  }
+
+  // 과목별 완주 기준 턴수를 모드에 맞게 계산해 문자열로 보여준다. (발견형=2, 문제유형형=3)
+  function maxTurnsSummary() {
+    const modes = subjectModesRef.current;
+    return JSON.stringify({
+      korean: maxTurnsForMode(modes.korean),
+      english: maxTurnsForMode(modes.english),
+      math: maxTurnsForMode(modes.math)
+    });
   }
 
   // ===========================================================
@@ -456,7 +541,10 @@ ${ctx.instruction}`;
   // ===========================================================
   function buildInitialUserMessage() {
     const info = sceneInfoRef.current;
-    const ctx = buildTurnContext(undefined); // 국어, 결핍턴, 0/0에서 시작
+    const ctx = buildTurnContext(undefined); // 첫 과목의 첫 단계(0/0)에서 시작
+    const openingAction = ctx.mode === 'discovery'
+      ? `곧바로 "${SUBJECT_META[ctx.activeTrack].label}" 과목의 결핍 상황을 겪게 한 뒤 원인 진단턴으로 들어가라`
+      : `곧바로 "${SUBJECT_META[ctx.activeTrack].label}" 과목의 실전 문제 상황을 겪게 한 뒤 정답판별턴으로 들어가라`;
     return `[입력값 — 이 장면의 고정 정보. 이후 대화 내내 유지할 것]
 CHAPTER_AREA: ${info.chapterArea}
 CHAPTER_GRADE: ${info.chapterGrade}
@@ -468,11 +556,11 @@ ENGLISH_GOAL: ${info.goalTexts.eng}
 ENGLISH_LEVEL: ${levels.eng} (1=가장 쉬움 ~ 5=가장 어려움)
 MATH_GOAL: ${info.goalTexts.math}
 MATH_LEVEL: ${levels.math} (1=가장 쉬움 ~ 5=가장 어려움)
-완료된 턴수: ${JSON.stringify(trackCompletedTurnsRef.current)} (과목별 0~2, 2면 완주)
+완료된 턴수: ${JSON.stringify(trackCompletedTurnsRef.current)} (과목별 완주 기준: ${maxTurnsSummary()})
 이번 단계 시도 횟수: ${JSON.stringify(trackAttemptsRef.current)}
 지금 담당할 과목: ${SUBJECT_META[ctx.activeTrack].label} (${ctx.activeTrack})
 
-첫 단락(오프닝)을 생성하라. 아직 선택은 없었다. 새로운 허구의 세계관과 등장인물을 이번 응답에서 창작해 오프닝을 시작하고, 곧바로 "${SUBJECT_META[ctx.activeTrack].label}" 과목의 결핍 상황을 겪게 한 뒤 원인 진단턴으로 들어가라. JSON만 출력하라.`;
+첫 단락(오프닝)을 생성하라. 아직 선택은 없었다. 새로운 허구의 세계관과 등장인물을 이번 응답에서 창작해 오프닝을 시작하고, ${openingAction}. JSON만 출력하라.`;
   }
 
   function buildChoiceUserMessage(choiceText, wasCorrect) {
@@ -480,7 +568,7 @@ MATH_LEVEL: ${levels.math} (1=가장 쉬움 ~ 5=가장 어려움)
 
 이 선택은 ${wasCorrect ? '성공 — 상황을 실제로 돌파하는 선택이었다' : '실패 — 그럴듯했지만 막다른 선택이었다'}.
 지금까지의 대화(직전 장면, 등장인물, 세계관, 진행 상황)를 그대로 이어받아 다음 단락을 생성하라. 절대 새로 시작하지 말고, 방금 선택의 직접적 결과로 이어지는 사건을 전개하라.
-완료된 턴수: ${JSON.stringify(trackCompletedTurnsRef.current)} (과목별 0~2, 2면 완주)
+완료된 턴수: ${JSON.stringify(trackCompletedTurnsRef.current)} (과목별 완주 기준: ${maxTurnsSummary()})
 이번 단계 시도 횟수: ${JSON.stringify(trackAttemptsRef.current)}
 
 JSON만 출력하라.`;
@@ -527,11 +615,22 @@ JSON만 출력하라.`;
 
     console.log('최종 goalTexts (프롬프트에 실제로 들어갈 문자열):', sceneInfoRef.current.goalTexts);
 
-    // 체크 해제된 과목은 completedTurns를 처음부터 2(완주)로 두어, getActiveSubject가 자동으로 건너뛴다.
+    // 과목별 모드(발견형/문제유형형)를 먼저 확정한다. 영어·수학은 항상 문제유형형,
+    // 국어는 선택된 목표(mid)에 따라 자동 분기된다. 이 값은 장면이 끝날 때까지 고정된다.
+    const subjectModes = {
+      korean: computeSubjectMode('korean', goals),
+      english: computeSubjectMode('english', goals),
+      math: computeSubjectMode('math', goals)
+    };
+    subjectModesRef.current = subjectModes;
+    console.log('과목별 모드(발견형/문제유형형):', subjectModes, '(국어 mid:', GOALS_DATA.kor[goals.kor]?.mid, ')');
+
+    // 체크 해제된 과목은 completedTurns를 처음부터 그 과목의 완주 기준(모드별 2 또는 3)으로 두어,
+    // getActiveSubject가 자동으로 건너뛴다.
     const initialCompleted = {
-      korean: enabledSubjects.korean ? 0 : 2,
-      english: enabledSubjects.english ? 0 : 2,
-      math: enabledSubjects.math ? 0 : 2
+      korean: enabledSubjects.korean ? 0 : maxTurnsForMode(subjectModes.korean),
+      english: enabledSubjects.english ? 0 : maxTurnsForMode(subjectModes.english),
+      math: enabledSubjects.math ? 0 : maxTurnsForMode(subjectModes.math)
     };
     const initialAttempts = { korean: 0, english: 0, math: 0 };
     setTrackCompletedTurns(initialCompleted);
@@ -571,7 +670,8 @@ JSON만 출력하라.`;
     let nextAttempts = prevAttempts;
 
     if (wasCorrect) {
-      nextCompleted = { ...prevCompleted, [subject]: Math.min(2, (prevCompleted[subject] || 0) + 1) };
+      const maxForSubject = maxTurnsForMode(subjectModesRef.current[subject]);
+      nextCompleted = { ...prevCompleted, [subject]: Math.min(maxForSubject, (prevCompleted[subject] || 0) + 1) };
       nextAttempts = { ...prevAttempts, [subject]: 0 };
     } else {
       nextAttempts = { ...prevAttempts, [subject]: (prevAttempts[subject] || 0) + 1 };
@@ -603,7 +703,8 @@ JSON만 출력하라.`;
   function getDisplayStatus(subject) {
     const c = trackCompletedTurns[subject];
     const a = trackAttempts[subject];
-    if (c >= 2) return '완주';
+    const max = maxTurnsForMode(subjectModesRef.current[subject]);
+    if (c >= max) return '완주';
     if (c === 0) return a > 0 ? '실패반복' : '미시작';
     return '깨달음직전';
   }
@@ -663,7 +764,13 @@ JSON만 출력하라.`;
               <select disabled={!enabledSubjects.korean} value={goals.kor} onChange={(e) => setGoals({ ...goals, kor: parseInt(e.target.value, 10) })}>
                 {GOALS_DATA.kor.map((g, idx) => <option key={idx} value={idx}>{g.title}</option>)}
               </select>
-              <div className="goal-detail">{goalFullText('kor', GOALS_DATA.kor[goals.kor])}</div>
+              <div className="goal-detail">
+                {goalFullText('kor', GOALS_DATA.kor[goals.kor])}
+                {' '}
+                <span className="mode-badge">
+                  [{computeSubjectMode('korean', goals) === 'discovery' ? '발견형 · 2단계' : '문제유형형 · 3단계'}]
+                </span>
+              </div>
               <div className="level-row">
                 <span>난이도</span>
                 <div className="level-btns">
@@ -695,7 +802,11 @@ JSON만 출력하라.`;
               <select disabled={!enabledSubjects.english} value={goals.eng} onChange={(e) => setGoals({ ...goals, eng: parseInt(e.target.value, 10) })}>
                 {GOALS_DATA.eng.map((g, idx) => <option key={idx} value={idx}>{g.title}</option>)}
               </select>
-              <div className="goal-detail">{goalFullText('eng', GOALS_DATA.eng[goals.eng])}</div>
+              <div className="goal-detail">
+                {goalFullText('eng', GOALS_DATA.eng[goals.eng])}
+                {' '}
+                <span className="mode-badge">[문제유형형 · 3단계]</span>
+              </div>
               <div className="level-row">
                 <span>난이도</span>
                 <div className="level-btns">
@@ -727,7 +838,11 @@ JSON만 출력하라.`;
               <select disabled={!enabledSubjects.math} value={goals.math} onChange={(e) => setGoals({ ...goals, math: parseInt(e.target.value, 10) })}>
                 {GOALS_DATA.math.map((g, idx) => <option key={idx} value={idx}>{g.title}</option>)}
               </select>
-              <div className="goal-detail">{goalFullText('math', GOALS_DATA.math[goals.math])}</div>
+              <div className="goal-detail">
+                {goalFullText('math', GOALS_DATA.math[goals.math])}
+                {' '}
+                <span className="mode-badge">[문제유형형 · 3단계]</span>
+              </div>
               <div className="level-row">
                 <span>난이도</span>
                 <div className="level-btns">
@@ -765,7 +880,7 @@ JSON만 출력하라.`;
                 <div className="debug-strip">
                   <b>[테스트용 디버그]</b> 현재 트랙: <b>{trackLabel(log.activeTrack)}</b>
                   {!log.sceneComplete && (
-                    <> (완료 턴 {log.completedTurnsSnapshot}/2 · 이번 단계 시도 {log.attemptsSnapshot + 1}회째)</>
+                    <> (완료 턴 {log.completedTurnsSnapshot}/{log.maxTurnsSnapshot} · 이번 단계 시도 {log.attemptsSnapshot + 1}회째)</>
                   )}
                   {log.originReason && (
                     <><br /><b>설계 메모(비공개):</b> {log.originReason}</>
