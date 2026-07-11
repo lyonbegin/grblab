@@ -220,11 +220,12 @@ export default function SceneGeneratorEngine() {
           subjectForModule: next,
           mode: nextMode,
           isDeficitPhase: true,
+          phaseIndex: 0,
           sceneComplete: false,
           instruction: `"${SUBJECT_META[subjectJustResolved].label}" 과목이 방금 완주되었다. narration 안에서 그 완주를 짧게 매듭짓고, 곧바로 다음 과목인 "${SUBJECT_META[next].label}"의 새 단계를 열어라. active_track에는 "${next}"를 넣어라.
 이번 "${SUBJECT_META[next].label}" 과목의 학습목표는 정확히 다음과 같다: ${sceneInfoRef.current.goalTexts[SUBJECT_META[next].goalKey]}
 narration·origin_reason·choices는 반드시 이 학습목표를 다뤄야 한다. 프롬프트 속 모범 예시의 소재를 그대로 재사용하지 말고 이번 목표에 맞는 새로운 상황을 만들어라.
-이번 턴: ${openingStageLabel(nextMode)} ${next !== 'english' ? 'narration과 선택지는 반드시 한국어로 작성하라 (직전 과목이 영어였더라도 지금은 한국어로 전환).' : 'narration과 선택지는 반드시 영어로 작성하라.'}`
+이번 턴: ${openingStageLabel(nextMode)} ${next !== 'english' ? 'narration과 선택지는 반드시 한국어로 작성하라 (직전 과목이 영어였더라도 지금은 한국어로 전환).' : '이 턴은 정답판별턴이므로 narration과 선택지는 반드시 영어로 작성하라.'}`
         };
       }
       return {
@@ -232,6 +233,7 @@ narration·origin_reason·choices는 반드시 이 학습목표를 다뤄야 한
         subjectForModule: null,
         mode: null,
         isDeficitPhase: false,
+        phaseIndex: null,
         sceneComplete: true,
         instruction: `"${SUBJECT_META[subjectJustResolved].label}" 과목이 방금 완주되어 국어·영어·수학 세 과목이 모두 완주되었다. scene_complete를 true로 하고, 세 과목이 함께 마무리되는 짧은 결말 narration을 작성하라. choices는 빈 배열로 둬라.`
       };
@@ -246,16 +248,28 @@ narration·origin_reason·choices는 반드시 이 학습목표를 다뤄야 한
     const isDeficitPhase = mode === 'discovery' && c === 0;
     const stageLabel = stageLabelForMode(mode, c, a);
 
+    // 영어 과목의 언어 지시는 발견형/문제유형형 공통이 아니라 턴(단계)마다 다르다:
+    // 정답판별턴(c===0)은 전부 영어, 이유판별턴·접근전략턴(c>=1)은 한국어 뼈대 + 영어 원문 인용 혼용.
+    let languageNote;
+    if (subject !== 'english') {
+      languageNote = '(narration과 선택지는 반드시 한국어로 작성하라. 직전 턴이 영어였더라도 지금은 한국어로 전환하라.)';
+    } else if (mode === 'problem' && c >= 1) {
+      languageNote = '(이 턴은 이유판별턴/접근전략턴이다. narration과 선택지의 뼈대는 한국어로 쓰되, 판별 대상이 되는 영어 표현은 절대 번역하지 말고 원문 그대로 인용해 문장 속에 남겨두어라. 통째로 한국어로만 쓰거나 통째로 영어로만 쓰면 안 된다 — 반드시 혼용하라.)';
+    } else {
+      languageNote = '(이 턴은 정답판별턴이다. narration과 선택지는 반드시 영어로 작성하라.)';
+    }
+
     return {
       activeTrack: subject,
       subjectForModule: subject,
       mode,
       isDeficitPhase,
+      phaseIndex: c,
       sceneComplete: false,
       instruction: `지금 담당할 과목은 "${SUBJECT_META[subject].label}"이다. active_track 필드에는 반드시 "${subject}"를 넣어라.
 이번 "${SUBJECT_META[subject].label}" 과목의 학습목표는 정확히 다음과 같다: ${sceneInfoRef.current.goalTexts[SUBJECT_META[subject].goalKey]}
 narration·origin_reason·choices는 반드시 이 학습목표를 다뤄야 한다. 이 목표와 무관한 다른 문법·개념·주제를 다루면 안 된다. 프롬프트 안에 참고용으로 실린 모범 예시는 서술 스타일과 밀도를 보여주기 위한 것일 뿐이니, 그 예시의 소재나 상황을 그대로 재사용하지 말고 이번 학습목표에 맞는 완전히 새로운 상황을 만들어라.
-이번 턴: ${stageLabel} ${subject !== 'english' ? `(narration과 선택지는 반드시 한국어로 작성하라. 직전 턴이 영어였더라도 지금은 한국어로 전환하라.)` : ''}`
+이번 턴: ${stageLabel} ${languageNote}`
     };
   }
 
@@ -361,11 +375,24 @@ ${ctx.instruction}`;
     }
 
     const englishInPlay = ctx.subjectForModule === 'english' || ctx.activeTrack === 'english';
-    if (englishInPlay) {
-      const hangulCount = (narration.match(/[가-힣]/g) || []).length;
-      const ratio = hangulCount / Math.max(1, narration.length);
-      if (ratio > 0.4) {
-        problems.push('영어 관련 턴인데 narration이 한국어 위주로 작성되었다. 지문 전체를 영어로 다시 작성하라 (짧은 지시문 정도만 한글 허용).');
+    if (englishInPlay && !ctx.sceneComplete) {
+      const englishText = narration + ' ' + choicesJoined;
+      const hangulCount = (englishText.match(/[가-힣]/g) || []).length;
+      const asciiLetterCount = (englishText.match(/[A-Za-z]/g) || []).length;
+      const isAnswerPhase = ctx.mode !== 'problem' || ctx.phaseIndex === 0; // 발견형 전체, 또는 문제유형형 정답판별턴
+      if (isAnswerPhase) {
+        const ratio = hangulCount / Math.max(1, englishText.length);
+        if (ratio > 0.4) {
+          problems.push('영어 정답판별턴(또는 발견형 영어 턴)인데 narration/선택지가 한국어 위주로 작성되었다. 이 단계는 지문 자체가 영어여야 하므로 전체를 영어로 다시 작성하라 (짧은 지시문 정도만 한글 허용).');
+        }
+      } else {
+        // 이유판별턴/접근전략턴: 한국어 뼈대 + 영어 원문 인용이 섞인 혼용 문장이어야 한다.
+        if (hangulCount === 0) {
+          problems.push('영어 이유판별턴/접근전략턴인데 narration과 선택지가 전부 영어로만 쓰였다. 사고의 뼈대(질문·설명)는 한국어로 짜고, 그 안에 판별 대상이 되는 영어 표현만 원문 그대로 인용하라.');
+        }
+        if (asciiLetterCount < 3) {
+          problems.push('영어 이유판별턴/접근전략턴인데 판별 대상이 되는 영어 표현이 원문 그대로 인용되지 않았다. 설명을 전부 한국어로 번역하지 말고, 핵심 영어 단어·구·문장을 큰따옴표로 원문 그대로 인용해 문장 속에 남겨두어라.');
+        }
       }
     }
 
