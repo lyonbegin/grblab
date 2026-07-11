@@ -406,9 +406,9 @@ export default function SceneGeneratorEngine() {
   };
 
   // Google Cloud Gemini API 통신 함수
- const callGeminiAPI = async (prompt) => {
+const callGeminiAPI = async (prompt) => {
   // 타겟 URL 변경: 브라우저는 Nginx 서버로 요청을 전송하며, Nginx가 Google로 라우팅
-const url = `https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+  const url = `https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`;
   
   try {
     const response = await fetch(url, {
@@ -420,8 +420,20 @@ const url = `https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flas
     });
     
     if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(`API 요청 실패 (HTTP ${response.status}): ${errorText}`);
+      let detailedError = "";
+      try {
+        // 응답 본문을 JSON 객체로 파싱 시도
+        const errorJson = await response.json();
+        // 콘솔에 객체 형태로 구조화하여 완전히 출력 (트리 형태로 디버깅 가능)
+        console.error("구글 API 반환 상세 에러 정보:", errorJson);
+        // 에러 메시지에 줄바꿈과 들여쓰기를 적용해 가독성 확보
+        detailedError = JSON.stringify(errorJson, null, 2);
+      } catch (e) {
+        // JSON 파싱 실패 시 일반 텍스트로 대체
+        detailedError = await response.text().catch(() => "알 수 없는 에러 본문");
+      }
+      
+      throw new Error(`\n========================================\nAPI 요청 실패 (HTTP ${response.status})\n----------------------------------------\n${detailedError}\n========================================`);
     }
     
     const data = await response.json();
