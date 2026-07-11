@@ -8,8 +8,7 @@ import {
   SYSTEM_PROMPT_MATH
 } from './constants';
 
-// 과목 진행 순서와, 과목별로 어떤 프롬프트 모듈 / 목표 키 / 표시 이름을 쓸지 매핑.
-// "지금 턴이 어느 과목인지"는 모델에게 묻지 않고 이 순서와 trackStatus를 보고 코드가 결정한다.
+// 과목 진행 순서와, 과목별 프롬프트 모듈 / 목표 키 / 표시 이름 매핑.
 const SUBJECT_ORDER = ['korean', 'english', 'math'];
 const SUBJECT_META = {
   korean: { label: '국어', goalKey: 'kor', prompt: SYSTEM_PROMPT_KOR },
@@ -17,8 +16,8 @@ const SUBJECT_META = {
   math: { label: '수학', goalKey: 'math', prompt: SYSTEM_PROMPT_MATH }
 };
 
-// Gemini에게 구조를 강제하기 위한 JSON 스키마. 텍스트 지시("JSON만 출력하라")만으로는
-// 모델이 통째로 무시할 수 있으므로, responseMimeType + responseSchema로 API 레벨에서 강제한다.
+// Gemini 구조 강제용 JSON 스키마. track_status는 더 이상 모델이 자체 보고하지 않는다 —
+// 턴 진행(완료 여부)은 코드가 "선택 인덱스 === correct_index" 비교로 직접 판정한다.
 const SCENE_RESPONSE_SCHEMA = {
   type: 'OBJECT',
   properties: {
@@ -27,18 +26,9 @@ const SCENE_RESPONSE_SCHEMA = {
     narration: { type: 'STRING' },
     choices: { type: 'ARRAY', items: { type: 'STRING' } },
     correct_index: { type: 'INTEGER' },
-    track_status: {
-      type: 'OBJECT',
-      properties: {
-        korean: { type: 'STRING', enum: ['미시작', '실패반복', '깨달음직전', '완주'] },
-        english: { type: 'STRING', enum: ['미시작', '실패반복', '깨달음직전', '완주'] },
-        math: { type: 'STRING', enum: ['미시작', '실패반복', '깨달음직전', '완주'] }
-      },
-      required: ['korean', 'english', 'math']
-    },
     scene_complete: { type: 'BOOLEAN' }
   },
-  required: ['origin_reason', 'active_track', 'narration', 'choices', 'correct_index', 'track_status', 'scene_complete']
+  required: ['origin_reason', 'active_track', 'narration', 'choices', 'correct_index', 'scene_complete']
 };
 
 export default function SceneGeneratorEngine() {
@@ -59,8 +49,11 @@ export default function SceneGeneratorEngine() {
   const [goals, setGoals] = useState({ kor: 0, eng: 0, math: 0 });
   const [levels, setLevels] = useState({ kor: 3, eng: 3, math: 3 });
 
-  const [trackStatus, setTrackStatus] = useState({ korean: '미시작', english: '미시작', math: '미시작' });
-  const [trackTurnCounts, setTrackTurnCounts] = useState({ korean: 0, english: 0, math: 0 });
+  // completedTurns: 과목별 "실제로 성공해서 넘어간" 턴수 (0~2). 2가 되면 그 과목 완주.
+  // attempts: 지금 단계(결핍턴 또는 적용확인턴) 안에서 실패한 횟수. 성공하면 0으로 리셋.
+  // 둘 다 오직 코드(클릭 시 선택 인덱스 === correct_index 비교)로만 갱신되며, 모델 출력에 의존하지 않는다.
+  const [trackCompletedTurns, setTrackCompletedTurns] = useState({ korean: 0, english: 0, math: 0 });
+  const [trackAttempts, setTrackAttempts] = useState({ korean: 0, english: 0, math: 0 });
   const [storyLogs, setStoryLogs] = useState([]);
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
@@ -70,10 +63,10 @@ export default function SceneGeneratorEngine() {
     chapterArea: '', chapterGrade: '', chapterTitle: '',
     selectedBookText: '', selectedTierLabel: '', goalTexts: { kor: '', eng: '', math: '' }
   });
-  const trackStatusRef = useRef(trackStatus);
-  const trackTurnCountsRef = useRef(trackTurnCounts);
-  useEffect(() => { trackStatusRef.current = trackStatus; }, [trackStatus]);
-  useEffect(() => { trackTurnCountsRef.current = trackTurnCounts; }, [trackTurnCounts]);
+  const trackCompletedTurnsRef = useRef(trackCompletedTurns);
+  const trackAttemptsRef = useRef(trackAttempts);
+  useEffect(() => { trackCompletedTurnsRef.current = trackCompletedTurns; }, [trackCompletedTurns]);
+  useEffect(() => { trackAttemptsRef.current = trackAttempts; }, [trackAttempts]);
 
   useEffect(() => {
     const uniqueAreas = Array.from(new Set(BOOKS_DATA.map(b => b.area)));
@@ -121,34 +114,80 @@ export default function SceneGeneratorEngine() {
   }
 
   // ===========================================================
-  // 코드가 "지금 턴은 어느 과목, 어떤 턴유형인지" 직접 계산한다 (모델에게 맡기지 않음)
+  // "지금 담당할 과목"은 completedTurns가 2 미만인 것 중 순서상 첫 번째.
   // ===========================================================
-  function getActiveSubject(status) {
-    return SUBJECT_ORDER.find(s => status[s] !== '완주') || null; // null이면 세 과목 모두 완주
+  function getActiveSubject(completed) {
+    return SUBJECT_ORDER.find(s => completed[s] < 2) || null; // null이면 세 과목 모두 완주
   }
 
-  function getTurnTypeLabel(turnCount) {
-    if (turnCount <= 0) return '결핍턴 (개념 이름·공식·정답 형태를 절대 등장시키지 말 것)';
-    if (turnCount === 1) return '발명턴 (아이가 직접 구체적 형태를 만들어보게 할 것)';
-    return '완결턴 (TRACK_TURN_COUNT 한도 초과 — 이번 응답에서 반드시 마무리하고 완주 처리할 것)';
+  // ===========================================================
+  // 이번 호출의 맥락(어느 과목·어떤 단계·어떤 지시문)을 코드가 계산한다.
+  // subjectJustResolved: 방금 아이가 선택을 한 과목 (최초 호출이면 undefined).
+  // ===========================================================
+  function buildTurnContext(subjectJustResolved) {
+    const completed = trackCompletedTurnsRef.current;
+    const attempts = trackAttemptsRef.current;
+
+    // 방금 그 과목이 완전히 완주(2턴 성공)된 경우
+    if (subjectJustResolved && completed[subjectJustResolved] >= 2) {
+      const next = getActiveSubject(completed);
+      if (next) {
+        return {
+          activeTrack: next,
+          subjectForModule: next,
+          isDeficitPhase: true,
+          sceneComplete: false,
+          instruction: `"${SUBJECT_META[subjectJustResolved].label}" 과목이 방금 완주되었다. narration 안에서 그 완주를 짧게 매듭짓고, 곧바로 다음 과목인 "${SUBJECT_META[next].label}"의 결핍 상황을 새로 열어라. active_track에는 "${next}"를 넣어라. choices는 "${SUBJECT_META[next].label}" 결핍턴에 대한 전략 선택지로 채우고, 개념 이름·공식·정답 형태는 절대 등장시키지 마라.`
+        };
+      }
+      return {
+        activeTrack: subjectJustResolved,
+        subjectForModule: null,
+        isDeficitPhase: false,
+        sceneComplete: true,
+        instruction: `"${SUBJECT_META[subjectJustResolved].label}" 과목이 방금 완주되어 국어·영어·수학 세 과목이 모두 완주되었다. scene_complete를 true로 하고, 세 과목이 함께 마무리되는 짧은 결말 narration을 작성하라. choices는 빈 배열로 둬라.`
+      };
+    }
+
+    const subject = subjectJustResolved || getActiveSubject(completed);
+    const c = completed[subject];
+    const a = attempts[subject];
+    const isDeficitPhase = c === 0;
+
+    let stageLabel;
+    if (isDeficitPhase) {
+      stageLabel = a === 0
+        ? '결핍턴 — 개념 이름·공식·정답 형태를 절대 등장시키지 말 것. "무엇을 해야 할까"라는 전략을 고르는 선택지를 제시하라.'
+        : `결핍턴 재시도 ${a}회째 — 아이는 방금 실패하는 선택을 했다. 그 선택이 만든 구체적 결과를 사건으로 보여준 뒤, 다시 전략을 고르게 하라. 여전히 개념 이름·정답 형태 금지.${a >= 2 ? ' 이미 여러 번 실패했으니 이번 선택지 중 하나는 확실히 성공으로 이어지도록 설계하라 (그래도 노골적으로 티내지는 마라).' : ''}`;
+    } else {
+      stageLabel = a === 0
+        ? '적용 확인턴 — 전략 발명에 막 성공했다. 그 발명을 실제로 적용해 확인하는 짧은 문제를 제시하라. 이제부터는 개념 이름이 등장해도 된다.'
+        : `적용 확인턴 재시도 ${a}회째 — 아이는 방금 적용에 실패했다. 그 실패를 사건으로 보여준 뒤 다시 적용을 시도하게 하라.${a >= 2 ? ' 이미 여러 번 실패했으니 이번엔 반드시 성공으로 이어지도록 선택지를 설계하라.' : ''}`;
+    }
+
+    return {
+      activeTrack: subject,
+      subjectForModule: subject,
+      isDeficitPhase,
+      sceneComplete: false,
+      instruction: `지금 담당할 과목은 "${SUBJECT_META[subject].label}"이다. active_track 필드에는 반드시 "${subject}"를 넣어라. 이번 턴: ${stageLabel}`
+    };
   }
 
-  // 이번 호출에 실제로 보낼 systemInstruction을 조합한다.
-  // 공통 섀시 + "지금 담당하는 과목 모듈 1개"만 붙여서, 프롬프트 길이와 혼란을 줄인다.
-  function buildSystemInstruction(activeSubject, turnCount) {
-    if (!activeSubject) {
+  function buildSystemInstruction(ctx) {
+    if (!ctx.subjectForModule) {
       return `${SYSTEM_PROMPT_COMMON}
 
 [지금 이 턴의 지시]
-국어·영어·수학 세 트랙이 모두 완주되었다. scene_complete를 true로 하고, 세 트랙이 함께 마무리되는 짧은 결말 narration을 작성하라. choices는 빈 배열로 두고, active_track에는 가장 마지막에 완주된 과목을 넣어라.`;
+${ctx.instruction}`;
     }
-    const meta = SUBJECT_META[activeSubject];
+    const meta = SUBJECT_META[ctx.subjectForModule];
     return `${SYSTEM_PROMPT_COMMON}
 
 ${meta.prompt}
 
 [지금 이 턴의 지시]
-지금 담당할 과목은 "${meta.label}"이다. active_track 필드에는 반드시 "${activeSubject}"를 넣어라. 이번 턴의 유형은: ${getTurnTypeLabel(turnCount)}`;
+${ctx.instruction}`;
   }
 
   // ===========================================================
@@ -162,7 +201,7 @@ ${meta.prompt}
     const recent = msgs.slice(-MAX_RECENT_MESSAGES);
     const bridgeNote = {
       role: 'user',
-      content: '[안내] 오래된 대화 일부는 길이 제한으로 생략되었다. 위 첫 메시지의 세계관·목표 설정과 아래 최근 대화를 기준으로 계속 이어가라. 지금까지 진행된 트랙 상태를 존중하고 이미 완주된 트랙으로 되돌아가지 마라.'
+      content: '[안내] 오래된 대화 일부는 길이 제한으로 생략되었다. 위 첫 메시지의 세계관·목표 설정과 아래 최근 대화를 기준으로 계속 이어가라. 지금까지 진행된 과목·단계를 존중하고 이미 완주된 과목으로 되돌아가지 마라.'
     };
     return [first, bridgeNote, ...recent];
   }
@@ -206,23 +245,26 @@ ${meta.prompt}
   }
 
   // ===========================================================
-  // 내용 검증 — 프롬프트 지시를 "코드가 강제로" 확인한다.
-  // 여기 걸리면 재시도 사유를 구체적으로 적어 다시 요청한다.
+  // 내용 검증 — 코드가 직접 확인. active_track 불일치, 수학 LaTeX 사용,
+  // 결핍턴인데 선택지가 완성된 숫자 답인 경우, 영어 턴인데 한국어 위주인 경우를 잡아낸다.
   // ===========================================================
-  function validateTurnContent(activeSubject, turnCount, parsed) {
+  function validateTurnContent(ctx, parsed) {
     const problems = [];
-    if (!activeSubject) return problems; // 마무리 턴은 검증 생략
+
+    if (ctx.activeTrack && parsed.active_track !== ctx.activeTrack) {
+      problems.push(`active_track 필드가 "${ctx.activeTrack}"이어야 하는데 "${parsed.active_track}"로 응답했다. 정확히 맞춰라.`);
+    }
 
     const narration = parsed.narration || '';
     const choicesJoined = (parsed.choices || []).join(' ');
-    const isDeficitTurn = turnCount <= 0;
 
-    if (activeSubject === 'math') {
+    const mathInPlay = ctx.subjectForModule === 'math' || ctx.activeTrack === 'math';
+    if (mathInPlay) {
       const mathText = narration + ' ' + choicesJoined;
       if (/\$|\\frac|\\lim|\\sum|\\sqrt|\^\{|_\{/.test(mathText)) {
-        problems.push('수학 턴인데 LaTeX/수식 기호($, \\frac, \\lim, ^{...} 등)가 사용되었다. 모든 수식은 반드시 한글 문장으로 풀어써야 한다 (예: "3분의 1", "x가 1에 가까워질 때").');
+        problems.push('수학 관련 턴인데 LaTeX/수식 기호($, \\frac, \\lim, ^{...} 등)가 사용되었다. 모든 수식은 반드시 한글 문장으로 풀어써야 한다 (예: "3분의 1", "x가 1에 가까워질 때").');
       }
-      if (isDeficitTurn && parsed.choices && parsed.choices.length > 0) {
+      if (ctx.isDeficitPhase && ctx.activeTrack === 'math' && parsed.choices && parsed.choices.length > 0) {
         const allNumericLike = parsed.choices.every(c => /^[\s0-9.\-\/,]+$/.test(c));
         if (allNumericLike) {
           problems.push('결핍턴인데 선택지가 완성된 숫자 답으로만 되어 있다. 결핍턴 선택지는 "어떤 전략으로 접근할지"를 고르는 것이어야지 이미 계산된 답이어서는 안 된다.');
@@ -230,11 +272,12 @@ ${meta.prompt}
       }
     }
 
-    if (activeSubject === 'english') {
+    const englishInPlay = ctx.subjectForModule === 'english' || ctx.activeTrack === 'english';
+    if (englishInPlay) {
       const hangulCount = (narration.match(/[가-힣]/g) || []).length;
       const ratio = hangulCount / Math.max(1, narration.length);
       if (ratio > 0.4) {
-        problems.push('영어 턴인데 narration이 한국어 위주로 작성되었다. 지문 전체를 영어로 다시 작성하라 (짧은 지시문 정도만 한글 허용).');
+        problems.push('영어 관련 턴인데 narration이 한국어 위주로 작성되었다. 지문 전체를 영어로 다시 작성하라 (짧은 지시문 정도만 한글 허용).');
       }
     }
 
@@ -301,13 +344,14 @@ ${meta.prompt}
 
   // ===========================================================
   // 한 턴 진행: 호출 → JSON 파싱 → 내용 검증 → (문제 시 최대 2회 교정 재시도)
+  // subjectJustResolved가 주어지면 그 과목의 맥락(완료턴/시도횟수는 이미 handleChoice에서
+  // 갱신된 값)을 그대로 사용해 응답을 만든다.
   // ===========================================================
   const MAX_ATTEMPTS = 3;
 
-  async function getSceneUpdate() {
-    const activeSubject = getActiveSubject(trackStatusRef.current);
-    const turnCount = activeSubject ? (trackTurnCountsRef.current[activeSubject] || 0) : 0;
-    const systemText = buildSystemInstruction(activeSubject, turnCount);
+  async function getSceneUpdate(subjectJustResolved) {
+    const ctx = buildTurnContext(subjectJustResolved);
+    const systemText = buildSystemInstruction(ctx);
 
     let lastError = null;
 
@@ -327,7 +371,7 @@ ${meta.prompt}
         continue;
       }
 
-      const problems = validateTurnContent(activeSubject, turnCount, parsed);
+      const problems = validateTurnContent(ctx, parsed);
       if (problems.length > 0) {
         lastError = new Error('내용 검증 실패: ' + problems.join(' / '));
         messagesRef.current.push({
@@ -342,17 +386,6 @@ ${meta.prompt}
     }
 
     throw lastError || new Error('알 수 없는 이유로 장면 생성에 실패했습니다.');
-  }
-
-  function applyResult(result) {
-    setTrackStatus(result.track_status);
-    const at = result.active_track;
-    setTrackTurnCounts(prev => {
-      if (!at || !(at in prev)) return prev;
-      const next = { ...prev };
-      next[at] = result.track_status[at] === '완주' ? 0 : (prev[at] || 0) + 1;
-      return next;
-    });
   }
 
   function appendLog(result) {
@@ -372,8 +405,7 @@ ${meta.prompt}
   // ===========================================================
   function buildInitialUserMessage() {
     const info = sceneInfoRef.current;
-    const activeSubject = getActiveSubject({ korean: '미시작', english: '미시작', math: '미시작' });
-    const meta = SUBJECT_META[activeSubject];
+    const ctx = buildTurnContext(undefined); // 국어, 결핍턴, 0/0에서 시작
     return `[입력값 — 이 장면의 고정 정보. 이후 대화 내내 유지할 것]
 CHAPTER_AREA: ${info.chapterArea}
 CHAPTER_GRADE: ${info.chapterGrade}
@@ -385,24 +417,20 @@ ENGLISH_GOAL: ${info.goalTexts.eng}
 ENGLISH_LEVEL: ${levels.eng} (1=가장 쉬움 ~ 5=가장 어려움)
 MATH_GOAL: ${info.goalTexts.math}
 MATH_LEVEL: ${levels.math} (1=가장 쉬움 ~ 5=가장 어려움)
-TRACK_STATUS: ${JSON.stringify({ korean: '미시작', english: '미시작', math: '미시작' })}
-TRACK_TURN_COUNT: ${JSON.stringify({ korean: 0, english: 0, math: 0 })}
-지금 담당할 과목: ${meta.label} (${activeSubject})
+완료된 턴수: ${JSON.stringify(trackCompletedTurnsRef.current)} (과목별 0~2, 2면 완주)
+이번 단계 시도 횟수: ${JSON.stringify(trackAttemptsRef.current)}
+지금 담당할 과목: ${SUBJECT_META[ctx.activeTrack].label} (${ctx.activeTrack})
 
-첫 단락(오프닝)을 생성하라. 아직 선택은 없었다. 새로운 허구의 세계관과 등장인물을 이번 응답에서 창작해 오프닝을 시작하고, 곧바로 "${meta.label}" 과목의 결핍턴으로 들어가라. JSON만 출력하라.`;
+첫 단락(오프닝)을 생성하라. 아직 선택은 없었다. 새로운 허구의 세계관과 등장인물을 이번 응답에서 창작해 오프닝을 시작하고, 곧바로 "${SUBJECT_META[ctx.activeTrack].label}" 과목의 결핍턴으로 들어가라. JSON만 출력하라.`;
   }
 
-  function buildChoiceUserMessage(choiceText) {
-    const status = trackStatusRef.current;
-    const counts = trackTurnCountsRef.current;
-    const activeSubject = getActiveSubject(status);
-    const meta = activeSubject ? SUBJECT_META[activeSubject] : null;
+  function buildChoiceUserMessage(choiceText, wasCorrect) {
     return `아이가 선택했다: "${choiceText}"
 
-지금까지의 대화(직전 장면, 등장인물, 세계관, 진행 상황)를 그대로 이어받아 다음 단락을 생성하라. 절대 새로 시작하지 말고, 방금 아이가 고른 선택의 직접적 결과로 이어지는 사건을 전개하라.
-현재 트랙 상태: ${JSON.stringify(status)}
-현재 TRACK_TURN_COUNT: ${JSON.stringify(counts)}
-지금 담당할 과목: ${meta ? `${meta.label} (${activeSubject})` : '없음 — 모든 과목 완주, 마무리 장면 작성'}
+이 선택은 ${wasCorrect ? '성공 — 상황을 실제로 돌파하는 선택이었다' : '실패 — 그럴듯했지만 막다른 선택이었다'}.
+지금까지의 대화(직전 장면, 등장인물, 세계관, 진행 상황)를 그대로 이어받아 다음 단락을 생성하라. 절대 새로 시작하지 말고, 방금 선택의 직접적 결과로 이어지는 사건을 전개하라.
+완료된 턴수: ${JSON.stringify(trackCompletedTurnsRef.current)} (과목별 0~2, 2면 완주)
+이번 단계 시도 횟수: ${JSON.stringify(trackAttemptsRef.current)}
 
 JSON만 출력하라.`;
   }
@@ -432,12 +460,12 @@ JSON만 출력하라.`;
       }
     };
 
-    const initialStatus = { korean: '미시작', english: '미시작', math: '미시작' };
-    const initialCounts = { korean: 0, english: 0, math: 0 };
-    setTrackStatus(initialStatus);
-    setTrackTurnCounts(initialCounts);
-    trackStatusRef.current = initialStatus;
-    trackTurnCountsRef.current = initialCounts;
+    const initialCompleted = { korean: 0, english: 0, math: 0 };
+    const initialAttempts = { korean: 0, english: 0, math: 0 };
+    setTrackCompletedTurns(initialCompleted);
+    setTrackAttempts(initialAttempts);
+    trackCompletedTurnsRef.current = initialCompleted;
+    trackAttemptsRef.current = initialAttempts;
     setStoryLogs([]);
     setView('stage');
     setLoading(true);
@@ -445,8 +473,7 @@ JSON만 출력하라.`;
     messagesRef.current = [{ role: 'user', content: buildInitialUserMessage() }];
 
     try {
-      const result = await getSceneUpdate();
-      applyResult(result);
+      const result = await getSceneUpdate(undefined);
       appendLog(result);
     } catch (err) {
       setErrorMsg(err.message);
@@ -455,21 +482,41 @@ JSON만 출력하라.`;
     }
   };
 
-  const handleChoice = async (logIndex, choiceIdx, choiceText) => {
+  // 아이가 선택지를 클릭했을 때: 코드가 직접 성공/실패를 판정하고,
+  // completedTurns/attempts를 갱신한 뒤 그 결과를 바탕으로 다음 장면을 요청한다.
+  const handleChoice = async (logIndex, choiceIdx, choiceText, correctIndex, subject) => {
     setStoryLogs(prev => {
       const updated = [...prev];
       updated[logIndex] = { ...updated[logIndex], selectedChoiceIndex: choiceIdx };
       return updated;
     });
 
+    const wasCorrect = choiceIdx === correctIndex;
+    const prevCompleted = trackCompletedTurnsRef.current;
+    const prevAttempts = trackAttemptsRef.current;
+
+    let nextCompleted = prevCompleted;
+    let nextAttempts = prevAttempts;
+
+    if (wasCorrect) {
+      nextCompleted = { ...prevCompleted, [subject]: Math.min(2, (prevCompleted[subject] || 0) + 1) };
+      nextAttempts = { ...prevAttempts, [subject]: 0 };
+    } else {
+      nextAttempts = { ...prevAttempts, [subject]: (prevAttempts[subject] || 0) + 1 };
+    }
+
+    trackCompletedTurnsRef.current = nextCompleted;
+    trackAttemptsRef.current = nextAttempts;
+    setTrackCompletedTurns(nextCompleted);
+    setTrackAttempts(nextAttempts);
+
     setLoading(true);
     setErrorMsg('');
 
-    messagesRef.current.push({ role: 'user', content: buildChoiceUserMessage(choiceText) });
+    messagesRef.current.push({ role: 'user', content: buildChoiceUserMessage(choiceText, wasCorrect) });
 
     try {
-      const result = await getSceneUpdate();
-      applyResult(result);
+      const result = await getSceneUpdate(subject);
       appendLog(result);
     } catch (err) {
       setErrorMsg(err.message);
@@ -481,8 +528,16 @@ JSON만 출력하라.`;
   // ===========================================================
   // 렌더링 헬퍼
   // ===========================================================
+  function getDisplayStatus(subject) {
+    const c = trackCompletedTurns[subject];
+    const a = trackAttempts[subject];
+    if (c >= 2) return '완주';
+    if (c === 0) return a > 0 ? '실패반복' : '미시작';
+    return '깨달음직전';
+  }
+
   const pillClass = (key) => {
-    const s = trackStatus[key];
+    const s = getDisplayStatus(key);
     if (s === '완주') return 'pill done';
     if (s === '실패반복' || s === '깨달음직전') return 'pill active';
     return 'pill';
@@ -614,7 +669,7 @@ JSON만 출력하라.`;
                 <div className="debug-strip">
                   <b>[테스트용 디버그]</b> 현재 트랙: <b>{trackLabel(log.activeTrack)}</b>
                   {!log.sceneComplete && (
-                    <> (턴 {trackTurnCounts[log.activeTrack] ?? '-'}/2)</>
+                    <> (완료 턴 {trackCompletedTurns[log.activeTrack] ?? 0}/2 · 이번 단계 시도 {(trackAttempts[log.activeTrack] ?? 0) + 1}회째)</>
                   )}
                   {log.originReason && (
                     <><br /><b>설계 메모(비공개):</b> {log.originReason}</>
@@ -636,7 +691,7 @@ JSON만 출력하라.`;
                         key={cIdx}
                         className={`choice-btn ${cIdx === log.correctIndex ? 'test-correct' : ''}`}
                         disabled={log.selectedChoiceIndex !== null}
-                        onClick={() => handleChoice(logIdx, cIdx, choice)}
+                        onClick={() => handleChoice(logIdx, cIdx, choice, log.correctIndex, log.activeTrack)}
                       >
                         {cIdx + 1}. {choice}
                       </button>
