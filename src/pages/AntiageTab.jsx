@@ -147,7 +147,7 @@ export default function SceneGeneratorEngine() {
   // contents는 {role:'user'|'model', parts:[{text}]} 형식으로 매핑)
   // ===========================================================
   const callGeminiAPI = async (messages) => {
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${GEMINI_API_KEY}`;
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent?key=${GEMINI_API_KEY}`;
 
     const contents = messages.map(m => ({
       role: m.role === 'assistant' ? 'model' : 'user',
