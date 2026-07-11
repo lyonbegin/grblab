@@ -137,7 +137,7 @@ export default function SceneGeneratorEngine() {
           subjectForModule: next,
           isDeficitPhase: true,
           sceneComplete: false,
-          instruction: `"${SUBJECT_META[subjectJustResolved].label}" 과목이 방금 완주되었다. narration 안에서 그 완주를 짧게 매듭짓고, 곧바로 다음 과목인 "${SUBJECT_META[next].label}"의 결핍 상황을 새로 열어라. active_track에는 "${next}"를 넣어라. choices는 "${SUBJECT_META[next].label}" 결핍턴에 대한 전략 선택지로 채우고, 개념 이름·공식·정답 형태는 절대 등장시키지 마라.`
+          instruction: `"${SUBJECT_META[subjectJustResolved].label}" 과목이 방금 완주되었다. narration 안에서 그 완주를 짧게 매듭짓고, 곧바로 다음 과목인 "${SUBJECT_META[next].label}"의 결핍 상황을 새로 열어라. active_track에는 "${next}"를 넣어라. choices는 "${SUBJECT_META[next].label}" 결핍턴에 대한 전략 선택지로 채우고, 개념 이름·공식·정답 형태는 절대 등장시키지 마라. ${next !== 'english' ? 'narration과 선택지는 반드시 한국어로 작성하라 (직전 과목이 영어였더라도 지금은 한국어로 전환).' : 'narration과 선택지는 반드시 영어로 작성하라.'}`
         };
       }
       return {
@@ -170,7 +170,7 @@ export default function SceneGeneratorEngine() {
       subjectForModule: subject,
       isDeficitPhase,
       sceneComplete: false,
-      instruction: `지금 담당할 과목은 "${SUBJECT_META[subject].label}"이다. active_track 필드에는 반드시 "${subject}"를 넣어라. 이번 턴: ${stageLabel}`
+      instruction: `지금 담당할 과목은 "${SUBJECT_META[subject].label}"이다. active_track 필드에는 반드시 "${subject}"를 넣어라. 이번 턴: ${stageLabel} ${subject !== 'english' ? `(narration과 선택지는 반드시 한국어로 작성하라. 직전 턴이 영어였더라도 지금은 한국어로 전환하라.)` : ''}`
     };
   }
 
@@ -278,6 +278,15 @@ ${ctx.instruction}`;
       const ratio = hangulCount / Math.max(1, narration.length);
       if (ratio > 0.4) {
         problems.push('영어 관련 턴인데 narration이 한국어 위주로 작성되었다. 지문 전체를 영어로 다시 작성하라 (짧은 지시문 정도만 한글 허용).');
+      }
+    }
+
+    const nonEnglishInPlay = ctx.activeTrack === 'korean' || ctx.activeTrack === 'math';
+    if (nonEnglishInPlay) {
+      const hangulCount = (narration.match(/[가-힣]/g) || []).length;
+      const ratio = hangulCount / Math.max(1, narration.length);
+      if (ratio < 0.3) {
+        problems.push(`"${SUBJECT_META[ctx.activeTrack].label}" 턴인데 narration이 한국어가 아니라 다른 언어(주로 영어)로 작성되었다. 직전 턴이 영어였더라도 지금은 반드시 한국어로 작성해야 한다.`);
       }
     }
 
