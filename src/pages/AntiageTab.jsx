@@ -48,6 +48,9 @@ export default function SceneGeneratorEngine() {
 
   const [goals, setGoals] = useState({ kor: 0, eng: 0, math: 0 });
   const [levels, setLevels] = useState({ kor: 3, eng: 3, math: 3 });
+  // 테스트 편의를 위해 국어/영어/수학 중 어느 과목을 이번 장면에 포함시킬지 체크한다.
+  // 체크 해제된 과목은 완전히 건너뛰고, 체크된 과목만 순서대로 진행된다.
+  const [enabledSubjects, setEnabledSubjects] = useState({ korean: true, english: true, math: true });
 
   // completedTurns: 과목별 "실제로 성공해서 넘어간" 턴수 (0~2). 2가 되면 그 과목 완주.
   // attempts: 지금 단계(결핍턴 또는 적용확인턴) 안에서 실패한 횟수. 성공하면 0으로 리셋.
@@ -65,6 +68,8 @@ export default function SceneGeneratorEngine() {
   });
   const trackCompletedTurnsRef = useRef(trackCompletedTurns);
   const trackAttemptsRef = useRef(trackAttempts);
+  // 체크된 과목만 담긴 이번 장면의 실제 진행 순서. startScene에서 채워진다.
+  const subjectOrderRef = useRef(SUBJECT_ORDER);
   useEffect(() => { trackCompletedTurnsRef.current = trackCompletedTurns; }, [trackCompletedTurns]);
   useEffect(() => { trackAttemptsRef.current = trackAttempts; }, [trackAttempts]);
 
@@ -117,7 +122,7 @@ export default function SceneGeneratorEngine() {
   // "지금 담당할 과목"은 completedTurns가 2 미만인 것 중 순서상 첫 번째.
   // ===========================================================
   function getActiveSubject(completed) {
-    return SUBJECT_ORDER.find(s => completed[s] < 2) || null; // null이면 세 과목 모두 완주
+    return subjectOrderRef.current.find(s => completed[s] < 2) || null; // null이면 체크된 과목 모두 완주
   }
 
   // ===========================================================
@@ -137,7 +142,7 @@ export default function SceneGeneratorEngine() {
           subjectForModule: next,
           isDeficitPhase: true,
           sceneComplete: false,
-          instruction: `"${SUBJECT_META[subjectJustResolved].label}" 과목이 방금 완주되었다. narration 안에서 그 완주를 짧게 매듭짓고, 곧바로 다음 과목인 "${SUBJECT_META[next].label}"의 결핍 상황을 새로 열어라. active_track에는 "${next}"를 넣어라. choices는 "${SUBJECT_META[next].label}" 결핍턴에 대한 전략 선택지로 채우고, 개념 이름·공식·정답 형태는 절대 등장시키지 마라. ${next !== 'english' ? 'narration과 선택지는 반드시 한국어로 작성하라 (직전 과목이 영어였더라도 지금은 한국어로 전환).' : 'narration과 선택지는 반드시 영어로 작성하라.'}`
+          instruction: `"${SUBJECT_META[subjectJustResolved].label}" 과목이 방금 완주되었다. narration 안에서 그 완주를 짧게 매듭짓고, 곧바로 다음 과목인 "${SUBJECT_META[next].label}"의 결핍 상황(막힘)을 새로 열어라. active_track에는 "${next}"를 넣어라. narration 끝에서 "왜 이런 일이 벌어졌을까?"를 명확히 묻고, choices에는 그 원인을 설명하는 완전한 문장 3개("~때문에 그렇다" 형태, 하나만 진짜 원인, 세 선택지 모두 같은 지점에 대한 것)를 제시하라. 개념 이름·공식·정답 형태는 절대 등장시키지 마라. ${next !== 'english' ? 'narration과 선택지는 반드시 한국어로 작성하라 (직전 과목이 영어였더라도 지금은 한국어로 전환).' : 'narration과 선택지는 반드시 영어로 작성하라.'}`
         };
       }
       return {
@@ -157,15 +162,12 @@ export default function SceneGeneratorEngine() {
     let stageLabel;
     if (isDeficitPhase) {
       stageLabel = a === 0
-        ? '결핍턴 — 개념 이름·공식·정답 형태를 절대 등장시키지 말 것. "무엇을 해야 할까"라는 전략을 고르는 선택지를 제시하라.'
-        : `결핍턴 재시도 ${a}회째 — 아이는 방금 실패하는 선택을 했다. 그 선택이 만든 구체적 결과를 사건으로 보여준 뒤, 다시 전략을 고르게 하라. 여전히 개념 이름·정답 형태 금지.${a >= 2 ? ' 이미 여러 번 실패했으니 이번 선택지 중 하나는 확실히 성공으로 이어지도록 설계하라 (그래도 노골적으로 티내지는 마라).' : ''}`;
+        ? '원인 진단턴 — narration 끝에서 "왜 이런 일이 벌어졌을까?"를 명확히 물어라. choices에는 그 상황의 원인을 설명하는 완전한 문장 3개("~때문에 그렇다" 형태)를 제시하고, 하나만 실제 원인이어야 한다. 전문 용어·공식 이름은 쓰지 말고 평이한 말로 풀어써라. 세 선택지 모두 반드시 같은 지점(같은 원인)에 대한 것이어야 하며, 서로 관련 없는 주제로 흩어지면 안 된다.'
+        : `원인 진단턴 재시도 ${a}회째 — 아이는 방금 틀린 원인을 골랐다. 그 오답이 왜 진짜 원인이 아닌지 직접 설명하지 말고, 그 오답을 사실이라 믿고 시도했을 때 벌어지는 구체적 결과를 사건으로 보여준 뒤, 같은 질문("왜 이런 일이 벌어졌을까?")에 다시 답하게 하라. 선택지는 여전히 같은 지점에 대한 원인 설명 문장 3개여야 한다.${a >= 2 ? ' 이미 여러 번 실패했으니 이번 선택지 중 하나는 확실히 진짜 원인으로 이어지도록 설계하라 (그래도 노골적으로 티내지는 마라).' : ''}`;
     } else {
       stageLabel = a === 0
-        ? `적용 확인턴 — 전략 발명에 막 성공했다. 방금 발명한 바로 그 개념을 그대로 사용해서 짧게 적용·확인하는 문제 하나만 제시하라. 완전히 새로운 전략을 처음부터 다시 찾게 하지 마라 — 이미 답을 찾는 방법은 정해졌고, 이번엔 그 방법을 실제로 써먹어 보는 것뿐이다.
-매우 중요: 이 확인 문제는 반드시 이번 학습목표(입력값의 KOREAN_GOAL/ENGLISH_GOAL/MATH_GOAL)가 실제로 요구하는 판단을 직접 묻는 것이어야 한다. "다음에 무엇을 할까요?"처럼 학습목표와 무관하게 스토리를 진행시키는 임의의 선택지는 절대 금지다.
-나쁜 예: 방금 주어·목적어를 명시해서 문제를 해결한 뒤, "1) 나사를 고정한다 2) 부품을 정리한다 3) 원리를 공부한다"처럼 학습목표와 아무 상관없는 다음 행동을 고르게 하는 것 — 이것은 확인이 아니라 그냥 스토리 진행이므로 실패다.
-좋은 예: 비슷하게 모호한 상황(다른 인물, 다른 대사)을 하나 더 제시하고, 그 상황에서 방금 발명한 방식(예: 주어·목적어를 분명히 밝히는 것)을 올바르게 적용한 표현과, 그렇지 못한 표현을 선택지로 나란히 두어 아이가 직접 판단하게 하는 것.`
-        : `적용 확인턴 재시도 ${a}회째 — 아이는 방금 적용에 실패했다. 그 실패를 사건으로 짧게 보여준 뒤, 같은 개념(방금 발명한 것)을 다시 적용해보게 하라. 새로운 전략이나 다른 접근법을 처음부터 다시 탐색하게 만들지 마라 — 방법은 이미 정해져 있고, 그 방법을 정확히 적용하는지만 확인하는 것이다. 이번에도 선택지는 반드시 학습목표가 요구하는 판단을 직접 묻는 것이어야 하며, 스토리 진행용 임의 선택지를 내면 안 된다.${a >= 2 ? ' 이미 여러 번 실패했으니 이번엔 반드시 성공으로 이어지도록 선택지를 설계하라.' : ''}`;
+        ? '해결 확인턴 — 원인 진단에 막 성공했다. narration 끝에서 "이 상황을 어떻게 해결하면 될까?"를 명확히 물어라. choices에는 해결 방법을 설명하는 완전한 문장 3개("~하면 해결된다" 형태)를 제시하고, 하나만 실제로 통하는 해결책이어야 한다. 이 선택지들은 반드시 이번 학습목표가 요구하는 판단과 직접 연결되어야 하며, 세 선택지 모두 같은 지점(같은 해결 대상)에 대한 것이어야 한다.'
+        : `해결 확인턴 재시도 ${a}회째 — 아이는 방금 틀린 해결책을 골랐다. 그 해결책이 왜 안 통하는지 직접 설명하지 말고, 그것을 시도했을 때 벌어지는 구체적 실패 사건을 보여준 뒤, 같은 질문("이 상황을 어떻게 해결하면 될까?")에 다시 답하게 하라. 선택지는 여전히 같은 지점에 대한 해결 문장 3개여야 한다.${a >= 2 ? ' 이미 여러 번 실패했으니 이번엔 반드시 성공으로 이어지도록 선택지를 설계하라.' : ''}`;
     }
 
     return {
@@ -302,6 +304,11 @@ ${ctx.instruction}`;
       const choiceCount = Array.isArray(parsed.choices) ? parsed.choices.filter(c => c && c.trim()).length : 0;
       if (choiceCount < 2) {
         problems.push('아직 장면이 끝나지 않았는데 choices가 비어있거나 부족하다. 아이가 고를 수 있는 선택지 3개를 반드시 포함하라. 정답을 그냥 설명으로 알려주고 끝내지 마라 — 아이가 선택해야만 다음으로 넘어간다.');
+      }
+      // narration이 질문 없이 상황 설명만 하고 곧장 선택지로 넘어가면, 아이 입장에서
+      // 선택지가 뜬금없이 나온 것처럼 느껴진다. 언어 무관하게 "?" 존재 여부로 가볍게 확인.
+      if (!narration.includes('?') && !narration.includes('？')) {
+        problems.push('narration이 명확한 질문 없이 상황 설명만 하고 끝났다. 마지막 문장을 아이에게 직접 묻는 질문형으로 바꿔서, 뒤따르는 선택지가 그 질문에 대한 답으로 자연스럽게 이어지게 하라.');
       }
     }
 
@@ -449,7 +456,7 @@ MATH_LEVEL: ${levels.math} (1=가장 쉬움 ~ 5=가장 어려움)
 이번 단계 시도 횟수: ${JSON.stringify(trackAttemptsRef.current)}
 지금 담당할 과목: ${SUBJECT_META[ctx.activeTrack].label} (${ctx.activeTrack})
 
-첫 단락(오프닝)을 생성하라. 아직 선택은 없었다. 새로운 허구의 세계관과 등장인물을 이번 응답에서 창작해 오프닝을 시작하고, 곧바로 "${SUBJECT_META[ctx.activeTrack].label}" 과목의 결핍턴으로 들어가라. JSON만 출력하라.`;
+첫 단락(오프닝)을 생성하라. 아직 선택은 없었다. 새로운 허구의 세계관과 등장인물을 이번 응답에서 창작해 오프닝을 시작하고, 곧바로 "${SUBJECT_META[ctx.activeTrack].label}" 과목의 결핍 상황을 겪게 한 뒤 원인 진단턴으로 들어가라. JSON만 출력하라.`;
   }
 
   function buildChoiceUserMessage(choiceText, wasCorrect) {
@@ -472,6 +479,12 @@ JSON만 출력하라.`;
       setErrorMsg('세계관의 기반이 될 책을 선택해주세요.');
       return;
     }
+    const chosenOrder = SUBJECT_ORDER.filter(s => enabledSubjects[s]);
+    if (chosenOrder.length === 0) {
+      setErrorMsg('국어·영어·수학 중 최소 한 과목은 체크해야 합니다.');
+      return;
+    }
+    subjectOrderRef.current = chosenOrder;
 
     const bookInfo = chapters.find(b => b.chapter === selectedChapter);
 
@@ -488,7 +501,12 @@ JSON만 출력하라.`;
       }
     };
 
-    const initialCompleted = { korean: 0, english: 0, math: 0 };
+    // 체크 해제된 과목은 completedTurns를 처음부터 2(완주)로 두어, getActiveSubject가 자동으로 건너뛴다.
+    const initialCompleted = {
+      korean: enabledSubjects.korean ? 0 : 2,
+      english: enabledSubjects.english ? 0 : 2,
+      math: enabledSubjects.math ? 0 : 2
+    };
     const initialAttempts = { korean: 0, english: 0, math: 0 };
     setTrackCompletedTurns(initialCompleted);
     setTrackAttempts(initialAttempts);
@@ -607,9 +625,16 @@ JSON만 출력하라.`;
 
           {/* 국어 목표선택 행 */}
           <div className="goal-row" style={{ marginTop: '20px' }}>
-            <div className="goal-tag tag-kor">국어</div>
-            <div>
-              <select value={goals.kor} onChange={(e) => setGoals({ ...goals, kor: parseInt(e.target.value, 10) })}>
+            <div className="goal-tag tag-kor" style={{ display: 'flex', alignItems: 'center', gap: '4px', justifyContent: 'center' }}>
+              <input
+                type="checkbox"
+                checked={enabledSubjects.korean}
+                onChange={(e) => setEnabledSubjects({ ...enabledSubjects, korean: e.target.checked })}
+              />
+              국어
+            </div>
+            <div style={{ opacity: enabledSubjects.korean ? 1 : 0.4 }}>
+              <select disabled={!enabledSubjects.korean} value={goals.kor} onChange={(e) => setGoals({ ...goals, kor: parseInt(e.target.value, 10) })}>
                 {GOALS_DATA.kor.map((g, idx) => <option key={idx} value={idx}>{g.title}</option>)}
               </select>
               <div className="goal-detail">{goalFullText('kor', GOALS_DATA.kor[goals.kor])}</div>
@@ -620,6 +645,7 @@ JSON만 출력하라.`;
                     <button
                       key={v}
                       type="button"
+                      disabled={!enabledSubjects.korean}
                       className={`level-btn ${levels.kor === v ? 'selected' : ''}`}
                       onClick={() => setLevels({ ...levels, kor: v })}
                     >{v}</button>
@@ -631,9 +657,16 @@ JSON만 출력하라.`;
 
           {/* 영어 목표선택 행 */}
           <div className="goal-row">
-            <div className="goal-tag tag-eng">영어</div>
-            <div>
-              <select value={goals.eng} onChange={(e) => setGoals({ ...goals, eng: parseInt(e.target.value, 10) })}>
+            <div className="goal-tag tag-eng" style={{ display: 'flex', alignItems: 'center', gap: '4px', justifyContent: 'center' }}>
+              <input
+                type="checkbox"
+                checked={enabledSubjects.english}
+                onChange={(e) => setEnabledSubjects({ ...enabledSubjects, english: e.target.checked })}
+              />
+              영어
+            </div>
+            <div style={{ opacity: enabledSubjects.english ? 1 : 0.4 }}>
+              <select disabled={!enabledSubjects.english} value={goals.eng} onChange={(e) => setGoals({ ...goals, eng: parseInt(e.target.value, 10) })}>
                 {GOALS_DATA.eng.map((g, idx) => <option key={idx} value={idx}>{g.title}</option>)}
               </select>
               <div className="goal-detail">{goalFullText('eng', GOALS_DATA.eng[goals.eng])}</div>
@@ -644,6 +677,7 @@ JSON만 출력하라.`;
                     <button
                       key={v}
                       type="button"
+                      disabled={!enabledSubjects.english}
                       className={`level-btn ${levels.eng === v ? 'selected' : ''}`}
                       onClick={() => setLevels({ ...levels, eng: v })}
                     >{v}</button>
@@ -655,9 +689,16 @@ JSON만 출력하라.`;
 
           {/* 수학 목표선택 행 */}
           <div className="goal-row">
-            <div className="goal-tag tag-math">수학</div>
-            <div>
-              <select value={goals.math} onChange={(e) => setGoals({ ...goals, math: parseInt(e.target.value, 10) })}>
+            <div className="goal-tag tag-math" style={{ display: 'flex', alignItems: 'center', gap: '4px', justifyContent: 'center' }}>
+              <input
+                type="checkbox"
+                checked={enabledSubjects.math}
+                onChange={(e) => setEnabledSubjects({ ...enabledSubjects, math: e.target.checked })}
+              />
+              수학
+            </div>
+            <div style={{ opacity: enabledSubjects.math ? 1 : 0.4 }}>
+              <select disabled={!enabledSubjects.math} value={goals.math} onChange={(e) => setGoals({ ...goals, math: parseInt(e.target.value, 10) })}>
                 {GOALS_DATA.math.map((g, idx) => <option key={idx} value={idx}>{g.title}</option>)}
               </select>
               <div className="goal-detail">{goalFullText('math', GOALS_DATA.math[goals.math])}</div>
@@ -668,6 +709,7 @@ JSON만 출력하라.`;
                     <button
                       key={v}
                       type="button"
+                      disabled={!enabledSubjects.math}
                       className={`level-btn ${levels.math === v ? 'selected' : ''}`}
                       onClick={() => setLevels({ ...levels, math: v })}
                     >{v}</button>
@@ -686,9 +728,9 @@ JSON만 출력하라.`;
         <div id="stage" style={{ display: 'block' }}>
           <h1>장면 진행 중</h1>
           <div className="progress">
-            <div className={pillClass('korean')}>국어</div>
-            <div className={pillClass('english')}>영어</div>
-            <div className={pillClass('math')}>수학</div>
+            {enabledSubjects.korean && <div className={pillClass('korean')}>국어</div>}
+            {enabledSubjects.english && <div className={pillClass('english')}>영어</div>}
+            {enabledSubjects.math && <div className={pillClass('math')}>수학</div>}
           </div>
 
           <div id="storyLog">
