@@ -1,10 +1,49 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { GOALS_DATA, BOOKS_DATA ,SYSTEM_PROMPT } from './constants';
+import {
+  GOALS_DATA,
+  BOOKS_DATA,
+  SYSTEM_PROMPT_COMMON,
+  SYSTEM_PROMPT_KOR,
+  SYSTEM_PROMPT_ENG,
+  SYSTEM_PROMPT_MATH
+} from './constants';
+
+// 과목 진행 순서와, 과목별로 어떤 프롬프트 모듈 / 목표 키 / 표시 이름을 쓸지 매핑.
+// "지금 턴이 어느 과목인지"는 모델에게 묻지 않고 이 순서와 trackStatus를 보고 코드가 결정한다.
+const SUBJECT_ORDER = ['korean', 'english', 'math'];
+const SUBJECT_META = {
+  korean: { label: '국어', goalKey: 'kor', prompt: SYSTEM_PROMPT_KOR },
+  english: { label: '영어', goalKey: 'eng', prompt: SYSTEM_PROMPT_ENG },
+  math: { label: '수학', goalKey: 'math', prompt: SYSTEM_PROMPT_MATH }
+};
+
+// Gemini에게 구조를 강제하기 위한 JSON 스키마. 텍스트 지시("JSON만 출력하라")만으로는
+// 모델이 통째로 무시할 수 있으므로, responseMimeType + responseSchema로 API 레벨에서 강제한다.
+const SCENE_RESPONSE_SCHEMA = {
+  type: 'OBJECT',
+  properties: {
+    origin_reason: { type: 'STRING' },
+    active_track: { type: 'STRING', enum: ['korean', 'english', 'math'] },
+    narration: { type: 'STRING' },
+    choices: { type: 'ARRAY', items: { type: 'STRING' } },
+    correct_index: { type: 'INTEGER' },
+    track_status: {
+      type: 'OBJECT',
+      properties: {
+        korean: { type: 'STRING', enum: ['미시작', '실패반복', '깨달음직전', '완주'] },
+        english: { type: 'STRING', enum: ['미시작', '실패반복', '깨달음직전', '완주'] },
+        math: { type: 'STRING', enum: ['미시작', '실패반복', '깨달음직전', '완주'] }
+      },
+      required: ['korean', 'english', 'math']
+    },
+    scene_complete: { type: 'BOOLEAN' }
+  },
+  required: ['origin_reason', 'active_track', 'narration', 'choices', 'correct_index', 'track_status', 'scene_complete']
+};
 
 export default function SceneGeneratorEngine() {
   const GEMINI_API_KEY = "AQ.Ab8RN6Jwrwo7TruQDJhlsuTuEg5v6AJmeI7hCvdLcijHwIGNig";
-
-
+  const GEMINI_MODEL = "gemini-3.1-flash-lite";
 
   // ===========================================================
   // UI 상태
@@ -20,21 +59,17 @@ export default function SceneGeneratorEngine() {
   const [goals, setGoals] = useState({ kor: 0, eng: 0, math: 0 });
   const [levels, setLevels] = useState({ kor: 3, eng: 3, math: 3 });
 
-  // 장면 진행 상태 (기존의 currentTrack 단일 값 대신, 엔진이 실제로 반환하는 트랙별 상태를 그대로 보관)
   const [trackStatus, setTrackStatus] = useState({ korean: '미시작', english: '미시작', math: '미시작' });
   const [trackTurnCounts, setTrackTurnCounts] = useState({ korean: 0, english: 0, math: 0 });
   const [storyLogs, setStoryLogs] = useState([]);
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
-  // 대화 히스토리(messages)와 장면 고정 정보는 렌더링과 무관하므로 ref로 관리해
-  // 비동기 호출 중 setState 타이밍 문제로 맥락이 끊기는 것을 방지한다.
   const messagesRef = useRef([]);
   const sceneInfoRef = useRef({
     chapterArea: '', chapterGrade: '', chapterTitle: '',
     selectedBookText: '', selectedTierLabel: '', goalTexts: { kor: '', eng: '', math: '' }
   });
-  // 최신 trackStatus/trackTurnCounts를 비동기 콜백 안에서도 정확히 참조하기 위한 ref
   const trackStatusRef = useRef(trackStatus);
   const trackTurnCountsRef = useRef(trackTurnCounts);
   useEffect(() => { trackStatusRef.current = trackStatus; }, [trackStatus]);
@@ -77,9 +112,6 @@ export default function SceneGeneratorEngine() {
     }
   };
 
-  // ===========================================================
-  // 목표 텍스트 헬퍼 (원본 엔진과 동일한 상세 서술 생성)
-  // ===========================================================
   function goalFullText(subject, item) {
     if (!item) return '';
     if (subject === 'math') {
@@ -89,7 +121,38 @@ export default function SceneGeneratorEngine() {
   }
 
   // ===========================================================
-  // 메시지 윈도잉 (컨텍스트 무한 증가 방지)
+  // 코드가 "지금 턴은 어느 과목, 어떤 턴유형인지" 직접 계산한다 (모델에게 맡기지 않음)
+  // ===========================================================
+  function getActiveSubject(status) {
+    return SUBJECT_ORDER.find(s => status[s] !== '완주') || null; // null이면 세 과목 모두 완주
+  }
+
+  function getTurnTypeLabel(turnCount) {
+    if (turnCount <= 0) return '결핍턴 (개념 이름·공식·정답 형태를 절대 등장시키지 말 것)';
+    if (turnCount === 1) return '발명턴 (아이가 직접 구체적 형태를 만들어보게 할 것)';
+    return '완결턴 (TRACK_TURN_COUNT 한도 초과 — 이번 응답에서 반드시 마무리하고 완주 처리할 것)';
+  }
+
+  // 이번 호출에 실제로 보낼 systemInstruction을 조합한다.
+  // 공통 섀시 + "지금 담당하는 과목 모듈 1개"만 붙여서, 프롬프트 길이와 혼란을 줄인다.
+  function buildSystemInstruction(activeSubject, turnCount) {
+    if (!activeSubject) {
+      return `${SYSTEM_PROMPT_COMMON}
+
+[지금 이 턴의 지시]
+국어·영어·수학 세 트랙이 모두 완주되었다. scene_complete를 true로 하고, 세 트랙이 함께 마무리되는 짧은 결말 narration을 작성하라. choices는 빈 배열로 두고, active_track에는 가장 마지막에 완주된 과목을 넣어라.`;
+    }
+    const meta = SUBJECT_META[activeSubject];
+    return `${SYSTEM_PROMPT_COMMON}
+
+${meta.prompt}
+
+[지금 이 턴의 지시]
+지금 담당할 과목은 "${meta.label}"이다. active_track 필드에는 반드시 "${activeSubject}"를 넣어라. 이번 턴의 유형은: ${getTurnTypeLabel(turnCount)}`;
+  }
+
+  // ===========================================================
+  // 메시지 윈도잉
   // ===========================================================
   const MAX_RECENT_MESSAGES = 12;
   function getMessagesForAPI() {
@@ -105,7 +168,7 @@ export default function SceneGeneratorEngine() {
   }
 
   // ===========================================================
-  // JSON 파싱 (줄바꿈/따옴표 이스케이프 누락에 대한 복구 포함)
+  // JSON 파싱 복구
   // ===========================================================
   function sanitizeJSONText(text) {
     let out = '';
@@ -137,17 +200,52 @@ export default function SceneGeneratorEngine() {
       try {
         return JSON.parse(sanitizeJSONText(clean));
       } catch (e2) {
-        throw e1; // 원본 오류를 보여줌
+        throw e1;
       }
     }
   }
 
   // ===========================================================
-  // Gemini API 호출 (systemInstruction으로 SYSTEM_PROMPT 전달,
-  // contents는 {role:'user'|'model', parts:[{text}]} 형식으로 매핑)
+  // 내용 검증 — 프롬프트 지시를 "코드가 강제로" 확인한다.
+  // 여기 걸리면 재시도 사유를 구체적으로 적어 다시 요청한다.
   // ===========================================================
-  const callGeminiAPI = async (messages) => {
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent?key=${GEMINI_API_KEY}`;
+  function validateTurnContent(activeSubject, turnCount, parsed) {
+    const problems = [];
+    if (!activeSubject) return problems; // 마무리 턴은 검증 생략
+
+    const narration = parsed.narration || '';
+    const choicesJoined = (parsed.choices || []).join(' ');
+    const isDeficitTurn = turnCount <= 0;
+
+    if (activeSubject === 'math') {
+      const mathText = narration + ' ' + choicesJoined;
+      if (/\$|\\frac|\\lim|\\sum|\\sqrt|\^\{|_\{/.test(mathText)) {
+        problems.push('수학 턴인데 LaTeX/수식 기호($, \\frac, \\lim, ^{...} 등)가 사용되었다. 모든 수식은 반드시 한글 문장으로 풀어써야 한다 (예: "3분의 1", "x가 1에 가까워질 때").');
+      }
+      if (isDeficitTurn && parsed.choices && parsed.choices.length > 0) {
+        const allNumericLike = parsed.choices.every(c => /^[\s0-9.\-\/,]+$/.test(c));
+        if (allNumericLike) {
+          problems.push('결핍턴인데 선택지가 완성된 숫자 답으로만 되어 있다. 결핍턴 선택지는 "어떤 전략으로 접근할지"를 고르는 것이어야지 이미 계산된 답이어서는 안 된다.');
+        }
+      }
+    }
+
+    if (activeSubject === 'english') {
+      const hangulCount = (narration.match(/[가-힣]/g) || []).length;
+      const ratio = hangulCount / Math.max(1, narration.length);
+      if (ratio > 0.4) {
+        problems.push('영어 턴인데 narration이 한국어 위주로 작성되었다. 지문 전체를 영어로 다시 작성하라 (짧은 지시문 정도만 한글 허용).');
+      }
+    }
+
+    return problems;
+  }
+
+  // ===========================================================
+  // Gemini API 호출
+  // ===========================================================
+  const callGeminiAPI = async (messages, systemText) => {
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${GEMINI_API_KEY}`;
 
     const contents = messages.map(m => ({
       role: m.role === 'assistant' ? 'model' : 'user',
@@ -159,8 +257,12 @@ export default function SceneGeneratorEngine() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
-          contents
+          systemInstruction: { parts: [{ text: systemText }] },
+          contents,
+          generationConfig: {
+            responseMimeType: 'application/json',
+            responseSchema: SCENE_RESPONSE_SCHEMA
+          }
         })
       });
 
@@ -198,25 +300,48 @@ export default function SceneGeneratorEngine() {
   };
 
   // ===========================================================
-  // 한 턴 진행: 호출 → 파싱 → (실패 시 1회 교정 재시도) → 히스토리 반영
+  // 한 턴 진행: 호출 → JSON 파싱 → 내용 검증 → (문제 시 최대 2회 교정 재시도)
   // ===========================================================
+  const MAX_ATTEMPTS = 3;
+
   async function getSceneUpdate() {
-    const rawText = await callGeminiAPI(getMessagesForAPI());
-    try {
-      const parsed = parseModelJSON(rawText);
+    const activeSubject = getActiveSubject(trackStatusRef.current);
+    const turnCount = activeSubject ? (trackTurnCountsRef.current[activeSubject] || 0) : 0;
+    const systemText = buildSystemInstruction(activeSubject, turnCount);
+
+    let lastError = null;
+
+    for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
+      const messagesToSend = getMessagesForAPI();
+      const rawText = await callGeminiAPI(messagesToSend, systemText);
+
+      let parsed;
+      try {
+        parsed = parseModelJSON(rawText);
+      } catch (parseErr) {
+        lastError = parseErr;
+        messagesRef.current.push({
+          role: 'user',
+          content: '[주의] 직전 응답이 유효한 JSON이 아니었다. narration 문자열 안의 줄바꿈은 반드시 \\n\\n 이스케이프 시퀀스로만 표기하고, 실제 줄바꿈 문자를 절대 넣지 마라. 대사에 큰따옴표를 쓸 경우 반드시 \\" 로 이스케이프하라. 유효한 JSON만 다시 출력하라.'
+        });
+        continue;
+      }
+
+      const problems = validateTurnContent(activeSubject, turnCount, parsed);
+      if (problems.length > 0) {
+        lastError = new Error('내용 검증 실패: ' + problems.join(' / '));
+        messagesRef.current.push({
+          role: 'user',
+          content: `[주의] 직전 응답이 규칙을 위반했다:\n- ${problems.join('\n- ')}\n같은 상황을 유지한 채, 위 문제만 고쳐서 다시 응답하라. JSON만 출력하라.`
+        });
+        continue;
+      }
+
       messagesRef.current.push({ role: 'assistant', content: rawText });
       return parsed;
-    } catch (e) {
-      const retryNote = {
-        role: 'user',
-        content: '[주의] 직전 응답이 유효한 JSON이 아니었다. narration 문자열 안의 줄바꿈은 반드시 \\n\\n 이스케이프 시퀀스로만 표기하고, 실제 줄바꿈 문자를 절대 넣지 마라. 대사에 큰따옴표를 쓸 경우 반드시 \\" 로 이스케이프하라. 유효한 JSON만 다시 출력하라.'
-      };
-      const retryMessages = [...getMessagesForAPI(), retryNote];
-      const retryRawText = await callGeminiAPI(retryMessages);
-      const parsed = parseModelJSON(retryRawText); // 실패하면 여기서 던져짐
-      messagesRef.current.push(retryNote, { role: 'assistant', content: retryRawText });
-      return parsed;
     }
+
+    throw lastError || new Error('알 수 없는 이유로 장면 생성에 실패했습니다.');
   }
 
   function applyResult(result) {
@@ -243,10 +368,12 @@ export default function SceneGeneratorEngine() {
   }
 
   // ===========================================================
-  // 프롬프트용 입력 메시지 빌더 (원본 엔진과 동일한 입력값 포맷)
+  // 프롬프트용 입력 메시지 빌더
   // ===========================================================
   function buildInitialUserMessage() {
     const info = sceneInfoRef.current;
+    const activeSubject = getActiveSubject({ korean: '미시작', english: '미시작', math: '미시작' });
+    const meta = SUBJECT_META[activeSubject];
     return `[입력값 — 이 장면의 고정 정보. 이후 대화 내내 유지할 것]
 CHAPTER_AREA: ${info.chapterArea}
 CHAPTER_GRADE: ${info.chapterGrade}
@@ -260,16 +387,24 @@ MATH_GOAL: ${info.goalTexts.math}
 MATH_LEVEL: ${levels.math} (1=가장 쉬움 ~ 5=가장 어려움)
 TRACK_STATUS: ${JSON.stringify({ korean: '미시작', english: '미시작', math: '미시작' })}
 TRACK_TURN_COUNT: ${JSON.stringify({ korean: 0, english: 0, math: 0 })}
+지금 담당할 과목: ${meta.label} (${activeSubject})
 
-위 세계관 구축 원칙, 절대 원칙, 언어 전환 규칙, 난이도 레벨 규칙, 트랙 전환 강제 규칙, 장면 내부 순서를 따라 첫 단락(오프닝)을 생성하라. 아직 선택은 없었다. 새로운 허구의 세계관과 등장인물을 이번 응답에서 창작해 오프닝을 시작하라. JSON만 출력하라.`;
+첫 단락(오프닝)을 생성하라. 아직 선택은 없었다. 새로운 허구의 세계관과 등장인물을 이번 응답에서 창작해 오프닝을 시작하고, 곧바로 "${meta.label}" 과목의 결핍턴으로 들어가라. JSON만 출력하라.`;
   }
 
   function buildChoiceUserMessage(choiceText) {
     const status = trackStatusRef.current;
     const counts = trackTurnCountsRef.current;
+    const activeSubject = getActiveSubject(status);
+    const meta = activeSubject ? SUBJECT_META[activeSubject] : null;
     return `아이가 선택했다: "${choiceText}"
 
-지금까지의 대화(직전 장면, 등장인물, 세계관, 진행 상황)를 그대로 이어받아 다음 단락을 생성하라. 절대 새로 시작하지 말고, 방금 아이가 고른 선택의 직접적 결과로 이어지는 사건을 전개하라. 현재 트랙 상태: ${JSON.stringify(status)}. 현재 TRACK_TURN_COUNT: ${JSON.stringify(counts)} — 어느 과목이든 이미 2 이상이면 이번 응답에서 반드시 마무리하고 완주 처리하라. 위 세계관 구축 원칙, 절대 원칙, 언어 전환 규칙, 난이도 레벨 규칙, 트랙 전환 강제 규칙, 장면 내부 순서를 계속 따르라. JSON만 출력하라.`;
+지금까지의 대화(직전 장면, 등장인물, 세계관, 진행 상황)를 그대로 이어받아 다음 단락을 생성하라. 절대 새로 시작하지 말고, 방금 아이가 고른 선택의 직접적 결과로 이어지는 사건을 전개하라.
+현재 트랙 상태: ${JSON.stringify(status)}
+현재 TRACK_TURN_COUNT: ${JSON.stringify(counts)}
+지금 담당할 과목: ${meta ? `${meta.label} (${activeSubject})` : '없음 — 모든 과목 완주, 마무리 장면 작성'}
+
+JSON만 출력하라.`;
   }
 
   // ===========================================================
@@ -353,7 +488,7 @@ TRACK_TURN_COUNT: ${JSON.stringify({ korean: 0, english: 0, math: 0 })}
     return 'pill';
   };
 
-  const trackLabel = (key) => ({ korean: '국어', english: '영어', math: '수학' }[key] || key || '-');
+  const trackLabel = (key) => (SUBJECT_META[key]?.label || key || '-');
 
   return (
     <div className="wrap">
