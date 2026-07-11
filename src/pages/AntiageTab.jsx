@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { GOALS_DATA, BOOKS_DATA } from './constants';
+import { GOALS_DATA, BOOKS_DATA ,SYSTEM_PROMPT } from './constants';
 
 export default function SceneGeneratorEngine() {
   const GEMINI_API_KEY = "AQ.Ab8RN6JzbpV_y9aVsJdMTJoCzEJhP3CLMC0myUIuFFmKlfCK_Q";
