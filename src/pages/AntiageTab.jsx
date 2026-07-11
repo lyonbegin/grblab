@@ -161,8 +161,8 @@ export default function SceneGeneratorEngine() {
         : `결핍턴 재시도 ${a}회째 — 아이는 방금 실패하는 선택을 했다. 그 선택이 만든 구체적 결과를 사건으로 보여준 뒤, 다시 전략을 고르게 하라. 여전히 개념 이름·정답 형태 금지.${a >= 2 ? ' 이미 여러 번 실패했으니 이번 선택지 중 하나는 확실히 성공으로 이어지도록 설계하라 (그래도 노골적으로 티내지는 마라).' : ''}`;
     } else {
       stageLabel = a === 0
-        ? '적용 확인턴 — 전략 발명에 막 성공했다. 그 발명을 실제로 적용해 확인하는 짧은 문제를 제시하라. 이제부터는 개념 이름이 등장해도 된다.'
-        : `적용 확인턴 재시도 ${a}회째 — 아이는 방금 적용에 실패했다. 그 실패를 사건으로 보여준 뒤 다시 적용을 시도하게 하라.${a >= 2 ? ' 이미 여러 번 실패했으니 이번엔 반드시 성공으로 이어지도록 선택지를 설계하라.' : ''}`;
+        ? '적용 확인턴 — 전략 발명에 막 성공했다. 방금 발명한 바로 그 개념을 그대로 사용해서 짧게 적용·확인하는 문제 하나만 제시하라. 완전히 새로운 전략을 처음부터 다시 찾게 하지 마라 — 이미 답을 찾는 방법은 정해졌고, 이번엔 그 방법을 실제로 써먹어 보는 것뿐이다.'
+        : `적용 확인턴 재시도 ${a}회째 — 아이는 방금 적용에 실패했다. 그 실패를 사건으로 짧게 보여준 뒤, 같은 개념(방금 발명한 것)을 다시 적용해보게 하라. 새로운 전략이나 다른 접근법을 처음부터 다시 탐색하게 만들지 마라 — 방법은 이미 정해져 있고, 그 방법을 정확히 적용하는지만 확인하는 것이다.${a >= 2 ? ' 이미 여러 번 실패했으니 이번엔 반드시 성공으로 이어지도록 선택지를 설계하라.' : ''}`;
     }
 
     return {
@@ -290,6 +290,18 @@ ${ctx.instruction}`;
       }
     }
 
+    // 가장 중요한 검증: 모델이 우리가 정한 진행 상태(ctx.sceneComplete)를 실제로 따랐는가.
+    // 이걸 확인하지 않으면 모델이 반복된 실패 끝에 스스로 장면을 끝내버리거나,
+    // 정답을 설명으로 알려주며 마무리해버리는 사고가 검증 없이 그대로 통과된다.
+    if (!!parsed.scene_complete !== !!ctx.sceneComplete) {
+      problems.push(`scene_complete 값이 잘못되었다. 지금은 ${ctx.sceneComplete ? '세 과목이 모두 완주된 시점이므로 scene_complete를 true로' : '아직 진행 중이므로 scene_complete를 false로'} 설정해야 한다. 아직 완주되지 않은 과목을 함부로 끝내지 말고, choices를 포함한 정상적인 진행 턴으로 응답하라.`);
+    } else if (!ctx.sceneComplete) {
+      const choiceCount = Array.isArray(parsed.choices) ? parsed.choices.filter(c => c && c.trim()).length : 0;
+      if (choiceCount < 2) {
+        problems.push('아직 장면이 끝나지 않았는데 choices가 비어있거나 부족하다. 아이가 고를 수 있는 선택지 3개를 반드시 포함하라. 정답을 그냥 설명으로 알려주고 끝내지 마라 — 아이가 선택해야만 다음으로 넘어간다.');
+      }
+    }
+
     return problems;
   }
 
@@ -398,6 +410,8 @@ ${ctx.instruction}`;
   }
 
   function appendLog(result) {
+    // 디버그 표시가 "지금 이 순간의" 값이 아니라 "이 응답이 만들어진 시점"의 값을 보여주도록,
+    // completedTurns/attempts를 로그 항목에 스냅샷으로 함께 저장한다.
     setStoryLogs(prev => [...prev, {
       activeTrack: result.active_track,
       originReason: result.origin_reason,
@@ -405,7 +419,9 @@ ${ctx.instruction}`;
       choices: result.choices || [],
       correctIndex: typeof result.correct_index === 'number' ? result.correct_index : 0,
       sceneComplete: !!result.scene_complete,
-      selectedChoiceIndex: null
+      selectedChoiceIndex: null,
+      completedTurnsSnapshot: trackCompletedTurnsRef.current[result.active_track] ?? 0,
+      attemptsSnapshot: trackAttemptsRef.current[result.active_track] ?? 0
     }]);
   }
 
@@ -678,7 +694,7 @@ JSON만 출력하라.`;
                 <div className="debug-strip">
                   <b>[테스트용 디버그]</b> 현재 트랙: <b>{trackLabel(log.activeTrack)}</b>
                   {!log.sceneComplete && (
-                    <> (완료 턴 {trackCompletedTurns[log.activeTrack] ?? 0}/2 · 이번 단계 시도 {(trackAttempts[log.activeTrack] ?? 0) + 1}회째)</>
+                    <> (완료 턴 {log.completedTurnsSnapshot}/2 · 이번 단계 시도 {log.attemptsSnapshot + 1}회째)</>
                   )}
                   {log.originReason && (
                     <><br /><b>설계 메모(비공개):</b> {log.originReason}</>
