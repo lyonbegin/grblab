@@ -111,11 +111,14 @@ export default function SceneGeneratorEngine() {
   };
 
   function goalFullText(subject, item) {
-    if (!item) return '';
-    if (subject === 'math') {
-      return `${item.title} (${item.part || ''} ${item.category || ''}, 난이도 ${item.difficulty || ''}) — 출제 경향: ${item.trend || ''}`;
+    if (!item) return `[[경고: ${subject} 학습목표 데이터를 찾지 못했습니다 — GOALS_DATA.${subject}[선택한 인덱스]가 undefined입니다. constants.ts의 GOALS_DATA 배열 개수/구조를 확인하세요]]`;
+    if (!item.title) {
+      console.warn(`goalFullText: ${subject} 항목에 title 필드가 없습니다.`, item);
     }
-    return `${item.title} (${item.major || ''} ${item.mid || ''}, 권장학습단계 ${item.stage || ''}, 중요도 ${item.importance || ''}) — ${item.content || ''}`;
+    if (subject === 'math') {
+      return `${item.title || '(제목 없음)'} (${item.part || ''} ${item.category || ''}, 난이도 ${item.difficulty || ''}) — 출제 경향: ${item.trend || ''}`;
+    }
+    return `${item.title || '(제목 없음)'} (${item.major || ''} ${item.mid || ''}, 권장학습단계 ${item.stage || ''}, 중요도 ${item.importance || ''}) — ${item.content || ''}`;
   }
 
   // ===========================================================
@@ -142,7 +145,10 @@ export default function SceneGeneratorEngine() {
           subjectForModule: next,
           isDeficitPhase: true,
           sceneComplete: false,
-          instruction: `"${SUBJECT_META[subjectJustResolved].label}" 과목이 방금 완주되었다. narration 안에서 그 완주를 짧게 매듭짓고, 곧바로 다음 과목인 "${SUBJECT_META[next].label}"의 결핍 상황(막힘)을 새로 열어라. active_track에는 "${next}"를 넣어라. narration 끝에서 "왜 이런 일이 벌어졌을까?"를 명확히 묻고, choices에는 그 원인을 설명하는 완전한 문장 3개("~때문에 그렇다" 형태, 하나만 진짜 원인, 세 선택지 모두 같은 지점에 대한 것)를 제시하라. 개념 이름·공식·정답 형태는 절대 등장시키지 마라. ${next !== 'english' ? 'narration과 선택지는 반드시 한국어로 작성하라 (직전 과목이 영어였더라도 지금은 한국어로 전환).' : 'narration과 선택지는 반드시 영어로 작성하라.'}`
+          instruction: `"${SUBJECT_META[subjectJustResolved].label}" 과목이 방금 완주되었다. narration 안에서 그 완주를 짧게 매듭짓고, 곧바로 다음 과목인 "${SUBJECT_META[next].label}"의 결핍 상황(막힘)을 새로 열어라. active_track에는 "${next}"를 넣어라.
+이번 "${SUBJECT_META[next].label}" 과목의 학습목표는 정확히 다음과 같다: ${sceneInfoRef.current.goalTexts[SUBJECT_META[next].goalKey]}
+narration·origin_reason·choices는 반드시 이 학습목표를 다뤄야 한다. 프롬프트 속 모범 예시의 소재를 그대로 재사용하지 말고 이번 목표에 맞는 새로운 상황을 만들어라.
+narration 끝에서 "왜 이런 일이 벌어졌을까?"를 명확히 묻고, choices에는 그 원인을 설명하는 완전한 문장 3개("~때문에 그렇다" 형태, 하나만 진짜 원인, 세 선택지 모두 같은 지점에 대한 것)를 제시하라. 개념 이름·공식·정답 형태는 절대 등장시키지 마라. ${next !== 'english' ? 'narration과 선택지는 반드시 한국어로 작성하라 (직전 과목이 영어였더라도 지금은 한국어로 전환).' : 'narration과 선택지는 반드시 영어로 작성하라.'}`
         };
       }
       return {
@@ -175,7 +181,10 @@ export default function SceneGeneratorEngine() {
       subjectForModule: subject,
       isDeficitPhase,
       sceneComplete: false,
-      instruction: `지금 담당할 과목은 "${SUBJECT_META[subject].label}"이다. active_track 필드에는 반드시 "${subject}"를 넣어라. 이번 턴: ${stageLabel} ${subject !== 'english' ? `(narration과 선택지는 반드시 한국어로 작성하라. 직전 턴이 영어였더라도 지금은 한국어로 전환하라.)` : ''}`
+      instruction: `지금 담당할 과목은 "${SUBJECT_META[subject].label}"이다. active_track 필드에는 반드시 "${subject}"를 넣어라.
+이번 "${SUBJECT_META[subject].label}" 과목의 학습목표는 정확히 다음과 같다: ${sceneInfoRef.current.goalTexts[SUBJECT_META[subject].goalKey]}
+narration·origin_reason·choices는 반드시 이 학습목표를 다뤄야 한다. 이 목표와 무관한 다른 문법·개념·주제를 다루면 안 된다. 프롬프트 안에 참고용으로 실린 모범 예시(예: 조사 생략, 비교급 등)는 서술 스타일과 밀도를 보여주기 위한 것일 뿐이니, 그 예시의 소재나 상황을 그대로 재사용하지 말고 이번 학습목표에 맞는 완전히 새로운 상황을 만들어라.
+이번 턴: ${stageLabel} ${subject !== 'english' ? `(narration과 선택지는 반드시 한국어로 작성하라. 직전 턴이 영어였더라도 지금은 한국어로 전환하라.)` : ''}`
     };
   }
 
@@ -325,6 +334,13 @@ ${ctx.instruction}`;
       role: m.role === 'assistant' ? 'model' : 'user',
       parts: [{ text: m.content }]
     }));
+
+    // 이 시점의 systemText는 이미 goals/levels 등 실제 선택값이 전부 치환 완료된 최종 문자열이다.
+    // "선택한 값이 실제로 API 요청에 들어갔는지" 눈으로 확인할 수 있도록 그대로 콘솔에 출력한다.
+    console.log('========================================');
+    console.log('이번 호출에 실제로 전송되는 systemInstruction (이미 치환 완료된 최종 텍스트):');
+    console.log(systemText);
+    console.log('========================================');
 
     try {
       const response = await fetch(url, {
@@ -488,6 +504,14 @@ JSON만 출력하라.`;
 
     const bookInfo = chapters.find(b => b.chapter === selectedChapter);
 
+    // 실제로 어떤 목표가 선택됐고, GOALS_DATA에서 무엇이 조회됐는지 직접 눈으로 확인하기 위한 로그.
+    console.log('========================================');
+    console.log('선택된 goals 인덱스:', goals);
+    console.log('국어 GOALS_DATA.kor[goals.kor]:', GOALS_DATA.kor?.[goals.kor], '(GOALS_DATA.kor 길이:', GOALS_DATA.kor?.length, ')');
+    console.log('영어 GOALS_DATA.eng[goals.eng]:', GOALS_DATA.eng?.[goals.eng], '(GOALS_DATA.eng 길이:', GOALS_DATA.eng?.length, ')');
+    console.log('수학 GOALS_DATA.math[goals.math]:', GOALS_DATA.math?.[goals.math], '(GOALS_DATA.math 길이:', GOALS_DATA.math?.length, ')');
+    console.log('========================================');
+
     sceneInfoRef.current = {
       chapterArea: selectedArea,
       chapterGrade: bookInfo?.grade || '',
@@ -500,6 +524,8 @@ JSON만 출력하라.`;
         math: goalFullText('math', GOALS_DATA.math[goals.math])
       }
     };
+
+    console.log('최종 goalTexts (프롬프트에 실제로 들어갈 문자열):', sceneInfoRef.current.goalTexts);
 
     // 체크 해제된 과목은 completedTurns를 처음부터 2(완주)로 두어, getActiveSubject가 자동으로 건너뛴다.
     const initialCompleted = {
