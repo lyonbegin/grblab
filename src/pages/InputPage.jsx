@@ -1786,7 +1786,7 @@ export default function InputPage() {
   const [preview, setPreview] = useState(null)
   const [dragOver, setDragOver] = useState(false)
   const [cameraOpen, setCameraOpen] = useState(false)
-  const [activeTab, setActiveTab] = useState('petition')
+  const [activeTab, setActiveTab] = useState('antitage')
   const [activeSubTab, setActiveSubTab] = useState('all')
   const [activeCmanageSubTab, setActiveCmanageSubTab] = useState('all')
   const [selectedSiteId, setSelectedSiteId] = useState(null)
@@ -2320,11 +2320,11 @@ const handleRiskImageSelect = useCallback(async (filename) => {
   //                   label: '스마트안전장비',
   //                   subs: CCTV_CARDS.map(c => ({ key: c.key, label: c.title })),
   //                 },
-  //                 {
-  //   key: 'antitage',
-  //   label: '앙티아쥬',
-  //   subs: [],
-  // },
+                  {
+    key: 'antitage',
+    label: '앙티아쥬',
+    subs: [],
+  },
 
                     {
     key: 'petition',
@@ -2476,7 +2476,7 @@ const handleRiskImageSelect = useCallback(async (filename) => {
                     // { key: 'cmanage', label: '건설안전' },
                     // { key: 'risk', label: 'AI안전' },
                     // { key: 'cctv', label: '스마트안전장비' },
-                    // { key: 'antitage', label: '앙티아쥬' },
+                    { key: 'antitage', label: '앙티아쥬' },
 
                     { key: 'petition', label: '서명' },
                   ].find(t => t.key === activeTab)?.label}
@@ -2502,7 +2502,7 @@ const handleRiskImageSelect = useCallback(async (filename) => {
                   // { key: 'cmanage', label: '건설안전' },
                   // { key: 'risk', label: 'AI안전' },
                   // { key: 'cctv', label: '스마트안전장비' },
-                  // { key: 'antitage', label: '앙티아쥬' },
+                  { key: 'antitage', label: '앙티아쥬' },
                     { key: 'petition', label: '서명' },
                 ].map(tab => (
                   <button
