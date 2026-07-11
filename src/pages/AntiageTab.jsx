@@ -404,8 +404,6 @@ export default function SceneGeneratorEngine() {
       setSelectedBook(null);
     }
   };
-
-  // Google Cloud Gemini API 통신 함수
 const callGeminiAPI = async (prompt) => {
   // 타겟 URL 변경: 브라우저는 Nginx 서버로 요청을 전송하며, Nginx가 Google로 라우팅
   const url = `https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`;
@@ -422,22 +420,37 @@ const callGeminiAPI = async (prompt) => {
     if (!response.ok) {
       let detailedError = "";
       try {
-        // 응답 본문을 JSON 객체로 파싱 시도
         const errorJson = await response.json();
-        // 콘솔에 객체 형태로 구조화하여 완전히 출력 (트리 형태로 디버깅 가능)
         console.error("구글 API 반환 상세 에러 정보:", errorJson);
-        // 에러 메시지에 줄바꿈과 들여쓰기를 적용해 가독성 확보
         detailedError = JSON.stringify(errorJson, null, 2);
       } catch (e) {
-        // JSON 파싱 실패 시 일반 텍스트로 대체
         detailedError = await response.text().catch(() => "알 수 없는 에러 본문");
       }
       
       throw new Error(`\n========================================\nAPI 요청 실패 (HTTP ${response.status})\n----------------------------------------\n${detailedError}\n========================================`);
     }
     
+    // 정상적으로 응답을 받았을 때의 처리
     const data = await response.json();
-    return data.candidates[0].content.parts[0].text;
+    
+    // [디버그 수집] 구글에서 리턴된 데이터 전체 구조를 콘솔에 보기 좋게 출력합니다.
+    console.log("========================================");
+    console.log("Gemini API 수신 성공 (전체 Response 구조):");
+    console.log(JSON.stringify(data, null, 2));
+    console.log("========================================");
+    
+    // 최종 텍스트 추출 검증 및 리턴
+    if (data.candidates && data.candidates[0]?.content?.parts[0]?.text) {
+      const resultText = data.candidates[0].content.parts[0].text;
+      
+      // 추출된 텍스트만 별도로 깔끔하게 확인하기 위한 로그
+      console.log("추출된 최종 답변 내용:\n", resultText);
+      
+      return resultText;
+    } else {
+      throw new Error("API 응답 성공했으나, 텍스트 데이터(candidates) 구조가 올바르지 않습니다.");
+    }
+
   } catch (error) {
     console.error("통신 에러 발생:", error);
     throw error;
