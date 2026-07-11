@@ -53,7 +53,7 @@ const GOALS_DATA = {
     { "major": "Ⅲ. 독서", "mid": "O. 읽기 방법", "no": "49", "title": "추론적 읽기", "stage": "고", "importance": "★★★", "content": "생략·함축, 전제·근거 도출" },
     { "major": "Ⅲ. 독서", "mid": "O. 읽기 방법", "no": "50", "title": "비판적 읽기", "stage": "고", "importance": "★★☆", "content": "타당성·신뢰성·공정성 평가" },
     { "major": "Ⅲ. 독서", "mid": "O. 읽기 방법", "no": "51", "title": "적용·창의적 읽기", "stage": "고", "importance": "★★☆", "content": "보기 적용, 다른 사례 확장" },
-    { "major": "Ⅲ. 독서", "mid": "P. 글의 구조", "no": "52", "title": "전개 방식 (정의·예시·비교 등)", "stage": "중~고", "importance": "★★★", "content": "서술 방식 식별" },
+    { "major": "Ⅲ. 독서", "mid": "P. 글의 구조", "no": "52", "title": "전개 방식 (정의·예시·비교 등)", "stage": "중~고", "importance": "★★★", "content": "서술 방식식별" },
     { "major": "Ⅲ. 독서", "mid": "P. 글의 구조", "no": "53", "title": "논지 전개와 문단 관계", "stage": "고", "importance": "★★★", "content": "중심문장, 논리 흐름·연결" },
     { "major": "Ⅲ. 독서", "mid": "P. 글의 구조", "no": "54", "title": "관점·정보의 비교 통합", "stage": "고", "importance": "★★★", "content": "복수 지문·자료 종합" },
     { "major": "Ⅲ. 독서", "mid": "Q. 제재별 독해", "no": "55", "title": "인문 지문 (철학·역사·논리)", "stage": "고", "importance": "★★★", "content": "추상 개념·논증 구조" },
@@ -344,10 +344,10 @@ const BOOKS_DATA = [
 ];
 
 export default function SceneGeneratorEngine() {
-  const GEMINI_API_KEY = "YOUR_GOOGLE_CLOUD_GEMINI_API_KEY"; // 구글 클라우드 제미나이 API 키 입력
+  const GEMINI_API_KEY = "YOUR_GOOGLE_CLOUD_GEMINI_API_KEY";
 
   // UI 상태 관리
-  const [view, setView] = useState('setup'); // 'setup' | 'stage'
+  const [view, setView] = useState('setup');
   const [areas, setAreas] = useState([]);
   const [selectedArea, setSelectedArea] = useState('');
   const [chapters, setChapters] = useState([]);
@@ -360,7 +360,7 @@ export default function SceneGeneratorEngine() {
   const [levels, setLevels] = useState({ kor: 1, eng: 1, math: 1 });
 
   // 이야기 진행 상태
-  const [currentTrack, setCurrentTrack] = useState('kor'); // 'kor' | 'eng' | 'math'
+  const [currentTrack, setCurrentTrack] = useState('kor');
   const [storyLogs, setStoryLogs] = useState([]);
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
@@ -374,9 +374,9 @@ export default function SceneGeneratorEngine() {
     }
 
     setGoals({
-      kor: GOALS_DATA.kor[0] ? 0 : '',
-      eng: GOALS_DATA.eng[0] ? 0 : '',
-      math: GOALS_DATA.math[0] ? 0 : ''
+      kor: GOALS_DATA.kor[0] ? 0 : 0,
+      eng: GOALS_DATA.eng[0] ? 0 : 0,
+      math: GOALS_DATA.math[0] ? 0 : 0
     });
   }, []);
 
@@ -437,8 +437,6 @@ export default function SceneGeneratorEngine() {
     setCurrentTrack('kor');
 
     const korGoal = GOALS_DATA.kor[goals.kor];
-    const engGoal = GOALS_DATA.eng[goals.eng];
-    const mathGoal = GOALS_DATA.math[goals.math];
 
     const initialPrompt = `
       너는 교육용 인터랙티브 스토리텔링 엔진이다.
@@ -449,7 +447,7 @@ export default function SceneGeneratorEngine() {
       국어 목표: ${korGoal.title} (${korGoal.content}) - 난이도 레벨 ${levels.kor}
       
       이 세계관 안에서 사건의 발단을 제시하고, 학습자가 국어 지식을 활용하여 해결해야 하는 상황을 3지선다형 선택지와 함께 생성해라.
-      출력 형식은 반드시 아래 형식을 명밀하게 유지해라. JSON 포맷이 아닌 텍스트로 줄 것:
+      출력 형식은 반드시 아래 형식을 엄밀하게 유지해라. JSON 포맷이 아닌 텍스트로 줄 것:
       
       [스토리] 여기에 흥미진진한 이야기 서술...
       [선택지1] 오답 선택지 1
@@ -469,6 +467,15 @@ export default function SceneGeneratorEngine() {
   };
 
   const handleChoice = async (choiceIdx, correctIdx) => {
+    // 사용자가 고른 답안 인덱스를 이전 상태 로그에 업데이트하여 바인딩 유지
+    setStoryLogs(prev => {
+      const updated = [...prev];
+      if (updated.length > 0) {
+        updated[updated.length - 1].selectedChoice = choiceIdx;
+      }
+      return updated;
+    });
+
     setLoading(true);
     setErrorMsg('');
 
@@ -476,7 +483,6 @@ export default function SceneGeneratorEngine() {
     let nextTrackName = '';
     let nextPrompt = '';
 
-    const korGoal = GOALS_DATA.kor[goals.kor];
     const engGoal = GOALS_DATA.eng[goals.eng];
     const mathGoal = GOALS_DATA.math[goals.math];
 
@@ -672,17 +678,16 @@ export default function SceneGeneratorEngine() {
                   <div className="choices">
                     {log.choices.map((choice, cIdx) => {
                       const choiceNum = cIdx + 1;
+                      // 사용자가 이미 선택한 버튼이거나, 이 카드가 가장 마지막 카드가 아닐 때 비활성화 처리
+                      const isSelected = log.selectedChoice === choiceNum;
+                      const hasSelectedAny = log.selectedChoice !== null;
+
                       return (
                         <button
                           key={cIdx}
-                          className="choice-btn"
-                          disabled={log.selectedChoice !== null}
-                          onClick={() => {
-                            const updated = [...storyLogs];
-                            updated[logIdx].selectedChoice = choiceNum;
-                            setStoryLogs(updated);
-                            handleChoice(choiceNum, log.correctIdx);
-                          }}
+                          className={`choice-btn ${isSelected ? 'selected-answer' : ''}`}
+                          disabled={hasSelectedAny}
+                          onClick={() => handleChoice(choiceNum, log.correctIdx)}
                         >
                           {choice}
                         </button>
