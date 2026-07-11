@@ -406,8 +406,11 @@ export default function SceneGeneratorEngine() {
   };
 
   // Google Cloud Gemini API 통신 함수
-  const callGeminiAPI = async (prompt) => {
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+ const callGeminiAPI = async (prompt) => {
+  // 타겟 URL 변경: 브라우저는 Nginx 서버로 요청을 전송하며, Nginx가 Google로 라우팅
+  const url = `/gemini/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+  
+  try {
     const response = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -417,13 +420,17 @@ export default function SceneGeneratorEngine() {
     });
     
     if (!response.ok) {
-      throw new Error(`API 요청 실패: ${response.statusText}`);
+      const errorText = await response.text();
+      throw new Error(`API 요청 실패 (HTTP ${response.status}): ${errorText}`);
     }
     
     const data = await response.json();
     return data.candidates[0].content.parts[0].text;
-  };
-
+  } catch (error) {
+    console.error("통신 에러 발생:", error);
+    throw error;
+  }
+};
   const startScene = async () => {
     setErrorMsg('');
     if (!selectedBook) {
