@@ -344,7 +344,7 @@ const BOOKS_DATA = [
 ];
 
 export default function SceneGeneratorEngine() {
-  const GEMINI_API_KEY = "YOUR_GOOGLE_CLOUD_GEMINI_API_KEY";
+  const GEMINI_API_KEY = "AQ.Ab8RN6JzbpV_y9aVsJdMTJoCzEJhP3CLMC0myUIuFFmKlfCK_Q";
 
   // UI 상태 관리
   const [view, setView] = useState('setup');
