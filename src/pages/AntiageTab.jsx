@@ -58,8 +58,8 @@ const SCENE_RESPONSE_SCHEMA = {
       properties: {
         type: { type: 'STRING', enum: ['curve', 'svg'] },
         // curve 전용 (함수 그래프 — 정확도가 중요해서 숫자 스펙으로 코드가 직접 그린다)
-        xRange: { type: 'ARRAY', items: { type: 'NUMBER' } },
-        yRange: { type: 'ARRAY', items: { type: 'NUMBER' } },
+          xRange: { type: 'ARRAY', items: { type: 'NUMBER' }, minItems: 2, maxItems: 2 },
+        yRange: { type: 'ARRAY', items: { type: 'NUMBER' }, minItems: 2, maxItems: 2 },
         curves: {
           type: 'ARRAY',
           items: {
@@ -467,7 +467,11 @@ ${ctx.instruction}`;
   // Gemini API 호출
   // ===========================================================
   const callGeminiAPI = async (messages, systemText) => {
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${GEMINI_API_KEY}`;
+   const url = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${GEMINI_API_KEY}`;
+    // 응답이 비정상적으로 커지거나(예: 배열 폭주) 네트워크가 멈추면 무한정 "로딩 중"에 갇히지 않도록,
+    // 45초 넘게 걸리면 강제로 요청을 끊고 에러를 던진다.
+    const abortController = new AbortController();
+    const timeoutId = setTimeout(() => abortController.abort(), 45000);
 
     const contents = messages.map(m => ({
       role: m.role === 'assistant' ? 'model' : 'user',
@@ -482,9 +486,10 @@ ${ctx.instruction}`;
     console.log('========================================');
 
     try {
-      const response = await fetch(url, {
+     const response = await fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        signal: abortController.signal,
         body: JSON.stringify({
           systemInstruction: { parts: [{ text: systemText }] },
           contents,
@@ -494,6 +499,7 @@ ${ctx.instruction}`;
           }
         })
       });
+      clearTimeout(timeoutId);
 
       if (!response.ok) {
         let detailedError = '';
@@ -522,7 +528,12 @@ ${ctx.instruction}`;
       console.log('추출된 최종 답변 내용:\n', resultText);
       return resultText;
 
-    } catch (error) {
+ } catch (error) {
+      clearTimeout(timeoutId);
+      if (error.name === 'AbortError') {
+        console.error('요청 시간 초과(45초) — 응답이 비정상적으로 커졌거나 네트워크가 멈췄을 수 있음.');
+        throw new Error('응답 생성이 45초 넘게 걸려 중단했습니다. 모델이 비정상적으로 긴 응답을 시도했을 수 있습니다. 다시 시도해주세요.');
+      }
       console.error('통신 에러 발생:', error);
       throw error;
     }
