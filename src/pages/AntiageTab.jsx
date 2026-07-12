@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import * as math from 'mathjs';
 import {
   GOALS_DATA,
   BOOKS_DATA,
@@ -56,8 +57,6 @@ const SCENE_RESPONSE_SCHEMA = {
       type: 'OBJECT',
       nullable: true,
       properties: {
-       type: { type: 'STRING', enum: ['curve'] },
-        // curve 전용 (함수 그래프 — 정확도가 중요해서 숫자 스펙으로 코드가 직접 그린다)
         xRange: { type: 'ARRAY', items: { type: 'NUMBER' } },
         yRange: { type: 'ARRAY', items: { type: 'NUMBER' } },
         curves: {
@@ -65,19 +64,14 @@ const SCENE_RESPONSE_SCHEMA = {
           items: {
             type: 'OBJECT',
             properties: {
-              kind: { type: 'STRING', enum: ['polynomial', 'trig'] },
-              coefficients: { type: 'ARRAY', items: { type: 'NUMBER' } },
-              trigType: { type: 'STRING', enum: ['sin', 'cos', 'tan'] },
-              amplitude: { type: 'NUMBER' },
-              period: { type: 'NUMBER' },
-              phaseShift: { type: 'NUMBER' },
-              verticalShift: { type: 'NUMBER' },
+              // "explicit": y = formula (x만 포함). "implicit": formula = 0 (x,y 둘 다 포함, 원·타원·쌍곡선 등).
+              kind: { type: 'STRING', enum: ['explicit', 'implicit'] },
+              formula: { type: 'STRING' },
               label: { type: 'STRING' },
               color: { type: 'STRING' }
             }
           }
-        },
-  
+        }
       }
     }
   },
@@ -402,11 +396,24 @@ ${ctx.instruction}`;
       }
     }
 
-  if (ctx.activeTrack === 'math' && !ctx.sceneComplete && parsed.visual && parsed.visual.type === 'curve') {
+    if (ctx.activeTrack === 'math' && !ctx.sceneComplete && parsed.visual) {
       if (!Array.isArray(parsed.visual.curves) || parsed.visual.curves.length === 0) {
-        problems.push('visual.type이 "curve"인데 curves 배열이 비어있다. 함수의 계수(coefficients) 또는 삼각함수 정보를 채워라.');
+        problems.push('visual 필드가 있는데 curves 배열이 비어있다. 함수 그래프로 표현할 게 아니면 visual 자체를 아예 넣지 말고(null), 넣을 거면 curves를 채워라.');
+      } else {
+        parsed.visual.curves.forEach((curve, i) => {
+          if (!curve.formula || typeof curve.formula !== 'string') {
+            problems.push(`curves[${i}]에 formula 문자열이 없다. 예: 다항식이면 "2*x^2 - 3*x + 1", 이차곡선이면 "x^2/25 + y^2/9 - 1"처럼 수식 문자열을 넣어라.`);
+            return;
+          }
+          try {
+            math.compile(curve.formula);
+          } catch (e) {
+            problems.push(`curves[${i}]의 formula("${curve.formula}")가 올바른 수식이 아니다(mathjs로 해석 실패: ${e.message}). 사칙연산·거듭제곱(^)·log·sin/cos/tan 등 mathjs가 이해하는 문법으로 다시 써라.`);
+          }
+        });
       }
     }
+
     const englishInPlay = ctx.subjectForModule === 'english' || ctx.activeTrack === 'english';
     if (englishInPlay && !ctx.sceneComplete) {
       // narration은 "쉬운 영어로 된 이야기 + 맨 끝 한국어 질문" 구조여야 한다.
@@ -755,79 +762,117 @@ JSON만 출력하라.`;
   };
 
   // ===========================================================
-  // 수학 시각 자료 렌더러 — 두 갈래로 나뉜다.
-  // "curve"(함수 그래프)는 모델이 숫자 스펙만 내놓고 코드가 좌표를 계산해 정확하게 그린다.
-  // "svg"(그 외 모든 도형)는 모델이 직접 만든 SVG 마크업을 그대로 렌더링한다.
+  // 수학 시각 자료 렌더러 — 모델은 수식 문자열 하나만 내놓고, 코드가 mathjs로 안전하게
+  // 계산해서 정확하게 그린다. 함수 종류(다항식/삼각/로그/지수/유리함수 등)가 늘어나도
+  // 이 렌더러는 고칠 필요가 없다 — "x만 있는 식(explicit)"과 "x,y가 섞인 식(implicit,
+  // 원·타원·쌍곡선 등)" 두 갈래만 처리하면 되기 때문이다.
   // ===========================================================
-  function evalCurve(curve, x) {
-    if (curve.kind === 'trig') {
-      const { trigType = 'sin', amplitude = 1, period = 2 * Math.PI, phaseShift = 0, verticalShift = 0 } = curve;
-      const arg = (2 * Math.PI / period) * (x - phaseShift);
-      const fn = trigType === 'cos' ? Math.cos : trigType === 'tan' ? Math.tan : Math.sin;
-      return amplitude * fn(arg) + verticalShift;
+  function sampleExplicitCurve(compiled, xMin, xMax, yMin, yMax, steps = 200) {
+    const pts = [];
+    const dx = (xMax - xMin) / steps;
+    for (let i = 0; i <= steps; i++) {
+      const x = xMin + i * dx;
+      let y;
+      try { y = compiled.evaluate({ x }); } catch (e) { y = null; }
+      if (typeof y === 'number' && Number.isFinite(y) && y >= yMin && y <= yMax) {
+        pts.push([x, y]);
+      }
     }
-    const coeffs = curve.coefficients && curve.coefficients.length ? curve.coefficients : [0];
-    let y = 0;
-    for (let i = 0; i < coeffs.length; i++) y += coeffs[i] * Math.pow(x, i);
-    return y;
+    return pts;
   }
 
-  // 모델이 직접 만든 SVG 문자열(삼각형·사각형·원·부채꼴·벡터·입체도형 등)을 그대로 렌더링한다.
-  // 최소한의 안전장치: <svg>...</svg> 형태인지 확인하고, script/이벤트 핸들러는 제거한다.
- 
+  // 음함수(F(x,y)=0)의 근사 해를 찾는다: 각 x열마다 y를 촘촘히 훑으며 F의 부호가
+  // 바뀌는 지점을 선형보간으로 잡아낸다. 원·타원·쌍곡선 등 어떤 이차곡선이 와도
+  // 이 방식 하나로 처리된다.
+  function sampleImplicitCurve(compiled, xMin, xMax, yMin, yMax, xSteps = 140, ySteps = 140) {
+    const pts = [];
+    const dx = (xMax - xMin) / xSteps;
+    const dy = (yMax - yMin) / ySteps;
+    for (let i = 0; i <= xSteps; i++) {
+      const x = xMin + i * dx;
+      let prevVal = null;
+      let prevY = null;
+      for (let j = 0; j <= ySteps; j++) {
+        const y = yMin + j * dy;
+        let val;
+        try { val = compiled.evaluate({ x, y }); } catch (e) { val = null; }
+        if (typeof val === 'number' && Number.isFinite(val) && typeof prevVal === 'number' && Number.isFinite(prevVal)) {
+          if ((prevVal < 0) !== (val < 0)) {
+            const t = prevVal / (prevVal - val);
+            pts.push([x, prevY + t * (y - prevY)]);
+          }
+        }
+        prevVal = val;
+        prevY = y;
+      }
+    }
+    return pts;
+  }
 
   function renderMathVisual(visual) {
-    if (!visual || !visual.type) return null;
+    if (!visual || !Array.isArray(visual.curves) || visual.curves.length === 0) return null;
 
-    if (visual.type === 'curve' && Array.isArray(visual.curves)) {
-      const W = 280, H = 280, PAD = 24;
-      const [xMin, xMax] = visual.xRange && visual.xRange.length === 2 ? visual.xRange : [-10, 10];
-      const [yMin, yMax] = visual.yRange && visual.yRange.length === 2 ? visual.yRange : [-10, 10];
-      const sx = (x) => PAD + ((x - xMin) / (xMax - xMin)) * (W - 2 * PAD);
-      const sy = (y) => H - PAD - ((y - yMin) / (yMax - yMin)) * (H - 2 * PAD);
+    const W = 280, H = 280, PAD = 24;
+    const [xMin, xMax] = visual.xRange && visual.xRange.length === 2 ? visual.xRange : [-10, 10];
+    const [yMin, yMax] = visual.yRange && visual.yRange.length === 2 ? visual.yRange : [-10, 10];
+    const sx = (x) => PAD + ((x - xMin) / (xMax - xMin)) * (W - 2 * PAD);
+    const sy = (y) => H - PAD - ((y - yMin) / (yMax - yMin)) * (H - 2 * PAD);
 
-      const gridLines = [];
-      for (let gx = Math.ceil(xMin); gx <= Math.floor(xMax); gx++) {
-        gridLines.push(<line key={`gx${gx}`} x1={sx(gx)} y1={sy(yMin)} x2={sx(gx)} y2={sy(yMax)} stroke="#e5e5e5" strokeWidth="1" />);
+    const gridLines = [];
+    for (let gx = Math.ceil(xMin); gx <= Math.floor(xMax); gx++) {
+      gridLines.push(<line key={`gx${gx}`} x1={sx(gx)} y1={sy(yMin)} x2={sx(gx)} y2={sy(yMax)} stroke="#e5e5e5" strokeWidth="1" />);
+    }
+    for (let gy = Math.ceil(yMin); gy <= Math.floor(yMax); gy++) {
+      gridLines.push(<line key={`gy${gy}`} x1={sx(xMin)} y1={sy(gy)} x2={sx(xMax)} y2={sy(gy)} stroke="#e5e5e5" strokeWidth="1" />);
+    }
+    const axes = (
+      <>
+        <line x1={sx(xMin)} y1={sy(0)} x2={sx(xMax)} y2={sy(0)} stroke="#999" strokeWidth="1.5" />
+        <line x1={sx(0)} y1={sy(yMin)} x2={sx(0)} y2={sy(yMax)} stroke="#999" strokeWidth="1.5" />
+      </>
+    );
+
+    const content = visual.curves.map((curve, i) => {
+      const color = curve.color || (i === 0 ? '#3b6d11' : '#d85a30');
+      let compiled;
+      try {
+        compiled = math.compile(curve.formula || '0');
+      } catch (e) {
+        return null;
       }
-      for (let gy = Math.ceil(yMin); gy <= Math.floor(yMax); gy++) {
-        gridLines.push(<line key={`gy${gy}`} x1={sx(xMin)} y1={sy(gy)} x2={sx(xMax)} y2={sy(gy)} stroke="#e5e5e5" strokeWidth="1" />);
-      }
-      const axes = (
-        <>
-          <line x1={sx(xMin)} y1={sy(0)} x2={sx(xMax)} y2={sy(0)} stroke="#999" strokeWidth="1.5" />
-          <line x1={sx(0)} y1={sy(yMin)} x2={sx(0)} y2={sy(yMax)} stroke="#999" strokeWidth="1.5" />
-        </>
-      );
 
-      const step = (xMax - xMin) / 120;
-      const content = visual.curves.map((curve, i) => {
-        const color = curve.color || (i === 0 ? '#3b6d11' : '#d85a30');
-        const pts = [];
-        for (let x = xMin; x <= xMax; x += step) {
-          const y = evalCurve(curve, x);
-          if (Number.isFinite(y) && y >= yMin && y <= yMax) pts.push(`${sx(x)},${sy(y)}`);
-        }
+      if (curve.kind === 'implicit') {
+        const pts = sampleImplicitCurve(compiled, xMin, xMax, yMin, yMax);
         return (
           <g key={i}>
-            <polyline points={pts.join(' ')} fill="none" stroke={color} strokeWidth="2.5" />
+            {pts.map(([x, y], pi) => (
+              <circle key={pi} cx={sx(x)} cy={sy(y)} r="1.6" fill={color} />
+            ))}
             {curve.label && pts.length > 0 && (
-              <text x={sx(xMax) - 4} y={sy(evalCurve(curve, xMax)) - 6} fontSize="11" fill={color} textAnchor="end">{curve.label}</text>
+              <text x={sx(pts[pts.length - 1][0])} y={sy(pts[pts.length - 1][1]) - 6} fontSize="11" fill={color} textAnchor="middle">{curve.label}</text>
             )}
           </g>
         );
-      });
+      }
 
+      const pts = sampleExplicitCurve(compiled, xMin, xMax, yMin, yMax);
       return (
-        <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} style={{ background: '#fff', border: '1px solid #ddd8ca', borderRadius: '8px', margin: '8px 0' }}>
-          {gridLines}
-          {axes}
-          {content}
-        </svg>
+        <g key={i}>
+          <polyline points={pts.map(([x, y]) => `${sx(x)},${sy(y)}`).join(' ')} fill="none" stroke={color} strokeWidth="2.5" />
+          {curve.label && pts.length > 0 && (
+            <text x={sx(pts[pts.length - 1][0]) - 4} y={sy(pts[pts.length - 1][1]) - 6} fontSize="11" fill={color} textAnchor="end">{curve.label}</text>
+          )}
+        </g>
       );
-    }
+    });
 
-    return null;
+    return (
+      <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} style={{ background: '#fff', border: '1px solid #ddd8ca', borderRadius: '8px', margin: '8px 0' }}>
+        {gridLines}
+        {axes}
+        {content}
+      </svg>
+    );
   }
 
   // ===========================================================
