@@ -51,7 +51,36 @@ const SCENE_RESPONSE_SCHEMA = {
     narration: { type: 'STRING' },
     choices: { type: 'ARRAY', items: { type: 'STRING' } },
     correct_index: { type: 'INTEGER' },
-    scene_complete: { type: 'BOOLEAN' }
+    scene_complete: { type: 'BOOLEAN' },
+    visual: {
+      type: 'OBJECT',
+      nullable: true,
+      properties: {
+        type: { type: 'STRING', enum: ['curve', 'svg'] },
+        // curve 전용 (함수 그래프 — 정확도가 중요해서 숫자 스펙으로 코드가 직접 그린다)
+        xRange: { type: 'ARRAY', items: { type: 'NUMBER' } },
+        yRange: { type: 'ARRAY', items: { type: 'NUMBER' } },
+        curves: {
+          type: 'ARRAY',
+          items: {
+            type: 'OBJECT',
+            properties: {
+              kind: { type: 'STRING', enum: ['polynomial', 'trig'] },
+              coefficients: { type: 'ARRAY', items: { type: 'NUMBER' } },
+              trigType: { type: 'STRING', enum: ['sin', 'cos', 'tan'] },
+              amplitude: { type: 'NUMBER' },
+              period: { type: 'NUMBER' },
+              phaseShift: { type: 'NUMBER' },
+              verticalShift: { type: 'NUMBER' },
+              label: { type: 'STRING' },
+              color: { type: 'STRING' }
+            }
+          }
+        },
+        // svg 전용 (그래프가 아닌 모든 도형 — 삼각형·사각형·원·부채꼴·벡터·입체도형 등)
+        svgMarkup: { type: 'STRING' }
+      }
+    }
   },
   required: ['origin_reason', 'active_track', 'narration', 'choices', 'correct_index', 'scene_complete']
 };
@@ -374,6 +403,19 @@ ${ctx.instruction}`;
       }
     }
 
+    if (ctx.activeTrack === 'math' && !ctx.sceneComplete) {
+      if (!parsed.visual || !parsed.visual.type) {
+        problems.push('수학 턴인데 visual 필드가 비어있다. 함수 그래프면 type을 "curve"로 하고 curves 배열을 채우고, 그 외 도형(삼각형·사각형·원·부채꼴·벡터·입체도형 등)이면 type을 "svg"로 하고 svgMarkup에 완성된 <svg>...</svg> 코드를 넣어라. narration에 그림을 텍스트로 묘사하지 마라.');
+      } else if (parsed.visual.type === 'curve' && (!Array.isArray(parsed.visual.curves) || parsed.visual.curves.length === 0)) {
+        problems.push('visual.type이 "curve"인데 curves 배열이 비어있다. 함수의 계수(coefficients) 또는 삼각함수 정보를 채워라.');
+      } else if (parsed.visual.type === 'svg') {
+        const svg = (parsed.visual.svgMarkup || '').trim();
+        if (!svg.startsWith('<svg') || !svg.endsWith('</svg>')) {
+          problems.push('visual.type이 "svg"인데 svgMarkup이 완전한 <svg>...</svg> 형태가 아니다. 태그가 완성된 SVG 코드를 그대로 넣어라.');
+        }
+      }
+    }
+
     const englishInPlay = ctx.subjectForModule === 'english' || ctx.activeTrack === 'english';
     if (englishInPlay && !ctx.sceneComplete) {
       // narration은 "쉬운 영어로 된 이야기 + 맨 끝 한국어 질문" 구조여야 한다.
@@ -543,6 +585,7 @@ ${ctx.instruction}`;
       correctIndex: typeof result.correct_index === 'number' ? result.correct_index : 0,
       sceneComplete: !!result.scene_complete,
       selectedChoiceIndex: null,
+      visual: result.visual || null,
       completedTurnsSnapshot: trackCompletedTurnsRef.current[result.active_track] ?? 0,
       attemptsSnapshot: trackAttemptsRef.current[result.active_track] ?? 0,
       maxTurnsSnapshot: maxTurnsForMode(subjectModesRef.current[result.active_track])
@@ -719,6 +762,99 @@ JSON만 출력하라.`;
       setLoading(false);
     }
   };
+
+  // ===========================================================
+  // 수학 시각 자료 렌더러 — 두 갈래로 나뉜다.
+  // "curve"(함수 그래프)는 모델이 숫자 스펙만 내놓고 코드가 좌표를 계산해 정확하게 그린다.
+  // "svg"(그 외 모든 도형)는 모델이 직접 만든 SVG 마크업을 그대로 렌더링한다.
+  // ===========================================================
+  function evalCurve(curve, x) {
+    if (curve.kind === 'trig') {
+      const { trigType = 'sin', amplitude = 1, period = 2 * Math.PI, phaseShift = 0, verticalShift = 0 } = curve;
+      const arg = (2 * Math.PI / period) * (x - phaseShift);
+      const fn = trigType === 'cos' ? Math.cos : trigType === 'tan' ? Math.tan : Math.sin;
+      return amplitude * fn(arg) + verticalShift;
+    }
+    const coeffs = curve.coefficients && curve.coefficients.length ? curve.coefficients : [0];
+    let y = 0;
+    for (let i = 0; i < coeffs.length; i++) y += coeffs[i] * Math.pow(x, i);
+    return y;
+  }
+
+  // 모델이 직접 만든 SVG 문자열(삼각형·사각형·원·부채꼴·벡터·입체도형 등)을 그대로 렌더링한다.
+  // 최소한의 안전장치: <svg>...</svg> 형태인지 확인하고, script/이벤트 핸들러는 제거한다.
+  function renderRawMathSvg(rawSvg) {
+    const trimmed = (rawSvg || '').trim();
+    if (!trimmed.startsWith('<svg') || !trimmed.endsWith('</svg>')) return null;
+    const cleaned = trimmed
+      .replace(/<script[\s\S]*?<\/script>/gi, '')
+      .replace(/\son\w+\s*=\s*"[^"]*"/gi, '')
+      .replace(/\son\w+\s*=\s*'[^']*'/gi, '');
+    return (
+      <div
+        style={{ background: '#fff', border: '1px solid #ddd8ca', borderRadius: '8px', margin: '8px 0', display: 'inline-block' }}
+        dangerouslySetInnerHTML={{ __html: cleaned }}
+      />
+    );
+  }
+
+  function renderMathVisual(visual) {
+    if (!visual || !visual.type) return null;
+
+    if (visual.type === 'svg') {
+      return renderRawMathSvg(visual.svgMarkup);
+    }
+
+    if (visual.type === 'curve' && Array.isArray(visual.curves)) {
+      const W = 280, H = 280, PAD = 24;
+      const [xMin, xMax] = visual.xRange && visual.xRange.length === 2 ? visual.xRange : [-10, 10];
+      const [yMin, yMax] = visual.yRange && visual.yRange.length === 2 ? visual.yRange : [-10, 10];
+      const sx = (x) => PAD + ((x - xMin) / (xMax - xMin)) * (W - 2 * PAD);
+      const sy = (y) => H - PAD - ((y - yMin) / (yMax - yMin)) * (H - 2 * PAD);
+
+      const gridLines = [];
+      for (let gx = Math.ceil(xMin); gx <= Math.floor(xMax); gx++) {
+        gridLines.push(<line key={`gx${gx}`} x1={sx(gx)} y1={sy(yMin)} x2={sx(gx)} y2={sy(yMax)} stroke="#e5e5e5" strokeWidth="1" />);
+      }
+      for (let gy = Math.ceil(yMin); gy <= Math.floor(yMax); gy++) {
+        gridLines.push(<line key={`gy${gy}`} x1={sx(xMin)} y1={sy(gy)} x2={sx(xMax)} y2={sy(gy)} stroke="#e5e5e5" strokeWidth="1" />);
+      }
+      const axes = (
+        <>
+          <line x1={sx(xMin)} y1={sy(0)} x2={sx(xMax)} y2={sy(0)} stroke="#999" strokeWidth="1.5" />
+          <line x1={sx(0)} y1={sy(yMin)} x2={sx(0)} y2={sy(yMax)} stroke="#999" strokeWidth="1.5" />
+        </>
+      );
+
+      const step = (xMax - xMin) / 120;
+      const content = visual.curves.map((curve, i) => {
+        const color = curve.color || (i === 0 ? '#3b6d11' : '#d85a30');
+        const pts = [];
+        for (let x = xMin; x <= xMax; x += step) {
+          const y = evalCurve(curve, x);
+          if (Number.isFinite(y) && y >= yMin && y <= yMax) pts.push(`${sx(x)},${sy(y)}`);
+        }
+        return (
+          <g key={i}>
+            <polyline points={pts.join(' ')} fill="none" stroke={color} strokeWidth="2.5" />
+            {curve.label && pts.length > 0 && (
+              <text x={sx(xMax) - 4} y={sy(evalCurve(curve, xMax)) - 6} fontSize="11" fill={color} textAnchor="end">{curve.label}</text>
+            )}
+          </g>
+        );
+      });
+
+      return (
+        <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} style={{ background: '#fff', border: '1px solid #ddd8ca', borderRadius: '8px', margin: '8px 0' }}>
+          {gridLines}
+          {axes}
+          {content}
+        </svg>
+      );
+    }
+
+    return null;
+  }
 
   // ===========================================================
   // 렌더링 헬퍼
@@ -914,6 +1050,7 @@ JSON만 출력하라.`;
                   {log.narration.split('\n\n').filter(p => p.trim()).map((p, pIdx) => (
                     <p key={pIdx}>{p.trim()}</p>
                   ))}
+                  {log.activeTrack === 'math' && renderMathVisual(log.visual)}
                 </div>
 
                 {log.sceneComplete ? (
