@@ -2,9 +2,11 @@ import React, { useState, useEffect, useRef } from 'react';
 import * as math from 'mathjs';
 import katex from 'katex';
 import 'katex/dist/katex.min.css';
+import { Mafs, Coordinates, Plot, Point, Line, Vector, Circle, Theme } from 'mafs';
+import 'mafs/core.css';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import {
-  GOALS_DATA,
-  BOOKS_DATA,
+
   SYSTEM_PROMPT_COMMON_BASE,
   SYSTEM_PROMPT_TURNS_DISCOVERY,
   SYSTEM_PROMPT_TURNS_PROBLEM,
@@ -12,8 +14,35 @@ import {
   SYSTEM_PROMPT_KOR_PROBLEM,
   SYSTEM_PROMPT_ENG_PROBLEM,
   SYSTEM_PROMPT_MATH_PROBLEM,
+  VIZ_PROMPT_MAFS_FUNCTION,
+  VIZ_PROMPT_MAFS_SHAPE,
+  VIZ_PROMPT_MAFS_VECTOR,
+  VIZ_PROMPT_MAFS_AREA,
+  VIZ_PROMPT_MAFS_DISCRETE,
+  VIZ_PROMPT_BAR_CHART,
+  VIZ_PROMPT_VENN,
+  VIZ_PROMPT_PSEUDO3D,
+  VIZ_PROMPT_MATRIX,
   KOR_DISCOVERY_MIDS
 } from './constants';
+import {
+  GOALS_DATA,
+  BOOKS_DATA
+} from './constantsbase';
+
+// vizType(문자열) → 그 시각화에 필요한 프롬프트 블록 매핑.
+// "narration"은 일부러 빠져 있다 — narration 타입은 시각 자료 지시 자체를 붙이지 않는다.
+const VIZ_PROMPT_BY_TYPE = {
+  mafs_function: VIZ_PROMPT_MAFS_FUNCTION,
+  mafs_shape: VIZ_PROMPT_MAFS_SHAPE,
+  mafs_vector: VIZ_PROMPT_MAFS_VECTOR,
+  mafs_area: VIZ_PROMPT_MAFS_AREA,
+  mafs_discrete: VIZ_PROMPT_MAFS_DISCRETE,
+  bar_chart: VIZ_PROMPT_BAR_CHART,
+  venn: VIZ_PROMPT_VENN,
+  pseudo3d: VIZ_PROMPT_PSEUDO3D,
+  matrix: VIZ_PROMPT_MATRIX
+};
 
 // 과목 진행 순서와, 과목별 목표 키 / 표시 이름 매핑.
 // 프롬프트 모듈은 과목마다 고정이 아니라 "모드"(발견형/문제유형형)에 따라 달라지므로
@@ -46,6 +75,11 @@ function getSubjectPromptModule(subject, mode) {
 
 // Gemini 구조 강제용 JSON 스키마. track_status는 더 이상 모델이 자체 보고하지 않는다 —
 // 턴 진행(완료 여부)은 코드가 "선택 인덱스 === correct_index" 비교로 직접 판정한다.
+//
+// visual 필드는 이제 "그래프 하나만" 표현하던 구조가 아니라, vizType(9종) 전부를 아우르는
+// 범용 구조다. 실제로 어떤 하위 필드를 채울지는 이번 학습목표의 vizType 하나로 이미 정해져
+// 있으므로(프롬프트 쪽에서 그 vizType 전용 지시만 내려준다), 모델은 매 턴 이 중 자신에게
+// 지시된 kind에 해당하는 필드만 채우면 된다.
 const SCENE_RESPONSE_SCHEMA = {
   type: 'OBJECT',
   properties: {
@@ -56,37 +90,109 @@ const SCENE_RESPONSE_SCHEMA = {
     correct_index: { type: 'INTEGER' },
     scene_complete: { type: 'BOOLEAN' },
     visual: {
-       type: 'OBJECT',
+      type: 'OBJECT',
       nullable: true,
       properties: {
-        // 그래프를 몇 개 그릴지, 각 그래프에 곡선을 몇 개 겹쳐 그릴지는 모델이 상황에 맞게 정한다.
-        // 예: 세 선택지를 한 그래프에 겹쳐 비교 → graphs 길이 1, 그 안에 curves 3개.
-        //     세 선택지를 각각 따로 보여주는 게 나음 → graphs 길이 3, 각 graph에 curves 1개.
-        graphs: {
+        kind: {
+          type: 'STRING',
+          enum: ['mafs_function', 'mafs_shape', 'mafs_vector', 'mafs_area', 'mafs_discrete', 'bar_chart', 'venn', 'pseudo3d', 'matrix']
+        },
+        xRange: { type: 'ARRAY', items: { type: 'NUMBER' } },
+        yRange: { type: 'ARRAY', items: { type: 'NUMBER' } },
+        // mafs_function / mafs_shape(원)/ mafs_area(기준 곡선)에서 공용으로 쓰는 곡선 배열
+        curves: {
           type: 'ARRAY',
           items: {
             type: 'OBJECT',
             properties: {
-              title: { type: 'STRING' },
-              xRange: { type: 'ARRAY', items: { type: 'NUMBER' } },
-              yRange: { type: 'ARRAY', items: { type: 'NUMBER' } },
-              curves: {
-                type: 'ARRAY',
-                items: {
-                  type: 'OBJECT',
-                  properties: {
-                    // "explicit": y = formula (x만 포함). "implicit": formula = 0 (x,y 둘 다 포함, 원·타원·쌍곡선 등).
-                    kind: { type: 'STRING', enum: ['explicit', 'implicit'] },
-                    formula: { type: 'STRING' },
-                    label: { type: 'STRING' },
-                    color: { type: 'STRING' }
-                  }
-                }
-              }
+              kind: { type: 'STRING', enum: ['explicit', 'implicit'] },
+              formula: { type: 'STRING' },
+              label: { type: 'STRING' },
+              color: { type: 'STRING' },
+              // 이 곡선이 choices 중 특정 선택지 하나를 나타내면 그 선택지의 배열 인덱스(0부터)를 넣는다.
+              // 넣으면 코드가 그 선택지 버튼 바로 아래에 이 곡선만 담은 미니 그래프를 그려준다.
+              // 특정 선택지에 속하지 않는 "공통 배경 곡선"이면 이 필드를 아예 비워둔다(모든 미니 그래프에 공통 표시됨).
+              forChoiceIndex: { type: 'INTEGER', nullable: true }
             }
           }
+        },
+        // mafs_shape(꼭짓점) / mafs_discrete(이산점) / mafs_vector(기준점)에서 공용으로 쓰는 점 배열
+        points: {
+          type: 'ARRAY',
+          items: {
+            type: 'OBJECT',
+            properties: {
+              x: { type: 'NUMBER' },
+              y: { type: 'NUMBER' },
+              label: { type: 'STRING' },
+              // curves의 forChoiceIndex와 동일한 용도 — 특정 선택지(방정식의 해 등)를 나타내는 점이면
+              // 그 선택지의 배열 인덱스를 넣는다.
+              forChoiceIndex: { type: 'INTEGER', nullable: true }
+            }
+          }
+        },
+        // mafs_shape 전용: 변·보조선
+        segments: {
+          type: 'ARRAY',
+          items: {
+            type: 'OBJECT',
+            properties: {
+              x1: { type: 'NUMBER' },
+              y1: { type: 'NUMBER' },
+              x2: { type: 'NUMBER' },
+              y2: { type: 'NUMBER' },
+              label: { type: 'STRING' },
+              forChoiceIndex: { type: 'INTEGER', nullable: true }
+            }
+          }
+        },
+        // mafs_vector 전용
+        vectors: {
+          type: 'ARRAY',
+          items: {
+            type: 'OBJECT',
+            properties: {
+              x1: { type: 'NUMBER' },
+              y1: { type: 'NUMBER' },
+              x2: { type: 'NUMBER' },
+              y2: { type: 'NUMBER' },
+              label: { type: 'STRING' },
+              color: { type: 'STRING' }
+            }
+          }
+        },
+        // mafs_area 전용
+        shadeFormula: { type: 'STRING' },
+        shadeXMin: { type: 'NUMBER' },
+        shadeXMax: { type: 'NUMBER' },
+        // bar_chart 전용
+        bars: {
+          type: 'ARRAY',
+          items: {
+            type: 'OBJECT',
+            properties: {
+              label: { type: 'STRING' },
+              value: { type: 'NUMBER' }
+            }
+          }
+        },
+        // venn 전용
+        vennLabelA: { type: 'STRING' },
+        vennLabelB: { type: 'STRING' },
+        vennOnlyA: { type: 'NUMBER' },
+        vennOnlyB: { type: 'NUMBER' },
+        vennBoth: { type: 'NUMBER' },
+        // pseudo3d 전용
+        solidType: { type: 'STRING', enum: ['cube', 'cylinder', 'cone', 'sphere'] },
+        dims: { type: 'ARRAY', items: { type: 'NUMBER' } },
+        solidLabel: { type: 'STRING' },
+        // matrix 전용
+        matrixRows: {
+          type: 'ARRAY',
+          items: { type: 'ARRAY', items: { type: 'NUMBER' } }
         }
-      }
+      },
+      required: ['kind']
     }
   },
   required: ['origin_reason', 'active_track', 'narration', 'choices', 'correct_index', 'scene_complete']
@@ -97,6 +203,11 @@ export default function SceneGeneratorEngine() {
   const GEMINI_MODEL = "gemini-3.1-flash-lite";
 
     // const GEMINI_MODEL = "gemini-3.1-flash";
+
+  // 콘솔 노이즈 제어. false면 systemInstruction 전체/응답 전체 JSON 같은 장황한 로그는 찍지 않고,
+  // "서버가 이번 턴에 visual을 실제로 뭘 보냈는지"만 요약해서 보여주는 로그(디버그 요약, 항상 출력)만 남는다.
+  // 시스템 프롬프트 자체를 눈으로 확인해야 할 때만 true로 바꿔서 써라.
+  const DEBUG_VERBOSE = false;
 
   // ===========================================================
   // UI 상태
@@ -136,6 +247,8 @@ export default function SceneGeneratorEngine() {
   // 과목별 모드(발견형/문제유형형). 영어·수학은 항상 'problem', 국어는 선택된 목표의 mid에 따라 결정.
   // startScene에서 채워지고 이후 장면 내내 고정된다.
   const subjectModesRef = useRef({ korean: 'problem', english: 'problem', math: 'problem' });
+  // 이번 장면의 수학 목표가 어떤 vizType을 쓰는지. startScene에서 GOALS_DATA.math[goals.math].vizType로 채워지고 고정된다.
+  const mathVizTypeRef = useRef('narration');
   useEffect(() => { trackCompletedTurnsRef.current = trackCompletedTurns; }, [trackCompletedTurns]);
   useEffect(() => { trackAttemptsRef.current = trackAttempts; }, [trackAttempts]);
 
@@ -177,7 +290,7 @@ export default function SceneGeneratorEngine() {
   };
 
   function goalFullText(subject, item) {
-    if (!item) return `[[경고: ${subject} 학습목표 데이터를 찾지 못했습니다 — GOALS_DATA.${subject}[선택한 인덱스]가 undefined입니다. constants.ts의 GOALS_DATA 배열 개수/구조를 확인하세요]]`;
+    if (!item) return `[[경고: ${subject} 학습목표 데이터를 찾지 못했습니다 — GOALS_DATA.${subject}[선택한 인덱스]가 undefined입니다. constantsbase.ts의 GOALS_DATA 배열 개수/구조를 확인하세요]]`;
     if (!item.title) {
       console.warn(`goalFullText: ${subject} 항목에 title 필드가 없습니다.`, item);
     }
@@ -311,12 +424,23 @@ narration·origin_reason·choices는 반드시 이 학습목표를 다뤄야 한
     };
   }
 
+  // math 턴일 때만, 이번 장면의 고정된 vizType에 맞는 시각 자료 지시 블록을 골라준다.
+  // vizType이 "narration"이거나 매핑이 없으면 null(=지시 블록 없음, visual 생략).
+  function getVizPromptBlock(ctx) {
+    if (ctx.activeTrack !== 'math' || ctx.sceneComplete) return null;
+    const vizType = mathVizTypeRef.current;
+    return VIZ_PROMPT_BY_TYPE[vizType] || null;
+  }
+
   function buildSystemInstruction(ctx) {
+    const vizBlock = getVizPromptBlock(ctx);
+    const vizSection = vizBlock ? `\n\n${vizBlock}` : '';
+
     if (!ctx.subjectForModule) {
       return `${SYSTEM_PROMPT_COMMON_BASE}
 
 [지금 이 턴의 지시]
-${ctx.instruction}`;
+${ctx.instruction}${vizSection}`;
     }
     const turnsBlock = ctx.mode === 'discovery' ? SYSTEM_PROMPT_TURNS_DISCOVERY : SYSTEM_PROMPT_TURNS_PROBLEM;
     const subjectModule = getSubjectPromptModule(ctx.subjectForModule, ctx.mode);
@@ -327,7 +451,7 @@ ${turnsBlock}
 ${subjectModule}
 
 [지금 이 턴의 지시]
-${ctx.instruction}`;
+${ctx.instruction}${vizSection}`;
   }
 
   // ===========================================================
@@ -349,6 +473,53 @@ ${ctx.instruction}`;
   // ===========================================================
   // JSON 파싱 복구
   // ===========================================================
+
+  // LaTeX 명령어(\frac, \sqrt, \times, \right 등)는 백슬래시+영문자로 시작하는데,
+  // 그중 \f(폼피드)·\t(탭)·\r(캐리지리턴)·\b(백스페이스)는 JSON에서 "유효한" 이스케이프라서,
+  // 모델이 실수로 \\frac(이중 백슬래시)가 아니라 \frac(단일 백슬래시)로 쓰면 JSON.parse가
+  // \f를 조용히 제어문자로 먹어버려 "frac"의 f가 사라지고 "rac"만 남는 등 LaTeX가 깨진다.
+  // (\sqrt처럼 \s가 아예 유효하지 않은 이스케이프인 경우는 파싱 자체가 실패해서 재시도라도 되지만,
+  //  \f/\t/\r/\b는 "유효한" 이스케이프라 에러 없이 조용히 깨져서 더 위험하다.)
+  // 그래서 JSON.parse를 시도하기 전에, 문자열 리터럴 안에서 \n(의도된 실제 줄바꿈)과 \"·\\·\/·\u
+  // 를 제외한 나머지 백슬래시+영문자 시퀀스는 전부 이중 백슬래시로 미리 교정해둔다.
+  function fixLatexBackslashes(text) {
+    let out = '';
+    let inString = false;
+    let i = 0;
+    while (i < text.length) {
+      const ch = text[i];
+      if (!inString) {
+        out += ch;
+        if (ch === '"') inString = true;
+        i++;
+        continue;
+      }
+      if (ch === '"') {
+        inString = false;
+        out += ch;
+        i++;
+        continue;
+      }
+      if (ch === '\\') {
+        const next = text[i + 1];
+        // \n(실제 줄바꿈 의도), \"·\\·\/·\u(정상적인 JSON 이스케이프)는 그대로 둔다.
+        if (next === 'n' || next === '"' || next === '\\' || next === '/' || next === 'u') {
+          out += ch + (next === undefined ? '' : next);
+          i += 2;
+          continue;
+        }
+        if (next === undefined) { out += ch; i++; continue; }
+        // 그 외(LaTeX 명령어의 시작일 가능성이 높은 \f, \t, \r, \b, \s, \l, ... )는 이중 이스케이프로 교정.
+        out += '\\\\' + next;
+        i += 2;
+        continue;
+      }
+      out += ch;
+      i++;
+    }
+    return out;
+  }
+
   function sanitizeJSONText(text) {
     let out = '';
     let inString = false;
@@ -373,11 +544,12 @@ ${ctx.instruction}`;
 
   function parseModelJSON(rawText) {
     const clean = rawText.trim().replace(/^```json/, '').replace(/^```/, '').replace(/```$/, '').trim();
+    const fixed = fixLatexBackslashes(clean);
     try {
-      return JSON.parse(clean);
+      return JSON.parse(fixed);
     } catch (e1) {
       try {
-        return JSON.parse(sanitizeJSONText(clean));
+        return JSON.parse(sanitizeJSONText(fixed));
       } catch (e2) {
         throw e1;
       }
@@ -388,6 +560,61 @@ ${ctx.instruction}`;
   // 내용 검증 — 코드가 직접 확인. active_track 불일치, 수학 LaTeX 사용,
   // 결핍턴인데 선택지가 완성된 숫자 답인 경우, 영어 턴인데 한국어 위주인 경우를 잡아낸다.
   // ===========================================================
+  // ===========================================================
+  // 시각 자료(visual)만 따로 검증한다 — 그래프 하나 때문에 학습 진행 전체가 막히면 안 되므로,
+  // 이 검증에서 나온 문제는 getSceneUpdate에서 "마지막 시도에도 안 고쳐지면 그냥 넘어가는"
+  // 관대한 처리 대상이다. active_track/narration/choices 같은 핵심 검증(validateTurnContent)과는
+  // 분리해서, 시각 자료 실패가 학습 흐름 자체를 막지 않도록 한다.
+  // ===========================================================
+  function validateVisualContent(ctx, parsed) {
+    const problems = [];
+    if (ctx.activeTrack !== 'math' || ctx.sceneComplete) return problems;
+
+    const vizType = mathVizTypeRef.current;
+    if (vizType === 'narration') {
+      if (parsed.visual) {
+        problems.push('이번 학습목표는 vizType이 "narration"이라 visual 필드를 아예 넣지 말아야 하는데 채워져 있다. visual을 생략하라(null 또는 필드 자체 삭제).');
+      }
+      return problems;
+    }
+
+    if (!parsed.visual || typeof parsed.visual !== 'object') {
+      problems.push(`이번 턴은 vizType "${vizType}"에 해당하므로 visual 필드를 반드시 채워야 하는데 비어 있다. [이번 턴의 시각 자료 지시] 블록을 따라 visual을 채워라. 특히 kind와 함께 curves/points/segments/vectors/bars/matrixRows 등 실제 데이터 필드를 반드시 같이 채워야 한다 — kind만 있고 데이터가 없으면 그래프가 화면에 전혀 나오지 않는다.`);
+      return problems;
+    }
+    if (parsed.visual.kind !== vizType) {
+      problems.push(`visual.kind가 "${vizType}"이어야 하는데 "${parsed.visual.kind}"로 되어 있다. 정확히 맞춰라.`);
+      return problems;
+    }
+
+    const v = parsed.visual;
+    const hasAnyContent =
+      (Array.isArray(v.curves) && v.curves.some(c => c && c.formula)) ||
+      (Array.isArray(v.points) && v.points.length > 0) ||
+      (Array.isArray(v.segments) && v.segments.length > 0) ||
+      (Array.isArray(v.vectors) && v.vectors.length > 0) ||
+      (Array.isArray(v.bars) && v.bars.length > 0) ||
+      (Array.isArray(v.matrixRows) && v.matrixRows.length > 0) ||
+      typeof v.shadeFormula === 'string' ||
+      typeof v.solidType === 'string' ||
+      typeof v.vennBoth === 'number';
+    if (!hasAnyContent) {
+      problems.push(`visual.kind는 "${vizType}"로 맞게 왔지만 정작 그 안의 데이터가 비어 있다 — kind만 채우고 curves/points/segments/vectors/bars/matrixRows 등 실제 값은 빠뜨렸다. [이번 턴의 시각 자료 지시] 블록에 명시된 필드를 반드시 실제 값으로 채워라. (예: mafs_function이면 curves 배열에 formula를 가진 곡선을 최소 1개 넣어야 한다.)`);
+    }
+    // mafs_function/mafs_shape/mafs_area의 curves는 formula가 mathjs로 컴파일 가능해야 한다.
+    if (Array.isArray(v.curves)) {
+      let hasValidCurve = v.curves.length === 0; // curves 자체가 필요 없는 vizType이면 통과
+      v.curves.forEach((curve) => {
+        if (!curve || !curve.formula) return;
+        try { math.compile(curve.formula); hasValidCurve = true; } catch (e) { /* 개별 곡선 하나 깨진 건 렌더링 단계에서 건너뜀 */ }
+      });
+      if (v.curves.length > 0 && !hasValidCurve) {
+        problems.push('visual.curves가 있지만 그 안에 mathjs로 계산 가능한 formula를 가진 곡선이 하나도 없다. 최소 1개는 유효한 formula로 채워라.');
+      }
+    }
+    return problems;
+  }
+
   function validateTurnContent(ctx, parsed) {
     const problems = [];
 
@@ -397,37 +624,6 @@ ${ctx.instruction}`;
 
     const narration = parsed.narration || '';
     const choicesJoined = (parsed.choices || []).join(' ');
-
-    const mathInPlay = ctx.subjectForModule === 'math' || ctx.activeTrack === 'math';
-    if (mathInPlay) {
-      if (ctx.isDeficitPhase && ctx.activeTrack === 'math' && parsed.choices && parsed.choices.length > 0) {
-        const allNumericLike = parsed.choices.every(c => /^[\s0-9.\-\/,]+$/.test(c));
-        if (allNumericLike) {
-          problems.push('결핍턴인데 선택지가 완성된 숫자 답으로만 되어 있다. 결핍턴 선택지는 "어떤 전략으로 접근할지"를 고르는 것이어야지 이미 계산된 답이어서는 안 된다.');
-        }
-      }
-    }
-
- if (ctx.activeTrack === 'math' && !ctx.sceneComplete && parsed.visual && Array.isArray(parsed.visual.graphs) && parsed.visual.graphs.length > 0) {
-      // 그래프 일부가 비어있거나 formula가 깨진 것은 코드가 조용히 걸러내고 넘어간다(아래 정제 단계).
-      // 여기서는 "쓸 수 있는 곡선이 하나도 없는 경우"만 진짜 실패로 잡아 재시도시킨다.
-      let hasAnyValidCurve = false;
-      parsed.visual.graphs.forEach((graph) => {
-        if (!Array.isArray(graph.curves)) return;
-        graph.curves.forEach((curve) => {
-          if (!curve.formula || typeof curve.formula !== 'string') return;
-          try {
-            math.compile(curve.formula);
-            hasAnyValidCurve = true;
-          } catch (e) {
-            // 개별 곡선 하나가 깨진 건 괜찮다 — 렌더링 단계에서 그 곡선만 건너뛴다.
-          }
-        });
-      });
-      if (!hasAnyValidCurve) {
-        problems.push('visual.graphs가 있지만 그 안에 유효한 formula를 가진 곡선이 하나도 없다. 그래프로 그릴 게 없다면 visual 자체를 넣지 말고(null), 그릴 게 있다면 최소 한 개의 그래프에 최소 한 개의 유효한 curve(formula 포함)를 채워라.');
-      }
-    }
 
     const englishInPlay = ctx.subjectForModule === 'english' || ctx.activeTrack === 'english';
     if (englishInPlay && !ctx.sceneComplete) {
@@ -488,11 +684,13 @@ ${ctx.instruction}`;
     }));
 
     // 이 시점의 systemText는 이미 goals/levels 등 실제 선택값이 전부 치환 완료된 최종 문자열이다.
-    // "선택한 값이 실제로 API 요청에 들어갔는지" 눈으로 확인할 수 있도록 그대로 콘솔에 출력한다.
-    console.log('========================================');
-    console.log('이번 호출에 실제로 전송되는 systemInstruction (이미 치환 완료된 최종 텍스트):');
-    console.log(systemText);
-    console.log('========================================');
+    // DEBUG_VERBOSE일 때만 전체 텍스트를 콘솔에 출력한다 (평소엔 노이즈라 꺼둠).
+    if (DEBUG_VERBOSE) {
+      console.log('========================================');
+      console.log('이번 호출에 실제로 전송되는 systemInstruction (이미 치환 완료된 최종 텍스트):');
+      console.log(systemText);
+      console.log('========================================');
+    }
 
     try {
       const response = await fetch(url, {
@@ -522,17 +720,21 @@ ${ctx.instruction}`;
 
       const data = await response.json();
 
-      console.log('========================================');
-      console.log('Gemini API 수신 성공 (전체 Response 구조):');
-      console.log(JSON.stringify(data, null, 2));
-      console.log('========================================');
+      if (DEBUG_VERBOSE) {
+        console.log('========================================');
+        console.log('Gemini API 수신 성공 (전체 Response 구조):');
+        console.log(JSON.stringify(data, null, 2));
+        console.log('========================================');
+      }
 
       const resultText = data.candidates && data.candidates[0]?.content?.parts?.[0]?.text;
       if (!resultText) {
         throw new Error('API 응답 성공했으나, 텍스트 데이터(candidates) 구조가 올바르지 않습니다: ' + JSON.stringify(data).slice(0, 300));
       }
 
-      console.log('추출된 최종 답변 내용:\n', resultText);
+      if (DEBUG_VERBOSE) {
+        console.log('추출된 최종 답변 내용:\n', resultText);
+      }
       return resultText;
 
     } catch (error) {
@@ -547,6 +749,57 @@ ${ctx.instruction}`;
   // 갱신된 값)을 그대로 사용해 응답을 만든다.
   // ===========================================================
   const MAX_ATTEMPTS = 3;
+
+  // ===========================================================
+  // [시각자료 디버그] — 순수하게 "서버(모델)가 이번 턴에 실제로 보낸 것"만 요약해서 찍는다.
+  // 학습목표별로 그래프가 아예 안 나오는 게 (a) 애초에 그 목표는 vizType이 narration이라
+  // 원래 안 나오는 게 정상인지, (b) 서버가 visual 자체를 안 보냈는지, (c) visual은 왔는데
+  // kind가 다르거나 안에 데이터가 비어서 렌더링이 안 되는지 — 이 셋을 한 줄로 구분해서 보여준다.
+  // 이 로그는 DEBUG_VERBOSE와 무관하게 항상 찍힌다(가장 자주 필요한 정보이기 때문).
+  // ===========================================================
+  function logServerVisualSummary(ctx, parsed, attempt) {
+    if (ctx.activeTrack !== 'math' || ctx.sceneComplete) return; // 수학 턴이 아니면 애초에 visual 자체가 무관하니 생략
+
+    const expected = mathVizTypeRef.current;
+    const label = `[시각자료 디버그] (시도 ${attempt}/${MAX_ATTEMPTS})`;
+
+    if (expected === 'narration') {
+      console.log(`${label} 기대 vizType="narration" → 이 학습목표는 원래 그래프가 없는 게 정상입니다. 서버가 보낸 visual:`, parsed.visual ?? '(없음, 정상)');
+      return;
+    }
+
+    if (!parsed.visual) {
+      console.log(`${label} ⚠️ 기대 vizType="${expected}"인데 서버가 visual 필드 자체를 아예 안 보냈습니다 (undefined/null). → 모델이 이번 학습목표에 맞는 시각 자료 지시를 무시했을 가능성이 큽니다.`);
+      return;
+    }
+
+    const v = parsed.visual;
+    const counts = {
+      curves: Array.isArray(v.curves) ? v.curves.length : undefined,
+      points: Array.isArray(v.points) ? v.points.length : undefined,
+      segments: Array.isArray(v.segments) ? v.segments.length : undefined,
+      vectors: Array.isArray(v.vectors) ? v.vectors.length : undefined,
+      bars: Array.isArray(v.bars) ? v.bars.length : undefined,
+      matrixRows: Array.isArray(v.matrixRows) ? v.matrixRows.length : undefined,
+      shadeFormula: v.shadeFormula,
+      solidType: v.solidType,
+      vennBoth: v.vennBoth
+    };
+
+    if (v.kind !== expected) {
+      console.log(`${label} ⚠️ 서버가 visual은 보냈지만 kind가 기대값과 다릅니다. 기대="${expected}", 실제="${v.kind}". 내용물 개수:`, counts);
+      return;
+    }
+
+    console.log(`${label} ✅ 서버가 visual.kind="${v.kind}"를 정확히 보냈습니다. 내용물 개수(값이 undefined면 그 필드를 아예 안 보낸 것):`, counts);
+    // 개수는 맞아도 formula 문법이 깨져 있으면 화면엔 안 그려진다 — 실제 내용물도 그대로 보여준다.
+    if (Array.isArray(v.curves) && v.curves.length > 0) {
+      console.log(`${label} curves 실제 내용:`, v.curves);
+    }
+    if (Array.isArray(v.points) && v.points.length > 0) {
+      console.log(`${label} points 실제 내용:`, v.points);
+    }
+  }
 
   async function getSceneUpdate(subjectJustResolved) {
     const ctx = buildTurnContext(subjectJustResolved);
@@ -570,14 +823,48 @@ ${ctx.instruction}`;
         continue;
       }
 
-      const problems = validateTurnContent(ctx, parsed);
-      if (problems.length > 0) {
-        lastError = new Error('내용 검증 실패: ' + problems.join(' / '));
+      // [시각자료 디버그] — 서버가 이번 시도에서 visual로 정확히 뭘 보냈는지만 순수하게 보여준다.
+      // (systemInstruction/전체 응답 JSON 같은 노이즈는 DEBUG_VERBOSE로 따로 뺐고, 이건 항상 찍는다.)
+      logServerVisualSummary(ctx, parsed, attempt);
+
+      const coreProblems = validateTurnContent(ctx, parsed);
+      const visualProblems = validateVisualContent(ctx, parsed);
+
+      // [시각자료 디버그] "curves는 왔는데 왜 재시도됐지?" 같은 의문을 바로 풀 수 있도록,
+      // 이번 시도가 왜 통과/거부됐는지 그 이유(핵심 검증 문제 / 시각자료 검증 문제)를 그대로 찍는다.
+      if (coreProblems.length > 0 || visualProblems.length > 0) {
+        console.log(`[검증 디버그] (시도 ${attempt}/${MAX_ATTEMPTS}) 이번 응답이 거부된 이유 →`, {
+          core: coreProblems.length > 0 ? coreProblems : '(핵심 검증은 통과)',
+          visual: visualProblems.length > 0 ? visualProblems : '(시각자료 검증은 통과)'
+        });
+      } else {
+        console.log(`[검증 디버그] (시도 ${attempt}/${MAX_ATTEMPTS}) 핵심·시각자료 검증 모두 통과 → 이 턴은 정상적으로 화면에 표시됩니다.`);
+      }
+
+      if (coreProblems.length > 0) {
+        // 핵심 검증(active_track/narration/choices/scene_complete 등) 실패는 항상 재시도.
+        lastError = new Error('내용 검증 실패: ' + coreProblems.concat(visualProblems).join(' / '));
         messagesRef.current.push({
           role: 'user',
-          content: `[주의] 직전 응답이 규칙을 위반했다:\n- ${problems.join('\n- ')}\n같은 상황을 유지한 채, 위 문제만 고쳐서 다시 응답하라. JSON만 출력하라.`
+          content: `[주의] 직전 응답이 규칙을 위반했다:\n- ${coreProblems.concat(visualProblems).join('\n- ')}\n같은 상황을 유지한 채, 위 문제만 고쳐서 다시 응답하라. JSON만 출력하라.`
         });
         continue;
+      }
+
+      if (visualProblems.length > 0) {
+        if (attempt < MAX_ATTEMPTS) {
+          // 시각 자료만 문제면, 아직 시도 횟수가 남아있는 동안은 고쳐보라고 재시도시킨다.
+          lastError = new Error('시각 자료 검증 실패: ' + visualProblems.join(' / '));
+          messagesRef.current.push({
+            role: 'user',
+            content: `[주의] 직전 응답의 내용(narration/choices)은 정상이지만 시각 자료(visual)에 문제가 있다:\n- ${visualProblems.join('\n- ')}\n같은 narration과 choices를 그대로 유지한 채, visual 필드만 고쳐서 다시 응답하라. JSON만 출력하라.`
+          });
+          continue;
+        }
+        // 마지막 시도까지 시각 자료를 못 고쳤으면, 그래프 없이라도 학습 진행 자체는 막지 않는다.
+        // (그래프는 부가 요소 — narration/choices/correct_index 등 핵심 판정 로직에는 영향 없음.)
+        console.warn('시각 자료 생성에 최종 실패해 visual 없이 진행합니다:', visualProblems);
+        parsed.visual = null;
       }
 
       messagesRef.current.push({ role: 'assistant', content: rawText });
@@ -671,13 +958,15 @@ JSON만 출력하라.`;
 
     const bookInfo = chapters.find(b => b.chapter === selectedChapter);
 
-    // 실제로 어떤 목표가 선택됐고, GOALS_DATA에서 무엇이 조회됐는지 직접 눈으로 확인하기 위한 로그.
-    console.log('========================================');
-    console.log('선택된 goals 인덱스:', goals);
-    console.log('국어 GOALS_DATA.kor[goals.kor]:', GOALS_DATA.kor?.[goals.kor], '(GOALS_DATA.kor 길이:', GOALS_DATA.kor?.length, ')');
-    console.log('영어 GOALS_DATA.eng[goals.eng]:', GOALS_DATA.eng?.[goals.eng], '(GOALS_DATA.eng 길이:', GOALS_DATA.eng?.length, ')');
-    console.log('수학 GOALS_DATA.math[goals.math]:', GOALS_DATA.math?.[goals.math], '(GOALS_DATA.math 길이:', GOALS_DATA.math?.length, ')');
-    console.log('========================================');
+    // 실제로 어떤 목표가 선택됐고, GOALS_DATA에서 무엇이 조회됐는지 확인하는 로그 (DEBUG_VERBOSE 전용).
+    if (DEBUG_VERBOSE) {
+      console.log('========================================');
+      console.log('선택된 goals 인덱스:', goals);
+      console.log('국어 GOALS_DATA.kor[goals.kor]:', GOALS_DATA.kor?.[goals.kor], '(GOALS_DATA.kor 길이:', GOALS_DATA.kor?.length, ')');
+      console.log('영어 GOALS_DATA.eng[goals.eng]:', GOALS_DATA.eng?.[goals.eng], '(GOALS_DATA.eng 길이:', GOALS_DATA.eng?.length, ')');
+      console.log('수학 GOALS_DATA.math[goals.math]:', GOALS_DATA.math?.[goals.math], '(GOALS_DATA.math 길이:', GOALS_DATA.math?.length, ')');
+      console.log('========================================');
+    }
 
     sceneInfoRef.current = {
       chapterArea: selectedArea,
@@ -692,7 +981,14 @@ JSON만 출력하라.`;
       }
     };
 
-    console.log('최종 goalTexts (프롬프트에 실제로 들어갈 문자열):', sceneInfoRef.current.goalTexts);
+    if (DEBUG_VERBOSE) {
+      console.log('최종 goalTexts (프롬프트에 실제로 들어갈 문자열):', sceneInfoRef.current.goalTexts);
+    }
+
+    // 이번 장면의 수학 목표가 어떤 vizType을 쓰는지 고정한다 (GOALS_DATA.math 항목에 미리 박혀있는 값).
+    // 이 한 줄은 "서버가 뭘 보내야 정상인지"의 기준값이라 항상 찍어둔다.
+    mathVizTypeRef.current = GOALS_DATA.math[goals.math]?.vizType || 'narration';
+    console.log('[시각자료 디버그] 이번 장면 수학 vizType(기대값):', mathVizTypeRef.current);
 
     // 과목별 모드(발견형/문제유형형)를 먼저 확정한다. 영어·수학은 항상 문제유형형,
     // 국어는 선택된 목표(mid)에 따라 자동 분기된다. 이 값은 장면이 끝날 때까지 고정된다.
@@ -702,7 +998,9 @@ JSON만 출력하라.`;
       math: computeSubjectMode('math', goals)
     };
     subjectModesRef.current = subjectModes;
-    console.log('과목별 모드(발견형/문제유형형):', subjectModes, '(국어 mid:', GOALS_DATA.kor[goals.kor]?.mid, ')');
+    if (DEBUG_VERBOSE) {
+      console.log('과목별 모드(발견형/문제유형형):', subjectModes, '(국어 mid:', GOALS_DATA.kor[goals.kor]?.mid, ')');
+    }
 
     // 체크 해제된 과목은 completedTurns를 처음부터 그 과목의 완주 기준(모드별 2 또는 3)으로 두어,
     // getActiveSubject가 자동으로 건너뛴다.
@@ -777,12 +1075,56 @@ JSON만 출력하라.`;
   };
 
   // ===========================================================
-  // 수학 시각 자료 렌더러 — 모델은 수식 문자열 하나만 내놓고, 코드가 mathjs로 안전하게
-  // 계산해서 정확하게 그린다. 함수 종류(다항식/삼각/로그/지수/유리함수 등)가 늘어나도
-  // 이 렌더러는 고칠 필요가 없다 — "x만 있는 식(explicit)"과 "x,y가 섞인 식(implicit,
-  // 원·타원·쌍곡선 등)" 두 갈래만 처리하면 되기 때문이다.
+  // 시각 자료 렌더러 — vizType(9종)에 따라 분기한다.
+  // mafs 기반 5종(mafs_function/mafs_shape/mafs_vector/mafs_area/mafs_discrete)은
+  // <Mafs> 안에서 mafs 컴포넌트로 그리고, 나머지 3종(bar_chart/venn/matrix/pseudo3d)은
+  // mafs 범위 밖이라 각각 recharts 또는 소형 SVG로 별도 렌더링한다.
   // ===========================================================
-  function sampleExplicitCurve(compiled, xMin, xMax, yMin, yMax, steps = 200) {
+
+  const MAFS_VIEWBOX_DEFAULT = { x: [-10, 10], y: [-10, 10] };
+
+  function safeCompile(formula) {
+    try { return math.compile(formula); } catch (e) { return null; }
+  }
+
+  function toRange(range, fallback) {
+    return Array.isArray(range) && range.length === 2 ? range : fallback;
+  }
+
+  // 원점 중심 원(x^2+y^2+c0=0 형태)인지 근사 판별. 원이면 mafs의 <Circle>로 정확히 그릴 수 있지만,
+  // 타원·쌍곡선 등 그 외 implicit 곡선은 mafs에 범용 음함수 플로터가 없어 이 판별에 실패한다.
+  function circleRadiusIfSimple(compiled) {
+    try {
+      const c0 = compiled.evaluate({ x: 0, y: 0 });
+      const r = Math.sqrt(Math.max(0, -c0));
+      // 실제로 원인지 몇 개 표본점에서 검증 (x^2+y^2-r^2 골격인지)
+      const check1 = compiled.evaluate({ x: r, y: 0 });
+      const check2 = compiled.evaluate({ x: 0, y: r });
+      if (r > 0 && Number.isFinite(r) && Math.abs(check1) < 1e-6 && Math.abs(check2) < 1e-6) {
+        return r;
+      }
+    } catch (e) { /* 원이 아니거나 평가 실패 */ }
+    return null;
+  }
+
+  // curves 중 "단순 원이 아닌 implicit 곡선"이 하나라도 있으면 true.
+  // (타원·쌍곡선처럼 mafs로 못 그리는 경우 — 이전 mathjs 샘플링 모듈로 폴백해야 하는 신호)
+  function hasComplexImplicitCurve(curves) {
+    if (!Array.isArray(curves)) return false;
+    return curves.some((curve) => {
+      if (!curve || curve.kind !== 'implicit' || !curve.formula) return false;
+      const compiled = safeCompile(curve.formula);
+      if (!compiled) return false;
+      return circleRadiusIfSimple(compiled) === null;
+    });
+  }
+
+  // ===========================================================
+  // 이전 모듈(복원) — mathjs로 직접 표본을 찍어 근사하는 방식.
+  // mafs가 다루지 못하는 타원·쌍곡선 등 일반 implicit 곡선(F(x,y)=0)이 하나라도 있으면,
+  // 그 그래프 전체(곡선+점+변)를 이 모듈로 그린다 (좌표계 혼용을 피하기 위해 통째로 전환).
+  // ===========================================================
+  function sampleExplicitCurveClassic(compiled, xMin, xMax, yMin, yMax, steps = 200) {
     const pts = [];
     const dx = (xMax - xMin) / steps;
     for (let i = 0; i <= steps; i++) {
@@ -799,7 +1141,7 @@ JSON만 출력하라.`;
   // 음함수(F(x,y)=0)의 근사 해를 찾는다: 각 x열마다 y를 촘촘히 훑으며 F의 부호가
   // 바뀌는 지점을 선형보간으로 잡아낸다. 원·타원·쌍곡선 등 어떤 이차곡선이 와도
   // 이 방식 하나로 처리된다.
-  function sampleImplicitCurve(compiled, xMin, xMax, yMin, yMax, xSteps = 140, ySteps = 140) {
+  function sampleImplicitCurveClassic(compiled, xMin, xMax, yMin, yMax, xSteps = 140, ySteps = 140) {
     const pts = [];
     const dx = (xMax - xMin) / xSteps;
     const dy = (yMax - yMin) / ySteps;
@@ -824,12 +1166,14 @@ JSON만 출력하라.`;
     return pts;
   }
 
-  function renderSingleGraph(graph, key) {
-    if (!graph || !Array.isArray(graph.curves) || graph.curves.length === 0) return null;
-
-    const W = 280, H = 280, PAD = 24;
-    const [xMin, xMax] = graph.xRange && graph.xRange.length === 2 ? graph.xRange : [-10, 10];
-    const [yMin, yMax] = graph.yRange && graph.yRange.length === 2 ? graph.yRange : [-10, 10];
+  // curves(+선택적으로 points/segments)를 이전 mathjs 샘플링 모듈로 통째로 그린다.
+  function renderClassicSvgGraph(v, key) {
+    const W = 300, H = 300, PAD = 26;
+    const [xMin, xMax] = toRange(v.xRange, [-10, 10]);
+    const [yMin, yMax] = toRange(v.yRange, [-10, 10]);
+    const curves = Array.isArray(v.curves) ? v.curves : [];
+    const points = Array.isArray(v.points) ? v.points : [];
+    const segments = Array.isArray(v.segments) ? v.segments : [];
 
     const sx = (x) => PAD + ((x - xMin) / (xMax - xMin)) * (W - 2 * PAD);
     const sy = (y) => H - PAD - ((y - yMin) / (yMax - yMin)) * (H - 2 * PAD);
@@ -848,19 +1192,16 @@ JSON만 출력하라.`;
       </>
     );
 
-  const content = graph.curves.map((curve, i) => {
+    const curveElements = curves.map((curve, i) => {
+      if (!curve || !curve.formula) return null;
+      const compiled = safeCompile(curve.formula);
+      if (!compiled) return null;
       const color = curve.color || (i === 0 ? '#3b6d11' : '#d85a30');
-      let compiled;
-      try {
-        compiled = math.compile(curve.formula || '0');
-      } catch (e) {
-        return null;
-      }
 
       if (curve.kind === 'implicit') {
-        const pts = sampleImplicitCurve(compiled, xMin, xMax, yMin, yMax);
+        const pts = sampleImplicitCurveClassic(compiled, xMin, xMax, yMin, yMax);
         return (
-          <g key={i}>
+          <g key={`curve${i}`}>
             {pts.map(([x, y], pi) => (
               <circle key={pi} cx={sx(x)} cy={sy(y)} r="1.6" fill={color} />
             ))}
@@ -871,9 +1212,9 @@ JSON만 출력하라.`;
         );
       }
 
-      const pts = sampleExplicitCurve(compiled, xMin, xMax, yMin, yMax);
+      const pts = sampleExplicitCurveClassic(compiled, xMin, xMax, yMin, yMax);
       return (
-        <g key={i}>
+        <g key={`curve${i}`}>
           <polyline points={pts.map(([x, y]) => `${sx(x)},${sy(y)}`).join(' ')} fill="none" stroke={color} strokeWidth="2.5" />
           {curve.label && pts.length > 0 && (
             <text x={sx(pts[pts.length - 1][0]) - 4} y={sy(pts[pts.length - 1][1]) - 6} fontSize="11" fill={color} textAnchor="end">{curve.label}</text>
@@ -881,29 +1222,367 @@ JSON만 출력하라.`;
         </g>
       );
     });
- return (
+
+    const segmentElements = segments.map((s, i) => (
+      (typeof s.x1 === 'number' && typeof s.y1 === 'number' && typeof s.x2 === 'number' && typeof s.y2 === 'number') ? (
+        <line key={`seg${i}`} x1={sx(s.x1)} y1={sy(s.y1)} x2={sx(s.x2)} y2={sy(s.y2)} stroke="#5a5a8c" strokeWidth="2" />
+      ) : null
+    ));
+
+    const pointElements = points.map((p, i) => (
+      (typeof p.x === 'number' && typeof p.y === 'number') ? (
+        <g key={`pt${i}`}>
+          <circle cx={sx(p.x)} cy={sy(p.y)} r="3" fill="#d85a30" />
+          {p.label && <text x={sx(p.x) + 6} y={sy(p.y) - 6} fontSize="11" fill="#5f5e5a">{p.label}</text>}
+        </g>
+      ) : null
+    ));
+
+    return (
       <div key={key} style={{ display: 'inline-block', margin: '4px' }}>
-        {graph.title && <div style={{ fontSize: '12px', color: '#5f5e5a', marginBottom: '2px', textAlign: 'center' }}>{graph.title}</div>}
         <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} style={{ background: '#fff', border: '1px solid #ddd8ca', borderRadius: '8px' }}>
           {gridLines}
           {axes}
-          {content}
+          {segmentElements}
+          {curveElements}
+          {pointElements}
         </svg>
       </div>
     );
   }
 
- function renderMathVisual(visual) {
-    if (!visual || !Array.isArray(visual.graphs) || visual.graphs.length === 0) return null;
-    // curves가 비어있거나 formula가 아예 없는 그래프는 조용히 걸러내고,
-    // 실제로 그릴 수 있는 그래프만 화면에 낸다 (깨진 곡선 하나는 renderSingleGraph 내부에서 개별적으로 건너뛴다).
-    const usableGraphs = visual.graphs.filter(g => Array.isArray(g.curves) && g.curves.some(c => c.formula));
-    if (usableGraphs.length === 0) return null;
+  // ===========================================================
+  // 선택지별 미니 그래프 지원 — curves/points/segments 각 항목에 forChoiceIndex(숫자)가 있으면
+  // 그 항목은 "특정 선택지 전용"이고, 없으면 "공통 배경"(모든 미니 그래프 + 상단 공통 그래프에 표시)이다.
+  // ===========================================================
+  function isTaggedForChoice(item) {
+    return typeof item?.forChoiceIndex === 'number';
+  }
+  function sharedOnly(arr) {
+    return Array.isArray(arr) ? arr.filter(it => !isTaggedForChoice(it)) : arr;
+  }
+  function sharedPlusChoice(arr, idx) {
+    return Array.isArray(arr) ? arr.filter(it => !isTaggedForChoice(it) || it.forChoiceIndex === idx) : arr;
+  }
+  function hasChoiceTagged(arr, idx) {
+    return Array.isArray(arr) && arr.some(it => isTaggedForChoice(it) && (idx === undefined || it.forChoiceIndex === idx));
+  }
+  function visualHasAnyChoiceTag(v) {
+    if (!v) return false;
+    return hasChoiceTagged(v.curves) || hasChoiceTagged(v.points) || hasChoiceTagged(v.segments);
+  }
+  function buildSharedVisual(v) {
+    return { ...v, curves: sharedOnly(v.curves), points: sharedOnly(v.points), segments: sharedOnly(v.segments) };
+  }
+  function buildChoiceVisual(v, idx) {
+    return { ...v, curves: sharedPlusChoice(v.curves, idx), points: sharedPlusChoice(v.points, idx), segments: sharedPlusChoice(v.segments, idx) };
+  }
+  function visualHasSomeContent(v) {
+    if (!v) return false;
+    return (Array.isArray(v.curves) && v.curves.some(c => c && c.formula)) ||
+      (Array.isArray(v.points) && v.points.length > 0) ||
+      (Array.isArray(v.segments) && v.segments.length > 0);
+  }
+
+  // 선택지 버튼 바로 아래에 그릴 "그 선택지 전용" 미니 그래프. mafs_function/mafs_shape에서만 지원한다.
+  // 이번 턴에 forChoiceIndex 태그가 하나도 없으면(=모델이 선택지별 그래프를 안 쓰기로 한 턴이면) null.
+  function renderChoiceMiniGraph(visual, choiceIndex) {
+    if (!visual || !visual.kind) return null;
+    if (visual.kind !== 'mafs_function' && visual.kind !== 'mafs_shape') return null;
+    if (!visualHasAnyChoiceTag(visual)) return null;
+    if (!hasChoiceTagged(visual.curves, choiceIndex) && !hasChoiceTagged(visual.points, choiceIndex) && !hasChoiceTagged(visual.segments, choiceIndex)) {
+      return null; // 이 선택지에는 태그된 항목이 없음 — 미니 그래프 안 그림
+    }
+    const miniV = buildChoiceVisual(visual, choiceIndex);
+    try {
+      return (
+        <div className="viz-box viz-box-mini" style={{ marginTop: '4px', marginBottom: '4px' }}>
+          {visual.kind === 'mafs_function' ? renderMafsFunction(miniV, 160) : renderMafsShape(miniV, 160)}
+        </div>
+      );
+    } catch (e) {
+      console.error('renderChoiceMiniGraph 렌더링 중 오류:', e);
+      return null;
+    }
+  }
+
+
+  // 타원·쌍곡선 등 mafs로 못 그리는 복잡한 implicit 곡선이 하나라도 섞여 있으면,
+  // 좌표계 혼용을 피하려고 이 그래프 전체를 이전 mathjs 샘플링 모듈(renderClassicSvgGraph)로 넘긴다.
+  function renderMafsFunction(v, heightPx) {
+    if (hasComplexImplicitCurve(v.curves)) {
+      return renderClassicSvgGraph(v, 'classic-function');
+    }
+    const xRange = toRange(v.xRange, [-10, 10]);
+    const yRange = toRange(v.yRange, [-10, 10]);
+    const curves = Array.isArray(v.curves) ? v.curves : [];
     return (
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
-        {usableGraphs.map((graph, i) => renderSingleGraph(graph, i))}
+      <Mafs viewBox={{ x: xRange, y: yRange }} preserveAspectRatio={false} height={heightPx || 500}>
+        <Coordinates.Cartesian />
+        {curves.map((curve, i) => {
+          if (!curve || !curve.formula) return null;
+          const compiled = safeCompile(curve.formula);
+          if (!compiled) return null;
+          const color = curve.color || Theme.blue;
+          if (curve.kind === 'implicit') {
+            const r = circleRadiusIfSimple(compiled);
+            if (r !== null) {
+              return <Circle key={i} center={[0, 0]} radius={r} color={color} />;
+            }
+            return null; // 여기 도달하면 hasComplexImplicitCurve가 이미 걸러냈어야 함
+          }
+          return (
+            <Plot.OfX key={i} y={(x) => { try { return compiled.evaluate({ x }); } catch (e) { return NaN; } }} color={color} />
+          );
+        })}
+      </Mafs>
+    );
+  }
+
+  // mafs_shape: points(꼭짓점) + segments(변) + curves(원, 있다면)를 함께 그린다.
+  // 마찬가지로 복잡한 implicit 곡선이 섞여 있으면 전체를 이전 모듈로 넘긴다.
+  function renderMafsShape(v, heightPx) {
+    if (hasComplexImplicitCurve(v.curves)) {
+      return renderClassicSvgGraph(v, 'classic-shape');
+    }
+    const xRange = toRange(v.xRange, [-1, 8]);
+    const yRange = toRange(v.yRange, [-1, 8]);
+    const points = Array.isArray(v.points) ? v.points : [];
+    const segments = Array.isArray(v.segments) ? v.segments : [];
+    const curves = Array.isArray(v.curves) ? v.curves : [];
+    return (
+      <Mafs viewBox={{ x: xRange, y: yRange }} preserveAspectRatio={false} height={heightPx || 500}>
+        <Coordinates.Cartesian />
+        {segments.map((s, i) => (
+          typeof s.x1 === 'number' && typeof s.y1 === 'number' && typeof s.x2 === 'number' && typeof s.y2 === 'number'
+            ? <Line.Segment key={`seg${i}`} point1={[s.x1, s.y1]} point2={[s.x2, s.y2]} color={Theme.indigo} />
+            : null
+        ))}
+        {curves.map((curve, i) => {
+          if (!curve || !curve.formula || curve.kind !== 'implicit') return null;
+          const compiled = safeCompile(curve.formula);
+          if (!compiled) return null;
+          const r = circleRadiusIfSimple(compiled);
+          if (r !== null) return <Circle key={`c${i}`} center={[0, 0]} radius={r} color={curve.color || Theme.blue} />;
+          return null;
+        })}
+        {points.map((p, i) => (
+          typeof p.x === 'number' && typeof p.y === 'number'
+            ? <Point key={`pt${i}`} x={p.x} y={p.y} color={Theme.red} />
+            : null
+        ))}
+        {points.map((p, i) => (
+          p.label && typeof p.x === 'number' && typeof p.y === 'number' ? (
+            <text key={`lbl${i}`} x={p.x} y={p.y} style={{ transform: 'translate(6px, -6px)', fontSize: '12px' }}>{p.label}</text>
+          ) : null
+        ))}
+      </Mafs>
+    );
+  }
+
+  // mafs_vector: Vector 컴포넌트로 tail→tip 화살표를 그린다.
+  function renderMafsVector(v) {
+    const xRange = toRange(v.xRange, [-6, 6]);
+    const yRange = toRange(v.yRange, [-6, 6]);
+    const vectors = Array.isArray(v.vectors) ? v.vectors : [];
+    const points = Array.isArray(v.points) ? v.points : [];
+    return (
+      <Mafs viewBox={{ x: xRange, y: yRange }} preserveAspectRatio={false}>
+        <Coordinates.Cartesian />
+        {vectors.map((vec, i) => (
+          typeof vec.x1 === 'number' && typeof vec.y1 === 'number' && typeof vec.x2 === 'number' && typeof vec.y2 === 'number'
+            ? <Vector key={i} tail={[vec.x1, vec.y1]} tip={[vec.x2, vec.y2]} color={vec.color || Theme.blue} />
+            : null
+        ))}
+        {points.map((p, i) => (
+          typeof p.x === 'number' && typeof p.y === 'number'
+            ? <Point key={`pt${i}`} x={p.x} y={p.y} color={Theme.red} />
+            : null
+        ))}
+      </Mafs>
+    );
+  }
+
+  // mafs_area: Plot.OfX로 기준 곡선을 그리고, Plot.Inequality로 [shadeXMin, shadeXMax] 구간의
+  // 곡선 아래(또는 위) 영역을 음영 처리한다.
+  function renderMafsArea(v) {
+    const xRange = toRange(v.xRange, [-10, 10]);
+    const yRange = toRange(v.yRange, [-10, 10]);
+    const curves = Array.isArray(v.curves) ? v.curves : [];
+    const shadeCompiled = v.shadeFormula ? safeCompile(v.shadeFormula) : null;
+    const xMin = typeof v.shadeXMin === 'number' ? v.shadeXMin : xRange[0];
+    const xMax = typeof v.shadeXMax === 'number' ? v.shadeXMax : xRange[1];
+    return (
+      <Mafs viewBox={{ x: xRange, y: yRange }} preserveAspectRatio={false}>
+        <Coordinates.Cartesian />
+        {curves.map((curve, i) => {
+          if (!curve || !curve.formula) return null;
+          const compiled = safeCompile(curve.formula);
+          if (!compiled) return null;
+          return (
+            <Plot.OfX key={i} y={(x) => { try { return compiled.evaluate({ x }); } catch (e) { return NaN; } }} color={curve.color || Theme.blue} />
+          );
+        })}
+        {shadeCompiled && (
+          <Plot.Inequality
+            y={{
+              '<=': (x) => (x >= xMin && x <= xMax ? (() => { try { return shadeCompiled.evaluate({ x }); } catch (e) { return 0; } })() : 0),
+              '>': (x) => (x >= xMin && x <= xMax ? 0 : 1e9)
+            }}
+            color={Theme.green}
+          />
+        )}
+      </Mafs>
+    );
+  }
+
+  // mafs_discrete: 이산수열 항들을 Point로 나열한다.
+  function renderMafsDiscrete(v) {
+    const xRange = toRange(v.xRange, [0, 10]);
+    const yRange = toRange(v.yRange, [-10, 10]);
+    const points = Array.isArray(v.points) ? v.points : [];
+    return (
+      <Mafs viewBox={{ x: xRange, y: yRange }} preserveAspectRatio={false}>
+        <Coordinates.Cartesian />
+        {points.map((p, i) => (
+          typeof p.x === 'number' && typeof p.y === 'number'
+            ? <Point key={i} x={p.x} y={p.y} color={Theme.blue} />
+            : null
+        ))}
+      </Mafs>
+    );
+  }
+
+  // bar_chart: recharts 막대그래프.
+  function renderBarChart(v) {
+    const bars = Array.isArray(v.bars) ? v.bars : [];
+    if (bars.length === 0) return null;
+    return (
+      <div style={{ width: '100%', height: 220 }}>
+        <ResponsiveContainer>
+          <BarChart data={bars}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="label" />
+            <YAxis />
+            <Tooltip />
+            <Bar dataKey="value" fill="#3b6d11" />
+          </BarChart>
+        </ResponsiveContainer>
       </div>
     );
+  }
+
+  // venn: 겹치는 원 두 개로 그리는 소형 SVG 벤다이어그램.
+  function renderVenn(v) {
+    const labelA = v.vennLabelA || 'A';
+    const labelB = v.vennLabelB || 'B';
+    const onlyA = typeof v.vennOnlyA === 'number' ? v.vennOnlyA : '';
+    const onlyB = typeof v.vennOnlyB === 'number' ? v.vennOnlyB : '';
+    const both = typeof v.vennBoth === 'number' ? v.vennBoth : '';
+    return (
+      <svg width="320" height="200" viewBox="0 0 320 200">
+        <circle cx="130" cy="100" r="80" fill="#3b6d1122" stroke="#3b6d11" strokeWidth="2" />
+        <circle cx="190" cy="100" r="80" fill="#d85a3022" stroke="#d85a30" strokeWidth="2" />
+        <text x="80" y="60" fontSize="14" fill="#3b6d11">{labelA}</text>
+        <text x="220" y="60" fontSize="14" fill="#d85a30">{labelB}</text>
+        <text x="95" y="105" fontSize="16" textAnchor="middle">{onlyA}</text>
+        <text x="160" y="105" fontSize="16" textAnchor="middle">{both}</text>
+        <text x="225" y="105" fontSize="16" textAnchor="middle">{onlyB}</text>
+      </svg>
+    );
+  }
+
+  // matrix: 숫자 격자를 표(HTML table)로 그린다.
+  function renderMatrix(v) {
+    const rows = Array.isArray(v.matrixRows) ? v.matrixRows : [];
+    if (rows.length === 0) return null;
+    return (
+      <table style={{ borderCollapse: 'collapse', margin: '8px 0' }}>
+        <tbody>
+          {rows.map((row, ri) => (
+            <tr key={ri}>
+              {row.map((val, ci) => (
+                <td key={ci} style={{ border: '1px solid #ddd8ca', padding: '6px 12px', textAlign: 'center' }}>{val}</td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    );
+  }
+
+  // pseudo3d: 정육면체·원기둥·원뿔·구를 고정된 등각투상 SVG 프리셋으로 그린다.
+  function renderPseudo3D(v) {
+    const kind = v.solidType;
+    const label = v.solidLabel || '';
+    if (kind === 'cube') {
+      return (
+        <svg width="220" height="200" viewBox="0 0 220 200">
+          <polygon points="40,140 120,140 150,100 70,100" fill="#e8e4d8" stroke="#5f5e5a" />
+          <polygon points="40,140 40,60 120,60 120,140" fill="#f5f2e8" stroke="#5f5e5a" />
+          <polygon points="120,60 150,20 150,100 120,140" fill="#ddd8ca" stroke="#5f5e5a" />
+          {label && <text x="80" y="180" fontSize="13" textAnchor="middle">{label}</text>}
+        </svg>
+      );
+    }
+    if (kind === 'cylinder') {
+      return (
+        <svg width="220" height="200" viewBox="0 0 220 200">
+          <ellipse cx="110" cy="50" rx="60" ry="20" fill="#f5f2e8" stroke="#5f5e5a" />
+          <path d="M50,50 L50,140 A60,20 0 0 0 170,140 L170,50" fill="#e8e4d8" stroke="#5f5e5a" />
+          <ellipse cx="110" cy="140" rx="60" ry="20" fill="none" stroke="#5f5e5a" />
+          {label && <text x="110" y="180" fontSize="13" textAnchor="middle">{label}</text>}
+        </svg>
+      );
+    }
+    if (kind === 'cone') {
+      return (
+        <svg width="220" height="200" viewBox="0 0 220 200">
+          <ellipse cx="110" cy="140" rx="60" ry="20" fill="#e8e4d8" stroke="#5f5e5a" />
+          <path d="M110,20 L50,140 A60,20 0 0 0 170,140 Z" fill="#f5f2e8" stroke="#5f5e5a" />
+          {label && <text x="110" y="180" fontSize="13" textAnchor="middle">{label}</text>}
+        </svg>
+      );
+    }
+    if (kind === 'sphere') {
+      return (
+        <svg width="220" height="200" viewBox="0 0 220 200">
+          <circle cx="110" cy="100" r="70" fill="#f5f2e8" stroke="#5f5e5a" />
+          <ellipse cx="110" cy="100" rx="70" ry="22" fill="none" stroke="#5f5e5a" strokeDasharray="4 3" />
+          {label && <text x="110" y="185" fontSize="13" textAnchor="middle">{label}</text>}
+        </svg>
+      );
+    }
+    return null;
+  }
+
+  function renderVisual(visual) {
+    if (!visual || !visual.kind) return null;
+    try {
+      // curves/points/segments 중 forChoiceIndex로 태그된 항목은 선택지별 미니 그래프 전용이므로,
+      // 상단 공통 그래프에서는 제외한다. 태그된 항목만 있고 공통(태그 없는) 내용이 하나도 없으면
+      // 상단 공통 그래프 자체를 생략한다(전부 선택지 버튼 아래 미니 그래프로만 보여준다).
+      const isSharableKind = visual.kind === 'mafs_function' || visual.kind === 'mafs_shape';
+      const displayVisual = isSharableKind && visualHasAnyChoiceTag(visual) ? buildSharedVisual(visual) : visual;
+      if (isSharableKind && visualHasAnyChoiceTag(visual) && !visualHasSomeContent(displayVisual)) {
+        return null;
+      }
+      switch (visual.kind) {
+        case 'mafs_function': return <div className="viz-box">{renderMafsFunction(displayVisual)}</div>;
+        case 'mafs_shape': return <div className="viz-box">{renderMafsShape(displayVisual)}</div>;
+        case 'mafs_vector': return <div className="viz-box">{renderMafsVector(visual)}</div>;
+        case 'mafs_area': return <div className="viz-box">{renderMafsArea(visual)}</div>;
+        case 'mafs_discrete': return <div className="viz-box">{renderMafsDiscrete(visual)}</div>;
+        case 'bar_chart': return <div className="viz-box">{renderBarChart(visual)}</div>;
+        case 'venn': return <div className="viz-box">{renderVenn(visual)}</div>;
+        case 'matrix': return <div className="viz-box">{renderMatrix(visual)}</div>;
+        case 'pseudo3d': return <div className="viz-box">{renderPseudo3D(visual)}</div>;
+        default: return null;
+      }
+    } catch (e) {
+      console.error('renderVisual 렌더링 중 오류:', e);
+      return null;
+    }
   }
 
   // ===========================================================
@@ -1071,6 +1750,8 @@ JSON만 출력하라.`;
                 {goalFullText('math', GOALS_DATA.math[goals.math])}
                 {' '}
                 <span className="mode-badge">[문제유형형 · 3단계]</span>
+                {' '}
+                <span className="viz-badge">[시각화: {GOALS_DATA.math[goals.math]?.vizType || 'narration'}]</span>
               </div>
               <div className="level-row">
                 <span>난이도</span>
@@ -1120,7 +1801,7 @@ JSON만 출력하라.`;
                   {log.narration.split('\n\n').filter(p => p.trim()).map((p, pIdx) => (
                     <p key={pIdx}>{renderTextWithMath(p.trim())}</p>
                   ))}
-                  {log.activeTrack === 'math' && renderMathVisual(log.visual)}
+                  {log.activeTrack === 'math' && renderVisual(log.visual)}
                 </div>
 
                 {log.sceneComplete ? (
@@ -1128,14 +1809,16 @@ JSON만 출력하라.`;
                 ) : (
                   <div className="choices">
                     {log.choices.map((choice, cIdx) => (
-                      <button
-                        key={cIdx}
-                        className={`choice-btn ${cIdx === log.correctIndex ? 'test-correct' : ''}`}
-                        disabled={log.selectedChoiceIndex !== null}
-                        onClick={() => handleChoice(logIdx, cIdx, choice, log.correctIndex, log.activeTrack)}
-                      >
-                        {cIdx + 1}. {renderTextWithMath(choice)}
-                      </button>
+                      <div className="choice-item" key={cIdx}>
+                        <button
+                          className={`choice-btn ${cIdx === log.correctIndex ? 'test-correct' : ''}`}
+                          disabled={log.selectedChoiceIndex !== null}
+                          onClick={() => handleChoice(logIdx, cIdx, choice, log.correctIndex, log.activeTrack)}
+                        >
+                          {cIdx + 1}. {renderTextWithMath(choice)}
+                        </button>
+                        {log.activeTrack === 'math' && renderChoiceMiniGraph(log.visual, cIdx)}
+                      </div>
                     ))}
                   </div>
                 )}
