@@ -736,6 +736,13 @@ ${ctx.instruction}${vizSection}`;
     }
 
     console.log(`${label} ✅ 서버가 visual.kind="${v.kind}"를 정확히 보냈습니다. 내용물 개수(값이 undefined면 그 필드를 아예 안 보낸 것):`, counts);
+    // 개수는 맞아도 formula 문법이 깨져 있으면 화면엔 안 그려진다 — 실제 내용물도 그대로 보여준다.
+    if (Array.isArray(v.curves) && v.curves.length > 0) {
+      console.log(`${label} curves 실제 내용:`, v.curves);
+    }
+    if (Array.isArray(v.points) && v.points.length > 0) {
+      console.log(`${label} points 실제 내용:`, v.points);
+    }
   }
 
   async function getSceneUpdate(subjectJustResolved) {
@@ -766,6 +773,17 @@ ${ctx.instruction}${vizSection}`;
 
       const coreProblems = validateTurnContent(ctx, parsed);
       const visualProblems = validateVisualContent(ctx, parsed);
+
+      // [시각자료 디버그] "curves는 왔는데 왜 재시도됐지?" 같은 의문을 바로 풀 수 있도록,
+      // 이번 시도가 왜 통과/거부됐는지 그 이유(핵심 검증 문제 / 시각자료 검증 문제)를 그대로 찍는다.
+      if (coreProblems.length > 0 || visualProblems.length > 0) {
+        console.log(`[검증 디버그] (시도 ${attempt}/${MAX_ATTEMPTS}) 이번 응답이 거부된 이유 →`, {
+          core: coreProblems.length > 0 ? coreProblems : '(핵심 검증은 통과)',
+          visual: visualProblems.length > 0 ? visualProblems : '(시각자료 검증은 통과)'
+        });
+      } else {
+        console.log(`[검증 디버그] (시도 ${attempt}/${MAX_ATTEMPTS}) 핵심·시각자료 검증 모두 통과 → 이 턴은 정상적으로 화면에 표시됩니다.`);
+      }
 
       if (coreProblems.length > 0) {
         // 핵심 검증(active_track/narration/choices/scene_complete 등) 실패는 항상 재시도.
