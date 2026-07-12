@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
+import * as math from 'mathjs';
 import katex from 'katex';
 import 'katex/dist/katex.min.css';
 import {
-
+  GOALS_DATA,
+  BOOKS_DATA,
   SYSTEM_PROMPT_COMMON_BASE,
   SYSTEM_PROMPT_TURNS_DISCOVERY,
   SYSTEM_PROMPT_TURNS_PROBLEM,
@@ -10,13 +12,8 @@ import {
   SYSTEM_PROMPT_KOR_PROBLEM,
   SYSTEM_PROMPT_ENG_PROBLEM,
   SYSTEM_PROMPT_MATH_PROBLEM,
-  SYSTEM_PROMPT_IMAGE_MODE_FORMAT,
   KOR_DISCOVERY_MIDS
 } from './constants';
-import {
-  GOALS_DATA,
-  BOOKS_DATA
-} from './constantsbase';
 
 // 과목 진행 순서와, 과목별 목표 키 / 표시 이름 매핑.
 // 프롬프트 모듈은 과목마다 고정이 아니라 "모드"(발견형/문제유형형)에 따라 달라지므로
@@ -49,10 +46,6 @@ function getSubjectPromptModule(subject, mode) {
 
 // Gemini 구조 강제용 JSON 스키마. track_status는 더 이상 모델이 자체 보고하지 않는다 —
 // 턴 진행(완료 여부)은 코드가 "선택 인덱스 === correct_index" 비교로 직접 판정한다.
-// (더 이상 visual.graphs 필드는 없다 — 수학 턴의 시각 자료는 코드가 좌표를 계산해 그리는 방식 대신,
-//  모델이 직접 "칠판 판서 이미지"를 생성해서 별도의 이미지 파트로 반환하는 방식으로 대체되었다.
-//  이 스키마는 이미지를 함께 요청하지 않는 일반 턴에서만 사용된다 — wantsImage인 턴은 스키마 강제 없이
-//  프롬프트 지시만으로 JSON 형식을 맞춘다. 자세한 이유는 callGeminiAPI/getSceneUpdate 주석 참고.)
 const SCENE_RESPONSE_SCHEMA = {
   type: 'OBJECT',
   properties: {
@@ -61,15 +54,43 @@ const SCENE_RESPONSE_SCHEMA = {
     narration: { type: 'STRING' },
     choices: { type: 'ARRAY', items: { type: 'STRING' } },
     correct_index: { type: 'INTEGER' },
-    scene_complete: { type: 'BOOLEAN' }
+    scene_complete: { type: 'BOOLEAN' },
+    visual: {
+       type: 'OBJECT',
+      nullable: true,
+      properties: {
+        // 그래프를 몇 개 그릴지, 각 그래프에 곡선을 몇 개 겹쳐 그릴지는 모델이 상황에 맞게 정한다.
+        // 예: 세 선택지를 한 그래프에 겹쳐 비교 → graphs 길이 1, 그 안에 curves 3개.
+        //     세 선택지를 각각 따로 보여주는 게 나음 → graphs 길이 3, 각 graph에 curves 1개.
+        graphs: {
+          type: 'ARRAY',
+          items: {
+            type: 'OBJECT',
+            properties: {
+              title: { type: 'STRING' },
+              xRange: { type: 'ARRAY', items: { type: 'NUMBER' } },
+              yRange: { type: 'ARRAY', items: { type: 'NUMBER' } },
+              curves: {
+                type: 'ARRAY',
+                items: {
+                  type: 'OBJECT',
+                  properties: {
+                    // "explicit": y = formula (x만 포함). "implicit": formula = 0 (x,y 둘 다 포함, 원·타원·쌍곡선 등).
+                    kind: { type: 'STRING', enum: ['explicit', 'implicit'] },
+                    formula: { type: 'STRING' },
+                    label: { type: 'STRING' },
+                    color: { type: 'STRING' }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
   },
   required: ['origin_reason', 'active_track', 'narration', 'choices', 'correct_index', 'scene_complete']
 };
-
-// 텍스트+이미지를 한 응답에서 함께 받아야 하는 호출도 동일한 GEMINI_MODEL을 그대로 쓴다
-// (사용자 확인: 이 모델이 이미지 생성도 지원함). responseSchema(구조화 출력 강제)와
-// responseModalities:["TEXT","IMAGE"]를 동시에 쓰는 조합은 공식 문서/사례로 확인되지 않아,
-// 이미지가 필요한 호출에서는 스키마 강제만 빼고 프롬프트 지시로 JSON 형식을 맞춘다.
 
 export default function SceneGeneratorEngine() {
   const GEMINI_API_KEY = "AQ.Ab8RN6Jwrwo7TruQDJhlsuTuEg5v6AJmeI7hCvdLcijHwIGNig";
@@ -290,15 +311,12 @@ narration·origin_reason·choices는 반드시 이 학습목표를 다뤄야 한
     };
   }
 
-  // wantsImage가 true면(=이번 호출이 텍스트+이미지를 함께 받는 호출이면), 스키마 강제 없이도
-  // JSON 형식을 정확히 맞추도록 SYSTEM_PROMPT_IMAGE_MODE_FORMAT 블록을 맨 끝에 덧붙인다.
-  function buildSystemInstruction(ctx, wantsImage) {
-    const imageBlock = wantsImage ? `\n\n${SYSTEM_PROMPT_IMAGE_MODE_FORMAT}` : '';
+  function buildSystemInstruction(ctx) {
     if (!ctx.subjectForModule) {
       return `${SYSTEM_PROMPT_COMMON_BASE}
 
 [지금 이 턴의 지시]
-${ctx.instruction}${imageBlock}`;
+${ctx.instruction}`;
     }
     const turnsBlock = ctx.mode === 'discovery' ? SYSTEM_PROMPT_TURNS_DISCOVERY : SYSTEM_PROMPT_TURNS_PROBLEM;
     const subjectModule = getSubjectPromptModule(ctx.subjectForModule, ctx.mode);
@@ -309,14 +327,7 @@ ${turnsBlock}
 ${subjectModule}
 
 [지금 이 턴의 지시]
-${ctx.instruction}${imageBlock}`;
-  }
-
-  // 이번 턴이 "텍스트+이미지 동시 생성"을 요청해야 하는 턴인지 판정한다.
-  // 지금은 수학이 진행 중이고(activeTrack === 'math') 아직 장면이 끝나지 않았을 때만 이미지가 필요하다.
-  // (장면 완료 턴이나 다른 과목 턴에서는 칠판 판서 이미지가 필요 없으므로 기존처럼 스키마 강제 호출을 쓴다.)
-  function wantsImageForContext(ctx) {
-    return ctx.activeTrack === 'math' && !ctx.sceneComplete;
+${ctx.instruction}`;
   }
 
   // ===========================================================
@@ -380,28 +391,6 @@ ${ctx.instruction}${imageBlock}`;
   function validateTurnContent(ctx, parsed) {
     const problems = [];
 
-    // 이미지가 필요한 턴(wantsImage)은 responseSchema 강제를 쓰지 않으므로, 여기서 필수 필드 존재
-    // 자체를 직접 확인한다 (스키마가 있는 일반 턴에서는 이미 보장되지만, 검증 비용이 거의 없어 항상 돌린다).
-    if (typeof parsed.active_track !== 'string') {
-      problems.push('active_track 필드가 문자열로 존재해야 한다.');
-    }
-    if (typeof parsed.narration !== 'string' || !parsed.narration.trim()) {
-      problems.push('narration 필드가 비어 있거나 없다. 반드시 채워라.');
-    }
-    if (!Array.isArray(parsed.choices)) {
-      problems.push('choices 필드가 배열이어야 한다.');
-    }
-    if (typeof parsed.correct_index !== 'number') {
-      problems.push('correct_index 필드가 숫자여야 한다.');
-    }
-    if (typeof parsed.scene_complete !== 'boolean') {
-      problems.push('scene_complete 필드가 boolean(true/false)이어야 한다.');
-    }
-    // 위 구조 자체가 깨졌으면 아래 세부 규칙 검사는 건너뛰고 바로 재시도시킨다 (narration.match 등에서 또 터지는 것 방지).
-    if (problems.length > 0) {
-      return problems;
-    }
-
     if (ctx.activeTrack && parsed.active_track !== ctx.activeTrack) {
       problems.push(`active_track 필드가 "${ctx.activeTrack}"이어야 하는데 "${parsed.active_track}"로 응답했다. 정확히 맞춰라.`);
     }
@@ -416,6 +405,27 @@ ${ctx.instruction}${imageBlock}`;
         if (allNumericLike) {
           problems.push('결핍턴인데 선택지가 완성된 숫자 답으로만 되어 있다. 결핍턴 선택지는 "어떤 전략으로 접근할지"를 고르는 것이어야지 이미 계산된 답이어서는 안 된다.');
         }
+      }
+    }
+
+ if (ctx.activeTrack === 'math' && !ctx.sceneComplete && parsed.visual && Array.isArray(parsed.visual.graphs) && parsed.visual.graphs.length > 0) {
+      // 그래프 일부가 비어있거나 formula가 깨진 것은 코드가 조용히 걸러내고 넘어간다(아래 정제 단계).
+      // 여기서는 "쓸 수 있는 곡선이 하나도 없는 경우"만 진짜 실패로 잡아 재시도시킨다.
+      let hasAnyValidCurve = false;
+      parsed.visual.graphs.forEach((graph) => {
+        if (!Array.isArray(graph.curves)) return;
+        graph.curves.forEach((curve) => {
+          if (!curve.formula || typeof curve.formula !== 'string') return;
+          try {
+            math.compile(curve.formula);
+            hasAnyValidCurve = true;
+          } catch (e) {
+            // 개별 곡선 하나가 깨진 건 괜찮다 — 렌더링 단계에서 그 곡선만 건너뛴다.
+          }
+        });
+      });
+      if (!hasAnyValidCurve) {
+        problems.push('visual.graphs가 있지만 그 안에 유효한 formula를 가진 곡선이 하나도 없다. 그래프로 그릴 게 없다면 visual 자체를 넣지 말고(null), 그릴 게 있다면 최소 한 개의 그래프에 최소 한 개의 유효한 curve(formula 포함)를 채워라.');
       }
     }
 
@@ -469,11 +479,7 @@ ${ctx.instruction}${imageBlock}`;
   // ===========================================================
   // Gemini API 호출
   // ===========================================================
-  // wantsImage가 true면 동일한 GEMINI_MODEL로 responseModalities만 지정해서(responseSchema 없이)
-  // (responseSchema 없이) 호출한다 — 이 조합에서 한 응답 안에 text 파트(JSON)와 inlineData 파트(이미지)가
-  // 함께 온다. wantsImage가 false면 기존처럼 텍스트 전용 모델 + responseSchema로 구조화 JSON만 받는다.
-  // 반환값은 항상 { jsonText, imageBase64, imageMimeType } 형태로 통일한다.
-  const callGeminiAPI = async (messages, systemText, wantsImage) => {
+  const callGeminiAPI = async (messages, systemText) => {
     const url = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${GEMINI_API_KEY}`;
 
     const contents = messages.map(m => ({
@@ -481,14 +487,9 @@ ${ctx.instruction}${imageBlock}`;
       parts: [{ text: m.content }]
     }));
 
-    const generationConfig = wantsImage
-      ? { responseModalities: ['TEXT', 'IMAGE'] }
-      : { responseMimeType: 'application/json', responseSchema: SCENE_RESPONSE_SCHEMA };
-
     // 이 시점의 systemText는 이미 goals/levels 등 실제 선택값이 전부 치환 완료된 최종 문자열이다.
     // "선택한 값이 실제로 API 요청에 들어갔는지" 눈으로 확인할 수 있도록 그대로 콘솔에 출력한다.
     console.log('========================================');
-    console.log(`이번 호출 모델: ${GEMINI_MODEL} (wantsImage=${wantsImage})`);
     console.log('이번 호출에 실제로 전송되는 systemInstruction (이미 치환 완료된 최종 텍스트):');
     console.log(systemText);
     console.log('========================================');
@@ -500,7 +501,10 @@ ${ctx.instruction}${imageBlock}`;
         body: JSON.stringify({
           systemInstruction: { parts: [{ text: systemText }] },
           contents,
-          generationConfig
+          generationConfig: {
+            responseMimeType: 'application/json',
+            responseSchema: SCENE_RESPONSE_SCHEMA
+          }
         })
       });
 
@@ -523,34 +527,13 @@ ${ctx.instruction}${imageBlock}`;
       console.log(JSON.stringify(data, null, 2));
       console.log('========================================');
 
-      const parts = data.candidates && data.candidates[0]?.content?.parts;
-      if (!Array.isArray(parts) || parts.length === 0) {
-        throw new Error('API 응답 성공했으나, parts 구조가 올바르지 않습니다: ' + JSON.stringify(data).slice(0, 300));
+      const resultText = data.candidates && data.candidates[0]?.content?.parts?.[0]?.text;
+      if (!resultText) {
+        throw new Error('API 응답 성공했으나, 텍스트 데이터(candidates) 구조가 올바르지 않습니다: ' + JSON.stringify(data).slice(0, 300));
       }
 
-      // text 파트는 전부 이어붙이고(모델이 여러 조각으로 나눠 줄 수 있음), inlineData 이미지 파트는 첫 번째 것만 취한다.
-      let jsonText = '';
-      let imageBase64 = null;
-      let imageMimeType = null;
-      for (const part of parts) {
-        if (typeof part.text === 'string') {
-          jsonText += part.text;
-        } else if (part.inlineData && part.inlineData.mimeType && part.inlineData.mimeType.startsWith('image/') && !imageBase64) {
-          imageBase64 = part.inlineData.data;
-          imageMimeType = part.inlineData.mimeType;
-        }
-      }
-
-      if (!jsonText) {
-        throw new Error('API 응답 성공했으나, 텍스트(JSON) 파트가 비어 있습니다: ' + JSON.stringify(data).slice(0, 300));
-      }
-
-      console.log('추출된 최종 텍스트(JSON) 내용:\n', jsonText);
-      if (wantsImage) {
-        console.log(imageBase64 ? '이미지 파트도 함께 수신됨 (mime: ' + imageMimeType + ')' : '⚠️ wantsImage였으나 이미지 파트가 비어 있음');
-      }
-
-      return { jsonText, imageBase64, imageMimeType };
+      console.log('추출된 최종 답변 내용:\n', resultText);
+      return resultText;
 
     } catch (error) {
       console.error('통신 에러 발생:', error);
@@ -567,19 +550,17 @@ ${ctx.instruction}${imageBlock}`;
 
   async function getSceneUpdate(subjectJustResolved) {
     const ctx = buildTurnContext(subjectJustResolved);
-    const wantsImage = wantsImageForContext(ctx);
-    const systemText = buildSystemInstruction(ctx, wantsImage);
+    const systemText = buildSystemInstruction(ctx);
 
     let lastError = null;
 
     for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
       const messagesToSend = getMessagesForAPI();
-      const apiResult = await callGeminiAPI(messagesToSend, systemText, wantsImage);
-      const { jsonText, imageBase64, imageMimeType } = apiResult;
+      const rawText = await callGeminiAPI(messagesToSend, systemText);
 
       let parsed;
       try {
-        parsed = parseModelJSON(jsonText);
+        parsed = parseModelJSON(rawText);
       } catch (parseErr) {
         lastError = parseErr;
         messagesRef.current.push({
@@ -599,14 +580,8 @@ ${ctx.instruction}${imageBlock}`;
         continue;
       }
 
-      // 이미지가 요청된 턴인데 이번 시도에서 이미지가 비어 있어도, 재시도로 API 비용을 더 태우지 않는다
-      // (이미지는 부가 요소 — 텍스트 검증만 통과하면 이 턴은 정상 진행시키고, 화면에는 그냥 이미지 없이 보여준다).
-      if (wantsImage && !imageBase64) {
-        console.warn('이번 수학 턴은 이미지 없이 진행됩니다 (이미지 파트 누락).');
-      }
-
-      messagesRef.current.push({ role: 'assistant', content: jsonText });
-      return { ...parsed, blackboardImage: imageBase64 || null, blackboardImageMime: imageMimeType || null };
+      messagesRef.current.push({ role: 'assistant', content: rawText });
+      return parsed;
     }
 
     throw lastError || new Error('알 수 없는 이유로 장면 생성에 실패했습니다.');
@@ -623,8 +598,7 @@ ${ctx.instruction}${imageBlock}`;
       correctIndex: typeof result.correct_index === 'number' ? result.correct_index : 0,
       sceneComplete: !!result.scene_complete,
       selectedChoiceIndex: null,
-      blackboardImage: result.blackboardImage || null,
-      blackboardImageMime: result.blackboardImageMime || null,
+      visual: result.visual || null,
       completedTurnsSnapshot: trackCompletedTurnsRef.current[result.active_track] ?? 0,
       attemptsSnapshot: trackAttemptsRef.current[result.active_track] ?? 0,
       maxTurnsSnapshot: maxTurnsForMode(subjectModesRef.current[result.active_track])
@@ -803,20 +777,131 @@ JSON만 출력하라.`;
   };
 
   // ===========================================================
-  // 수학 칠판 판서 이미지 렌더러 — 모델이 텍스트(JSON)와 함께 생성한 이미지 파트를
-  // 그대로 <img>로 보여준다. 좌표 계산·곡선 샘플링은 더 이상 코드가 하지 않는다
-  // (이전에는 mathjs로 코드가 직접 그래프를 그렸지만, 이제는 모델이 직접 손그림 판서
-  // 이미지를 생성해서 반환하므로 렌더러가 훨씬 단순해졌다).
+  // 수학 시각 자료 렌더러 — 모델은 수식 문자열 하나만 내놓고, 코드가 mathjs로 안전하게
+  // 계산해서 정확하게 그린다. 함수 종류(다항식/삼각/로그/지수/유리함수 등)가 늘어나도
+  // 이 렌더러는 고칠 필요가 없다 — "x만 있는 식(explicit)"과 "x,y가 섞인 식(implicit,
+  // 원·타원·쌍곡선 등)" 두 갈래만 처리하면 되기 때문이다.
   // ===========================================================
-  function renderBlackboardImage(base64, mimeType) {
-    if (!base64) return null;
+  function sampleExplicitCurve(compiled, xMin, xMax, yMin, yMax, steps = 200) {
+    const pts = [];
+    const dx = (xMax - xMin) / steps;
+    for (let i = 0; i <= steps; i++) {
+      const x = xMin + i * dx;
+      let y;
+      try { y = compiled.evaluate({ x }); } catch (e) { y = null; }
+      if (typeof y === 'number' && Number.isFinite(y) && y >= yMin && y <= yMax) {
+        pts.push([x, y]);
+      }
+    }
+    return pts;
+  }
+
+  // 음함수(F(x,y)=0)의 근사 해를 찾는다: 각 x열마다 y를 촘촘히 훑으며 F의 부호가
+  // 바뀌는 지점을 선형보간으로 잡아낸다. 원·타원·쌍곡선 등 어떤 이차곡선이 와도
+  // 이 방식 하나로 처리된다.
+  function sampleImplicitCurve(compiled, xMin, xMax, yMin, yMax, xSteps = 140, ySteps = 140) {
+    const pts = [];
+    const dx = (xMax - xMin) / xSteps;
+    const dy = (yMax - yMin) / ySteps;
+    for (let i = 0; i <= xSteps; i++) {
+      const x = xMin + i * dx;
+      let prevVal = null;
+      let prevY = null;
+      for (let j = 0; j <= ySteps; j++) {
+        const y = yMin + j * dy;
+        let val;
+        try { val = compiled.evaluate({ x, y }); } catch (e) { val = null; }
+        if (typeof val === 'number' && Number.isFinite(val) && typeof prevVal === 'number' && Number.isFinite(prevVal)) {
+          if ((prevVal < 0) !== (val < 0)) {
+            const t = prevVal / (prevVal - val);
+            pts.push([x, prevY + t * (y - prevY)]);
+          }
+        }
+        prevVal = val;
+        prevY = y;
+      }
+    }
+    return pts;
+  }
+
+  function renderSingleGraph(graph, key) {
+    if (!graph || !Array.isArray(graph.curves) || graph.curves.length === 0) return null;
+
+    const W = 280, H = 280, PAD = 24;
+    const [xMin, xMax] = graph.xRange && graph.xRange.length === 2 ? graph.xRange : [-10, 10];
+    const [yMin, yMax] = graph.yRange && graph.yRange.length === 2 ? graph.yRange : [-10, 10];
+
+    const sx = (x) => PAD + ((x - xMin) / (xMax - xMin)) * (W - 2 * PAD);
+    const sy = (y) => H - PAD - ((y - yMin) / (yMax - yMin)) * (H - 2 * PAD);
+
+    const gridLines = [];
+    for (let gx = Math.ceil(xMin); gx <= Math.floor(xMax); gx++) {
+      gridLines.push(<line key={`gx${gx}`} x1={sx(gx)} y1={sy(yMin)} x2={sx(gx)} y2={sy(yMax)} stroke="#e5e5e5" strokeWidth="1" />);
+    }
+    for (let gy = Math.ceil(yMin); gy <= Math.floor(yMax); gy++) {
+      gridLines.push(<line key={`gy${gy}`} x1={sx(xMin)} y1={sy(gy)} x2={sx(xMax)} y2={sy(gy)} stroke="#e5e5e5" strokeWidth="1" />);
+    }
+    const axes = (
+      <>
+        <line x1={sx(xMin)} y1={sy(0)} x2={sx(xMax)} y2={sy(0)} stroke="#999" strokeWidth="1.5" />
+        <line x1={sx(0)} y1={sy(yMin)} x2={sx(0)} y2={sy(yMax)} stroke="#999" strokeWidth="1.5" />
+      </>
+    );
+
+  const content = graph.curves.map((curve, i) => {
+      const color = curve.color || (i === 0 ? '#3b6d11' : '#d85a30');
+      let compiled;
+      try {
+        compiled = math.compile(curve.formula || '0');
+      } catch (e) {
+        return null;
+      }
+
+      if (curve.kind === 'implicit') {
+        const pts = sampleImplicitCurve(compiled, xMin, xMax, yMin, yMax);
+        return (
+          <g key={i}>
+            {pts.map(([x, y], pi) => (
+              <circle key={pi} cx={sx(x)} cy={sy(y)} r="1.6" fill={color} />
+            ))}
+            {curve.label && pts.length > 0 && (
+              <text x={sx(pts[pts.length - 1][0])} y={sy(pts[pts.length - 1][1]) - 6} fontSize="11" fill={color} textAnchor="middle">{curve.label}</text>
+            )}
+          </g>
+        );
+      }
+
+      const pts = sampleExplicitCurve(compiled, xMin, xMax, yMin, yMax);
+      return (
+        <g key={i}>
+          <polyline points={pts.map(([x, y]) => `${sx(x)},${sy(y)}`).join(' ')} fill="none" stroke={color} strokeWidth="2.5" />
+          {curve.label && pts.length > 0 && (
+            <text x={sx(pts[pts.length - 1][0]) - 4} y={sy(pts[pts.length - 1][1]) - 6} fontSize="11" fill={color} textAnchor="end">{curve.label}</text>
+          )}
+        </g>
+      );
+    });
+ return (
+      <div key={key} style={{ display: 'inline-block', margin: '4px' }}>
+        {graph.title && <div style={{ fontSize: '12px', color: '#5f5e5a', marginBottom: '2px', textAlign: 'center' }}>{graph.title}</div>}
+        <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} style={{ background: '#fff', border: '1px solid #ddd8ca', borderRadius: '8px' }}>
+          {gridLines}
+          {axes}
+          {content}
+        </svg>
+      </div>
+    );
+  }
+
+ function renderMathVisual(visual) {
+    if (!visual || !Array.isArray(visual.graphs) || visual.graphs.length === 0) return null;
+    // curves가 비어있거나 formula가 아예 없는 그래프는 조용히 걸러내고,
+    // 실제로 그릴 수 있는 그래프만 화면에 낸다 (깨진 곡선 하나는 renderSingleGraph 내부에서 개별적으로 건너뛴다).
+    const usableGraphs = visual.graphs.filter(g => Array.isArray(g.curves) && g.curves.some(c => c.formula));
+    if (usableGraphs.length === 0) return null;
     return (
-      <div className="blackboard-note" style={{ marginTop: '8px' }}>
-        <img
-          src={`data:${mimeType || 'image/png'};base64,${base64}`}
-          alt="선생님이 칠판에 그린 판서"
-          style={{ maxWidth: '100%', borderRadius: '8px', border: '1px solid #ddd8ca', display: 'block' }}
-        />
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
+        {usableGraphs.map((graph, i) => renderSingleGraph(graph, i))}
       </div>
     );
   }
@@ -1035,7 +1120,7 @@ JSON만 출력하라.`;
                   {log.narration.split('\n\n').filter(p => p.trim()).map((p, pIdx) => (
                     <p key={pIdx}>{renderTextWithMath(p.trim())}</p>
                   ))}
-                  {log.activeTrack === 'math' && renderBlackboardImage(log.blackboardImage, log.blackboardImageMime)}
+                  {log.activeTrack === 'math' && renderMathVisual(log.visual)}
                 </div>
 
                 {log.sceneComplete ? (
@@ -1058,7 +1143,7 @@ JSON만 출력하라.`;
             ))}
           </div>
 
-          {loading && <div className="loading">이야기를 쓰는 중... (수학 턴이면 선생님이 칠판에 그리는 것도 같이 기다려요)</div>}
+          {loading && <div className="loading">이야기를 쓰는 중...</div>}
           {errorMsg && <div className="err">{errorMsg}</div>}
         </div>
       )}
