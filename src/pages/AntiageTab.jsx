@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import * as math from 'mathjs';
+import katex from 'katex';
+import 'katex/dist/katex.min.css';
 import {
   GOALS_DATA,
   BOOKS_DATA,
@@ -384,10 +386,6 @@ ${ctx.instruction}`;
 
     const mathInPlay = ctx.subjectForModule === 'math' || ctx.activeTrack === 'math';
     if (mathInPlay) {
-      const mathText = narration + ' ' + choicesJoined;
-      if (/\$|\\frac|\\lim|\\sum|\\sqrt|\^\{|_\{/.test(mathText)) {
-        problems.push('수학 관련 턴인데 LaTeX/수식 기호($, \\frac, \\lim, ^{...} 등)가 사용되었다. 모든 수식은 반드시 한글 문장으로 풀어써야 한다 (예: "3분의 1", "x가 1에 가까워질 때").');
-      }
       if (ctx.isDeficitPhase && ctx.activeTrack === 'math' && parsed.choices && parsed.choices.length > 0) {
         const allNumericLike = parsed.choices.every(c => /^[\s0-9.\-\/,]+$/.test(c));
         if (allNumericLike) {
@@ -876,6 +874,26 @@ JSON만 출력하라.`;
   }
 
   // ===========================================================
+  // 텍스트 안의 $...$ 로 감싸진 LaTeX 수식만 KaTeX로 렌더링하고, 나머지 일반 텍스트는 그대로 둔다.
+  // ===========================================================
+  function renderTextWithMath(text) {
+    if (!text) return null;
+    const parts = String(text).split(/(\$[^$]+\$)/g);
+    return parts.map((part, i) => {
+      if (part.length > 2 && part.startsWith('$') && part.endsWith('$')) {
+        const expr = part.slice(1, -1);
+        try {
+          const html = katex.renderToString(expr, { throwOnError: false, displayMode: false });
+          return <span key={i} dangerouslySetInnerHTML={{ __html: html }} />;
+        } catch (e) {
+          return <span key={i}>{part}</span>;
+        }
+      }
+      return <span key={i}>{part}</span>;
+    });
+  }
+
+  // ===========================================================
   // 렌더링 헬퍼
   // ===========================================================
   function getDisplayStatus(subject) {
@@ -1067,7 +1085,7 @@ JSON만 출력하라.`;
 
                 <div className="story-card">
                   {log.narration.split('\n\n').filter(p => p.trim()).map((p, pIdx) => (
-                    <p key={pIdx}>{p.trim()}</p>
+                    <p key={pIdx}>{renderTextWithMath(p.trim())}</p>
                   ))}
                   {log.activeTrack === 'math' && renderMathVisual(log.visual)}
                 </div>
@@ -1083,7 +1101,7 @@ JSON만 출력하라.`;
                         disabled={log.selectedChoiceIndex !== null}
                         onClick={() => handleChoice(logIdx, cIdx, choice, log.correctIndex, log.activeTrack)}
                       >
-                        {cIdx + 1}. {choice}
+                        {cIdx + 1}. {renderTextWithMath(choice)}
                       </button>
                     ))}
                   </div>
