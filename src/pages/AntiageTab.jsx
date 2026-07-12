@@ -56,7 +56,7 @@ const SCENE_RESPONSE_SCHEMA = {
       type: 'OBJECT',
       nullable: true,
       properties: {
-        type: { type: 'STRING', enum: ['curve', 'svg'] },
+       type: { type: 'STRING', enum: ['curve'] },
         // curve 전용 (함수 그래프 — 정확도가 중요해서 숫자 스펙으로 코드가 직접 그린다)
         xRange: { type: 'ARRAY', items: { type: 'NUMBER' } },
         yRange: { type: 'ARRAY', items: { type: 'NUMBER' } },
@@ -77,8 +77,7 @@ const SCENE_RESPONSE_SCHEMA = {
             }
           }
         },
-        // svg 전용 (그래프가 아닌 모든 도형 — 삼각형·사각형·원·부채꼴·벡터·입체도형 등)
-        svgMarkup: { type: 'STRING' }
+  
       }
     }
   },
@@ -403,19 +402,11 @@ ${ctx.instruction}`;
       }
     }
 
-    if (ctx.activeTrack === 'math' && !ctx.sceneComplete) {
-      if (!parsed.visual || !parsed.visual.type) {
-        problems.push('수학 턴인데 visual 필드가 비어있다. 함수 그래프면 type을 "curve"로 하고 curves 배열을 채우고, 그 외 도형(삼각형·사각형·원·부채꼴·벡터·입체도형 등)이면 type을 "svg"로 하고 svgMarkup에 완성된 <svg>...</svg> 코드를 넣어라. narration에 그림을 텍스트로 묘사하지 마라.');
-      } else if (parsed.visual.type === 'curve' && (!Array.isArray(parsed.visual.curves) || parsed.visual.curves.length === 0)) {
+  if (ctx.activeTrack === 'math' && !ctx.sceneComplete && parsed.visual && parsed.visual.type === 'curve') {
+      if (!Array.isArray(parsed.visual.curves) || parsed.visual.curves.length === 0) {
         problems.push('visual.type이 "curve"인데 curves 배열이 비어있다. 함수의 계수(coefficients) 또는 삼각함수 정보를 채워라.');
-      } else if (parsed.visual.type === 'svg') {
-        const svg = (parsed.visual.svgMarkup || '').trim();
-        if (!svg.startsWith('<svg') || !svg.endsWith('</svg>')) {
-          problems.push('visual.type이 "svg"인데 svgMarkup이 완전한 <svg>...</svg> 형태가 아니다. 태그가 완성된 SVG 코드를 그대로 넣어라.');
-        }
       }
     }
-
     const englishInPlay = ctx.subjectForModule === 'english' || ctx.activeTrack === 'english';
     if (englishInPlay && !ctx.sceneComplete) {
       // narration은 "쉬운 영어로 된 이야기 + 맨 끝 한국어 질문" 구조여야 한다.
@@ -783,27 +774,10 @@ JSON만 출력하라.`;
 
   // 모델이 직접 만든 SVG 문자열(삼각형·사각형·원·부채꼴·벡터·입체도형 등)을 그대로 렌더링한다.
   // 최소한의 안전장치: <svg>...</svg> 형태인지 확인하고, script/이벤트 핸들러는 제거한다.
-  function renderRawMathSvg(rawSvg) {
-    const trimmed = (rawSvg || '').trim();
-    if (!trimmed.startsWith('<svg') || !trimmed.endsWith('</svg>')) return null;
-    const cleaned = trimmed
-      .replace(/<script[\s\S]*?<\/script>/gi, '')
-      .replace(/\son\w+\s*=\s*"[^"]*"/gi, '')
-      .replace(/\son\w+\s*=\s*'[^']*'/gi, '');
-    return (
-      <div
-        style={{ background: '#fff', border: '1px solid #ddd8ca', borderRadius: '8px', margin: '8px 0', display: 'inline-block' }}
-        dangerouslySetInnerHTML={{ __html: cleaned }}
-      />
-    );
-  }
+ 
 
   function renderMathVisual(visual) {
     if (!visual || !visual.type) return null;
-
-    if (visual.type === 'svg') {
-      return renderRawMathSvg(visual.svgMarkup);
-    }
 
     if (visual.type === 'curve' && Array.isArray(visual.curves)) {
       const W = 280, H = 280, PAD = 24;
