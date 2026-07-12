@@ -56,21 +56,33 @@ const SCENE_RESPONSE_SCHEMA = {
     correct_index: { type: 'INTEGER' },
     scene_complete: { type: 'BOOLEAN' },
     visual: {
-      type: 'OBJECT',
+       type: 'OBJECT',
       nullable: true,
       properties: {
-        xRange: { type: 'ARRAY', items: { type: 'NUMBER' } },
-        yRange: { type: 'ARRAY', items: { type: 'NUMBER' } },
-        curves: {
+        // 그래프를 몇 개 그릴지, 각 그래프에 곡선을 몇 개 겹쳐 그릴지는 모델이 상황에 맞게 정한다.
+        // 예: 세 선택지를 한 그래프에 겹쳐 비교 → graphs 길이 1, 그 안에 curves 3개.
+        //     세 선택지를 각각 따로 보여주는 게 나음 → graphs 길이 3, 각 graph에 curves 1개.
+        graphs: {
           type: 'ARRAY',
           items: {
             type: 'OBJECT',
             properties: {
-              // "explicit": y = formula (x만 포함). "implicit": formula = 0 (x,y 둘 다 포함, 원·타원·쌍곡선 등).
-              kind: { type: 'STRING', enum: ['explicit', 'implicit'] },
-              formula: { type: 'STRING' },
-              label: { type: 'STRING' },
-              color: { type: 'STRING' }
+              title: { type: 'STRING' },
+              xRange: { type: 'ARRAY', items: { type: 'NUMBER' } },
+              yRange: { type: 'ARRAY', items: { type: 'NUMBER' } },
+              curves: {
+                type: 'ARRAY',
+                items: {
+                  type: 'OBJECT',
+                  properties: {
+                    // "explicit": y = formula (x만 포함). "implicit": formula = 0 (x,y 둘 다 포함, 원·타원·쌍곡선 등).
+                    kind: { type: 'STRING', enum: ['explicit', 'implicit'] },
+                    formula: { type: 'STRING' },
+                    label: { type: 'STRING' },
+                    color: { type: 'STRING' }
+                  }
+                }
+              }
             }
           }
         }
@@ -394,20 +406,26 @@ ${ctx.instruction}`;
       }
     }
 
-    if (ctx.activeTrack === 'math' && !ctx.sceneComplete && parsed.visual) {
-      if (!Array.isArray(parsed.visual.curves) || parsed.visual.curves.length === 0) {
-        problems.push('visual 필드가 있는데 curves 배열이 비어있다. 함수 그래프로 표현할 게 아니면 visual 자체를 아예 넣지 말고(null), 넣을 거면 curves를 채워라.');
+  if (ctx.activeTrack === 'math' && !ctx.sceneComplete && parsed.visual) {
+      if (!Array.isArray(parsed.visual.graphs) || parsed.visual.graphs.length === 0) {
+        problems.push('visual 필드가 있는데 graphs 배열이 비어있다. 함수 그래프로 표현할 게 아니면 visual 자체를 아예 넣지 말고(null), 넣을 거면 graphs를 채워라.');
       } else {
-        parsed.visual.curves.forEach((curve, i) => {
-          if (!curve.formula || typeof curve.formula !== 'string') {
-            problems.push(`curves[${i}]에 formula 문자열이 없다. 예: 다항식이면 "2*x^2 - 3*x + 1", 이차곡선이면 "x^2/25 + y^2/9 - 1"처럼 수식 문자열을 넣어라.`);
+        parsed.visual.graphs.forEach((graph, gi) => {
+          if (!Array.isArray(graph.curves) || graph.curves.length === 0) {
+            problems.push(`graphs[${gi}]에 curves가 비어있다. 그래프마다 최소 1개의 곡선을 채워라.`);
             return;
           }
-          try {
-            math.compile(curve.formula);
-          } catch (e) {
-            problems.push(`curves[${i}]의 formula("${curve.formula}")가 올바른 수식이 아니다(mathjs로 해석 실패: ${e.message}). 사칙연산·거듭제곱(^)·log·sin/cos/tan 등 mathjs가 이해하는 문법으로 다시 써라.`);
-          }
+          graph.curves.forEach((curve, i) => {
+            if (!curve.formula || typeof curve.formula !== 'string') {
+              problems.push(`graphs[${gi}].curves[${i}]에 formula 문자열이 없다. 예: "2*x^2 - 3*x + 1" 또는 "x^2/25 + y^2/9 - 1"처럼 수식 문자열을 넣어라.`);
+              return;
+            }
+            try {
+              math.compile(curve.formula);
+            } catch (e) {
+              problems.push(`graphs[${gi}].curves[${i}]의 formula("${curve.formula}")가 올바른 수식이 아니다(mathjs 해석 실패: ${e.message}).`);
+            }
+          });
         });
       }
     }
@@ -807,12 +825,13 @@ JSON만 출력하라.`;
     return pts;
   }
 
-  function renderMathVisual(visual) {
-    if (!visual || !Array.isArray(visual.curves) || visual.curves.length === 0) return null;
+  function renderSingleGraph(graph, key) {
+    if (!graph || !Array.isArray(graph.curves) || graph.curves.length === 0) return null;
 
     const W = 280, H = 280, PAD = 24;
-    const [xMin, xMax] = visual.xRange && visual.xRange.length === 2 ? visual.xRange : [-10, 10];
-    const [yMin, yMax] = visual.yRange && visual.yRange.length === 2 ? visual.yRange : [-10, 10];
+    const [xMin, xMax] = graph.xRange && graph.xRange.length === 2 ? graph.xRange : [-10, 10];
+    const [yMin, yMax] = graph.yRange && graph.yRange.length === 2 ? graph.yRange : [-10, 10];
+
     const sx = (x) => PAD + ((x - xMin) / (xMax - xMin)) * (W - 2 * PAD);
     const sy = (y) => H - PAD - ((y - yMin) / (yMax - yMin)) * (H - 2 * PAD);
 
@@ -830,7 +849,7 @@ JSON만 출력하라.`;
       </>
     );
 
-    const content = visual.curves.map((curve, i) => {
+  const content = graph.curves.map((curve, i) => {
       const color = curve.color || (i === 0 ? '#3b6d11' : '#d85a30');
       let compiled;
       try {
@@ -863,13 +882,24 @@ JSON만 출력하라.`;
         </g>
       );
     });
+ return (
+      <div key={key} style={{ display: 'inline-block', margin: '4px' }}>
+        {graph.title && <div style={{ fontSize: '12px', color: '#5f5e5a', marginBottom: '2px', textAlign: 'center' }}>{graph.title}</div>}
+        <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} style={{ background: '#fff', border: '1px solid #ddd8ca', borderRadius: '8px' }}>
+          {gridLines}
+          {axes}
+          {content}
+        </svg>
+      </div>
+    );
+  }
 
+  function renderMathVisual(visual) {
+    if (!visual || !Array.isArray(visual.graphs) || visual.graphs.length === 0) return null;
     return (
-      <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} style={{ background: '#fff', border: '1px solid #ddd8ca', borderRadius: '8px', margin: '8px 0' }}>
-        {gridLines}
-        {axes}
-        {content}
-      </svg>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
+        {visual.graphs.map((graph, i) => renderSingleGraph(graph, i))}
+      </div>
     );
   }
 
