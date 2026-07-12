@@ -3,8 +3,7 @@ import * as math from 'mathjs';
 import katex from 'katex';
 import 'katex/dist/katex.min.css';
 import {
-  GOALS_DATA,
-  BOOKS_DATA,
+
   SYSTEM_PROMPT_COMMON_BASE,
   SYSTEM_PROMPT_TURNS_DISCOVERY,
   SYSTEM_PROMPT_TURNS_PROBLEM,
@@ -14,7 +13,10 @@ import {
   SYSTEM_PROMPT_MATH_PROBLEM,
   KOR_DISCOVERY_MIDS
 } from './constants';
-
+import {
+  GOALS_DATA,
+  BOOKS_DATA
+} from './constantsbase';
 // 과목 진행 순서와, 과목별 목표 키 / 표시 이름 매핑.
 // 프롬프트 모듈은 과목마다 고정이 아니라 "모드"(발견형/문제유형형)에 따라 달라지므로
 // getSubjectPromptModule()에서 그때그때 계산한다.
