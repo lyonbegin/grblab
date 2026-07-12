@@ -94,9 +94,9 @@ const SCENE_RESPONSE_SCHEMA = {
 
 export default function SceneGeneratorEngine() {
   const GEMINI_API_KEY = "AQ.Ab8RN6Jwrwo7TruQDJhlsuTuEg5v6AJmeI7hCvdLcijHwIGNig";
-  // const GEMINI_MODEL = "gemini-3.1-flash-lite";
+  const GEMINI_MODEL = "gemini-3.1-flash-lite";
 
-    const GEMINI_MODEL = "gemini-3.1-flash";
+    // const GEMINI_MODEL = "gemini-3.1-flash";
 
   // ===========================================================
   // UI 상태
@@ -480,8 +480,8 @@ ${ctx.instruction}`;
   // Gemini API 호출
   // ===========================================================
   const callGeminiAPI = async (messages, systemText) => {
-    // const url = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${GEMINI_API_KEY}`;
-    const url = `https://generativelanguage.googleapis.com/v1/models/${GEMINI_MODEL}:generateContent?key=${GEMINI_API_KEY}`;
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${GEMINI_API_KEY}`;
+
     const contents = messages.map(m => ({
       role: m.role === 'assistant' ? 'model' : 'user',
       parts: [{ text: m.content }]
