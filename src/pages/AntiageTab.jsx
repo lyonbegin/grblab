@@ -73,7 +73,7 @@ const SCENE_RESPONSE_SCHEMA = {
 
 export default function SceneGeneratorEngine() {
   const GEMINI_API_KEY = "AQ.Ab8RN6Jwrwo7TruQDJhlsuTuEg5v6AJmeI7hCvdLcijHwIGNig";
-  const GEMINI_MODEL = "gemini-3.1-flash-lite-image";
+  const GEMINI_MODEL = "gemini-3.1-flash-lite";
 
     // const GEMINI_MODEL = "gemini-3.1-flash";
 
