@@ -108,7 +108,11 @@ const SCENE_RESPONSE_SCHEMA = {
               kind: { type: 'STRING', enum: ['explicit', 'implicit'] },
               formula: { type: 'STRING' },
               label: { type: 'STRING' },
-              color: { type: 'STRING' }
+              color: { type: 'STRING' },
+              // 이 곡선이 choices 중 특정 선택지 하나를 나타내면 그 선택지의 배열 인덱스(0부터)를 넣는다.
+              // 넣으면 코드가 그 선택지 버튼 바로 아래에 이 곡선만 담은 미니 그래프를 그려준다.
+              // 특정 선택지에 속하지 않는 "공통 배경 곡선"이면 이 필드를 아예 비워둔다(모든 미니 그래프에 공통 표시됨).
+              forChoiceIndex: { type: 'INTEGER', nullable: true }
             }
           }
         },
@@ -120,7 +124,10 @@ const SCENE_RESPONSE_SCHEMA = {
             properties: {
               x: { type: 'NUMBER' },
               y: { type: 'NUMBER' },
-              label: { type: 'STRING' }
+              label: { type: 'STRING' },
+              // curves의 forChoiceIndex와 동일한 용도 — 특정 선택지(방정식의 해 등)를 나타내는 점이면
+              // 그 선택지의 배열 인덱스를 넣는다.
+              forChoiceIndex: { type: 'INTEGER', nullable: true }
             }
           }
         },
@@ -134,7 +141,8 @@ const SCENE_RESPONSE_SCHEMA = {
               y1: { type: 'NUMBER' },
               x2: { type: 'NUMBER' },
               y2: { type: 'NUMBER' },
-              label: { type: 'STRING' }
+              label: { type: 'STRING' },
+              forChoiceIndex: { type: 'INTEGER', nullable: true }
             }
           }
         },
@@ -465,6 +473,53 @@ ${ctx.instruction}${vizSection}`;
   // ===========================================================
   // JSON 파싱 복구
   // ===========================================================
+
+  // LaTeX 명령어(\frac, \sqrt, \times, \right 등)는 백슬래시+영문자로 시작하는데,
+  // 그중 \f(폼피드)·\t(탭)·\r(캐리지리턴)·\b(백스페이스)는 JSON에서 "유효한" 이스케이프라서,
+  // 모델이 실수로 \\frac(이중 백슬래시)가 아니라 \frac(단일 백슬래시)로 쓰면 JSON.parse가
+  // \f를 조용히 제어문자로 먹어버려 "frac"의 f가 사라지고 "rac"만 남는 등 LaTeX가 깨진다.
+  // (\sqrt처럼 \s가 아예 유효하지 않은 이스케이프인 경우는 파싱 자체가 실패해서 재시도라도 되지만,
+  //  \f/\t/\r/\b는 "유효한" 이스케이프라 에러 없이 조용히 깨져서 더 위험하다.)
+  // 그래서 JSON.parse를 시도하기 전에, 문자열 리터럴 안에서 \n(의도된 실제 줄바꿈)과 \"·\\·\/·\u
+  // 를 제외한 나머지 백슬래시+영문자 시퀀스는 전부 이중 백슬래시로 미리 교정해둔다.
+  function fixLatexBackslashes(text) {
+    let out = '';
+    let inString = false;
+    let i = 0;
+    while (i < text.length) {
+      const ch = text[i];
+      if (!inString) {
+        out += ch;
+        if (ch === '"') inString = true;
+        i++;
+        continue;
+      }
+      if (ch === '"') {
+        inString = false;
+        out += ch;
+        i++;
+        continue;
+      }
+      if (ch === '\\') {
+        const next = text[i + 1];
+        // \n(실제 줄바꿈 의도), \"·\\·\/·\u(정상적인 JSON 이스케이프)는 그대로 둔다.
+        if (next === 'n' || next === '"' || next === '\\' || next === '/' || next === 'u') {
+          out += ch + (next === undefined ? '' : next);
+          i += 2;
+          continue;
+        }
+        if (next === undefined) { out += ch; i++; continue; }
+        // 그 외(LaTeX 명령어의 시작일 가능성이 높은 \f, \t, \r, \b, \s, \l, ... )는 이중 이스케이프로 교정.
+        out += '\\\\' + next;
+        i += 2;
+        continue;
+      }
+      out += ch;
+      i++;
+    }
+    return out;
+  }
+
   function sanitizeJSONText(text) {
     let out = '';
     let inString = false;
@@ -489,11 +544,12 @@ ${ctx.instruction}${vizSection}`;
 
   function parseModelJSON(rawText) {
     const clean = rawText.trim().replace(/^```json/, '').replace(/^```/, '').replace(/```$/, '').trim();
+    const fixed = fixLatexBackslashes(clean);
     try {
-      return JSON.parse(clean);
+      return JSON.parse(fixed);
     } catch (e1) {
       try {
-        return JSON.parse(sanitizeJSONText(clean));
+        return JSON.parse(sanitizeJSONText(fixed));
       } catch (e2) {
         throw e1;
       }
@@ -1195,10 +1251,65 @@ JSON만 출력하라.`;
     );
   }
 
-  // mafs_function: curves를 Plot.OfX(explicit) 또는 Circle(단순 원 implicit)로 그린다.
+  // ===========================================================
+  // 선택지별 미니 그래프 지원 — curves/points/segments 각 항목에 forChoiceIndex(숫자)가 있으면
+  // 그 항목은 "특정 선택지 전용"이고, 없으면 "공통 배경"(모든 미니 그래프 + 상단 공통 그래프에 표시)이다.
+  // ===========================================================
+  function isTaggedForChoice(item) {
+    return typeof item?.forChoiceIndex === 'number';
+  }
+  function sharedOnly(arr) {
+    return Array.isArray(arr) ? arr.filter(it => !isTaggedForChoice(it)) : arr;
+  }
+  function sharedPlusChoice(arr, idx) {
+    return Array.isArray(arr) ? arr.filter(it => !isTaggedForChoice(it) || it.forChoiceIndex === idx) : arr;
+  }
+  function hasChoiceTagged(arr, idx) {
+    return Array.isArray(arr) && arr.some(it => isTaggedForChoice(it) && (idx === undefined || it.forChoiceIndex === idx));
+  }
+  function visualHasAnyChoiceTag(v) {
+    if (!v) return false;
+    return hasChoiceTagged(v.curves) || hasChoiceTagged(v.points) || hasChoiceTagged(v.segments);
+  }
+  function buildSharedVisual(v) {
+    return { ...v, curves: sharedOnly(v.curves), points: sharedOnly(v.points), segments: sharedOnly(v.segments) };
+  }
+  function buildChoiceVisual(v, idx) {
+    return { ...v, curves: sharedPlusChoice(v.curves, idx), points: sharedPlusChoice(v.points, idx), segments: sharedPlusChoice(v.segments, idx) };
+  }
+  function visualHasSomeContent(v) {
+    if (!v) return false;
+    return (Array.isArray(v.curves) && v.curves.some(c => c && c.formula)) ||
+      (Array.isArray(v.points) && v.points.length > 0) ||
+      (Array.isArray(v.segments) && v.segments.length > 0);
+  }
+
+  // 선택지 버튼 바로 아래에 그릴 "그 선택지 전용" 미니 그래프. mafs_function/mafs_shape에서만 지원한다.
+  // 이번 턴에 forChoiceIndex 태그가 하나도 없으면(=모델이 선택지별 그래프를 안 쓰기로 한 턴이면) null.
+  function renderChoiceMiniGraph(visual, choiceIndex) {
+    if (!visual || !visual.kind) return null;
+    if (visual.kind !== 'mafs_function' && visual.kind !== 'mafs_shape') return null;
+    if (!visualHasAnyChoiceTag(visual)) return null;
+    if (!hasChoiceTagged(visual.curves, choiceIndex) && !hasChoiceTagged(visual.points, choiceIndex) && !hasChoiceTagged(visual.segments, choiceIndex)) {
+      return null; // 이 선택지에는 태그된 항목이 없음 — 미니 그래프 안 그림
+    }
+    const miniV = buildChoiceVisual(visual, choiceIndex);
+    try {
+      return (
+        <div className="viz-box viz-box-mini" style={{ marginTop: '4px', marginBottom: '4px' }}>
+          {visual.kind === 'mafs_function' ? renderMafsFunction(miniV, 160) : renderMafsShape(miniV, 160)}
+        </div>
+      );
+    } catch (e) {
+      console.error('renderChoiceMiniGraph 렌더링 중 오류:', e);
+      return null;
+    }
+  }
+
+
   // 타원·쌍곡선 등 mafs로 못 그리는 복잡한 implicit 곡선이 하나라도 섞여 있으면,
   // 좌표계 혼용을 피하려고 이 그래프 전체를 이전 mathjs 샘플링 모듈(renderClassicSvgGraph)로 넘긴다.
-  function renderMafsFunction(v) {
+  function renderMafsFunction(v, heightPx) {
     if (hasComplexImplicitCurve(v.curves)) {
       return renderClassicSvgGraph(v, 'classic-function');
     }
@@ -1206,7 +1317,7 @@ JSON만 출력하라.`;
     const yRange = toRange(v.yRange, [-10, 10]);
     const curves = Array.isArray(v.curves) ? v.curves : [];
     return (
-      <Mafs viewBox={{ x: xRange, y: yRange }} preserveAspectRatio={false}>
+      <Mafs viewBox={{ x: xRange, y: yRange }} preserveAspectRatio={false} height={heightPx || 500}>
         <Coordinates.Cartesian />
         {curves.map((curve, i) => {
           if (!curve || !curve.formula) return null;
@@ -1230,7 +1341,7 @@ JSON만 출력하라.`;
 
   // mafs_shape: points(꼭짓점) + segments(변) + curves(원, 있다면)를 함께 그린다.
   // 마찬가지로 복잡한 implicit 곡선이 섞여 있으면 전체를 이전 모듈로 넘긴다.
-  function renderMafsShape(v) {
+  function renderMafsShape(v, heightPx) {
     if (hasComplexImplicitCurve(v.curves)) {
       return renderClassicSvgGraph(v, 'classic-shape');
     }
@@ -1240,7 +1351,7 @@ JSON만 출력하라.`;
     const segments = Array.isArray(v.segments) ? v.segments : [];
     const curves = Array.isArray(v.curves) ? v.curves : [];
     return (
-      <Mafs viewBox={{ x: xRange, y: yRange }} preserveAspectRatio={false}>
+      <Mafs viewBox={{ x: xRange, y: yRange }} preserveAspectRatio={false} height={heightPx || 500}>
         <Coordinates.Cartesian />
         {segments.map((s, i) => (
           typeof s.x1 === 'number' && typeof s.y1 === 'number' && typeof s.x2 === 'number' && typeof s.y2 === 'number'
@@ -1448,9 +1559,17 @@ JSON만 출력하라.`;
   function renderVisual(visual) {
     if (!visual || !visual.kind) return null;
     try {
+      // curves/points/segments 중 forChoiceIndex로 태그된 항목은 선택지별 미니 그래프 전용이므로,
+      // 상단 공통 그래프에서는 제외한다. 태그된 항목만 있고 공통(태그 없는) 내용이 하나도 없으면
+      // 상단 공통 그래프 자체를 생략한다(전부 선택지 버튼 아래 미니 그래프로만 보여준다).
+      const isSharableKind = visual.kind === 'mafs_function' || visual.kind === 'mafs_shape';
+      const displayVisual = isSharableKind && visualHasAnyChoiceTag(visual) ? buildSharedVisual(visual) : visual;
+      if (isSharableKind && visualHasAnyChoiceTag(visual) && !visualHasSomeContent(displayVisual)) {
+        return null;
+      }
       switch (visual.kind) {
-        case 'mafs_function': return <div className="viz-box">{renderMafsFunction(visual)}</div>;
-        case 'mafs_shape': return <div className="viz-box">{renderMafsShape(visual)}</div>;
+        case 'mafs_function': return <div className="viz-box">{renderMafsFunction(displayVisual)}</div>;
+        case 'mafs_shape': return <div className="viz-box">{renderMafsShape(displayVisual)}</div>;
         case 'mafs_vector': return <div className="viz-box">{renderMafsVector(visual)}</div>;
         case 'mafs_area': return <div className="viz-box">{renderMafsArea(visual)}</div>;
         case 'mafs_discrete': return <div className="viz-box">{renderMafsDiscrete(visual)}</div>;
@@ -1690,14 +1809,16 @@ JSON만 출력하라.`;
                 ) : (
                   <div className="choices">
                     {log.choices.map((choice, cIdx) => (
-                      <button
-                        key={cIdx}
-                        className={`choice-btn ${cIdx === log.correctIndex ? 'test-correct' : ''}`}
-                        disabled={log.selectedChoiceIndex !== null}
-                        onClick={() => handleChoice(logIdx, cIdx, choice, log.correctIndex, log.activeTrack)}
-                      >
-                        {cIdx + 1}. {renderTextWithMath(choice)}
-                      </button>
+                      <div className="choice-item" key={cIdx}>
+                        <button
+                          className={`choice-btn ${cIdx === log.correctIndex ? 'test-correct' : ''}`}
+                          disabled={log.selectedChoiceIndex !== null}
+                          onClick={() => handleChoice(logIdx, cIdx, choice, log.correctIndex, log.activeTrack)}
+                        >
+                          {cIdx + 1}. {renderTextWithMath(choice)}
+                        </button>
+                        {log.activeTrack === 'math' && renderChoiceMiniGraph(log.visual, cIdx)}
+                      </div>
                     ))}
                   </div>
                 )}
