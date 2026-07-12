@@ -16,12 +16,14 @@
     "html5-qrcode": "^2.3.8",
     "jspdf": "^2.5.2",
     "katex": "^0.17.0",
+    "mafs": "^0.21.0",
     "mathjs": "^15.2.0",
     "qrcode": "^1.5.4",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.27.0",
-    "react-webcam": "^7.2.0"
+    "react-webcam": "^7.2.0",
+    "recharts": "^3.9.2"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.3.3",
