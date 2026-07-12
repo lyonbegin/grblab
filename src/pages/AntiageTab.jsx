@@ -183,7 +183,8 @@ const SCENE_RESPONSE_SCHEMA = {
           type: 'ARRAY',
           items: { type: 'ARRAY', items: { type: 'NUMBER' } }
         }
-      }
+      },
+      required: ['kind']
     }
   },
   required: ['origin_reason', 'active_track', 'narration', 'choices', 'correct_index', 'scene_complete']
@@ -194,6 +195,11 @@ export default function SceneGeneratorEngine() {
   const GEMINI_MODEL = "gemini-3.1-flash-lite";
 
     // const GEMINI_MODEL = "gemini-3.1-flash";
+
+  // 콘솔 노이즈 제어. false면 systemInstruction 전체/응답 전체 JSON 같은 장황한 로그는 찍지 않고,
+  // "서버가 이번 턴에 visual을 실제로 뭘 보냈는지"만 요약해서 보여주는 로그(디버그 요약, 항상 출력)만 남는다.
+  // 시스템 프롬프트 자체를 눈으로 확인해야 할 때만 true로 바꿔서 써라.
+  const DEBUG_VERBOSE = false;
 
   // ===========================================================
   // UI 상태
@@ -498,6 +504,61 @@ ${ctx.instruction}${vizSection}`;
   // 내용 검증 — 코드가 직접 확인. active_track 불일치, 수학 LaTeX 사용,
   // 결핍턴인데 선택지가 완성된 숫자 답인 경우, 영어 턴인데 한국어 위주인 경우를 잡아낸다.
   // ===========================================================
+  // ===========================================================
+  // 시각 자료(visual)만 따로 검증한다 — 그래프 하나 때문에 학습 진행 전체가 막히면 안 되므로,
+  // 이 검증에서 나온 문제는 getSceneUpdate에서 "마지막 시도에도 안 고쳐지면 그냥 넘어가는"
+  // 관대한 처리 대상이다. active_track/narration/choices 같은 핵심 검증(validateTurnContent)과는
+  // 분리해서, 시각 자료 실패가 학습 흐름 자체를 막지 않도록 한다.
+  // ===========================================================
+  function validateVisualContent(ctx, parsed) {
+    const problems = [];
+    if (ctx.activeTrack !== 'math' || ctx.sceneComplete) return problems;
+
+    const vizType = mathVizTypeRef.current;
+    if (vizType === 'narration') {
+      if (parsed.visual) {
+        problems.push('이번 학습목표는 vizType이 "narration"이라 visual 필드를 아예 넣지 말아야 하는데 채워져 있다. visual을 생략하라(null 또는 필드 자체 삭제).');
+      }
+      return problems;
+    }
+
+    if (!parsed.visual || typeof parsed.visual !== 'object') {
+      problems.push(`이번 턴은 vizType "${vizType}"에 해당하므로 visual 필드를 반드시 채워야 하는데 비어 있다. [이번 턴의 시각 자료 지시] 블록을 따라 visual을 채워라. 특히 kind와 함께 curves/points/segments/vectors/bars/matrixRows 등 실제 데이터 필드를 반드시 같이 채워야 한다 — kind만 있고 데이터가 없으면 그래프가 화면에 전혀 나오지 않는다.`);
+      return problems;
+    }
+    if (parsed.visual.kind !== vizType) {
+      problems.push(`visual.kind가 "${vizType}"이어야 하는데 "${parsed.visual.kind}"로 되어 있다. 정확히 맞춰라.`);
+      return problems;
+    }
+
+    const v = parsed.visual;
+    const hasAnyContent =
+      (Array.isArray(v.curves) && v.curves.some(c => c && c.formula)) ||
+      (Array.isArray(v.points) && v.points.length > 0) ||
+      (Array.isArray(v.segments) && v.segments.length > 0) ||
+      (Array.isArray(v.vectors) && v.vectors.length > 0) ||
+      (Array.isArray(v.bars) && v.bars.length > 0) ||
+      (Array.isArray(v.matrixRows) && v.matrixRows.length > 0) ||
+      typeof v.shadeFormula === 'string' ||
+      typeof v.solidType === 'string' ||
+      typeof v.vennBoth === 'number';
+    if (!hasAnyContent) {
+      problems.push(`visual.kind는 "${vizType}"로 맞게 왔지만 정작 그 안의 데이터가 비어 있다 — kind만 채우고 curves/points/segments/vectors/bars/matrixRows 등 실제 값은 빠뜨렸다. [이번 턴의 시각 자료 지시] 블록에 명시된 필드를 반드시 실제 값으로 채워라. (예: mafs_function이면 curves 배열에 formula를 가진 곡선을 최소 1개 넣어야 한다.)`);
+    }
+    // mafs_function/mafs_shape/mafs_area의 curves는 formula가 mathjs로 컴파일 가능해야 한다.
+    if (Array.isArray(v.curves)) {
+      let hasValidCurve = v.curves.length === 0; // curves 자체가 필요 없는 vizType이면 통과
+      v.curves.forEach((curve) => {
+        if (!curve || !curve.formula) return;
+        try { math.compile(curve.formula); hasValidCurve = true; } catch (e) { /* 개별 곡선 하나 깨진 건 렌더링 단계에서 건너뜀 */ }
+      });
+      if (v.curves.length > 0 && !hasValidCurve) {
+        problems.push('visual.curves가 있지만 그 안에 mathjs로 계산 가능한 formula를 가진 곡선이 하나도 없다. 최소 1개는 유효한 formula로 채워라.');
+      }
+    }
+    return problems;
+  }
+
   function validateTurnContent(ctx, parsed) {
     const problems = [];
 
@@ -507,49 +568,6 @@ ${ctx.instruction}${vizSection}`;
 
     const narration = parsed.narration || '';
     const choicesJoined = (parsed.choices || []).join(' ');
-
-    // 수학이고 vizType이 narration이 아니면, visual이 있어야 하고 그 kind가 이번 vizType과 일치해야 한다.
-    // vizType이 narration이면 반대로 visual을 아예 넣지 말아야 한다.
-    if (ctx.activeTrack === 'math' && !ctx.sceneComplete) {
-      const vizType = mathVizTypeRef.current;
-      if (vizType === 'narration') {
-        if (parsed.visual) {
-          problems.push('이번 학습목표는 vizType이 "narration"이라 visual 필드를 아예 넣지 말아야 하는데 채워져 있다. visual을 생략하라(null 또는 필드 자체 삭제).');
-        }
-      } else {
-        if (!parsed.visual || typeof parsed.visual !== 'object') {
-          problems.push(`이번 턴은 vizType "${vizType}"에 해당하므로 visual 필드를 반드시 채워야 하는데 비어 있다. [이번 턴의 시각 자료 지시] 블록을 따라 visual을 채워라.`);
-        } else if (parsed.visual.kind !== vizType) {
-          problems.push(`visual.kind가 "${vizType}"이어야 하는데 "${parsed.visual.kind}"로 되어 있다. 정확히 맞춰라.`);
-        } else {
-          const v = parsed.visual;
-          const hasAnyContent =
-            (Array.isArray(v.curves) && v.curves.some(c => c && c.formula)) ||
-            (Array.isArray(v.points) && v.points.length > 0) ||
-            (Array.isArray(v.segments) && v.segments.length > 0) ||
-            (Array.isArray(v.vectors) && v.vectors.length > 0) ||
-            (Array.isArray(v.bars) && v.bars.length > 0) ||
-            (Array.isArray(v.matrixRows) && v.matrixRows.length > 0) ||
-            typeof v.shadeFormula === 'string' ||
-            typeof v.solidType === 'string' ||
-            typeof v.vennBoth === 'number';
-          if (!hasAnyContent) {
-            problems.push(`visual.kind는 "${vizType}"로 맞게 왔지만 정작 그 안의 데이터(곡선/점/벡터/막대/행렬 등)가 비어 있다. [이번 턴의 시각 자료 지시] 블록에 명시된 필드를 실제로 채워라.`);
-          }
-          // mafs_function/mafs_shape/mafs_area의 curves는 formula가 mathjs로 컴파일 가능해야 한다.
-          if (Array.isArray(v.curves)) {
-            let hasValidCurve = v.curves.length === 0; // curves 자체가 필요 없는 vizType이면 통과
-            v.curves.forEach((curve) => {
-              if (!curve || !curve.formula) return;
-              try { math.compile(curve.formula); hasValidCurve = true; } catch (e) { /* 개별 곡선 하나 깨진 건 렌더링 단계에서 건너뜀 */ }
-            });
-            if (v.curves.length > 0 && !hasValidCurve) {
-              problems.push('visual.curves가 있지만 그 안에 mathjs로 계산 가능한 formula를 가진 곡선이 하나도 없다. 최소 1개는 유효한 formula로 채워라.');
-            }
-          }
-        }
-      }
-    }
 
     const englishInPlay = ctx.subjectForModule === 'english' || ctx.activeTrack === 'english';
     if (englishInPlay && !ctx.sceneComplete) {
@@ -610,11 +628,13 @@ ${ctx.instruction}${vizSection}`;
     }));
 
     // 이 시점의 systemText는 이미 goals/levels 등 실제 선택값이 전부 치환 완료된 최종 문자열이다.
-    // "선택한 값이 실제로 API 요청에 들어갔는지" 눈으로 확인할 수 있도록 그대로 콘솔에 출력한다.
-    console.log('========================================');
-    console.log('이번 호출에 실제로 전송되는 systemInstruction (이미 치환 완료된 최종 텍스트):');
-    console.log(systemText);
-    console.log('========================================');
+    // DEBUG_VERBOSE일 때만 전체 텍스트를 콘솔에 출력한다 (평소엔 노이즈라 꺼둠).
+    if (DEBUG_VERBOSE) {
+      console.log('========================================');
+      console.log('이번 호출에 실제로 전송되는 systemInstruction (이미 치환 완료된 최종 텍스트):');
+      console.log(systemText);
+      console.log('========================================');
+    }
 
     try {
       const response = await fetch(url, {
@@ -644,17 +664,21 @@ ${ctx.instruction}${vizSection}`;
 
       const data = await response.json();
 
-      console.log('========================================');
-      console.log('Gemini API 수신 성공 (전체 Response 구조):');
-      console.log(JSON.stringify(data, null, 2));
-      console.log('========================================');
+      if (DEBUG_VERBOSE) {
+        console.log('========================================');
+        console.log('Gemini API 수신 성공 (전체 Response 구조):');
+        console.log(JSON.stringify(data, null, 2));
+        console.log('========================================');
+      }
 
       const resultText = data.candidates && data.candidates[0]?.content?.parts?.[0]?.text;
       if (!resultText) {
         throw new Error('API 응답 성공했으나, 텍스트 데이터(candidates) 구조가 올바르지 않습니다: ' + JSON.stringify(data).slice(0, 300));
       }
 
-      console.log('추출된 최종 답변 내용:\n', resultText);
+      if (DEBUG_VERBOSE) {
+        console.log('추출된 최종 답변 내용:\n', resultText);
+      }
       return resultText;
 
     } catch (error) {
@@ -669,6 +693,50 @@ ${ctx.instruction}${vizSection}`;
   // 갱신된 값)을 그대로 사용해 응답을 만든다.
   // ===========================================================
   const MAX_ATTEMPTS = 3;
+
+  // ===========================================================
+  // [시각자료 디버그] — 순수하게 "서버(모델)가 이번 턴에 실제로 보낸 것"만 요약해서 찍는다.
+  // 학습목표별로 그래프가 아예 안 나오는 게 (a) 애초에 그 목표는 vizType이 narration이라
+  // 원래 안 나오는 게 정상인지, (b) 서버가 visual 자체를 안 보냈는지, (c) visual은 왔는데
+  // kind가 다르거나 안에 데이터가 비어서 렌더링이 안 되는지 — 이 셋을 한 줄로 구분해서 보여준다.
+  // 이 로그는 DEBUG_VERBOSE와 무관하게 항상 찍힌다(가장 자주 필요한 정보이기 때문).
+  // ===========================================================
+  function logServerVisualSummary(ctx, parsed, attempt) {
+    if (ctx.activeTrack !== 'math' || ctx.sceneComplete) return; // 수학 턴이 아니면 애초에 visual 자체가 무관하니 생략
+
+    const expected = mathVizTypeRef.current;
+    const label = `[시각자료 디버그] (시도 ${attempt}/${MAX_ATTEMPTS})`;
+
+    if (expected === 'narration') {
+      console.log(`${label} 기대 vizType="narration" → 이 학습목표는 원래 그래프가 없는 게 정상입니다. 서버가 보낸 visual:`, parsed.visual ?? '(없음, 정상)');
+      return;
+    }
+
+    if (!parsed.visual) {
+      console.log(`${label} ⚠️ 기대 vizType="${expected}"인데 서버가 visual 필드 자체를 아예 안 보냈습니다 (undefined/null). → 모델이 이번 학습목표에 맞는 시각 자료 지시를 무시했을 가능성이 큽니다.`);
+      return;
+    }
+
+    const v = parsed.visual;
+    const counts = {
+      curves: Array.isArray(v.curves) ? v.curves.length : undefined,
+      points: Array.isArray(v.points) ? v.points.length : undefined,
+      segments: Array.isArray(v.segments) ? v.segments.length : undefined,
+      vectors: Array.isArray(v.vectors) ? v.vectors.length : undefined,
+      bars: Array.isArray(v.bars) ? v.bars.length : undefined,
+      matrixRows: Array.isArray(v.matrixRows) ? v.matrixRows.length : undefined,
+      shadeFormula: v.shadeFormula,
+      solidType: v.solidType,
+      vennBoth: v.vennBoth
+    };
+
+    if (v.kind !== expected) {
+      console.log(`${label} ⚠️ 서버가 visual은 보냈지만 kind가 기대값과 다릅니다. 기대="${expected}", 실제="${v.kind}". 내용물 개수:`, counts);
+      return;
+    }
+
+    console.log(`${label} ✅ 서버가 visual.kind="${v.kind}"를 정확히 보냈습니다. 내용물 개수(값이 undefined면 그 필드를 아예 안 보낸 것):`, counts);
+  }
 
   async function getSceneUpdate(subjectJustResolved) {
     const ctx = buildTurnContext(subjectJustResolved);
@@ -692,14 +760,37 @@ ${ctx.instruction}${vizSection}`;
         continue;
       }
 
-      const problems = validateTurnContent(ctx, parsed);
-      if (problems.length > 0) {
-        lastError = new Error('내용 검증 실패: ' + problems.join(' / '));
+      // [시각자료 디버그] — 서버가 이번 시도에서 visual로 정확히 뭘 보냈는지만 순수하게 보여준다.
+      // (systemInstruction/전체 응답 JSON 같은 노이즈는 DEBUG_VERBOSE로 따로 뺐고, 이건 항상 찍는다.)
+      logServerVisualSummary(ctx, parsed, attempt);
+
+      const coreProblems = validateTurnContent(ctx, parsed);
+      const visualProblems = validateVisualContent(ctx, parsed);
+
+      if (coreProblems.length > 0) {
+        // 핵심 검증(active_track/narration/choices/scene_complete 등) 실패는 항상 재시도.
+        lastError = new Error('내용 검증 실패: ' + coreProblems.concat(visualProblems).join(' / '));
         messagesRef.current.push({
           role: 'user',
-          content: `[주의] 직전 응답이 규칙을 위반했다:\n- ${problems.join('\n- ')}\n같은 상황을 유지한 채, 위 문제만 고쳐서 다시 응답하라. JSON만 출력하라.`
+          content: `[주의] 직전 응답이 규칙을 위반했다:\n- ${coreProblems.concat(visualProblems).join('\n- ')}\n같은 상황을 유지한 채, 위 문제만 고쳐서 다시 응답하라. JSON만 출력하라.`
         });
         continue;
+      }
+
+      if (visualProblems.length > 0) {
+        if (attempt < MAX_ATTEMPTS) {
+          // 시각 자료만 문제면, 아직 시도 횟수가 남아있는 동안은 고쳐보라고 재시도시킨다.
+          lastError = new Error('시각 자료 검증 실패: ' + visualProblems.join(' / '));
+          messagesRef.current.push({
+            role: 'user',
+            content: `[주의] 직전 응답의 내용(narration/choices)은 정상이지만 시각 자료(visual)에 문제가 있다:\n- ${visualProblems.join('\n- ')}\n같은 narration과 choices를 그대로 유지한 채, visual 필드만 고쳐서 다시 응답하라. JSON만 출력하라.`
+          });
+          continue;
+        }
+        // 마지막 시도까지 시각 자료를 못 고쳤으면, 그래프 없이라도 학습 진행 자체는 막지 않는다.
+        // (그래프는 부가 요소 — narration/choices/correct_index 등 핵심 판정 로직에는 영향 없음.)
+        console.warn('시각 자료 생성에 최종 실패해 visual 없이 진행합니다:', visualProblems);
+        parsed.visual = null;
       }
 
       messagesRef.current.push({ role: 'assistant', content: rawText });
@@ -793,13 +884,15 @@ JSON만 출력하라.`;
 
     const bookInfo = chapters.find(b => b.chapter === selectedChapter);
 
-    // 실제로 어떤 목표가 선택됐고, GOALS_DATA에서 무엇이 조회됐는지 직접 눈으로 확인하기 위한 로그.
-    console.log('========================================');
-    console.log('선택된 goals 인덱스:', goals);
-    console.log('국어 GOALS_DATA.kor[goals.kor]:', GOALS_DATA.kor?.[goals.kor], '(GOALS_DATA.kor 길이:', GOALS_DATA.kor?.length, ')');
-    console.log('영어 GOALS_DATA.eng[goals.eng]:', GOALS_DATA.eng?.[goals.eng], '(GOALS_DATA.eng 길이:', GOALS_DATA.eng?.length, ')');
-    console.log('수학 GOALS_DATA.math[goals.math]:', GOALS_DATA.math?.[goals.math], '(GOALS_DATA.math 길이:', GOALS_DATA.math?.length, ')');
-    console.log('========================================');
+    // 실제로 어떤 목표가 선택됐고, GOALS_DATA에서 무엇이 조회됐는지 확인하는 로그 (DEBUG_VERBOSE 전용).
+    if (DEBUG_VERBOSE) {
+      console.log('========================================');
+      console.log('선택된 goals 인덱스:', goals);
+      console.log('국어 GOALS_DATA.kor[goals.kor]:', GOALS_DATA.kor?.[goals.kor], '(GOALS_DATA.kor 길이:', GOALS_DATA.kor?.length, ')');
+      console.log('영어 GOALS_DATA.eng[goals.eng]:', GOALS_DATA.eng?.[goals.eng], '(GOALS_DATA.eng 길이:', GOALS_DATA.eng?.length, ')');
+      console.log('수학 GOALS_DATA.math[goals.math]:', GOALS_DATA.math?.[goals.math], '(GOALS_DATA.math 길이:', GOALS_DATA.math?.length, ')');
+      console.log('========================================');
+    }
 
     sceneInfoRef.current = {
       chapterArea: selectedArea,
@@ -814,11 +907,14 @@ JSON만 출력하라.`;
       }
     };
 
-    console.log('최종 goalTexts (프롬프트에 실제로 들어갈 문자열):', sceneInfoRef.current.goalTexts);
+    if (DEBUG_VERBOSE) {
+      console.log('최종 goalTexts (프롬프트에 실제로 들어갈 문자열):', sceneInfoRef.current.goalTexts);
+    }
 
     // 이번 장면의 수학 목표가 어떤 vizType을 쓰는지 고정한다 (GOALS_DATA.math 항목에 미리 박혀있는 값).
+    // 이 한 줄은 "서버가 뭘 보내야 정상인지"의 기준값이라 항상 찍어둔다.
     mathVizTypeRef.current = GOALS_DATA.math[goals.math]?.vizType || 'narration';
-    console.log('이번 장면의 수학 vizType:', mathVizTypeRef.current);
+    console.log('[시각자료 디버그] 이번 장면 수학 vizType(기대값):', mathVizTypeRef.current);
 
     // 과목별 모드(발견형/문제유형형)를 먼저 확정한다. 영어·수학은 항상 문제유형형,
     // 국어는 선택된 목표(mid)에 따라 자동 분기된다. 이 값은 장면이 끝날 때까지 고정된다.
@@ -828,7 +924,9 @@ JSON만 출력하라.`;
       math: computeSubjectMode('math', goals)
     };
     subjectModesRef.current = subjectModes;
-    console.log('과목별 모드(발견형/문제유형형):', subjectModes, '(국어 mid:', GOALS_DATA.kor[goals.kor]?.mid, ')');
+    if (DEBUG_VERBOSE) {
+      console.log('과목별 모드(발견형/문제유형형):', subjectModes, '(국어 mid:', GOALS_DATA.kor[goals.kor]?.mid, ')');
+    }
 
     // 체크 해제된 과목은 completedTurns를 처음부터 그 과목의 완주 기준(모드별 2 또는 3)으로 두어,
     // getActiveSubject가 자동으로 건너뛴다.
