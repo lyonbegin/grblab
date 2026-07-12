@@ -406,27 +406,24 @@ ${ctx.instruction}`;
       }
     }
 
-  if (ctx.activeTrack === 'math' && !ctx.sceneComplete && parsed.visual) {
-      if (!Array.isArray(parsed.visual.graphs) || parsed.visual.graphs.length === 0) {
-        problems.push('visual 필드가 있는데 graphs 배열이 비어있다. 함수 그래프로 표현할 게 아니면 visual 자체를 아예 넣지 말고(null), 넣을 거면 graphs를 채워라.');
-      } else {
-        parsed.visual.graphs.forEach((graph, gi) => {
-          if (!Array.isArray(graph.curves) || graph.curves.length === 0) {
-            problems.push(`graphs[${gi}]에 curves가 비어있다. 그래프마다 최소 1개의 곡선을 채워라.`);
-            return;
+ if (ctx.activeTrack === 'math' && !ctx.sceneComplete && parsed.visual && Array.isArray(parsed.visual.graphs) && parsed.visual.graphs.length > 0) {
+      // 그래프 일부가 비어있거나 formula가 깨진 것은 코드가 조용히 걸러내고 넘어간다(아래 정제 단계).
+      // 여기서는 "쓸 수 있는 곡선이 하나도 없는 경우"만 진짜 실패로 잡아 재시도시킨다.
+      let hasAnyValidCurve = false;
+      parsed.visual.graphs.forEach((graph) => {
+        if (!Array.isArray(graph.curves)) return;
+        graph.curves.forEach((curve) => {
+          if (!curve.formula || typeof curve.formula !== 'string') return;
+          try {
+            math.compile(curve.formula);
+            hasAnyValidCurve = true;
+          } catch (e) {
+            // 개별 곡선 하나가 깨진 건 괜찮다 — 렌더링 단계에서 그 곡선만 건너뛴다.
           }
-          graph.curves.forEach((curve, i) => {
-            if (!curve.formula || typeof curve.formula !== 'string') {
-              problems.push(`graphs[${gi}].curves[${i}]에 formula 문자열이 없다. 예: "2*x^2 - 3*x + 1" 또는 "x^2/25 + y^2/9 - 1"처럼 수식 문자열을 넣어라.`);
-              return;
-            }
-            try {
-              math.compile(curve.formula);
-            } catch (e) {
-              problems.push(`graphs[${gi}].curves[${i}]의 formula("${curve.formula}")가 올바른 수식이 아니다(mathjs 해석 실패: ${e.message}).`);
-            }
-          });
         });
+      });
+      if (!hasAnyValidCurve) {
+        problems.push('visual.graphs가 있지만 그 안에 유효한 formula를 가진 곡선이 하나도 없다. 그래프로 그릴 게 없다면 visual 자체를 넣지 말고(null), 그릴 게 있다면 최소 한 개의 그래프에 최소 한 개의 유효한 curve(formula 포함)를 채워라.');
       }
     }
 
@@ -894,11 +891,15 @@ JSON만 출력하라.`;
     );
   }
 
-  function renderMathVisual(visual) {
+ function renderMathVisual(visual) {
     if (!visual || !Array.isArray(visual.graphs) || visual.graphs.length === 0) return null;
+    // curves가 비어있거나 formula가 아예 없는 그래프는 조용히 걸러내고,
+    // 실제로 그릴 수 있는 그래프만 화면에 낸다 (깨진 곡선 하나는 renderSingleGraph 내부에서 개별적으로 건너뛴다).
+    const usableGraphs = visual.graphs.filter(g => Array.isArray(g.curves) && g.curves.some(c => c.formula));
+    if (usableGraphs.length === 0) return null;
     return (
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
-        {visual.graphs.map((graph, i) => renderSingleGraph(graph, i))}
+        {usableGraphs.map((graph, i) => renderSingleGraph(graph, i))}
       </div>
     );
   }
