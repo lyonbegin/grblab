@@ -376,17 +376,19 @@ ${ctx.instruction}`;
 
     const englishInPlay = ctx.subjectForModule === 'english' || ctx.activeTrack === 'english';
     if (englishInPlay && !ctx.sceneComplete) {
-      // 정답판별턴 포함 모든 영어 턴에서 이제 동일한 규칙을 적용한다:
-      // 질문·설명(서사의 뼈대)은 한국어로, 학습목표를 담은 지문·선택지에는 영어 표현이 실제로 등장해야 한다.
-      // 예전에는 정답판별턴만 "전체를 영어로" 요구했지만, 난이도를 낮추기 위해 이 요구를 없앴다.
+      // narration은 "쉬운 영어로 된 이야기 + 맨 끝 한국어 질문" 구조여야 한다.
+      // 즉 영어가 이야기의 몸통을 이루고, 한국어는 마지막 질문 한두 문장에만 등장해야 한다.
       const englishText = narration + ' ' + choicesJoined;
       const hangulCount = (englishText.match(/[가-힣]/g) || []).length;
       const asciiLetterCount = (englishText.match(/[A-Za-z]/g) || []).length;
       if (hangulCount === 0) {
-        problems.push('영어 턴인데 narration과 선택지가 전부 영어로만 쓰였다. 질문·설명(서사를 이끌어가는 뼈대)은 반드시 한국어로 작성하라.');
+        problems.push('영어 턴인데 질문 문장이 한국어로 되어 있지 않다. narration 맨 끝의 질문(또는 이유를 묻는 문장)은 반드시 한국어로 작성하라.');
       }
-      if (asciiLetterCount < 3) {
-        problems.push('영어 턴인데 실제 영어 표현이 거의 등장하지 않았다. 학습목표에 해당하는 영어 문장·표현을 지문이나 선택지 안에 반드시 포함하라.');
+      if (asciiLetterCount < 20) {
+        problems.push('영어 턴인데 영어로 된 이야기가 너무 적다. narration의 대부분(상황 설명, 사건 전개)은 쉬운 영어 단문으로 직접 그려내고, 마지막 질문 문장만 한국어로 써라. 한국어로 이야기를 서술하고 영어 문장 하나만 따옴표로 인용하는 방식은 금지다.');
+      }
+      if (asciiLetterCount < hangulCount) {
+        problems.push('영어 턴인데 narration이 한국어 위주로 쓰였다(국어 수업처럼 느껴짐). narration의 이야기 부분은 반드시 쉬운 영어 문장들로 작성하고, 한국어는 맨 끝 질문 문장에만 써라.');
       }
     }
 
