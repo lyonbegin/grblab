@@ -17,6 +17,7 @@ import {
   GOALS_DATA,
   BOOKS_DATA
 } from './constantsbase';
+
 // 과목 진행 순서와, 과목별 목표 키 / 표시 이름 매핑.
 // 프롬프트 모듈은 과목마다 고정이 아니라 "모드"(발견형/문제유형형)에 따라 달라지므로
 // getSubjectPromptModule()에서 그때그때 계산한다.
@@ -65,12 +66,10 @@ const SCENE_RESPONSE_SCHEMA = {
   required: ['origin_reason', 'active_track', 'narration', 'choices', 'correct_index', 'scene_complete']
 };
 
-// 텍스트+이미지를 한 응답에서 함께 받아야 하는 모델. responseSchema(구조화 출력 강제)와
+// 텍스트+이미지를 한 응답에서 함께 받아야 하는 호출도 동일한 GEMINI_MODEL을 그대로 쓴다
+// (사용자 확인: 이 모델이 이미지 생성도 지원함). responseSchema(구조화 출력 강제)와
 // responseModalities:["TEXT","IMAGE"]를 동시에 쓰는 조합은 공식 문서/사례로 확인되지 않아,
-// 이미지가 필요한 호출에서는 스키마 강제를 포기하고 프롬프트 지시로 JSON 형식을 맞춘다.
-// ⚠️ 아래 모델명은 실제로 이미지 생성을 지원하는 Gemini 모델명으로 반드시 재확인 후 맞춰 넣을 것
-// (Google AI Studio에서 현재 이미지 생성 가능 모델 목록 확인 필요 — 이름이 다르면 이미지 파트가 비어서 옵니다).
-const GEMINI_IMAGE_MODEL = "gemini-3.1-flash-image-preview";
+// 이미지가 필요한 호출에서는 스키마 강제만 빼고 프롬프트 지시로 JSON 형식을 맞춘다.
 
 export default function SceneGeneratorEngine() {
   const GEMINI_API_KEY = "AQ.Ab8RN6Jwrwo7TruQDJhlsuTuEg5v6AJmeI7hCvdLcijHwIGNig";
@@ -470,13 +469,12 @@ ${ctx.instruction}${imageBlock}`;
   // ===========================================================
   // Gemini API 호출
   // ===========================================================
-  // wantsImage가 true면 이미지 생성이 가능한 모델(GEMINI_IMAGE_MODEL)로, responseModalities만 지정해서
+  // wantsImage가 true면 동일한 GEMINI_MODEL로 responseModalities만 지정해서(responseSchema 없이)
   // (responseSchema 없이) 호출한다 — 이 조합에서 한 응답 안에 text 파트(JSON)와 inlineData 파트(이미지)가
   // 함께 온다. wantsImage가 false면 기존처럼 텍스트 전용 모델 + responseSchema로 구조화 JSON만 받는다.
   // 반환값은 항상 { jsonText, imageBase64, imageMimeType } 형태로 통일한다.
   const callGeminiAPI = async (messages, systemText, wantsImage) => {
-    const modelForThisCall = wantsImage ? GEMINI_IMAGE_MODEL : GEMINI_MODEL;
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelForThisCall}:generateContent?key=${GEMINI_API_KEY}`;
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${GEMINI_API_KEY}`;
 
     const contents = messages.map(m => ({
       role: m.role === 'assistant' ? 'model' : 'user',
@@ -490,7 +488,7 @@ ${ctx.instruction}${imageBlock}`;
     // 이 시점의 systemText는 이미 goals/levels 등 실제 선택값이 전부 치환 완료된 최종 문자열이다.
     // "선택한 값이 실제로 API 요청에 들어갔는지" 눈으로 확인할 수 있도록 그대로 콘솔에 출력한다.
     console.log('========================================');
-    console.log(`이번 호출 모델: ${modelForThisCall} (wantsImage=${wantsImage})`);
+    console.log(`이번 호출 모델: ${GEMINI_MODEL} (wantsImage=${wantsImage})`);
     console.log('이번 호출에 실제로 전송되는 systemInstruction (이미 치환 완료된 최종 텍스트):');
     console.log(systemText);
     console.log('========================================');
