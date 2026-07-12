@@ -376,23 +376,17 @@ ${ctx.instruction}`;
 
     const englishInPlay = ctx.subjectForModule === 'english' || ctx.activeTrack === 'english';
     if (englishInPlay && !ctx.sceneComplete) {
+      // 정답판별턴 포함 모든 영어 턴에서 이제 동일한 규칙을 적용한다:
+      // 질문·설명(서사의 뼈대)은 한국어로, 학습목표를 담은 지문·선택지에는 영어 표현이 실제로 등장해야 한다.
+      // 예전에는 정답판별턴만 "전체를 영어로" 요구했지만, 난이도를 낮추기 위해 이 요구를 없앴다.
       const englishText = narration + ' ' + choicesJoined;
       const hangulCount = (englishText.match(/[가-힣]/g) || []).length;
       const asciiLetterCount = (englishText.match(/[A-Za-z]/g) || []).length;
-      const isAnswerPhase = ctx.mode !== 'problem' || ctx.phaseIndex === 0; // 발견형 전체, 또는 문제유형형 정답판별턴
-      if (isAnswerPhase) {
-        const ratio = hangulCount / Math.max(1, englishText.length);
-        if (ratio > 0.4) {
-          problems.push('영어 정답판별턴(또는 발견형 영어 턴)인데 narration/선택지가 한국어 위주로 작성되었다. 이 단계는 지문 자체가 영어여야 하므로 전체를 영어로 다시 작성하라 (짧은 지시문 정도만 한글 허용).');
-        }
-      } else {
-        // 이유판별턴/접근전략턴: 한국어 뼈대 + 영어 원문 인용이 섞인 혼용 문장이어야 한다.
-        if (hangulCount === 0) {
-          problems.push('영어 이유판별턴/접근전략턴인데 narration과 선택지가 전부 영어로만 쓰였다. 사고의 뼈대(질문·설명)는 한국어로 짜고, 그 안에 판별 대상이 되는 영어 표현만 원문 그대로 인용하라.');
-        }
-        if (asciiLetterCount < 3) {
-          problems.push('영어 이유판별턴/접근전략턴인데 판별 대상이 되는 영어 표현이 원문 그대로 인용되지 않았다. 설명을 전부 한국어로 번역하지 말고, 핵심 영어 단어·구·문장을 큰따옴표로 원문 그대로 인용해 문장 속에 남겨두어라.');
-        }
+      if (hangulCount === 0) {
+        problems.push('영어 턴인데 narration과 선택지가 전부 영어로만 쓰였다. 질문·설명(서사를 이끌어가는 뼈대)은 반드시 한국어로 작성하라.');
+      }
+      if (asciiLetterCount < 3) {
+        problems.push('영어 턴인데 실제 영어 표현이 거의 등장하지 않았다. 학습목표에 해당하는 영어 문장·표현을 지문이나 선택지 안에 반드시 포함하라.');
       }
     }
 
