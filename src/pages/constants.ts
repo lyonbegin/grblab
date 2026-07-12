@@ -250,81 +250,145 @@ export const SYSTEM_PROMPT_MATH_PROBLEM = `[지금 이 턴의 과목: 수학 · 
 // vizType이 "narration"이면 아무 블록도 붙이지 않는다(visual 필드 자체를 생략시킴).
 // ===========================================================
 
-// mafs Plot.OfX / Plot.OfY 로 그리는 함수 그래프. (판별식, 접선, 증가·감소, 이차곡선 등)
+// mafs Plot.OfX / Circle 로 그리는 함수 그래프. (판별식, 접선, 증가·감소, 이차곡선 등)
 export const VIZ_PROMPT_MAFS_FUNCTION = `[이번 턴의 시각 자료 지시: mafs 함수 그래프]
-visual.kind는 "mafs_function"으로 고정하고, visual.curves 배열을 채워라. 각 curve는:
-- kind: "explicit"(y=formula, x만 포함) 또는 "implicit"(formula=0, x와 y 모두 포함 — 원·타원·쌍곡선 등)
-- formula: mathjs 문법 수식 문자열. 거듭제곱 ^, 곱셈은 반드시 *(2*x), 로그 log(x), 삼각함수 sin(x)/cos(x)/tan(x).
-- label: 이 곡선이 어떤 선택지/후보를 나타내는지 "①"처럼 짧게.
-- color: 선택지별로 다르게, 정답을 암시하는 색은 쓰지 마라.
-visual.xRange, visual.yRange는 [최솟값, 최댓값] 배열로, 곡선이 잘 보이는 범위를 잡아라.
-후보 3개를 한 그래프에 겹쳐 비교하는 게 자연스러우면 curves에 3개 다 넣고, 서로 다른 범위라 겹치면 헷갈리면 이 turn에서는 대표 후보 하나만(가장 핵심적인 곡선) 넣어도 된다.
-curves가 비어있으면 이 턴은 실패로 간주된다 — 최소 1개는 반드시 채워라.`;
 
-// mafs Polygon/Point/Line.Segment 로 그리는 평면도형 (삼각형, 각, 길이 등)
+이 시각 자료가 실제로 어떻게 그려지는지: 코드는 네가 채운 visual.curves 배열을 하나씩 훑으면서, kind가 "explicit"이면 mathjs로 formula를 컴파일해 mafs 라이브러리의 <Plot.OfX> 컴포넌트에 넘겨 곡선을 그리고, kind가 "implicit"이면서 원 방정식으로 인식되면 <Circle> 컴포넌트로 그린다. 즉 이 시각 자료 전체는 오직 visual.curves 배열 안의 formula 문자열들만으로 만들어진다 — 다른 방법으로 그림을 그려주는 코드는 없다.
+
+반드시 채워야 하는 필드(하나라도 빠지면 화면에 그래프가 전혀 나타나지 않는다):
+- visual.kind: "mafs_function" (고정 문자열)
+- visual.curves: 배열, 반드시 길이 1 이상. 각 원소는:
+  · kind: "explicit"(y=formula, x만 포함) 또는 "implicit"(formula=0, x와 y 모두 포함 — 원·타원·쌍곡선 등)
+  · formula: mathjs 문법을 따르는 수식 문자열. 거듭제곱은 ^, 곱셈은 반드시 *로 명시(2x가 아니라 2*x), 로그는 log(x), 삼각함수는 sin(x)/cos(x)/tan(x). 이 문자열이 mathjs로 파싱 안 되면(예: 문법 오류) 그 곡선 하나는 통째로 그려지지 않는다.
+  · label: 이 곡선이 어떤 선택지/후보를 나타내는지 "①"처럼 짧게.
+  · color: 선택지별로 다르게. 정답을 암시하는 색은 쓰지 마라.
+- visual.xRange, visual.yRange: 각각 [최솟값, 최댓값] 형태의 숫자 배열 2개짜리. 곡선이 화면 안에 잘 들어오는 범위로 잡아라 (없으면 기본값 [-10,10]으로 그려지므로, 곡선이 그 범위 밖에 있으면 아무것도 안 보일 수 있다).
+
+타원·쌍곡선처럼 원이 아닌 implicit 곡선도 formula만 정확히 채우면 된다 — 코드가 mafs로 못 그리는 형태라고 판단하면 자동으로 mathjs 기반의 보조 렌더러(좌표를 직접 계산해 점으로 찍는 방식)로 전환해서 그려주므로, 너는 formula만 정확한 mathjs 문법으로 채우면 그만이다.
+
+후보 3개를 한 그래프에 겹쳐 비교하는 게 자연스러우면 curves에 3개 다 넣고, 서로 다른 범위라 겹치면 헷갈리면 이 턴에서는 대표 후보 하나만(가장 핵심적인 곡선) 넣어도 된다.
+
+최종 확인(반드시 스스로 점검하라): visual 객체 안에 curves 키가 있는가? 그 배열 안에 formula 문자열을 가진 원소가 최소 1개 있는가? 이 둘 중 하나라도 "아니오"면 이 턴은 실패다 — kind만 채우고 curves를 비우거나 생략하는 것은 명백한 오류다.`;
+
+// mafs Point/Line.Segment(+원인 경우 Circle) 로 그리는 평면도형 (삼각형, 각, 길이 등)
 export const VIZ_PROMPT_MAFS_SHAPE = `[이번 턴의 시각 자료 지시: mafs 도형]
-visual.kind는 "mafs_shape"로 고정하고 다음을 채워라:
-- visual.points: 도형의 꼭짓점들. 각 항목 {x, y, label}. label은 "A"/"B"/"C"처럼 짧게.
-- visual.segments: 변·보조선. 각 항목 {x1, y1, x2, y2, label}(label 선택).
-- visual.curves: 원이 필요하면(원주각, 내접원 등) kind:"implicit"인 원의 방정식 하나를 여기 넣어도 된다. 필요 없으면 빈 배열로 둬라.
-visual.xRange, visual.yRange는 도형 전체가 잘 보이는 범위로 잡아라 (보통 정사각형에 가깝게, 예: [-1, 8]).
-좌표는 임의로 잡되, 이번 문제가 요구하는 변의 길이·각의 크기 비율이 실제로 맞아야 한다(계산 없이 그림만 보고 속을 수 있는 왜곡된 좌표를 쓰지 마라).
-정답을 암시하는 위치·강조는 하지 마라 — 조건이 되는 정보(변·각)만 그려라.`;
+
+이 시각 자료가 실제로 어떻게 그려지는지: 코드는 visual.points 배열의 각 항목을 mafs의 <Point> 컴포넌트로, visual.segments 배열의 각 항목을 <Line.Segment> 컴포넌트(변·보조선)로 그린다. visual.curves에 원의 방정식을 넣으면 <Circle>로 그려지고, 원이 아닌 implicit 곡선(타원 등)을 넣으면 mathjs 기반 보조 렌더러로 자동 전환되어 그려진다. 즉 도형은 점(vertex)과 선분(edge)의 좌표 숫자로만 구성된다 — narration에 아무리 자세히 글로 묘사해도 그림 자체는 이 숫자들이 없으면 그려지지 않는다.
+
+반드시 채워야 하는 필드(하나라도 빠지면 도형이 전혀 나타나지 않는다):
+- visual.kind: "mafs_shape" (고정 문자열)
+- visual.points: 배열, 반드시 길이 1 이상(도형의 꼭짓점들). 각 항목 {x, y, label}, label은 "A"/"B"/"C"처럼 짧게.
+- visual.segments: 배열(도형의 변·보조선). 각 항목 {x1, y1, x2, y2, label}(label 선택). 삼각형이면 보통 변 3개, 사각형이면 4개.
+- visual.curves: 원이 필요할 때만(원주각, 내접원 등) kind:"implicit"인 원의 방정식 하나를 넣는다. 필요 없으면 빈 배열([])로 둬라 — 필드 자체는 있어야 하지만 비어 있어도 된다.
+- visual.xRange, visual.yRange: 도형 전체가 화면 안에 들어오는 범위(예: [-1, 8]). 점들의 좌표가 이 범위를 벗어나면 화면 밖으로 잘려서 안 보인다.
+
+좌표는 임의로 잡되, 이번 문제가 요구하는 변의 길이·각의 크기 비율이 실제로 맞아야 한다(계산 없이 그림만 보고 속을 수 있는 왜곡된 좌표를 쓰지 마라). 정답을 암시하는 위치·강조는 하지 마라 — 조건이 되는 정보(변·각)만 그려라.
+
+최종 확인: visual.points 배열에 좌표가 있는가? 삼각형·사각형이라면 그 점들을 잇는 visual.segments도 채웠는가? 이 중 하나라도 비어 있으면 도형이 안 보인다.`;
 
 // mafs Vector 로 그리는 벡터 (내적, 평행조건, 벡터 연산 등)
 export const VIZ_PROMPT_MAFS_VECTOR = `[이번 턴의 시각 자료 지시: mafs 벡터]
-visual.kind는 "mafs_vector"로 고정하고 visual.vectors 배열을 채워라. 각 항목:
-- x1, y1: 벡터의 시작점(꼬리)
-- x2, y2: 벡터의 끝점(머리)
-- label: 벡터 이름("a", "b" 등)
-- color: 벡터마다 다르게
-필요하면 visual.points(기준점 강조)도 추가로 채울 수 있다.
-visual.xRange, visual.yRange를 벡터들이 잘 보이는 범위로 잡아라(원점을 포함시켜라).
-벡터 2~3개로 이번 문제의 조건(각·평행·수직 등)이 시각적으로 드러나야 한다.`;
 
-// mafs Plot.Inequality 로 그리는 곡선 아래 넓이 음영 (정적분, 넓이 등)
+이 시각 자료가 실제로 어떻게 그려지는지: 코드는 visual.vectors 배열의 각 항목(꼬리 좌표→머리 좌표)을 mafs의 <Vector> 컴포넌트에 그대로 넘겨 화살표로 그린다. visual.points가 있으면 <Point>로 기준점도 함께 찍는다. 즉 벡터는 두 좌표(시작점·끝점) 숫자쌍으로만 표현되며, 이 배열이 비어 있으면 화살표가 하나도 안 나타난다.
+
+반드시 채워야 하는 필드(하나라도 빠지면 벡터가 전혀 나타나지 않는다):
+- visual.kind: "mafs_vector" (고정 문자열)
+- visual.vectors: 배열, 반드시 길이 1 이상. 각 항목:
+  · x1, y1: 벡터의 시작점(꼬리) 좌표
+  · x2, y2: 벡터의 끝점(머리) 좌표
+  · label: 벡터 이름("a", "b" 등)
+  · color: 벡터마다 다르게
+- visual.xRange, visual.yRange: 벡터들이 잘 보이는 범위(원점을 포함시켜라, 예: [-6,6]).
+
+필요하면 visual.points(기준점 강조)도 추가로 채울 수 있지만, 이건 선택 사항이다. 벡터 2~3개로 이번 문제의 조건(각·평행·수직 등)이 시각적으로 드러나야 한다.
+
+최종 확인: visual.vectors 배열에 시작점·끝점 좌표를 가진 원소가 최소 1개 있는가? 없으면 이 턴은 실패다.`;
+
+// mafs Plot.OfX(기준 곡선) + Plot.Inequality(음영) 로 그리는 넓이 (정적분, 넓이 등)
 export const VIZ_PROMPT_MAFS_AREA = `[이번 턴의 시각 자료 지시: mafs 넓이 음영]
-visual.kind는 "mafs_area"로 고정하고 다음을 채워라:
-- visual.curves: 기준이 되는 곡선 하나 이상, {kind:"explicit", formula, label, color} 형태 (위 mafs_function 규칙과 동일한 formula 문법).
-- visual.shadeFormula: 넓이로 강조할 구간의 함수식(보통 curves의 첫 곡선과 같은 formula).
-- visual.shadeXMin, visual.shadeXMax: 넓이를 표시할 x 구간의 시작·끝 값(숫자).
-visual.xRange, visual.yRange를 곡선과 음영 구간이 잘 보이는 범위로 잡아라.
-정답에 해당하는 넓이의 최종 수치는 밝히지 말고, 구간과 곡선(조건)만 시각화하라.`;
+
+이 시각 자료가 실제로 어떻게 그려지는지: 코드는 visual.curves의 곡선을 mafs <Plot.OfX>로 먼저 그리고, 그 다음 visual.shadeFormula를 mathjs로 컴파일해서 visual.shadeXMin부터 visual.shadeXMax까지의 구간에만 mafs <Plot.Inequality>로 음영을 채운다. 즉 "곡선"과 "음영 구간"은 서로 다른 필드이며, 곡선만 있고 shadeFormula/shadeXMin/shadeXMax가 없으면 곡선은 보이는데 음영(넓이 강조)은 전혀 안 나타난다.
+
+반드시 채워야 하는 필드(하나라도 빠지면 그 부분이 화면에 나타나지 않는다):
+- visual.kind: "mafs_area" (고정 문자열)
+- visual.curves: 배열, 반드시 길이 1 이상. {kind:"explicit", formula, label, color} 형태 (mafs_function과 동일한 mathjs formula 문법 — 거듭제곱 ^, 곱셈 *, 로그 log(x), 삼각함수 sin(x)/cos(x)/tan(x)).
+- visual.shadeFormula: 넓이로 강조할 함수식(mathjs 문법 문자열, 보통 curves의 첫 곡선과 같은 formula).
+- visual.shadeXMin, visual.shadeXMax: 넓이를 표시할 x 구간의 시작·끝 값(둘 다 반드시 숫자).
+- visual.xRange, visual.yRange: 곡선과 음영 구간이 잘 보이는 범위.
+
+정답에 해당하는 넓이의 최종 수치는 밝히지 말고, 구간과 곡선(조건)만 시각화하라.
+
+최종 확인: curves에 formula가 있는가? shadeFormula, shadeXMin, shadeXMax 세 개가 모두 채워졌는가? 셋 중 하나라도 빠지면 음영이 안 나타난다.`;
 
 // mafs Point 나열로 그리는 이산수열 (등차·등비·점화식 등)
 export const VIZ_PROMPT_MAFS_DISCRETE = `[이번 턴의 시각 자료 지시: mafs 이산점]
-visual.kind는 "mafs_discrete"로 고정하고 visual.points 배열을 채워라. 각 항목 {x, y, label}에서 x는 항 번호(1,2,3...), y는 그 항의 값이다. label은 "a1"처럼 짧게(선택).
-6~8개 정도의 항을 순서대로 넣어서 규칙이 눈에 보이게 하라. 마지막 한두 항은 비워서(점을 넣지 않아서) "다음 항이 무엇일지" 판단할 여지를 남겨도 좋다.
-visual.xRange, visual.yRange를 점들이 잘 보이는 범위로 잡아라.
-수열의 최종 일반항 공식이나 정답 값은 밝히지 마라 — 항의 나열(패턴)만 보여줘라.`;
+
+이 시각 자료가 실제로 어떻게 그려지는지: 코드는 visual.points 배열의 각 항목을 mafs <Point>로 하나씩 찍는다. 곡선을 잇는 선은 그리지 않는다 — 순수하게 점들만 나열된다. 이 배열이 비어 있으면 점이 하나도 안 나타난다.
+
+반드시 채워야 하는 필드(하나라도 빠지면 점이 전혀 나타나지 않는다):
+- visual.kind: "mafs_discrete" (고정 문자열)
+- visual.points: 배열, 반드시 길이 5 이상(항이 5개 미만이면 패턴이 안 보인다). 각 항목 {x, y, label}에서 x는 항 번호(1,2,3...), y는 그 항의 값(둘 다 숫자). label은 "a1"처럼 짧게(선택).
+- visual.xRange, visual.yRange: 점들이 잘 보이는 범위.
+
+6~8개 정도의 항을 순서대로 넣어서 규칙이 눈에 보이게 하라. 마지막 한두 항은 비워서(점을 넣지 않아서) "다음 항이 무엇일지" 판단할 여지를 남겨도 좋다. 수열의 최종 일반항 공식이나 정답 값은 밝히지 마라 — 항의 나열(패턴)만 보여줘라.
+
+최종 확인: visual.points 배열의 길이가 5 이상인가? 각 항목에 x, y 숫자가 다 있는가?`;
 
 // recharts 막대그래프 (이산확률분포, 도수분포 등)
 export const VIZ_PROMPT_BAR_CHART = `[이번 턴의 시각 자료 지시: 막대그래프]
-visual.kind는 "bar_chart"로 고정하고 visual.bars 배열을 채워라. 각 항목 {label, value}에서 label은 x축에 표시될 짧은 이름(계급·확률변수 값 등), value는 그 막대의 높이(도수 또는 확률, 숫자).
-4~8개 정도의 막대가 적당하다. 정답이 되는 최종 수치를 그대로 막대 값에 노출하지 말고, 문제를 구성하는 원자료(조건)만 보여줘라.`;
 
-// 벤다이어그램 (확률의 덧셈정리, 조건부확률, 여사건 등)
+이 시각 자료가 실제로 어떻게 그려지는지: 코드는 visual.bars 배열을 그대로 recharts 라이브러리의 <BarChart>에 데이터로 넘긴다. mafs나 mathjs는 관여하지 않는다 — 그냥 {label, value} 목록이 막대 하나하나가 된다. 이 배열이 비어 있으면 막대가 하나도 안 나타난다.
+
+반드시 채워야 하는 필드(하나라도 빠지면 그래프가 전혀 나타나지 않는다):
+- visual.kind: "bar_chart" (고정 문자열)
+- visual.bars: 배열, 반드시 길이 2 이상. 각 항목 {label, value}에서 label은 x축에 표시될 짧은 문자열(계급·확률변수 값 등), value는 그 막대의 높이(도수 또는 확률, 반드시 숫자).
+
+4~8개 정도의 막대가 적당하다. 정답이 되는 최종 수치를 그대로 막대 값에 노출하지 말고, 문제를 구성하는 원자료(조건)만 보여줘라.
+
+최종 확인: visual.bars 배열에 최소 2개 이상의 {label, value} 항목이 있는가? value가 전부 숫자인가?`;
+
+// 소형 SVG 벤다이어그램 (확률의 덧셈정리, 조건부확률, 여사건 등)
 export const VIZ_PROMPT_VENN = `[이번 턴의 시각 자료 지시: 벤다이어그램]
-visual.kind는 "venn"으로 고정하고 다음을 채워라:
+
+이 시각 자료가 실제로 어떻게 그려지는지: 코드는 겹치는 원 두 개를 자체 SVG로 그리고, 그 위에 visual.vennLabelA/vennLabelB(원 이름), visual.vennOnlyA/vennOnlyB(각 원의 교집합 아닌 부분), visual.vennBoth(교집합 부분)의 값을 숫자로 표시한다. mafs·mathjs·recharts는 전혀 관여하지 않는다. 이 5개 필드 중 숫자 3개(vennOnlyA/vennOnlyB/vennBoth)가 비어 있으면 벤다이어그램은 그려지지만 그 안에 숫자가 하나도 안 보인다.
+
+반드시 채워야 하는 필드:
+- visual.kind: "venn" (고정 문자열)
 - visual.vennLabelA, visual.vennLabelB: 두 사건의 이름(짧게, 예: "비가 옴", "우산을 챙김")
-- visual.vennOnlyA, visual.vennOnlyB: 각각 A만 해당하는 영역, B만 해당하는 영역에 표시할 값(원소 개수 또는 확률, 숫자)
-- visual.vennBoth: 교집합(A∩B) 영역에 표시할 값(숫자)
-전체 정답(예: 최종 확률)은 이 숫자들에 직접 드러나지 않게, 문제를 구성하는 조건 값만 채워라.`;
+- visual.vennOnlyA, visual.vennOnlyB: 각각 A만 해당하는 영역, B만 해당하는 영역에 표시할 값(원소 개수 또는 확률, 반드시 숫자)
+- visual.vennBoth: 교집합(A∩B) 영역에 표시할 값(반드시 숫자)
 
-// 간단한 등각투상 의사 3D (공간도형, 회전체, 겉넓이·부피 등)
+전체 정답(예: 최종 확률)은 이 숫자들에 직접 드러나지 않게, 문제를 구성하는 조건 값만 채워라.
+
+최종 확인: vennOnlyA, vennOnlyB, vennBoth 세 필드가 모두 숫자로 채워졌는가?`;
+
+// 소형 등각투상 SVG 프리셋 (공간도형, 회전체, 겉넓이·부피 등)
 export const VIZ_PROMPT_PSEUDO3D = `[이번 턴의 시각 자료 지시: 의사 3D 도형]
-visual.kind는 "pseudo3d"로 고정하고 다음을 채워라:
-- visual.solidType: 다음 중 하나로 고정 — "cube"(직육면체), "cylinder"(원기둥), "cone"(원뿔), "sphere"(구)
-  이번 문제의 입체가 이 네 종류 중 정확히 일치하지 않더라도, 가장 가깝고 자연스러운 것을 골라라.
-- visual.dims: 그 입체의 치수 배열. cube는 [가로,세로,높이], cylinder/cone은 [밑면반지름, 높이], sphere는 [반지름]. (숫자 배열)
-- visual.solidLabel: 이 도형이 이번 문제에서 무엇을 뜻하는지 짧은 라벨(예: "저수조").
-정답이 되는 부피·겉넓이 수치는 라벨에 노출하지 말고, 치수(조건)만 보여줘라.`;
 
-// 행렬을 격자(표)로 표시
+이 시각 자료가 실제로 어떻게 그려지는지: 코드는 visual.solidType 값에 따라 미리 그려둔 4가지 SVG 프리셋(직육면체/원기둥/원뿔/구) 중 하나를 그대로 화면에 낸다. 실제 치수(visual.dims)에 따라 모양이 정교하게 바뀌지는 않는다 — dims는 화면 표시용이 아니라 문제 설명 보조용 숫자다. solidType이 4종 중 하나로 정확히 오지 않으면 아무 그림도 안 나타난다.
+
+반드시 채워야 하는 필드:
+- visual.kind: "pseudo3d" (고정 문자열)
+- visual.solidType: 다음 네 값 중 정확히 하나 — "cube"(직육면체), "cylinder"(원기둥), "cone"(원뿔), "sphere"(구). 이 네 문자열 외의 값을 넣으면 아무것도 안 그려진다. 이번 문제의 입체가 이 네 종류 중 정확히 일치하지 않더라도, 가장 가깝고 자연스러운 것을 반드시 골라라.
+- visual.dims: 그 입체의 치수 배열(숫자). cube는 [가로,세로,높이], cylinder/cone은 [밑면반지름, 높이], sphere는 [반지름].
+- visual.solidLabel: 이 도형이 이번 문제에서 무엇을 뜻하는지 짧은 라벨(예: "저수조").
+
+정답이 되는 부피·겉넓이 수치는 라벨에 노출하지 말고, 치수(조건)만 보여줘라.
+
+최종 확인: solidType이 cube/cylinder/cone/sphere 중 하나로 정확히 적혀 있는가(오타·다른 표현 금지)?`;
+
+// HTML 표(격자)로 그리는 행렬
 export const VIZ_PROMPT_MATRIX = `[이번 턴의 시각 자료 지시: 행렬]
-visual.kind는 "matrix"로 고정하고 visual.matrixRows 배열을 채워라. 이차원 배열로, 각 안쪽 배열이 행 하나(숫자들)를 나타낸다. 예: 2x2 행렬이면 [[1,2],[3,4]].
-행렬 곱셈처럼 두 행렬이 동시에 필요하면, visual.matrixRows에는 첫 번째 행렬만 넣고 두 번째 행렬은 narration/선택지의 텍스트(LaTeX)로 설명하라 — 이 시각 자료는 행렬 하나만 표에 담는다.
-정답에 해당하는 계산 결과 행렬은 넣지 말고, 문제에 주어진 원래 행렬만 담아라.`;
+
+이 시각 자료가 실제로 어떻게 그려지는지: 코드는 visual.matrixRows(이차원 숫자 배열)를 그대로 HTML 표의 행·열로 그린다. mafs·mathjs·recharts는 관여하지 않는다. 이 배열이 비어 있으면 표가 전혀 나타나지 않는다.
+
+반드시 채워야 하는 필드:
+- visual.kind: "matrix" (고정 문자열)
+- visual.matrixRows: 이차원 배열, 반드시 길이 1 이상. 각 안쪽 배열이 행 하나(숫자들)를 나타낸다. 예: 2x2 행렬이면 [[1,2],[3,4]].
+
+행렬 곱셈처럼 두 행렬이 동시에 필요하면, visual.matrixRows에는 첫 번째 행렬만 넣고 두 번째 행렬은 narration/선택지의 텍스트(LaTeX)로 설명하라 — 이 시각 자료는 행렬 하나만 표에 담는다. 정답에 해당하는 계산 결과 행렬은 넣지 말고, 문제에 주어진 원래 행렬만 담아라.
+
+최종 확인: visual.matrixRows에 숫자로 채워진 행이 최소 1개 있는가? 각 행의 열 개수가 서로 같은가(직사각형 형태)?`;
 
 
 // ---------------------------------------------------------
