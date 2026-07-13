@@ -88,11 +88,16 @@ const VISUAL_SHAPE_PROPERTIES = {
     type: 'ARRAY',
     items: {
       type: 'OBJECT',
-      properties: {
+     properties: {
         kind: { type: 'STRING', enum: ['explicit', 'implicit'] },
         // formula는 "y=", "x=" 없이 순수 수식 문자열만 담는다 (예: "3*x+2"). 절대 여기에 설명·추론
         // 과정을 쓰지 마라 — 이 필드는 mathjs가 그대로 계산에 쓰는 값이다.
         formula: { type: 'STRING', maxLength: 60 },
+        // 분수 형태 함수(0/0 극한 등)에서만 쓴다. formula가 "sin(x)/x"라면 numerFormula="sin(x)",
+        // denomFormula="x"처럼 분자·분모식을 따로 담는다. 두 막대(분자·분모) 장치가 이 두 값으로
+        // 각각의 길이를 그린다. 분수가 아닌 곡선에는 채우지 않아도 된다(선택).
+        numerFormula: { type: 'STRING', maxLength: 60, nullable: true },
+        denomFormula: { type: 'STRING', maxLength: 60, nullable: true },
         // label은 그래프에 짧게 표시될 이름표일 뿐이다(예: "A", "①"). 절대 여기에 설명·추론
         // 과정이나 수식을 길게 풀어쓰지 마라 — 15자 넘는 텍스트는 전부 잘려나가 화면이 깨진다.
         label: { type: 'STRING', maxLength: 15 },
