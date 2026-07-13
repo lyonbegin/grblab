@@ -94,11 +94,11 @@ const VISUAL_SHAPE_PROPERTIES = {
         // formula는 "y=", "x=" 없이 순수 수식 문자열만 담는다 (예: "3*x+2"). 절대 여기에 설명·추론
         // 과정을 쓰지 마라 — 이 필드는 mathjs가 그대로 계산에 쓰는 값이다.
         formula: { type: 'STRING', maxLength: 60 },
-        // deviceType "limit_approach"(부정형 극한 전용)에서만 쓴다: formula가 분수 형태(N/D)일 때
-        // 분자식·분모식을 따로 담아서, 렌더러가 |분자|·|분모| 두 막대를 실제 길이로 그릴 수 있게 한다.
-        // 이 두 필드가 없으면 막대 장치는 생략되고 곡선+드래그만 표시된다.
-        numerFormula: { type: 'STRING', maxLength: 60, nullable: true },
-        denomFormula: { type: 'STRING', maxLength: 60, nullable: true },
+        // deviceType "limit_approach"(부정형 극한 전용)에서만 쓴다: 이 곡선이 정의되지 않는
+        // 지점(예: 0/0이 되는 x)의 x좌표를 숫자로만 알려준다. 예전엔 분자식·분모식을 문자열로
+        // 따로 받았는데, 모델이 formula와 같은 내용을 또 쓰라고 하면 무의미한 항을 반복하며
+        // 폭주하는 사고가 반복돼서, 반복 위험이 없는 숫자 하나로 바꿨다.
+        targetX: { type: 'NUMBER', nullable: true },
         // label은 그래프에 짧게 표시될 이름표일 뿐이다(예: "A", "①"). 절대 여기에 설명·추론
         // 과정이나 수식을 길게 풀어쓰지 마라 — 15자 넘는 텍스트는 전부 잘려나가 화면이 깨진다.
         label: { type: 'STRING', maxLength: 15 },
@@ -695,21 +695,7 @@ ${ctx.instruction}${vizSection}${deviceSection}${fieldHygieneWarning}`;
       if (v.curves.length > 0 && !hasValidCurve) {
         problems.push('visual.curves가 있지만 그 안에 mathjs로 계산 가능한 formula를 가진 곡선이 하나도 없다. 최소 1개는 유효한 formula로 채워라.');
       }
-      // numerFormula/denomFormula("limit_approach" 전용)가 비정상적으로 길거나(반복 폭주 등)
-      // 컴파일이 안 되면, 막대 렌더러가 그 값을 그대로 쓰다 이상한 결과를 낼 수 있다.
-      // 실제로 이런 사고가 있었다: "sin(x) * 10 / 10 + x * 0.001 - ..." 식으로 x*x/x*x/...가
-      // 수백 번 반복되며 폭주한 사례. 60자를 넘거나 컴파일 실패하면 문제로 잡는다.
-      v.curves.forEach((curve, i) => {
-        ['numerFormula', 'denomFormula'].forEach((key) => {
-          const val = curve && curve[key];
-          if (typeof val !== 'string' || val.length === 0) return;
-          if (val.length > 60) {
-            problems.push(`curves[${i}].${key}가 ${val.length}자로 비정상적으로 길다(60자 제한). 반복되는 무의미한 항(예: x*x/x*x/... 폭주)이 섞였을 가능성이 크다. 짧고 단순한 수식(예: "sin(x)", "x-1")으로 다시 써라.`);
-          } else if (!safeCompile(val, 'explicit')) {
-            problems.push(`curves[${i}].${key}("${val}")가 mathjs로 컴파일되지 않는다. 유효한 수식으로 다시 써라.`);
-          }
-        });
-      });
+      // targetX("limit_approach" 전용)는 숫자 하나뿐이라 반복 폭주 위험이 없다 — 별도 검증 불필요.
     }
 
     // device_visual 검증 (deviceType이 있을 때만, 관대하게 — 실패해도 학습 진행을 막지 않음).
@@ -874,7 +860,7 @@ ${ctx.instruction}${vizSection}${deviceSection}${fieldHygieneWarning}`;
   // subjectJustResolved가 주어지면 그 과목의 맥락(완료턴/시도횟수는 이미 handleChoice에서
   // 갱신된 값)을 그대로 사용해 응답을 만든다.
   // ===========================================================
-  const MAX_ATTEMPTS = 3;
+  const MAX_ATTEMPTS = 6; // RECITATION 차단이 몇 번 겹쳐도 내용 교정 재시도가 굶지 않도록 여유를 늘림.
 
   // ===========================================================
   // [시각자료 디버그] — 순수하게 "서버(모델)가 이번 턴에 실제로 보낸 것"만 요약해서 찍는다.
@@ -951,7 +937,7 @@ ${ctx.instruction}${vizSection}${deviceSection}${fieldHygieneWarning}`;
         if (callErr.isRetryableBlock) {
           messagesRef.current.push({
             role: 'user',
-            content: `[주의] 직전 시도가 차단되었다: ${callErr.message} 같은 상황·같은 학습목표를 유지한 채, 문장 표현만 바꿔서(특히 교과서 문장을 그대로 옮긴 것처럼 보일 수 있는 부분을) 다시 써라. JSON만 출력하라.`
+            content: `[주의] 직전 시도가 차단되었다: ${callErr.message} 같은 학습목표·같은 진행 상태(과목/단계)는 유지하되, 세계관·인물·소재·문장을 상당히 다르게 새로 지어내라 — 특히 origin_reason과 narration의 역사적 사실 설명 문장은 교과서·백과사전 문체와 겹치지 않게 완전히 다른 어순·표현으로 풀어써라. 단어 몇 개만 바꾸는 미세 수정으로는 다시 차단될 수 있다. JSON만 출력하라.`
           });
         }
         continue;

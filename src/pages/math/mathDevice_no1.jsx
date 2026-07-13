@@ -1,162 +1,68 @@
 // ===========================================================
-// no:1 "부정형 극한(0/0)" 전용 인터랙션 — 초등 선행 개념훈련용.
-// 수학 지식 0을 전제로, 수학자가 실제로 부딪힌 벽을 여러 사건으로 되밟아
-// 마지막에 '극한' 개념에 도달시킨다.
+// no:1 "부정형 극한(0/0)" 전용 인터랙션 — 재설계판.
 //
-// 이 장치는 두 개의 상호작용 층을 가진다:
-//   (A) 도형 조작 — 분자막대·분모막대 두 개를 손잡이로 목표 지점에 밀어붙이며,
-//       둘 다 0으로 사라지는데 그 "비율"은 한 값으로 좁혀지는 걸 눈으로 본다.
-//   (B) 그래프 검증 — (A)의 비율을 곡선 하나로 펼쳐, 목표 지점의 구멍(정의 안 됨)으로
-//       좌우에서 값이 좁혀지는 걸 재확인한다.
-//   (A)의 손잡이 위치(x)와 (B)의 빨간 점 위치는 같은 state로 연동된다.
+// [이전 설계를 버린 이유] 분자막대·분모막대를 그리려고 모델에게 numerFormula/denomFormula를
+// formula와 별도로 또 쓰라고 시켰더니, 같은 내용을 문자열로 재진술하는 과정에서 모델이
+// 무의미한 항(x*x/x*x/...)을 수백 번 반복하며 폭주하는 사고가 여러 번 재현됐다(함수를
+// 바꿔도 재현됨 — 특정 함수의 문제가 아니라 "formula와 겹치는 내용을 또 쓰게 하는 구조"
+// 자체가 문제였다).
 //
-// [중요] 두 막대를 "진짜" 분자·분모 길이로 그리려면 분자식과 분모식을 각각 알아야 한다.
-// 그래서 이 항목의 visual.curves[0]은 formula(합쳐진 함수, 그래프용)에 더해
-// numerFormula(분자식)·denomFormula(분모식)를 함께 받는다. 이 둘이 있으면 막대는
-// 정확히 |분자|, |분모|가 되어 목표 지점에서 둘 다 0으로 수렴하고 비율은 극한값으로 좁혀진다.
-// (만약 모델이 numer/denom을 안 보내면, 막대 층은 생략하고 곡선+드래그만 보여준다 —
-//  억지 역산으로 엉뚱한 막대를 그리느니 아예 안 그리는 게 낫다.)
+// [새 설계] 막대 장치를 아예 없앴다. 이제 모델에게는:
+//   - curves[0].formula: 원래 함수 하나 (이미 다른 모든 mafs_function 항목과 동일하게 요구됨)
+//   - curves[0].targetX: 그 함수가 정의되지 않는 지점의 x좌표, 숫자 하나
+// 이 둘만 받는다. targetX는 숫자라 반복 폭주가 구조적으로 불가능하다.
 //
-// 기본 함수는 sin(x)/x, 목표 x=0, 수렴값 1 (0/0의 원조 사례, 순간속도에서 뉴턴이 막힌 그 형태).
-// ===========================================================
-// ===========================================================
-// 참고: 이 장치가 기대하는 데이터 모양(vizType/deviceType/graphRule)의 실제 정본은
-// constantsbase.ts의 GOALS_DATA.math 배열(no:"1" 항목)이다 — 여기엔 중복해서 두지 않는다.
-// 이 파일은 오직 렌더링 함수(renderDevice_no1)만 export한다.
+// 화면에는 그래프 하나만 그리고, 그 위에 드래그 가능한 점 하나를 둔다. 아이가 이 점을
+// targetX 쪽으로 직접 끌어당기면서, 곡선이 정의 안 되는 그 지점 근처에서 y값이 실제로
+// 어떤 값에 다가가는지(또는 안 다가가는지) 실시간으로 확인한다.
 // ===========================================================
 import React from 'react';
 import { Mafs, Coordinates, Plot, Point, Theme, MovablePoint } from 'mafs';
 import { safeCompile, toRange, approxLimitAt } from './mathDeviceShared';
-function findHoleByDenominator(denomCompiled, xMin, xMax, steps = 2000) {
-  const dx = (xMax - xMin) / steps;
-  let prevX = null, prevV = null;
-  for (let i = 0; i <= steps; i++) {
-    const x = xMin + i * dx;
-    let val;
-    try { val = denomCompiled.evaluate({ x }); } catch (e) { val = NaN; }
-    if (!Number.isFinite(val)) { prevX = x; prevV = val; continue; }
-    if (Math.abs(val) < 1e-9) return x;
-    if (prevV !== null && Number.isFinite(prevV) && (prevV < 0) !== (val < 0)) {
-      const t = prevV / (prevV - val);
-      return prevX + t * (x - prevX);
-    }
-    prevX = x; prevV = val;
-  }
-  return null;
-}
-
-function TwoBarsDevice({ numerCompiled, denomCompiled, currentX, limitValue }) {
-  let numerVal, denomVal;
-  try { numerVal = numerCompiled.evaluate({ x: currentX }); } catch (e) { numerVal = NaN; }
-  try { denomVal = denomCompiled.evaluate({ x: currentX }); } catch (e) { denomVal = NaN; }
-
-  const numerLen = Number.isFinite(numerVal) ? Math.abs(numerVal) : NaN;
-  const denomLen = Number.isFinite(denomVal) ? Math.abs(denomVal) : NaN;
-  const ratio = (Number.isFinite(numerVal) && Number.isFinite(denomVal) && Math.abs(denomVal) > 1e-9)
-    ? numerVal / denomVal
-    : NaN;
-
-  const maxLen = Math.max(numerLen || 0, denomLen || 0, 1e-6);
-  const scale = 120 / maxLen;
-  const numerH = Number.isFinite(numerLen) ? Math.min(120, numerLen * scale) : 0;
-  const denomH = Number.isFinite(denomLen) ? Math.min(120, denomLen * scale) : 0;
-
-  const barBox = { display: 'inline-flex', flexDirection: 'column', justifyContent: 'flex-end', alignItems: 'center', height: 130, margin: '0 14px' };
-  const bar = (h, color) => ({ width: 34, height: Math.max(2, h), background: color, borderRadius: 4, transition: 'height 0.08s linear' });
-
-  return (
-    <div style={{ textAlign: 'center', padding: '8px 0 4px' }}>
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-end' }}>
-        <div style={barBox}>
-          <div style={bar(numerH, Theme.blue)} />
-          <div style={{ fontSize: 11, color: '#5f5e5a', marginTop: 4 }}>분자(위) {Number.isFinite(numerVal) ? numerVal.toFixed(2) : '?'}</div>
-        </div>
-        <div style={{ fontSize: 22, color: '#5f5e5a', alignSelf: 'center', margin: '0 2px' }}>÷</div>
-        <div style={barBox}>
-          <div style={bar(denomH, Theme.red)} />
-          <div style={{ fontSize: 11, color: '#5f5e5a', marginTop: 4 }}>분모(아래) {Number.isFinite(denomVal) ? denomVal.toFixed(2) : '?'}</div>
-        </div>
-        <div style={{ fontSize: 22, color: '#5f5e5a', alignSelf: 'center', margin: '0 8px' }}>=</div>
-        <div style={{ alignSelf: 'center', textAlign: 'center' }}>
-          <div style={{ fontSize: 12, color: '#5f5e5a' }}>비율</div>
-          <div style={{ fontSize: 26, fontWeight: 700, color: '#2a2a28' }}>
-            {Number.isFinite(ratio) ? ratio.toFixed(2) : '?'}
-          </div>
-        </div>
-      </div>
-      <div style={{ fontSize: 12, color: '#5f5e5a', marginTop: 6 }}>
-        아래 손잡이를 목표 지점으로 밀어 보세요 — 두 막대가 함께 0으로 사라져도
-        {limitValue !== null && <> 비율은 <b>{limitValue.toFixed(2)}</b> 근처로 좁혀집니다</>}
-      </div>
-    </div>
-  );
-}
 
 export function renderDevice_no1(log, logIdx, sharedXByLog, setSharedXByLog) {
   const DEBUG = '[mathDevice_no1 디버그]';
   const v = log.visual;
 
   if (!v) {
-    console.log(`${DEBUG} 중단: log.visual 자체가 없다(null/undefined). 서버가 이번 턴에 visual을 아예 안 보냈거나, 검증 실패로 null 처리됐을 가능성이 크다. log 전체:`, log);
+    console.log(`${DEBUG} 중단: log.visual이 없다. log:`, log);
     return null;
   }
   if (v.kind !== 'mafs_function') {
-    console.log(`${DEBUG} 중단: visual.kind가 "mafs_function"이 아니라 "${v.kind}"다. 모델이 vizType 지시를 안 따랐다. visual 전체:`, v);
+    console.log(`${DEBUG} 중단: visual.kind가 "mafs_function"이 아니라 "${v.kind}"다.`);
     return null;
   }
 
-  const rawCurves = Array.isArray(v.curves) ? v.curves : [];
-  const curves = rawCurves.filter(c => c && c.formula);
-  console.log(`${DEBUG} visual.curves 원본(필터 전, ${rawCurves.length}개):`, JSON.stringify(rawCurves));
+  const curves = (v.curves || []).filter(c => c && c.formula);
   if (curves.length < 1) {
-    console.log(`${DEBUG} 중단: formula가 있는 curve가 하나도 없다(필터 후 0개). 서버가 curves는 보냈지만 formula 필드가 비어있거나 curves 자체가 빈 배열이다.`);
+    console.log(`${DEBUG} 중단: formula가 있는 curve가 없다.`);
     return null;
   }
 
   const c0 = curves[0];
-  console.log(`${DEBUG} curves[0] 사용할 항목:`, JSON.stringify(c0));
   const compiled = safeCompile(c0.formula, c0.kind);
   if (!compiled) {
-    console.log(`${DEBUG} 중단: formula "${c0.formula}"(kind=${c0.kind})가 mathjs로 컴파일 실패했다. 수식 문법 오류일 가능성이 크다.`);
+    console.log(`${DEBUG} 중단: formula "${c0.formula}" 컴파일 실패.`);
     return null;
   }
-  console.log(`${DEBUG} ✅ 여기까지 통과 — 메인 곡선(formula="${c0.formula}") 컴파일 성공. 아래부터는 막대(선택)와 그래프를 그린다.`);
-
-  // 서버가 numerFormula/denomFormula에 폭주한 값(예: "x*x/x*x/..."가 수백 번 반복)을 보낸 사례가
-  // 실제로 있었다. 검증 단계(validateVisualContent)에서 60자 넘으면 재시도시키지만, 혹시 그걸
-  // 뚫고 여기까지 왔더라도 렌더러가 또 한 번 방어한다 — 60자 넘으면 아예 없는 것처럼 취급한다.
-  const MAX_SUBFORMULA_LEN = 60;
-  const numerFormulaRaw = (typeof c0.numerFormula === 'string' && c0.numerFormula.length <= MAX_SUBFORMULA_LEN) ? c0.numerFormula : null;
-  const denomFormulaRaw = (typeof c0.denomFormula === 'string' && c0.denomFormula.length <= MAX_SUBFORMULA_LEN) ? c0.denomFormula : null;
-  if (typeof c0.numerFormula === 'string' && c0.numerFormula.length > MAX_SUBFORMULA_LEN) {
-    console.warn(`[mathDevice_no1 디버그] numerFormula가 ${c0.numerFormula.length}자로 비정상적으로 길어 무시함(막대 생략됨):`, c0.numerFormula.slice(0, 80) + '...');
-  }
-  if (typeof c0.denomFormula === 'string' && c0.denomFormula.length > MAX_SUBFORMULA_LEN) {
-    console.warn(`[mathDevice_no1 디버그] denomFormula가 ${c0.denomFormula.length}자로 비정상적으로 길어 무시함(막대 생략됨):`, c0.denomFormula.slice(0, 80) + '...');
-  }
-
-  const numerCompiled = numerFormulaRaw ? safeCompile(numerFormulaRaw, 'explicit') : null;
-  const denomCompiled = denomFormulaRaw ? safeCompile(denomFormulaRaw, 'explicit') : null;
-  const canDrawBars = !!(numerCompiled && denomCompiled);
-  console.log(`${DEBUG} numerFormula="${c0.numerFormula ?? '(없음)'}" denomFormula="${c0.denomFormula ?? '(없음)'}" → canDrawBars=${canDrawBars}${canDrawBars ? '' : ' (막대 장치는 생략되고 그래프만 표시됨 — 이건 정상 동작이다, numer/denom을 안 보냈거나 폭주값이라 무시됐을 때의 의도된 폴백)'}`);
 
   const xRange = toRange(v.xRange, [-10, 10]);
   const yRange = toRange(v.yRange, [-10, 10]);
-  console.log(`${DEBUG} xRange=${JSON.stringify(xRange)} yRange=${JSON.stringify(yRange)}`);
 
-  let target = null;
-  if (denomCompiled) {
-    target = findHoleByDenominator(denomCompiled, xRange[0], xRange[1]);
-  }
-  console.log(`${DEBUG} target(구멍 x좌표)=${target} (denomCompiled 있음=${!!denomCompiled})`);
+  // target(구멍의 x좌표): 모델이 targetX(숫자)를 직접 주면 그걸 그대로 쓴다.
+  // 안 주면 xRange 중앙을 기본값으로 삼는다(그래도 그래프+드래그는 정상 작동).
+  const target = typeof c0.targetX === 'number' && Number.isFinite(c0.targetX)
+    ? c0.targetX
+    : (xRange[0] + xRange[1]) / 2;
+  console.log(`${DEBUG} formula="${c0.formula}" targetX=${c0.targetX ?? '(없음, 기본값 사용)'} → target=${target}`);
 
-  const { left, right } = target !== null ? approxLimitAt(compiled, target) : { left: NaN, right: NaN };
+  const { left, right } = approxLimitAt(compiled, target);
   const limitValue = (Number.isFinite(left) && Number.isFinite(right) && Math.abs(left - right) < 1e-2)
     ? (left + right) / 2
     : null;
   console.log(`${DEBUG} left=${left} right=${right} limitValue=${limitValue}`);
 
-  const defaultX = target !== null ? target + (xRange[1] - target) * 0.3 : (xRange[0] + xRange[1]) / 2;
+  const defaultX = target + (xRange[1] - target) * 0.3;
   const currentX = sharedXByLog?.[logIdx] ?? defaultX;
   const setCurrentX = (x) => {
     const clamped = Math.min(xRange[1], Math.max(xRange[0], x));
@@ -165,37 +71,21 @@ export function renderDevice_no1(log, logIdx, sharedXByLog, setSharedXByLog) {
   let currentY;
   try { currentY = compiled.evaluate({ x: currentX }); } catch (e) { currentY = NaN; }
 
+  const distance = Math.abs(currentX - target);
+
   return (
     <div className="viz-box">
-      {canDrawBars && (
-        <TwoBarsDevice
-          numerCompiled={numerCompiled}
-          denomCompiled={denomCompiled}
-          currentX={currentX}
-          limitValue={limitValue}
-        />
-      )}
-
-      <input
-        type="range"
-        min={xRange[0]}
-        max={xRange[1]}
-        step={(xRange[1] - xRange[0]) / 400}
-        value={currentX}
-        onChange={(e) => setCurrentX(parseFloat(e.target.value))}
-        style={{ width: '80%', display: 'block', margin: '2px auto 12px' }}
-      />
-
-      <Mafs viewBox={{ x: xRange, y: yRange }} preserveAspectRatio={false} height={340}>
+      <Mafs viewBox={{ x: xRange, y: yRange }} preserveAspectRatio={false} height={360}>
         <Coordinates.Cartesian />
         <Plot.OfX
           y={(x) => {
-            if (target !== null && Math.abs(x - target) < 1e-6) return NaN;
+            if (Math.abs(x - target) < 1e-6) return NaN; // 목표 지점은 정의되지 않음(구멍)
             try { return compiled.evaluate({ x }); } catch (e) { return NaN; }
           }}
           color={Theme.blue}
         />
-        {target !== null && limitValue !== null && (
+        {limitValue !== null && (
+          // 목표 지점의 "빈 점"(정의되지 않지만 값이 수렴하는 자리)을 표시.
           <Point x={target} y={limitValue} color="white" />
         )}
         <MovablePoint
@@ -210,11 +100,10 @@ export function renderDevice_no1(log, logIdx, sharedXByLog, setSharedXByLog) {
         />
       </Mafs>
       <div style={{ fontSize: '12px', color: '#5f5e5a', textAlign: 'center' }}>
-        빨간 점을 곡선 위에서 목표 지점(구멍)에 가깝게 끌어당겨 보세요
-        {target !== null && (
-          <> — 지금 x = {currentX.toFixed(2)}, f(x) = {Number.isFinite(currentY) ? currentY.toFixed(2) : '정의 안 됨'}
-          {limitValue !== null && <> · 다가갈수록 <b>{limitValue.toFixed(2)}</b>로 좁혀집니다</>}</>
-        )}
+        빨간 점을 곡선 위에서 목표 지점(구멍, x = {target.toFixed(2)})에 가깝게 끌어당겨 보세요
+        <br />
+        지금 x = {currentX.toFixed(2)}(목표까지 거리 {distance.toFixed(2)}) · f(x) = {Number.isFinite(currentY) ? currentY.toFixed(3) : '정의 안 됨'}
+        {limitValue !== null && <> · 다가갈수록 <b>{limitValue.toFixed(3)}</b>로 좁혀집니다</>}
       </div>
     </div>
   );
