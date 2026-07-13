@@ -30,7 +30,7 @@ import {
   BOOKS_DATA
 } from './constantsbase';
 // 학습목표별 전용 인터랙티브 장치 — deviceType으로 분기해서 쓴다(현재는 no.1 부정형 극한만).
-import { renderDevice_no1, renderLimitApproachLinked } from './math/mathDevice_no1';
+import { getDeviceRenderer, getDeviceRendererByNo, deviceNeedsDeviceVisual } from './math/mathDeviceIndex';
 
 // vizType(문자열) → 그 시각화에 필요한 프롬프트 블록 매핑.
 // "narration"은 일부러 빠져 있다 — narration 타입은 시각 자료 지시 자체를 붙이지 않는다.
@@ -712,9 +712,11 @@ ${ctx.instruction}${vizSection}${deviceSection}${fieldHygieneWarning}`;
     // device_visual 검증 (deviceType이 있을 때만, 관대하게 — 실패해도 학습 진행을 막지 않음).
     // "limit_approach"처럼 장치를 device_visual이 아니라 visual.curves 안(numerFormula/denomFormula)에
     // 통째로 담는 타입은 애초에 device_visual을 안 쓰므로 이 검증에서 제외한다.
-    const DEVICE_TYPES_WITHOUT_DEVICE_VISUAL = new Set(); // 이제 전부 device_visual을 쓴다(points/segments 기반이라 안전).
-    const deviceType = mathDeviceTypeRef.current;
-    if (deviceType && deviceType !== 'none' && !DEVICE_TYPES_WITHOUT_DEVICE_VISUAL.has(deviceType)) {
+     const deviceType = mathDeviceTypeRef.current;
+    if (deviceType && deviceType !== 'none' && deviceNeedsDeviceVisual(deviceType)) {
+
+
+
       if (!parsed.device_visual || typeof parsed.device_visual !== 'object') {
         problems.push(`이번 학습목표는 deviceType "${deviceType}"이라 device_visual도 채워야 하는데 비어 있다. [이번 턴의 2단계 장치 지시] 블록을 따라 device_visual을 채워라.`);
       } else if (deviceType === 'balance') {
@@ -1903,15 +1905,14 @@ JSON만 출력하라.`;
   function renderMathVisualArea(log, logIdx) {
     console.log(`[디스패치 디버그] logIdx=${logIdx} mathDeviceTypeRef.current="${mathDeviceTypeRef.current}" log.visual 존재=${!!log.visual} log.visual?.kind="${log.visual?.kind}" log.deviceVisual 존재=${!!log.deviceVisual}`);
     // 학습목표별 전용 인터랙티브 장치가 있으면 그걸 우선 쓴다.
-    if (mathDeviceTypeRef.current === 'limit_approach') {
-      const linkedLimit = renderLimitApproachLinked(log, logIdx, sharedXByLog, setSharedXByLog);
-      if (linkedLimit) {
-        console.log('[디스패치 디버그] renderLimitApproachLinked(장치↔그래프 연동)이 정상 반환됨 — 이걸 씀.');
-        return linkedLimit;
+ const reg = getDeviceRendererByNo(log.no) || getDeviceRenderer(mathDeviceTypeRef.current);
+    if (reg) {
+      if (reg.linkedRender) {
+        const linkedCustom = reg.linkedRender(log, logIdx, sharedXByLog, setSharedXByLog);
+        if (linkedCustom) return linkedCustom;
       }
-      const custom = renderDevice_no1(log, logIdx, sharedXByLog, setSharedXByLog);
+      const custom = reg.render(log, logIdx, sharedXByLog, setSharedXByLog);
       if (custom) {
-        console.log('[디스패치 디버그] renderLimitApproachLinked는 실패(장치 데이터 부족)했지만 renderDevice_no1(그래프만)은 성공 — device_visual(있으면)과 함께 씀.');
         return (
           <>
             {log.deviceVisual && renderVisual(log.deviceVisual)}
@@ -1919,7 +1920,6 @@ JSON만 출력하라.`;
           </>
         );
       }
-      console.log('[디스패치 디버그] ⚠️ renderDevice_no1이 null을 반환함(위 [mathDevice_no1 디버그] 로그에서 어느 조건에 걸렸는지 확인) → 일반 렌더러로 폴백함.');
     }
     const linked = renderBalanceGraphLinked(log, logIdx);
     if (linked) return linked;
