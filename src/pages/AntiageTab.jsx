@@ -468,10 +468,21 @@ narration·origin_reason·choices는 반드시 이 학습목표를 다뤄야 한
     if (ctx.activeTrack !== 'math' || ctx.sceneComplete) return null;
     const deviceType = mathDeviceTypeRef.current;
     if (!deviceType || deviceType === 'none') return null;
-    // "limit_approach"는 device_visual을 아예 안 쓴다 — 장치(막대)까지 visual.curves 안의
-    // numerFormula/denomFormula로 전부 표현되므로, 여기서 별도 지시를 붙이지 않는다
-    // (그 지시는 VIZ_PROMPT_MAFS_FUNCTION 쪽에 이미 들어있는 MATH_GOAL.graphRule로 충분하다).
-    if (deviceType === 'limit_approach') return null;
+    // "limit_approach"(부정형 극한)는 이제 device_visual도 실제로 그린다. 저울과 마찬가지로
+    // points/segments(전부 숫자·인덱스)만 쓰고 수식 문자열은 전혀 안 받으므로, 예전
+    // numerFormula/denomFormula처럼 텍스트를 중복해서 쓰다 폭주하는 위험이 구조적으로 없다.
+    if (deviceType === 'limit_approach') {
+      return `[이번 턴의 2단계 장치 지시: "다가가지만 사라지는" 장면을 device_visual에 실제로 그려라]
+narration 초반에, 어떤 지점(landmark)으로 점점 다가가는데 다가가는 대상 자체는 그 지점에서 사라지거나 의미를 잃는 장면을 등장시키고, 그 장면을 device_visual 필드로 실제로 그려야 한다(말로만 묘사하고 끝내지 마라).
+
+device_visual 형식(반드시 이 순서를 지켜라, 좌표는 숫자로만 채워라 — 수식 문자열은 여기 절대 안 들어간다):
+- kind: "mafs_shape"
+- points: 최소 2개. [0] 목표 지점(landmark, 고정 좌표, 예: 안개 속 표지판·다리 건너편 등), [1] 다가가는 주체의 현재 위치(목표에서 조금 떨어진 좌표). 각각 label을 채워라(예: "목표 지점", "다가가는 이").
+- segments: {fromPoint: 0, toPoint: 1} 하나로 둘을 잇는 경로선을 그려라.
+- xRange, yRange: 두 점이 잘 보이는 범위.
+
+이건 3단계 그래프(curves의 formula/targetX)와는 좌표계가 별개인 순수 삽화다 — 실시간으로 연동되지는 않는다. 두 점의 위치·거리감으로 "가까워지지만 정확히 닿지는 않는" 느낌만 전달하면 된다.`;
+    }
 
     if (deviceType === 'balance') {
       return `[이번 턴의 2단계 장치 지시: 양팔저울을 device_visual에 실제로 그려라]
@@ -701,7 +712,7 @@ ${ctx.instruction}${vizSection}${deviceSection}${fieldHygieneWarning}`;
     // device_visual 검증 (deviceType이 있을 때만, 관대하게 — 실패해도 학습 진행을 막지 않음).
     // "limit_approach"처럼 장치를 device_visual이 아니라 visual.curves 안(numerFormula/denomFormula)에
     // 통째로 담는 타입은 애초에 device_visual을 안 쓰므로 이 검증에서 제외한다.
-    const DEVICE_TYPES_WITHOUT_DEVICE_VISUAL = new Set(['limit_approach']);
+    const DEVICE_TYPES_WITHOUT_DEVICE_VISUAL = new Set(); // 이제 전부 device_visual을 쓴다(points/segments 기반이라 안전).
     const deviceType = mathDeviceTypeRef.current;
     if (deviceType && deviceType !== 'none' && !DEVICE_TYPES_WITHOUT_DEVICE_VISUAL.has(deviceType)) {
       if (!parsed.device_visual || typeof parsed.device_visual !== 'object') {
@@ -1890,13 +1901,21 @@ JSON만 출력하라.`;
   // 조건(mafs_shape 저울 + mafs_function curves 2개)을 만족하면 인터랙티브 연동 뷰를 그리고,
   // 아니면 deviceVisual(있으면)과 visual을 그냥 위아래로 정적으로 쌓아서 보여준다.
   function renderMathVisualArea(log, logIdx) {
-    console.log(`[디스패치 디버그] logIdx=${logIdx} mathDeviceTypeRef.current="${mathDeviceTypeRef.current}" log.visual 존재=${!!log.visual} log.visual?.kind="${log.visual?.kind}"`);
+    console.log(`[디스패치 디버그] logIdx=${logIdx} mathDeviceTypeRef.current="${mathDeviceTypeRef.current}" log.visual 존재=${!!log.visual} log.visual?.kind="${log.visual?.kind}" log.deviceVisual 존재=${!!log.deviceVisual}`);
     // 학습목표별 전용 인터랙티브 장치가 있으면 그걸 우선 쓴다.
     if (mathDeviceTypeRef.current === 'limit_approach') {
       const custom = renderDevice_no1(log, logIdx, sharedXByLog, setSharedXByLog);
       if (custom) {
-        console.log('[디스패치 디버그] renderDevice_no1이 정상적으로 화면을 반환함 — 이걸 씀.');
-        return custom;
+        console.log('[디스패치 디버그] renderDevice_no1이 정상적으로 화면을 반환함 — device_visual(있으면)과 함께 씀.');
+        // device_visual(점+선분, 저울과 같은 안전한 좌표 기반 방식)이 있으면 위에 같이 그리고,
+        // 그 아래 커스텀 그래프+드래그 위젯을 이어붙인다. device_visual은 formula를 전혀 안 쓰므로
+        // 예전 numerFormula/denomFormula 같은 폭주 위험이 없다.
+        return (
+          <>
+            {log.deviceVisual && renderVisual(log.deviceVisual)}
+            {custom}
+          </>
+        );
       }
       console.log('[디스패치 디버그] ⚠️ renderDevice_no1이 null을 반환함(위 [mathDevice_no1 디버그] 로그에서 어느 조건에 걸렸는지 확인) → 일반 렌더러로 폴백함.');
     }
