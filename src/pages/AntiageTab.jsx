@@ -2147,7 +2147,7 @@ JSON만 출력하라.`;
                   {log.narration.split('\n\n').filter(p => p.trim()).map((p, pIdx) => (
                     <p key={pIdx}>{renderTextWithMath(p.trim())}</p>
                   ))}
-                  {log.activeTrack === 'math' && renderMathVisualArea(log, logIdx)}
+                   {log.activeTrack === 'math' && log.selectedChoiceIndex === null && renderMathVisualArea(log, logIdx)}
                 </div>
 
                 {log.sceneComplete ? (
