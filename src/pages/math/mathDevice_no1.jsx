@@ -122,10 +122,23 @@ export function renderDevice_no1(log, logIdx, sharedXByLog, setSharedXByLog) {
   }
   console.log(`${DEBUG} ✅ 여기까지 통과 — 메인 곡선(formula="${c0.formula}") 컴파일 성공. 아래부터는 막대(선택)와 그래프를 그린다.`);
 
-  const numerCompiled = c0.numerFormula ? safeCompile(c0.numerFormula, 'explicit') : null;
-  const denomCompiled = c0.denomFormula ? safeCompile(c0.denomFormula, 'explicit') : null;
+  // 서버가 numerFormula/denomFormula에 폭주한 값(예: "x*x/x*x/..."가 수백 번 반복)을 보낸 사례가
+  // 실제로 있었다. 검증 단계(validateVisualContent)에서 60자 넘으면 재시도시키지만, 혹시 그걸
+  // 뚫고 여기까지 왔더라도 렌더러가 또 한 번 방어한다 — 60자 넘으면 아예 없는 것처럼 취급한다.
+  const MAX_SUBFORMULA_LEN = 60;
+  const numerFormulaRaw = (typeof c0.numerFormula === 'string' && c0.numerFormula.length <= MAX_SUBFORMULA_LEN) ? c0.numerFormula : null;
+  const denomFormulaRaw = (typeof c0.denomFormula === 'string' && c0.denomFormula.length <= MAX_SUBFORMULA_LEN) ? c0.denomFormula : null;
+  if (typeof c0.numerFormula === 'string' && c0.numerFormula.length > MAX_SUBFORMULA_LEN) {
+    console.warn(`[mathDevice_no1 디버그] numerFormula가 ${c0.numerFormula.length}자로 비정상적으로 길어 무시함(막대 생략됨):`, c0.numerFormula.slice(0, 80) + '...');
+  }
+  if (typeof c0.denomFormula === 'string' && c0.denomFormula.length > MAX_SUBFORMULA_LEN) {
+    console.warn(`[mathDevice_no1 디버그] denomFormula가 ${c0.denomFormula.length}자로 비정상적으로 길어 무시함(막대 생략됨):`, c0.denomFormula.slice(0, 80) + '...');
+  }
+
+  const numerCompiled = numerFormulaRaw ? safeCompile(numerFormulaRaw, 'explicit') : null;
+  const denomCompiled = denomFormulaRaw ? safeCompile(denomFormulaRaw, 'explicit') : null;
   const canDrawBars = !!(numerCompiled && denomCompiled);
-  console.log(`${DEBUG} numerFormula="${c0.numerFormula ?? '(없음)'}" denomFormula="${c0.denomFormula ?? '(없음)'}" → canDrawBars=${canDrawBars}${canDrawBars ? '' : ' (막대 장치는 생략되고 그래프만 표시됨 — 이건 정상 동작이다, numer/denom을 안 보냈을 때의 의도된 폴백)'}`);
+  console.log(`${DEBUG} numerFormula="${c0.numerFormula ?? '(없음)'}" denomFormula="${c0.denomFormula ?? '(없음)'}" → canDrawBars=${canDrawBars}${canDrawBars ? '' : ' (막대 장치는 생략되고 그래프만 표시됨 — 이건 정상 동작이다, numer/denom을 안 보냈거나 폭주값이라 무시됐을 때의 의도된 폴백)'}`);
 
   const xRange = toRange(v.xRange, [-10, 10]);
   const yRange = toRange(v.yRange, [-10, 10]);

@@ -695,6 +695,21 @@ ${ctx.instruction}${vizSection}${deviceSection}${fieldHygieneWarning}`;
       if (v.curves.length > 0 && !hasValidCurve) {
         problems.push('visual.curves가 있지만 그 안에 mathjs로 계산 가능한 formula를 가진 곡선이 하나도 없다. 최소 1개는 유효한 formula로 채워라.');
       }
+      // numerFormula/denomFormula("limit_approach" 전용)가 비정상적으로 길거나(반복 폭주 등)
+      // 컴파일이 안 되면, 막대 렌더러가 그 값을 그대로 쓰다 이상한 결과를 낼 수 있다.
+      // 실제로 이런 사고가 있었다: "sin(x) * 10 / 10 + x * 0.001 - ..." 식으로 x*x/x*x/...가
+      // 수백 번 반복되며 폭주한 사례. 60자를 넘거나 컴파일 실패하면 문제로 잡는다.
+      v.curves.forEach((curve, i) => {
+        ['numerFormula', 'denomFormula'].forEach((key) => {
+          const val = curve && curve[key];
+          if (typeof val !== 'string' || val.length === 0) return;
+          if (val.length > 60) {
+            problems.push(`curves[${i}].${key}가 ${val.length}자로 비정상적으로 길다(60자 제한). 반복되는 무의미한 항(예: x*x/x*x/... 폭주)이 섞였을 가능성이 크다. 짧고 단순한 수식(예: "sin(x)", "x-1")으로 다시 써라.`);
+          } else if (!safeCompile(val, 'explicit')) {
+            problems.push(`curves[${i}].${key}("${val}")가 mathjs로 컴파일되지 않는다. 유효한 수식으로 다시 써라.`);
+          }
+        });
+      });
     }
 
     // device_visual 검증 (deviceType이 있을 때만, 관대하게 — 실패해도 학습 진행을 막지 않음).
@@ -832,6 +847,14 @@ ${ctx.instruction}${vizSection}${deviceSection}${fieldHygieneWarning}`;
 
       const resultText = data.candidates && data.candidates[0]?.content?.parts?.[0]?.text;
       if (!resultText) {
+        const finishReason = data.candidates?.[0]?.finishReason;
+        // RECITATION(저작권 유사 판정)·SAFETY 등으로 구글이 응답 자체를 막은 경우 — 우리 쪽 파싱 문제가
+        // 아니라 이번 시도 하나가 차단된 것뿐이므로, 재시도하면 되는 에러라고 표시해둔다.
+        if (finishReason === 'RECITATION' || finishReason === 'SAFETY' || finishReason === 'OTHER') {
+          const err = new Error(`Gemini가 finishReason="${finishReason}"로 이번 응답을 차단했다(내용이 저작권 자료와 비슷하다고 판단되었거나 안전 필터에 걸림). 같은 상황을 유지한 채 표현만 바꿔서 다시 응답해야 한다.`);
+          err.isRetryableBlock = true;
+          throw err;
+        }
         throw new Error('API 응답 성공했으나, 텍스트 데이터(candidates) 구조가 올바르지 않습니다: ' + JSON.stringify(data).slice(0, 300));
       }
 
@@ -908,7 +931,7 @@ ${ctx.instruction}${vizSection}${deviceSection}${fieldHygieneWarning}`;
     }
   }
 
- async function getSceneUpdate(subjectJustResolved) {
+  async function getSceneUpdate(subjectJustResolved) {
     const ctx = buildTurnContext(subjectJustResolved);
     const systemText = buildSystemInstruction(ctx);
 
