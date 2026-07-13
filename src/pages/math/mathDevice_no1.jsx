@@ -91,7 +91,11 @@ export function renderLimitApproachLinked(log, logIdx, sharedXByLog, setSharedXB
             color={Theme.red}
             onMove={(pos) => {
               const { tt } = projectOntoSegment(pos);
-              const newDist = (1 - tt) * maxDist;
+              // projectOntoSegment의 tt는 landmark에서 0, approacherStart에서 1이다.
+              // 즉 landmark(목표)에 가깝게 끌수록(tt→0) 목표까지 남은 거리도 0에 가까워져야 하므로
+              // newDist = tt * maxDist가 맞다. 예전엔 (1-tt)*maxDist로 계산해서 방향이 반대였다
+              // (목표 쪽으로 끌면 오히려 그래프 x가 목표에서 멀어지는 사고).
+              const newDist = tt * maxDist;
               setSharedX(target + sign * newDist);
             }}
           />
