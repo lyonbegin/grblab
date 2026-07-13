@@ -6,6 +6,8 @@ import { Mafs, Coordinates, Plot, Point, Line, Vector, Circle, Theme, MovablePoi
 import 'mafs/core.css';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { getDeviceRenderer } from './math/mathDeviceIndex';
+
+import { MATH_DEVICE_TEST_ITEMS } from './math/mathDeviceIndex';
 import {
 
   SYSTEM_PROMPT_COMMON_BASE,
