@@ -4,11 +4,13 @@
 // ===========================================================
 import { MATH_DEVICE_ITEM_NO8, renderDevice_no8 } from './mathDevice_no8';
 import { MATH_DEVICE_ITEM_NO1, renderDevice_no1 } from './mathDevice_no1';
+import { MATH_DEVICE_ITEM_NO1, renderDevice_no1_1 } from './mathDevice_no1_1';
 
 // 테스트용 GOALS_DATA.math 항목 목록 (각 파일에서 export한 데이터를 그대로 모음).
 export const MATH_DEVICE_TEST_ITEMS = [
   MATH_DEVICE_ITEM_NO8,
-  MATH_DEVICE_ITEM_NO1
+  MATH_DEVICE_ITEM_NO1,
+   MATH_DEVICE_ITEM_NO1_1
 ];
 
 // no별 렌더러. 함수 시그니처가 항목마다 다를 수 있다(no:8은 sharedXByLog 등 추가 인자가
@@ -16,7 +18,8 @@ export const MATH_DEVICE_TEST_ITEMS = [
 // AntiageTab.jsx 쪽에서 각 렌더러가 실제로 몇 개의 인자를 받는지 보고 맞춰 호출한다.
 export const MATH_DEVICE_RENDERERS = {
   '8': renderDevice_no8,
-  '1': renderDevice_no1
+  '1': renderDevice_no1,
+   '0': renderDevice_no1_1
 };
 
 export function getDeviceRenderer(no) {
