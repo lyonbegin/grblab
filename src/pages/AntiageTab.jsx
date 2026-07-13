@@ -30,7 +30,7 @@ import {
   BOOKS_DATA
 } from './constantsbase';
 // 학습목표별 전용 인터랙티브 장치 — deviceType으로 분기해서 쓴다(현재는 no.1 부정형 극한만).
-import { renderDevice_no1 } from './math/mathDevice_no1';
+import { renderDevice_no1, renderLimitApproachLinked } from './math/mathDevice_no1';
 
 // vizType(문자열) → 그 시각화에 필요한 프롬프트 블록 매핑.
 // "narration"은 일부러 빠져 있다 — narration 타입은 시각 자료 지시 자체를 붙이지 않는다.
@@ -481,7 +481,7 @@ device_visual 형식(반드시 이 순서를 지켜라, 좌표는 숫자로만 �
 - segments: {fromPoint: 0, toPoint: 1} 하나로 둘을 잇는 경로선을 그려라.
 - xRange, yRange: 두 점이 잘 보이는 범위.
 
-이건 3단계 그래프(curves의 formula/targetX)와는 좌표계가 별개인 순수 삽화다 — 실시간으로 연동되지는 않는다. 두 점의 위치·거리감으로 "가까워지지만 정확히 닿지는 않는" 느낌만 전달하면 된다.`;
+이 장치는 3단계 그래프와 실시간으로 연동된다: points[0](목표 지점)과 points[1](다가가는 이의 초기 위치)을 정확히 채우면, 코드가 두 점을 잇는 선 위에서 points[1]을 드래그 가능하게 만들고, 그 위치(목표까지 남은 비율)를 그래프의 x좌표와 자동으로 맞춰준다 — 장치를 움직이면 그래프도, 그래프를 움직이면 장치도 함께 움직인다. 좌표값 자체(정확한 x,y)는 임의로 잡아도 되고, 오직 "points[0]=목표, points[1]=다가가는 이의 시작 위치"라는 역할만 지켜라.`;
     }
 
     if (deviceType === 'balance') {
@@ -1904,12 +1904,14 @@ JSON만 출력하라.`;
     console.log(`[디스패치 디버그] logIdx=${logIdx} mathDeviceTypeRef.current="${mathDeviceTypeRef.current}" log.visual 존재=${!!log.visual} log.visual?.kind="${log.visual?.kind}" log.deviceVisual 존재=${!!log.deviceVisual}`);
     // 학습목표별 전용 인터랙티브 장치가 있으면 그걸 우선 쓴다.
     if (mathDeviceTypeRef.current === 'limit_approach') {
+      const linkedLimit = renderLimitApproachLinked(log, logIdx, sharedXByLog, setSharedXByLog);
+      if (linkedLimit) {
+        console.log('[디스패치 디버그] renderLimitApproachLinked(장치↔그래프 연동)이 정상 반환됨 — 이걸 씀.');
+        return linkedLimit;
+      }
       const custom = renderDevice_no1(log, logIdx, sharedXByLog, setSharedXByLog);
       if (custom) {
-        console.log('[디스패치 디버그] renderDevice_no1이 정상적으로 화면을 반환함 — device_visual(있으면)과 함께 씀.');
-        // device_visual(점+선분, 저울과 같은 안전한 좌표 기반 방식)이 있으면 위에 같이 그리고,
-        // 그 아래 커스텀 그래프+드래그 위젯을 이어붙인다. device_visual은 formula를 전혀 안 쓰므로
-        // 예전 numerFormula/denomFormula 같은 폭주 위험이 없다.
+        console.log('[디스패치 디버그] renderLimitApproachLinked는 실패(장치 데이터 부족)했지만 renderDevice_no1(그래프만)은 성공 — device_visual(있으면)과 함께 씀.');
         return (
           <>
             {log.deviceVisual && renderVisual(log.deviceVisual)}

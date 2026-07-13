@@ -17,8 +17,117 @@
 // 어떤 값에 다가가는지(또는 안 다가가는지) 실시간으로 확인한다.
 // ===========================================================
 import React from 'react';
-import { Mafs, Coordinates, Plot, Point, Theme, MovablePoint } from 'mafs';
+import { Mafs, Coordinates, Plot, Point, Line, Theme, MovablePoint } from 'mafs';
 import { safeCompile, toRange, approxLimitAt } from './mathDeviceShared';
+
+// deviceVisual(점 2개: 목표 지점+다가가는 이, mafs_shape) + visual(mafs_function, curves 1개 +
+// targetX)을 같은 화면에 그리고, 서로 sharedX 하나를 공유해 실시간 연동시킨다. 저울과 같은
+// 원리: 도형 쪽 점을 선분 위에서 드래그하면 그 위치(목표까지 남은 비율)를 그래프의 x로
+// 역산하고, 반대로 그래프 점을 드래그하면 그 x에 맞춰 도형 쪽 점이 선분 위 해당 위치로 이동한다.
+// AntiageTab.jsx의 renderMathVisualArea가 device_visual이 있을 때 이 함수를 먼저 시도하고,
+// 실패하면(장치 데이터 부족) 아래 renderDevice_no1(그래프만)으로 폴백한다.
+export function renderLimitApproachLinked(log, logIdx, sharedXByLog, setSharedXByLog) {
+  const dv = log.deviceVisual;
+  const v = log.visual;
+  if (!dv || dv.kind !== 'mafs_shape' || !v || v.kind !== 'mafs_function') return null;
+  const curves = (v.curves || []).filter(c => c && c.formula);
+  if (curves.length < 1) return null;
+  const c0 = curves[0];
+  const compiled = safeCompile(c0.formula, c0.kind);
+  if (!compiled) return null;
+  const dPoints = Array.isArray(dv.points) ? dv.points : [];
+  if (dPoints.length < 2) return null;
+
+  const xRange = toRange(v.xRange, [-10, 10]);
+  const yRange = toRange(v.yRange, [-10, 10]);
+  const target = typeof c0.targetX === 'number' && Number.isFinite(c0.targetX)
+    ? c0.targetX
+    : (xRange[0] + xRange[1]) / 2;
+
+  const landmark = dPoints[0];        // 목표 지점(고정)
+  const approacherStart = dPoints[1]; // 다가가는 이의 "가장 먼" 초기 위치(고정 기준점)
+
+  const initialX = target + (xRange[1] - target) * 0.3;
+  const sign = Math.sign(initialX - target) || 1;
+  const maxDist = Math.max(Math.abs(xRange[0] - target), Math.abs(xRange[1] - target), 1e-6);
+
+  const sharedX = sharedXByLog?.[logIdx] ?? initialX;
+  const setSharedX = (x) => {
+    const clamped = Math.min(xRange[1], Math.max(xRange[0], x));
+    setSharedXByLog?.(prev => ({ ...prev, [logIdx]: clamped }));
+  };
+
+  const dist = Math.abs(sharedX - target);
+  const t = Math.min(1, Math.max(0, 1 - dist / maxDist)); // 0=멀다, 1=거의 도착
+
+  const liveX = approacherStart.x + (landmark.x - approacherStart.x) * t;
+  const liveY = approacherStart.y + (landmark.y - approacherStart.y) * t;
+
+  const dXRange = toRange(dv.xRange, [Math.min(landmark.x, approacherStart.x) - 2, Math.max(landmark.x, approacherStart.x) + 2]);
+  const dYRange = toRange(dv.yRange, [Math.min(landmark.y, approacherStart.y) - 2, Math.max(landmark.y, approacherStart.y) + 2]);
+
+  let currentY;
+  try { currentY = compiled.evaluate({ x: sharedX }); } catch (e) { currentY = NaN; }
+
+  // 선분(landmark ↔ approacherStart) 위로만 드래그를 투영하는 헬퍼.
+  const projectOntoSegment = (pos) => {
+    const dx = approacherStart.x - landmark.x, dy = approacherStart.y - landmark.y;
+    const len2 = dx * dx + dy * dy || 1e-9;
+    let tt = ((pos[0] - landmark.x) * dx + (pos[1] - landmark.y) * dy) / len2;
+    tt = Math.min(1, Math.max(0, tt));
+    return { point: [landmark.x + dx * tt, landmark.y + dy * tt], tt };
+  };
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+      <div className="viz-box" style={{ background: '#f5f2e8', borderRadius: '10px', padding: '6px' }}>
+        <Mafs viewBox={{ x: dXRange, y: dYRange }} preserveAspectRatio={false} height={220}>
+          {/* 좌표축·눈금 없음 — 수학 그래프가 아니라 장치 "그림"이어야 하기 때문 */}
+          <Line.Segment point1={[landmark.x, landmark.y]} point2={[approacherStart.x, approacherStart.y]} color="#bbb" />
+          <Point x={landmark.x} y={landmark.y} color={Theme.blue} />
+          <MovablePoint
+            point={[liveX, liveY]}
+            constrain={(pos) => projectOntoSegment(pos).point}
+            color={Theme.red}
+            onMove={(pos) => {
+              const { tt } = projectOntoSegment(pos);
+              const newDist = (1 - tt) * maxDist;
+              setSharedX(target + sign * newDist);
+            }}
+          />
+        </Mafs>
+        <div style={{ fontSize: '12px', color: '#5f5e5a', textAlign: 'center' }}>
+          빨간 점을 목표 지점(파란 점) 쪽으로 끌어보세요
+        </div>
+      </div>
+      <div className="viz-box">
+        <Mafs viewBox={{ x: xRange, y: yRange }} preserveAspectRatio={false} height={320}>
+          <Coordinates.Cartesian />
+          <Plot.OfX
+            y={(x) => {
+              if (Math.abs(x - target) < 1e-6) return NaN;
+              try { return compiled.evaluate({ x }); } catch (e) { return NaN; }
+            }}
+            color={Theme.blue}
+          />
+          <MovablePoint
+            point={[sharedX, Number.isFinite(currentY) ? currentY : 0]}
+            constrain={(pos) => {
+              const clampedX = Math.min(xRange[1], Math.max(xRange[0], pos[0]));
+              let y; try { y = compiled.evaluate({ x: clampedX }); } catch (e) { y = NaN; }
+              return [clampedX, Number.isFinite(y) ? y : pos[1]];
+            }}
+            color={Theme.green}
+            onMove={(pos) => setSharedX(pos[0])}
+          />
+        </Mafs>
+        <div style={{ fontSize: '12px', color: '#5f5e5a', textAlign: 'center' }}>
+          지금 x = {sharedX.toFixed(2)} · f(x) = {Number.isFinite(currentY) ? currentY.toFixed(3) : '정의 안 됨'}
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export function renderDevice_no1(log, logIdx, sharedXByLog, setSharedXByLog) {
   const DEBUG = '[mathDevice_no1 디버그]';
