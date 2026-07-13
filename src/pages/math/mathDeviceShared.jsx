@@ -31,3 +31,24 @@ export function approxLimitAt(compiled, target, epsilon = 1e-4) {
   try { right = compiled.evaluate({ x: target + epsilon }); } catch (e) { /* 무시 */ }
   return { left, right };
 }
+
+export function findXForDiff(compiledA, compiledB, xMin, xMax, target, steps = 400) {
+  let bestX = (xMin + xMax) / 2;
+  let bestErr = Infinity;
+  let prevX = null, prevVal = null;
+  for (let i = 0; i <= steps; i++) {
+    const x = xMin + (i / steps) * (xMax - xMin);
+    let a, b;
+    try { a = compiledA.evaluate({ x }); b = compiledB.evaluate({ x }); } catch (e) { continue; }
+    if (!Number.isFinite(a) || !Number.isFinite(b)) continue;
+    const val = a - b;
+    if (prevVal !== null && ((prevVal - target) < 0) !== ((val - target) < 0)) {
+      const t = (target - prevVal) / (val - prevVal);
+      return prevX + t * (x - prevX);
+    }
+    const err = Math.abs(val - target);
+    if (err < bestErr) { bestErr = err; bestX = x; }
+    prevX = x; prevVal = val;
+  }
+  return bestX;
+}
