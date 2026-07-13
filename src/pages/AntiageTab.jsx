@@ -1859,10 +1859,15 @@ JSON만 출력하라.`;
   // 조건(mafs_shape 저울 + mafs_function curves 2개)을 만족하면 인터랙티브 연동 뷰를 그리고,
   // 아니면 deviceVisual(있으면)과 visual을 그냥 위아래로 정적으로 쌓아서 보여준다.
   function renderMathVisualArea(log, logIdx) {
+    console.log(`[디스패치 디버그] logIdx=${logIdx} mathDeviceTypeRef.current="${mathDeviceTypeRef.current}" log.visual 존재=${!!log.visual} log.visual?.kind="${log.visual?.kind}"`);
     // 학습목표별 전용 인터랙티브 장치가 있으면 그걸 우선 쓴다.
     if (mathDeviceTypeRef.current === 'limit_approach') {
       const custom = renderDevice_no1(log, logIdx, sharedXByLog, setSharedXByLog);
-      if (custom) return custom;
+      if (custom) {
+        console.log('[디스패치 디버그] renderDevice_no1이 정상적으로 화면을 반환함 — 이걸 씀.');
+        return custom;
+      }
+      console.log('[디스패치 디버그] ⚠️ renderDevice_no1이 null을 반환함(위 [mathDevice_no1 디버그] 로그에서 어느 조건에 걸렸는지 확인) → 일반 렌더러로 폴백함.');
     }
     const linked = renderBalanceGraphLinked(log, logIdx);
     if (linked) return linked;

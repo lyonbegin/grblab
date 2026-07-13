@@ -19,56 +19,14 @@
 //
 // 기본 함수는 sin(x)/x, 목표 x=0, 수렴값 1 (0/0의 원조 사례, 순간속도에서 뉴턴이 막힌 그 형태).
 // ===========================================================
+// ===========================================================
+// 참고: 이 장치가 기대하는 데이터 모양(vizType/deviceType/graphRule)의 실제 정본은
+// constantsbase.ts의 GOALS_DATA.math 배열(no:"1" 항목)이다 — 여기엔 중복해서 두지 않는다.
+// 이 파일은 오직 렌더링 함수(renderDevice_no1)만 export한다.
+// ===========================================================
 import React from 'react';
 import { Mafs, Coordinates, Plot, Point, Theme, MovablePoint } from 'mafs';
 import { safeCompile, toRange, approxLimitAt } from './mathDeviceShared';
-
-export const MATH_DEVICE_ITEM_NO1 = {
-  part: "Ⅰ부",
-  category: "도구 1. 미분",
-  no: "1",
-  title: "부정형 극한(0/0)",
-  difficulty: "2.2 (하)",
-  trend: "초반부 3점 계산 위주 출제",
-  vizType: "mafs_function",
-  deviceType: "limit_approach",
-  graphRule: `부정형 극한(0/0) — 초등 선행 개념훈련, 6사건 서사판
-수학 지식이 하나도 없다는 전제. 수학자가 실제로 부딪힌 벽을 여러 사건으로 되밟아 마지막에 '극한'에 도달한다. 사건마다 앞의 벽이 다음 사건을 낳는다.
-
-사건 1 — 나눗셈이 막히는 순간 (수 감각만)
-사탕 6개를 3명이 나누면 2개씩. 그럼 6개를 0명이 나누면? 나눠줄 사람이 없다. 답이 없다. → 첫 벽: "0으로 나누는 건 안 되는구나."
-
-사건 2 — 그런데 0에 가까워지면?
-6을 어떤 수로 나눈 값을, 나누는 수를 3→1→0.1로 0에 가까이 보내면 몫이 쑥쑥 커진다. → 첫 극한 감각: 다가가면 값이 어디로 가는지 보인다(여기선 무한대).
-
-사건 3 — 위도 0, 아래도 0이면?
-이번엔 위(나눠지는 수)도 같이 0으로 간다(움직이다 멈추는 순간: 걸린 시간 0, 간 거리도 0). 위도 0, 아래도 0 = 0/0. → 새 벽: "이번엔 위가 안 버텨주네. 막대는 커질까, 0이 될까, 아니면?"
-
-사건 4 — 두 막대로 직접 조여보기 (핵심)
-분자막대(위)와 분모막대(아래)를 나란히. 손잡이를 목표로 밀면 둘 다 동시에 짧아진다. 옆의 비율 숫자를 보게 한다. → 정답판별턴 질문: "둘 다 0으로 사라지는데 비율은?" 1) 0  2) 하나의 값으로 좁혀진다  3) 끝없이 커진다 → 정답 2).
-
-사건 5 — 좌우가 만나는가
-왼쪽에서 밀 때와 오른쪽에서 밀 때 비율이 같은 곳에서 만나는지 양쪽으로 조여본다. 만나면 그게 극한, 어긋나면 극한 없음.
-
-사건 6 — 곡선으로 펼쳐 확인
-막대 비율을 곡선으로 편다. 목표 지점엔 구멍(정의 안 됨), 좌우에서 곡선을 따라가면 그 구멍 자리로 좁혀진다. 사건 4~5에서 밀던 손잡이 위치가 그래프 빨간 점으로 넘어온다.
-
-도달점 — "정확히 그 점은 못 밟아도, 좌우에서 다가가면 값이 하나로 정해진다" = 극한. '극한'이란 단어도 공식도 없이 개념을 몸으로 통과한다.
-
-[실제 구현 규격 — 반드시 지켜라]
-- visual.kind="mafs_function", curves는 정확히 1개.
-- 그 curves[0]에는 세 가지 식을 모두 채워라:
-  · formula: 합쳐진 분수 함수(그래프용). 예: "sin(x)/x"
-  · numerFormula: 분자식만. 예: "sin(x)"
-  · denomFormula: 분모식만. 예: "x"
-  이 세 식이 다 있어야 두 막대(분자·분모)가 화면에 정확히 그려진다. numerFormula/denomFormula를 빠뜨리면 막대가 안 나온다.
-- 기본 예: formula "sin(x)/x", numerFormula "sin(x)", denomFormula "x" (목표 x=0, 수렴값 1).
-  다른 예: formula "(x^2-1)/(x-1)", numerFormula "x^2-1", denomFormula "x-1" (목표 x=1, 수렴값 2).
-- 목표 지점(구멍)은 코드가 분모식이 0이 되는 곳을 자동으로 찾으므로 별도 필드 불필요.
-- 아이는 손잡이(슬라이더/빨간 점)를 목표 지점으로 밀며, 두 막대가 함께 0으로 사라져도 비율은 한 값으로 좁혀지는 걸 직접 확인한다.`
-};
-
-// 분모식이 0이 되는 지점(=0/0 구멍의 x좌표)을 xRange 안에서 찾는다.
 function findHoleByDenominator(denomCompiled, xMin, xMax, steps = 2000) {
   const dx = (xMax - xMin) / steps;
   let prevX = null, prevV = null;
@@ -135,31 +93,55 @@ function TwoBarsDevice({ numerCompiled, denomCompiled, currentX, limitValue }) {
 }
 
 export function renderDevice_no1(log, logIdx, sharedXByLog, setSharedXByLog) {
+  const DEBUG = '[mathDevice_no1 디버그]';
   const v = log.visual;
-  if (!v || v.kind !== 'mafs_function') return null;
-  const curves = (v.curves || []).filter(c => c && c.formula);
-  if (curves.length < 1) return null;
+
+  if (!v) {
+    console.log(`${DEBUG} 중단: log.visual 자체가 없다(null/undefined). 서버가 이번 턴에 visual을 아예 안 보냈거나, 검증 실패로 null 처리됐을 가능성이 크다. log 전체:`, log);
+    return null;
+  }
+  if (v.kind !== 'mafs_function') {
+    console.log(`${DEBUG} 중단: visual.kind가 "mafs_function"이 아니라 "${v.kind}"다. 모델이 vizType 지시를 안 따랐다. visual 전체:`, v);
+    return null;
+  }
+
+  const rawCurves = Array.isArray(v.curves) ? v.curves : [];
+  const curves = rawCurves.filter(c => c && c.formula);
+  console.log(`${DEBUG} visual.curves 원본(필터 전, ${rawCurves.length}개):`, JSON.stringify(rawCurves));
+  if (curves.length < 1) {
+    console.log(`${DEBUG} 중단: formula가 있는 curve가 하나도 없다(필터 후 0개). 서버가 curves는 보냈지만 formula 필드가 비어있거나 curves 자체가 빈 배열이다.`);
+    return null;
+  }
 
   const c0 = curves[0];
+  console.log(`${DEBUG} curves[0] 사용할 항목:`, JSON.stringify(c0));
   const compiled = safeCompile(c0.formula, c0.kind);
-  if (!compiled) return null;
+  if (!compiled) {
+    console.log(`${DEBUG} 중단: formula "${c0.formula}"(kind=${c0.kind})가 mathjs로 컴파일 실패했다. 수식 문법 오류일 가능성이 크다.`);
+    return null;
+  }
+  console.log(`${DEBUG} ✅ 여기까지 통과 — 메인 곡선(formula="${c0.formula}") 컴파일 성공. 아래부터는 막대(선택)와 그래프를 그린다.`);
 
   const numerCompiled = c0.numerFormula ? safeCompile(c0.numerFormula, 'explicit') : null;
   const denomCompiled = c0.denomFormula ? safeCompile(c0.denomFormula, 'explicit') : null;
   const canDrawBars = !!(numerCompiled && denomCompiled);
+  console.log(`${DEBUG} numerFormula="${c0.numerFormula ?? '(없음)'}" denomFormula="${c0.denomFormula ?? '(없음)'}" → canDrawBars=${canDrawBars}${canDrawBars ? '' : ' (막대 장치는 생략되고 그래프만 표시됨 — 이건 정상 동작이다, numer/denom을 안 보냈을 때의 의도된 폴백)'}`);
 
   const xRange = toRange(v.xRange, [-10, 10]);
   const yRange = toRange(v.yRange, [-10, 10]);
+  console.log(`${DEBUG} xRange=${JSON.stringify(xRange)} yRange=${JSON.stringify(yRange)}`);
 
   let target = null;
   if (denomCompiled) {
     target = findHoleByDenominator(denomCompiled, xRange[0], xRange[1]);
   }
+  console.log(`${DEBUG} target(구멍 x좌표)=${target} (denomCompiled 있음=${!!denomCompiled})`);
 
   const { left, right } = target !== null ? approxLimitAt(compiled, target) : { left: NaN, right: NaN };
   const limitValue = (Number.isFinite(left) && Number.isFinite(right) && Math.abs(left - right) < 1e-2)
     ? (left + right) / 2
     : null;
+  console.log(`${DEBUG} left=${left} right=${right} limitValue=${limitValue}`);
 
   const defaultX = target !== null ? target + (xRange[1] - target) * 0.3 : (xRange[0] + xRange[1]) / 2;
   const currentX = sharedXByLog?.[logIdx] ?? defaultX;
