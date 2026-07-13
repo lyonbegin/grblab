@@ -908,7 +908,7 @@ ${ctx.instruction}${vizSection}${deviceSection}${fieldHygieneWarning}`;
     }
   }
 
-  async function getSceneUpdate(subjectJustResolved) {
+ async function getSceneUpdate(subjectJustResolved) {
     const ctx = buildTurnContext(subjectJustResolved);
     const systemText = buildSystemInstruction(ctx);
 
@@ -916,7 +916,29 @@ ${ctx.instruction}${vizSection}${deviceSection}${fieldHygieneWarning}`;
 
     for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
       const messagesToSend = getMessagesForAPI();
-      const rawText = await callGeminiAPI(messagesToSend, systemText);
+
+      let rawText;
+      try {
+        rawText = await callGeminiAPI(messagesToSend, systemText);
+      } catch (callErr) {
+        // 이전에는 여기서 catch 없이 바로 밖으로 던져서, RECITATION 차단 같은 "재시도하면 되는"
+        // 에러 하나에 턴 전체가 죽어버렸다. 이제는 재시도 예산 안에서 한 번 더 시도한다.
+        lastError = callErr;
+        console.warn(`[재시도 디버그] (시도 ${attempt}/${MAX_ATTEMPTS}) API 호출 자체가 실패해 재시도함:`, callErr.message);
+        if (callErr.isRetryableBlock) {
+          messagesRef.current.push({
+            role: 'user',
+            content: `[주의] 직전 시도가 차단되었다: ${callErr.message} 같은 상황·같은 학습목표를 유지한 채, 문장 표현만 바꿔서(특히 교과서 문장을 그대로 옮긴 것처럼 보일 수 있는 부분을) 다시 써라. JSON만 출력하라.`
+          });
+        }
+        continue;
+      }
+
+      // 서버가 이번 시도에서 실제로 보낸 원문 그대로 — 파싱/검증/재시도 판단이 일어나기 전에
+      // 무조건 먼저 찍는다. 파싱이 깨지거나 검증에서 걸려도 이 로그는 항상 남으므로,
+      // "재시도되기 전에 뭘 받았는지" 여기서 그대로 확인할 수 있다.
+      console.log(`[원문 디버그] (시도 ${attempt}/${MAX_ATTEMPTS}) 서버 원문 그대로:`);
+      console.log(rawText);
 
       let parsed;
       try {
