@@ -30,7 +30,7 @@ import {
   BOOKS_DATA
 } from './constantsbase';
 // 학습목표별 전용 인터랙티브 장치 — deviceType으로 분기해서 쓴다(현재는 no.1 부정형 극한만).
-import { renderDevice_no1 } from './renderDevice_no1';
+import { renderDevice_no1 } from './math/mathDevice_no1';
 
 // vizType(문자열) → 그 시각화에 필요한 프롬프트 블록 매핑.
 // "narration"은 일부러 빠져 있다 — narration 타입은 시각 자료 지시 자체를 붙이지 않는다.
