@@ -3,6 +3,7 @@ import { renderDevice_no1, renderLimitApproachLinked } from './mathDevice_no1';
 import { renderDevice_no1_1 } from './mathDevice_no1_1';
 import { renderDivGt1 } from './mathDevice_div_gt1';
 import { renderDivLt1 } from './mathDevice_div_lt1';
+import { renderInfDiv } from './mathDevice_infdiv';
 // deviceType(+선택 no) → 렌더러. 새 장치는 여기 한 줄만 추가.
 const REGISTRY = [
   { deviceType: 'balance',        no: '8', render: renderDevice_no8,   needsDeviceVisual: true },
@@ -10,6 +11,7 @@ const REGISTRY = [
   { deviceType: 'limit_approach', no: '0', render: renderDevice_no1_1, needsDeviceVisual: true },
   { deviceType: 'divide_shrink',  no: 'div1', render: renderDivGt1,    needsDeviceVisual: false },
    { deviceType: 'divide_grow',   no: 'div2', render: renderDivLt1,       needsDeviceVisual: false },
+   { deviceType: 'inf_over_inf', no: 'infdiv', render: renderInfDiv, needsDeviceVisual: false },
 ];
 
 const BY_NO = {}, BY_DEVICE_TYPE = {};
