@@ -5,6 +5,7 @@ import 'katex/dist/katex.min.css';
 import { Mafs, Coordinates, Plot, Point, Line, Vector, Circle, Theme, MovablePoint } from 'mafs';
 import 'mafs/core.css';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { getDeviceRenderer } from './math/mathDeviceIndex';
 import {
 
   SYSTEM_PROMPT_COMMON_BASE,
@@ -266,6 +267,8 @@ export default function SceneGeneratorEngine() {
   const mathVizTypeRef = useRef('narration');
   // 이번 장면 수학 목표의 deviceType(2단계 장치 종류, 없으면 'none'). startScene에서 채워지고 고정된다.
   const mathDeviceTypeRef = useRef('none');
+  // 이번 장면 수학 목표의 no(학습 항목 번호). math/ 폴더의 항목별 렌더러를 조회할 때 쓴다.
+  const mathItemNoRef = useRef(null);
   useEffect(() => { trackCompletedTurnsRef.current = trackCompletedTurns; }, [trackCompletedTurns]);
   useEffect(() => { trackAttemptsRef.current = trackAttempts; }, [trackAttempts]);
 
@@ -1084,7 +1087,8 @@ JSON만 출력하라.`;
     // 이 한 줄은 "서버가 뭘 보내야 정상인지"의 기준값이라 항상 찍어둔다.
     mathVizTypeRef.current = GOALS_DATA.math[goals.math]?.vizType || 'narration';
     mathDeviceTypeRef.current = GOALS_DATA.math[goals.math]?.deviceType || 'none';
-    console.log('[시각자료 디버그] 이번 장면 수학 vizType(기대값):', mathVizTypeRef.current, '/ deviceType:', mathDeviceTypeRef.current);
+    mathItemNoRef.current = GOALS_DATA.math[goals.math]?.no || null;
+    console.log('[시각자료 디버그] 이번 장면 수학 vizType(기대값):', mathVizTypeRef.current, '/ deviceType:', mathDeviceTypeRef.current, '/ no:', mathItemNoRef.current);
 
     // 과목별 모드(발견형/문제유형형)를 먼저 확정한다. 영어·수학은 항상 문제유형형,
     // 국어는 선택된 목표(mid)에 따라 자동 분기된다. 이 값은 장면이 끝날 때까지 고정된다.
@@ -1204,146 +1208,6 @@ JSON만 출력하라.`;
     return Array.isArray(range) && range.length === 2 ? range : fallback;
   }
 
-  // ===========================================================
-  // 저울 ↔ 그래프 인터랙티브 연동
-  // "A(x)-B(x) = target" 이 되는 x를 xRange 안에서 찾는다(부호가 바뀌는 구간을 선형보간,
-  // 못 찾으면 가장 가까운 값). 저울 접시를 드래그해서 만든 기울기(target)를 그래프의 x로
-  // 역산할 때 쓴다 — curve가 임의의 식이라 정확한 역함수 대신 표본 탐색으로 근사한다.
-  // ===========================================================
-  function findXForDiff(compiledA, compiledB, xMin, xMax, target, steps = 400) {
-    let bestX = (xMin + xMax) / 2;
-    let bestErr = Infinity;
-    let prevX = null, prevVal = null;
-    for (let i = 0; i <= steps; i++) {
-      const x = xMin + (i / steps) * (xMax - xMin);
-      let a, b;
-      try { a = compiledA.evaluate({ x }); b = compiledB.evaluate({ x }); } catch (e) { continue; }
-      if (!Number.isFinite(a) || !Number.isFinite(b)) continue;
-      const val = a - b;
-      if (prevVal !== null && ((prevVal - target) < 0) !== ((val - target) < 0)) {
-        const t = (target - prevVal) / (val - prevVal);
-        return prevX + t * (x - prevX);
-      }
-      const err = Math.abs(val - target);
-      if (err < bestErr) { bestErr = err; bestX = x; }
-      prevX = x; prevVal = val;
-    }
-    return bestX;
-  }
-
-  // deviceVisual(저울, mafs_shape) + visual(mafs_function, curves 정확히 2개)을 같은 화면에
-  // 위아래로 그리고, 오른쪽 접시(점)를 드래그하면 그 기울기가 실시간으로 x로 역산되어
-  // 아래 그래프의 점이 같은 x로 이동한다. 반대로 그래프 점을 드래그해도 x가 갱신되어
-  // 저울 기울기가 그만큼 다시 계산된다 — 두 그림이 "sharedX" 하나를 공유해서 보여주는 구조.
-  function renderBalanceGraphLinked(log, logIdx) {
-    const dv = log.deviceVisual;
-    const v = log.visual;
-    if (!dv || dv.kind !== 'mafs_shape' || !v || v.kind !== 'mafs_function') return null;
-    const curves = (v.curves || []).filter(c => c && c.formula);
-    if (curves.length !== 2) return null;
-    const compiledA = safeCompile(curves[0].formula, curves[0].kind);
-    const compiledB = safeCompile(curves[1].formula, curves[1].kind);
-    if (!compiledA || !compiledB) return null;
-    const dPoints = Array.isArray(dv.points) ? dv.points : [];
-    if (dPoints.length < 3) return null;
-    const dSegments = Array.isArray(dv.segments) ? dv.segments : [];
-
-    const xRange = toRange(v.xRange, [-10, 10]);
-    const yRange = toRange(v.yRange, [-10, 10]);
-
-    const sharedX = sharedXByLog[logIdx] ?? (xRange[0] + xRange[1]) / 2;
-    const setSharedX = (x) => {
-      const clamped = Math.min(xRange[1], Math.max(xRange[0], x));
-      setSharedXByLog(prev => ({ ...prev, [logIdx]: clamped }));
-    };
-
-    let yA = NaN, yB = NaN;
-    try { yA = compiledA.evaluate({ x: sharedX }); } catch (e) { /* 무시 */ }
-    try { yB = compiledB.evaluate({ x: sharedX }); } catch (e) { /* 무시 */ }
-    const diff = (Number.isFinite(yA) && Number.isFinite(yB)) ? (yA - yB) : 0;
-    const isBalanced = Math.abs(diff) < (Math.max(1, Math.abs(dPoints[0].y)) * 0.01 + 0.05);
-    const tiltScale = 0.2; // diff 1단위당 접시가 움직이는 y거리(장치 표현용 배율, 실제 눈금 아님)
-
-    // "받침점=0번, 왼쪽 접시=1번, 오른쪽 접시=2번" 이라는 인덱스 규칙만 코드가 알고 있다(그래야
-    // 어느 점을 드래그시킬지, 어느 점을 diff로 움직일지 알 수 있다). 그 외에 이 점이 "저울"인지,
-    // 몇 개의 점으로 어떤 모양을 이루는지는 전혀 모른다 — 그건 전부 points/segments 데이터다.
-    // livePoints: 1번·2번 점의 y좌표만 diff에 따라 실시간으로 덮어쓴 좌표 목록(그리기용).
-    const baseY = dPoints[0].y;
-    const livePoints = dPoints.map((p, i) => {
-      if (i === 1) return { ...p, y: baseY + diff * tiltScale };
-      if (i === 2) return { ...p, y: baseY - diff * tiltScale };
-      return p;
-    });
-
-    const dXRange = toRange(dv.xRange, [dPoints[0].x - 4, dPoints[0].x + 4]);
-    const dYRange = toRange(dv.yRange, [baseY - 3, baseY + 3]);
-
-    return (
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-        <div className="viz-box" style={{ background: '#f5f2e8', borderRadius: '10px', padding: '6px' }}>
-          <Mafs viewBox={{ x: dXRange, y: dYRange }} preserveAspectRatio={false} height={220}>
-            {/* 좌표축·눈금은 일부러 안 그린다 — 수학 그래프가 아니라 장치 "그림"이어야 하기 때문 */}
-            {/* segments/points는 전부 모델 데이터다. 렌더러는 fromPoint/toPoint 인덱스로 livePoints에서
-                현재 좌표를 찾아 선을 긋고, 점을 찍을 뿐 — 이게 저울대인지 받침대인지 전혀 모른다. */}
-            {dSegments.map((s, i) => {
-              const p1 = livePoints[s.fromPoint];
-              const p2 = livePoints[s.toPoint];
-              if (!p1 || !p2) return null;
-              const isBeam = (s.fromPoint === 1 && s.toPoint === 2) || (s.fromPoint === 2 && s.toPoint === 1);
-              return (
-                <Line.Segment
-                  key={`seg${i}`}
-                  point1={[p1.x, p1.y]}
-                  point2={[p2.x, p2.y]}
-                  color={isBeam && isBalanced ? Theme.green : (s.color || '#8a7f6a')}
-                />
-              );
-            })}
-            {livePoints.map((p, i) => {
-              if (i === 2) {
-                // 오른쪽 접시(2번 점)만 드래그 가능 — 인터랙션이 필요한 유일한 지점이라 여기만 코드가 관여한다.
-                return (
-                  <MovablePoint
-                    key="movable-pan"
-                    point={[p.x, p.y]}
-                    constrain={(pos) => [p.x, pos[1]]}
-                    color={Theme.red}
-                    onMove={(pos) => {
-                      const newDiff = (baseY - pos[1]) / tiltScale;
-                      const newX = findXForDiff(compiledA, compiledB, xRange[0], xRange[1], newDiff);
-                      setSharedX(newX);
-                    }}
-                  />
-                );
-              }
-              return typeof p.x === 'number' && typeof p.y === 'number'
-                ? <Point key={`pt${i}`} x={p.x} y={p.y} color={i === 1 ? Theme.blue : '#5f5e5a'} />
-                : null;
-            })}
-          </Mafs>
-          <div style={{ fontSize: '12px', color: '#5f5e5a', textAlign: 'center' }}>
-            저울의 오른쪽 접시(빨간 점)를 위아래로 끌어보세요{isBalanced ? ' — 지금 평형입니다!' : ''}
-          </div>
-        </div>
-        <div className="viz-box">
-          <Mafs viewBox={{ x: xRange, y: yRange }} preserveAspectRatio={false} height={320}>
-            <Coordinates.Cartesian />
-            <Plot.OfX y={(x) => { try { return compiledA.evaluate({ x }); } catch (e) { return NaN; } }} color={curves[0].color || Theme.blue} />
-            <Plot.OfX y={(x) => { try { return compiledB.evaluate({ x }); } catch (e) { return NaN; } }} color={curves[1].color || Theme.red} />
-            <MovablePoint
-              point={[sharedX, 0]}
-              constrain={(pos) => [Math.min(xRange[1], Math.max(xRange[0], pos[0])), 0]}
-              color={Theme.green}
-              onMove={(pos) => setSharedX(pos[0])}
-            />
-          </Mafs>
-          <div style={{ fontSize: '12px', color: '#5f5e5a', textAlign: 'center' }}>
-            지금 x = {sharedX.toFixed(2)} · 차이 = {diff.toFixed(2)}{isBalanced ? ' (두 값이 같아졌습니다!)' : ''}
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   // 원점 중심 원(x^2+y^2+c0=0 형태)인지 근사 판별. 원이면 mafs의 <Circle>로 정확히 그릴 수 있지만,
   // 타원·쌍곡선 등 그 외 implicit 곡선은 mafs에 범용 음함수 플로터가 없어 이 판별에 실패한다.
@@ -1841,12 +1705,15 @@ JSON만 출력하라.`;
     }
   }
 
-  // 수학 턴의 시각 영역 전체를 담당하는 진입점. deviceVisual과 visual이 저울↔그래프 연동
-  // 조건(mafs_shape 저울 + mafs_function curves 2개)을 만족하면 인터랙티브 연동 뷰를 그리고,
-  // 아니면 deviceVisual(있으면)과 visual을 그냥 위아래로 정적으로 쌓아서 보여준다.
+  // 수학 턴의 시각 영역 전체를 담당하는 진입점. math/ 폴더에 이번 항목(no) 전용 인터랙티브
+  // 렌더러가 등록되어 있으면 그걸 쓰고, 없으면(장치형이 아닌 항목) deviceVisual(있으면)과
+  // visual을 그냥 위아래로 정적으로 쌓아서 보여준다. 항목별 렌더러 시그니처가 서로 달라도
+  // (예: no:8은 sharedXByLog가 필요, no:1은 log 하나만 필요) 안 쓰는 인자는 JS가 그냥
+  // 무시하므로 항상 같은 방식으로 호출하면 된다.
   function renderMathVisualArea(log, logIdx) {
-    const linked = renderBalanceGraphLinked(log, logIdx);
-    if (linked) return linked;
+    const rendererFn = getDeviceRenderer(mathItemNoRef.current);
+    const rendered = rendererFn ? rendererFn(log, logIdx, sharedXByLog, setSharedXByLog) : null;
+    if (rendered) return rendered;
     return (
       <>
         {log.deviceVisual && renderVisual(log.deviceVisual)}
