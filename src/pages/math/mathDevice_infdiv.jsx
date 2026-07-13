@@ -103,18 +103,15 @@ export function renderInfDiv(log, logIdx, sharedXByLog, setSharedXByLog) {
   const numCount = Math.max(1, Math.round(step * numRate));
   const denCount = Math.max(1, Math.round(step * denRate));
   const value = numCount / denCount;            // = numRate/denRate (x 약분)
-  const slope = numRate / denRate;              // 직선 기울기(값과 동일, x 무관)
 
-  const axisMax = maxStep * 3 + 1;
+  // 가로축 = 공통 단계 x, 세로축 = 값 y. x를 아무리 밀어도 y=value(수평선)로 고정.
+  const xAxisMax = maxStep + 1;                 // 가로축: 공통 단계 x
+  const yAxisMax = 4;                            // 세로축: 값(속도 비율). 최대 3배/1배=3 → 여유로 4
   const numColor = { a: '#e8a13a', b: '#f0c070', edge: '#b5701a' };
   const denColor = { a: '#5a86c4', b: '#8fb0dd', edge: '#2f5a99' };
 
-  // 원점에서 기울기 slope로 뻗는 직선(축 끝까지). 이 직선은 step과 무관하게 고정.
-  const lineEndX = axisMax;
-  const lineEndY = Math.min(axisMax * 3, slope * axisMax);
-
-  // y축 눈금이 촘촘해 지저분하므로 5칸 간격으로 정리한다.
-  const axisSubdivisions = 5;
+  // y = value 인 수평선. x가 약분되어 값은 x와 무관하게 하나로 고정된다.
+  // 빨간 점은 현재 공통 단계 x에서 그 수평선 위에 얹힌다.
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
@@ -167,14 +164,14 @@ export function renderInfDiv(log, logIdx, sharedXByLog, setSharedXByLog) {
 
       {/* ── 그래프 카드: 정체(수식) + 축 라벨 + 직선/점 ── */}
       <div className="viz-box">
-        {/* 그래프가 무슨 그래프인지: 정체 수식과 약분 과정을 상단에 명시 */}
+        {/* 그래프가 무슨 그래프인지: 약분되어 y=값(상수)이 됨을 상단에 명시 */}
         <div style={{ textAlign: 'center', marginBottom: '6px' }}>
           <div style={{ fontSize: '14px', color: '#333', fontWeight: 'bold' }}>
-            y = (분자속도 · x) / (분모속도 · x)
+            y = (분자속도 · x) / (분모속도 · x) = {numRate} / {denRate}
           </div>
           <div style={{ fontSize: '13px', color: '#2e7d32', marginTop: '2px' }}>
-            = 분자속도 / 분모속도 = {numRate} / {denRate} = <b>{value.toFixed(2)}</b>
-            <span style={{ fontSize: '11px', color: '#8a8880', marginLeft: '6px' }}>(x는 약분되어 사라짐)</span>
+            <span style={{ fontSize: '11px', color: '#8a8880', marginRight: '6px' }}>(x가 약분되어 사라짐)</span>
+            → <b>y = {value.toFixed(2)}</b> (x와 무관한 수평선)
           </div>
         </div>
 
@@ -182,48 +179,47 @@ export function renderInfDiv(log, logIdx, sharedXByLog, setSharedXByLog) {
         <div style={{ display: 'flex', alignItems: 'stretch' }}>
           <div style={{
             writingMode: 'vertical-rl', transform: 'rotate(180deg)',
-            fontSize: '12px', color: denColor.edge === denColor.edge ? '#2f5a99' : '#333',
-            textAlign: 'center', padding: '0 2px', fontWeight: 'bold', color: '#b5701a'
+            fontSize: '12px', textAlign: 'center', padding: '0 2px', fontWeight: 'bold', color: '#2e7d32'
           }}>
-            세로 = 분자 도막수 (y)
+            세로 = 값 (y)
           </div>
           <div style={{ flex: 1 }}>
-            <Mafs viewBox={{ x: [0, axisMax], y: [0, axisMax] }} preserveAspectRatio={false} height={300}>
+            <Mafs viewBox={{ x: [0, xAxisMax], y: [0, yAxisMax] }} preserveAspectRatio={false} height={260}>
               <Coordinates.Cartesian
-                subdivisions={axisSubdivisions}
-                xAxis={{ lines: 5 }}
-                yAxis={{ lines: 5 }}
+                xAxis={{ lines: 1 }}
+                yAxis={{ lines: 1 }}
               />
-              <Line.Segment point1={[0, 0]} point2={[lineEndX, lineEndY]} color={Theme.green} />
-              {/* 빨간 점 = (분모도막, 분자도막). 드래그하면 그 위치에 맞는 공통 단계로 역산 연동. */}
+              {/* y = value 수평선: x가 약분되어 값은 x와 무관하게 하나로 고정 */}
+              <Line.Segment point1={[0, value]} point2={[xAxisMax, value]} color={Theme.green} />
+              {/* 빨간 점 = (현재 x, 값). 좌우로 드래그해도 y는 value에 붙어 수평선 위를 미끄러진다. */}
               <MovablePoint
-                point={[denCount, numCount]}
+                point={[step, value]}
                 constrain={(pos) => {
-                  // 직선 위로만: 분모축(x)에 맞춰 분자축(y)=slope*x 로 고정
-                  const cx = Math.min(axisMax, Math.max(denRate, pos[0]));
-                  return [cx, slope * cx];
+                  // 수평선 위로만: x는 자유(범위 안), y는 value로 고정
+                  const cx = Math.min(xAxisMax, Math.max(1, pos[0]));
+                  return [cx, value];
                 }}
                 color={Theme.red}
                 onMove={(pos) => {
-                  // 드래그한 분모도막 수 → 공통 단계 x로 역산(x = 분모도막/분모속도)
-                  const newStep = Math.min(maxStep, Math.max(1, Math.round(pos[0] / denRate)));
+                  // 드래그한 가로 위치 → 공통 단계 x로 반영
+                  const newStep = Math.min(maxStep, Math.max(1, Math.round(pos[0])));
                   patch({ step: newStep });
                 }}
               />
             </Mafs>
             {/* 가로축 라벨 */}
-            <div style={{ textAlign: 'center', fontSize: '12px', fontWeight: 'bold', color: '#2f5a99', marginTop: '2px' }}>
-              가로 = 분모 도막수 (x)
+            <div style={{ textAlign: 'center', fontSize: '12px', fontWeight: 'bold', color: '#7a5a10', marginTop: '2px' }}>
+              가로 = 공통 단계 x
             </div>
           </div>
         </div>
 
         <div style={{ fontSize: '13px', color: '#5f5e5a', textAlign: 'center', marginTop: '6px' }}>
-          지금 점: 가로 {denCount} · 세로 {numCount}
+          지금 점: 가로 x={step} · 세로 값={value.toFixed(2)}
           <br />
           <span style={{ fontSize: '11px' }}>
-            공통 단계 x를 아무리 크게 밀어도 점은 같은 기울기 직선 위를 미끄러질 뿐 —
-            값은 이 기울기(분자속도÷분모속도 = {numRate}÷{denRate}) 하나로 정해집니다.
+            공통 단계 x를 아무리 크게 밀어도 점은 같은 높이(수평선) 위를 좌우로만 움직일 뿐 —
+            값은 속도 비율(분자속도÷분모속도 = {numRate}÷{denRate}) 하나로 정해집니다.
           </span>
         </div>
       </div>
