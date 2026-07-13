@@ -6,6 +6,9 @@ import { MATH_DEVICE_ITEM_NO8, renderDevice_no8 } from './mathDevice_no8';
 import { MATH_DEVICE_ITEM_NO1, renderDevice_no1 } from './mathDevice_no1';
 import { MATH_DEVICE_ITEM_NO1, renderDevice_no1_1 } from './mathDevice_no1_1';
 
+import { MATH_DEVICE_ITEM_NO1, renderDivGt1 } from './mathDevice_div_gt1';
+
+
 // 테스트용 GOALS_DATA.math 항목 목록 (각 파일에서 export한 데이터를 그대로 모음).
 export const MATH_DEVICE_TEST_ITEMS = [
   MATH_DEVICE_ITEM_NO8,
@@ -19,7 +22,8 @@ export const MATH_DEVICE_TEST_ITEMS = [
 export const MATH_DEVICE_RENDERERS = {
   '8': renderDevice_no8,
   '1': renderDevice_no1,
-   '0': renderDevice_no1_1
+   '0': renderDevice_no1_1,
+    'div1': renderDivGt1
 };
 
 export function getDeviceRenderer(no) {
