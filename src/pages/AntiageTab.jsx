@@ -103,6 +103,7 @@ const VISUAL_SHAPE_PROPERTIES = {
   },
   // mafs_shape에서 저울(balance)로 쓸 때: points[0]=받침점(고정), points[1]=왼쪽 접시(고정 x, 초기 y),
   // points[2]=오른쪽 접시(고정 x, 초기 y) — 이 순서 규칙을 저울↔그래프 연동 렌더러가 그대로 사용한다.
+  // (4번째 점부터는 받침대·장식 등 자유롭게 추가 가능 — 렌더러는 점 개수·모양을 전혀 정하지 않는다.)
   points: {
     type: 'ARRAY',
     items: {
@@ -116,19 +117,22 @@ const VISUAL_SHAPE_PROPERTIES = {
       required: ['x', 'y']
     }
   },
+  // segments는 좌표를 직접 담지 않는다 — points 배열의 몇 번째 점과 몇 번째 점을 잇는 선인지
+  // "인덱스"로만 표현한다(0부터 시작). 렌더러는 이 인덱스로 points 배열에서 현재 좌표를 찾아
+  // 선을 그릴 뿐, "이건 빔이다/줄이다" 같은 의미를 전혀 모른다 — 어떤 점을 몇 개 만들고
+  // 어떻게 이을지는 전부 네(모델)가 points/segments 데이터로 결정한다.
   segments: {
     type: 'ARRAY',
     items: {
       type: 'OBJECT',
       properties: {
-        x1: { type: 'NUMBER' },
-        y1: { type: 'NUMBER' },
-        x2: { type: 'NUMBER' },
-        y2: { type: 'NUMBER' },
+        fromPoint: { type: 'INTEGER' },
+        toPoint: { type: 'INTEGER' },
         label: { type: 'STRING', maxLength: 15 },
+        color: { type: 'STRING' },
         forChoiceIndex: { type: 'INTEGER', nullable: true }
       },
-      required: ['x1', 'y1', 'x2', 'y2']
+      required: ['fromPoint', 'toPoint']
     }
   },
   vectors: {
@@ -461,12 +465,20 @@ narration·origin_reason·choices는 반드시 이 학습목표를 다뤄야 한
     if (deviceType === 'balance') {
       return `[이번 턴의 2단계 장치 지시: 양팔저울을 device_visual에 실제로 그려라]
 narration 초반에 양팔저울(또는 그와 동등한 평형 비유) 장면을 등장시키고, 그 장면을 device_visual 필드로 실제로 그려야 한다(말로만 묘사하고 끝내지 마라 — 화면에 그려져야 아이가 손으로 만질 수 있다).
-device_visual 형식(반드시 이 순서를 지켜라):
+
+중요: 렌더러(코드)는 어떤 모양을 그릴지 전혀 정하지 않는다 — points와 segments에 있는 데이터를 그대로 그릴 뿐이다. "이게 저울대다", "이게 받침대다" 같은 의미는 코드가 모른다. 그러니 저울처럼 보이게 만드는 모든 선(저울대, 접시를 매단 줄, 받침대 등)을 반드시 네가 segments에 직접 채워야 화면에 나타난다 — 하나라도 안 채우면 그 선은 안 보인다.
+
+device_visual 형식:
 - kind: "mafs_shape"
-- points: 정확히 3개, 이 순서로 — [0] 받침점(저울의 중심, 고정), [1] 왼쪽 접시(고정 x좌표, 초기 y좌표), [2] 오른쪽 접시(고정 x좌표, 초기 y좌표). 세 점 모두 label을 채워라(예: "받침점", "A요금", "B요금").
-- segments: 필요하면 받침대(기둥) 등 장식용 선분을 추가로 넣어도 되지만, 필수는 points 3개다.
-- xRange, yRange: 저울 전체가 잘 보이는 범위.
-이 장치는 이후 아이가 오른쪽 접시를 직접 드래그해서 움직이면, 코드가 자동으로 그 조작을 3단계의 최종 그래프(visual)와 실시간으로 연동시켜준다 — 저울이 기울어진 정도가 곧 두 그래프(visual.curves[0]와 curves[1])의 y값 차이와 정확히 같아지도록 코드가 계산한다. 이 연동이 되려면 visual.curves가 정확히 2개여야 한다(더 많거나 적으면 연동이 안 켜진다).`;
+- points: 최소 3개. 앞의 3개는 반드시 이 순서로 고정 — [0] 받침점(저울의 중심, 고정 좌표), [1] 왼쪽 접시(고정 x좌표, 초기 y좌표), [2] 오른쪽 접시(고정 x좌표, 초기 y좌표). 세 점 모두 label을 채워라(예: "받침점", "A요금", "B요금"). 이후 3번, 4번... 점을 자유롭게 추가해서 받침대 다리 끝, 기둥 아래쪽 등 장식용 좌표를 표현해도 된다.
+- segments: 각 항목은 좌표가 아니라 "몇 번 점과 몇 번 점을 잇는가"(fromPoint, toPoint — points 배열의 인덱스, 0부터 시작)로 표현한다. 반드시 다음을 포함하라:
+  · {fromPoint: 1, toPoint: 2} — 저울대(빔). 코드는 이 두 점의 실시간 위치를 이어서 자동으로 기울어지게 그린다(너는 좌표를 안 넣어도 된다, 인덱스만 맞으면 된다).
+  · {fromPoint: 0, toPoint: 1} 와 {fromPoint: 0, toPoint: 2} — 접시를 매단 줄.
+  · 그 외 받침대(다리·기둥 등)는 0번 점(또는 네가 추가한 3번,4번... 점)을 서로 이어서 자유롭게 구성하라. 예: 3번·4번 점을 받침대 다리 끝으로 두고 {fromPoint: 0, toPoint: 3}, {fromPoint: 0, toPoint: 4}.
+  · segments의 label/color도 자유롭게 채워도 된다(선택).
+- xRange, yRange: 저울 전체(받침대 포함)가 잘 보이는 범위로, 받침점보다 아래쪽 공간을 충분히 남겨라(예: 받침점 y좌표보다 2~3만큼 더 아래까지).
+
+이 장치는 이후 아이가 오른쪽 접시(점 인덱스 2번, {fromPoint:1,toPoint:2} 선의 오른쪽 끝)를 직접 드래그해서 움직이면, 코드가 자동으로 그 조작을 3단계의 최종 그래프(visual)와 실시간으로 연동시켜준다 — 저울이 기울어진 정도가 곧 두 그래프(visual.curves[0]와 curves[1])의 y값 차이와 정확히 같아지도록 코드가 계산한다. 이 연동이 되려면 visual.curves가 정확히 2개여야 한다(더 많거나 적으면 연동이 안 켜진다).`;
     }
 
     if (deviceType === 'area_split') {
@@ -474,8 +486,8 @@ device_visual 형식(반드시 이 순서를 지켜라):
 narration 초반에 큰 직사각형을 두 조각으로 나누는 장면을 등장시키고, 그 장면을 device_visual 필드로 실제로 그려야 한다.
 device_visual 형식:
 - kind: "mafs_shape"
-- points: 전체 직사각형의 네 꼭짓점 + 나누는 경계선 위 점 (각각 label 포함)
-- segments: 직사각형의 둘레 + 나누는 경계선
+- points: 전체 직사각형의 네 꼭짓점 + 나누는 경계선 위 점 (각각 label 포함, 순서대로 인덱스 0,1,2,3...이 매겨진다)
+- segments: 좌표가 아니라 points 배열의 인덱스로 "몇 번 점과 몇 번 점을 잇는가"(fromPoint, toPoint)를 적는다. 직사각형의 둘레(네 변)와 나누는 경계선을 전부 이 방식으로 채워라. 예: 꼭짓점이 0,1,2,3이고 나누는 점이 4,5라면 [{fromPoint:0,toPoint:1}, {fromPoint:1,toPoint:2}, {fromPoint:2,toPoint:3}, {fromPoint:3,toPoint:0}, {fromPoint:4,toPoint:5}].
 - xRange, yRange: 도형 전체가 잘 보이는 범위.`;
     }
 
@@ -1234,6 +1246,7 @@ JSON만 출력하라.`;
     if (!compiledA || !compiledB) return null;
     const dPoints = Array.isArray(dv.points) ? dv.points : [];
     if (dPoints.length < 3) return null;
+    const dSegments = Array.isArray(dv.segments) ? dv.segments : [];
 
     const xRange = toRange(v.xRange, [-10, 10]);
     const yRange = toRange(v.yRange, [-10, 10]);
@@ -1248,39 +1261,65 @@ JSON만 출력하라.`;
     try { yA = compiledA.evaluate({ x: sharedX }); } catch (e) { /* 무시 */ }
     try { yB = compiledB.evaluate({ x: sharedX }); } catch (e) { /* 무시 */ }
     const diff = (Number.isFinite(yA) && Number.isFinite(yB)) ? (yA - yB) : 0;
-
-    const pivot = dPoints[0];
-    const leftBaseX = dPoints[1].x;
-    const rightBaseX = dPoints[2].x;
-    const baseY = pivot.y;
+    const isBalanced = Math.abs(diff) < (Math.max(1, Math.abs(dPoints[0].y)) * 0.01 + 0.05);
     const tiltScale = 0.2; // diff 1단위당 접시가 움직이는 y거리(장치 표현용 배율, 실제 눈금 아님)
-    const leftPanY = baseY + diff * tiltScale;
-    const rightPanY = baseY - diff * tiltScale;
 
-    const dXRange = toRange(dv.xRange, [pivot.x - 4, pivot.x + 4]);
+    // "받침점=0번, 왼쪽 접시=1번, 오른쪽 접시=2번" 이라는 인덱스 규칙만 코드가 알고 있다(그래야
+    // 어느 점을 드래그시킬지, 어느 점을 diff로 움직일지 알 수 있다). 그 외에 이 점이 "저울"인지,
+    // 몇 개의 점으로 어떤 모양을 이루는지는 전혀 모른다 — 그건 전부 points/segments 데이터다.
+    // livePoints: 1번·2번 점의 y좌표만 diff에 따라 실시간으로 덮어쓴 좌표 목록(그리기용).
+    const baseY = dPoints[0].y;
+    const livePoints = dPoints.map((p, i) => {
+      if (i === 1) return { ...p, y: baseY + diff * tiltScale };
+      if (i === 2) return { ...p, y: baseY - diff * tiltScale };
+      return p;
+    });
+
+    const dXRange = toRange(dv.xRange, [dPoints[0].x - 4, dPoints[0].x + 4]);
     const dYRange = toRange(dv.yRange, [baseY - 3, baseY + 3]);
-
-    const isBalanced = Math.abs(diff) < (Math.max(1, Math.abs(baseY)) * 0.01 + 0.05);
 
     return (
       <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-        <div className="viz-box">
+        <div className="viz-box" style={{ background: '#f5f2e8', borderRadius: '10px', padding: '6px' }}>
           <Mafs viewBox={{ x: dXRange, y: dYRange }} preserveAspectRatio={false} height={220}>
-            <Coordinates.Cartesian />
-            <Line.Segment point1={[leftBaseX, leftPanY]} point2={[rightBaseX, rightPanY]} color={isBalanced ? Theme.green : Theme.indigo} />
-            <Line.Segment point1={[pivot.x, pivot.y]} point2={[(leftBaseX + rightBaseX) / 2, (leftPanY + rightPanY) / 2]} color="#999" />
-            <Point x={pivot.x} y={pivot.y} color="#5f5e5a" />
-            <Point x={leftBaseX} y={leftPanY} color={Theme.blue} />
-            <MovablePoint
-              point={[rightBaseX, rightPanY]}
-              constrain={(pos) => [rightBaseX, pos[1]]}
-              color={Theme.red}
-              onMove={(pos) => {
-                const newDiff = (baseY - pos[1]) / tiltScale;
-                const newX = findXForDiff(compiledA, compiledB, xRange[0], xRange[1], newDiff);
-                setSharedX(newX);
-              }}
-            />
+            {/* 좌표축·눈금은 일부러 안 그린다 — 수학 그래프가 아니라 장치 "그림"이어야 하기 때문 */}
+            {/* segments/points는 전부 모델 데이터다. 렌더러는 fromPoint/toPoint 인덱스로 livePoints에서
+                현재 좌표를 찾아 선을 긋고, 점을 찍을 뿐 — 이게 저울대인지 받침대인지 전혀 모른다. */}
+            {dSegments.map((s, i) => {
+              const p1 = livePoints[s.fromPoint];
+              const p2 = livePoints[s.toPoint];
+              if (!p1 || !p2) return null;
+              const isBeam = (s.fromPoint === 1 && s.toPoint === 2) || (s.fromPoint === 2 && s.toPoint === 1);
+              return (
+                <Line.Segment
+                  key={`seg${i}`}
+                  point1={[p1.x, p1.y]}
+                  point2={[p2.x, p2.y]}
+                  color={isBeam && isBalanced ? Theme.green : (s.color || '#8a7f6a')}
+                />
+              );
+            })}
+            {livePoints.map((p, i) => {
+              if (i === 2) {
+                // 오른쪽 접시(2번 점)만 드래그 가능 — 인터랙션이 필요한 유일한 지점이라 여기만 코드가 관여한다.
+                return (
+                  <MovablePoint
+                    key="movable-pan"
+                    point={[p.x, p.y]}
+                    constrain={(pos) => [p.x, pos[1]]}
+                    color={Theme.red}
+                    onMove={(pos) => {
+                      const newDiff = (baseY - pos[1]) / tiltScale;
+                      const newX = findXForDiff(compiledA, compiledB, xRange[0], xRange[1], newDiff);
+                      setSharedX(newX);
+                    }}
+                  />
+                );
+              }
+              return typeof p.x === 'number' && typeof p.y === 'number'
+                ? <Point key={`pt${i}`} x={p.x} y={p.y} color={i === 1 ? Theme.blue : '#5f5e5a'} />
+                : null;
+            })}
           </Mafs>
           <div style={{ fontSize: '12px', color: '#5f5e5a', textAlign: 'center' }}>
             저울의 오른쪽 접시(빨간 점)를 위아래로 끌어보세요{isBalanced ? ' — 지금 평형입니다!' : ''}
@@ -1438,11 +1477,12 @@ JSON만 출력하라.`;
       );
     });
 
-    const segmentElements = segments.map((s, i) => (
-      (typeof s.x1 === 'number' && typeof s.y1 === 'number' && typeof s.x2 === 'number' && typeof s.y2 === 'number') ? (
-        <line key={`seg${i}`} x1={sx(s.x1)} y1={sy(s.y1)} x2={sx(s.x2)} y2={sy(s.y2)} stroke="#5a5a8c" strokeWidth="2" />
-      ) : null
-    ));
+    const segmentElements = segments.map((s, i) => {
+      const p1 = points[s.fromPoint];
+      const p2 = points[s.toPoint];
+      if (!p1 || !p2 || typeof p1.x !== 'number' || typeof p2.x !== 'number') return null;
+      return <line key={`seg${i}`} x1={sx(p1.x)} y1={sy(p1.y)} x2={sx(p2.x)} y2={sy(p2.y)} stroke={s.color || '#5a5a8c'} strokeWidth="2" />;
+    });
 
     const pointElements = points.map((p, i) => (
       (typeof p.x === 'number' && typeof p.y === 'number') ? (
@@ -1568,11 +1608,12 @@ JSON만 출력하라.`;
     return (
       <Mafs viewBox={{ x: xRange, y: yRange }} preserveAspectRatio={false} height={heightPx || 500}>
         <Coordinates.Cartesian />
-        {segments.map((s, i) => (
-          typeof s.x1 === 'number' && typeof s.y1 === 'number' && typeof s.x2 === 'number' && typeof s.y2 === 'number'
-            ? <Line.Segment key={`seg${i}`} point1={[s.x1, s.y1]} point2={[s.x2, s.y2]} color={Theme.indigo} />
-            : null
-        ))}
+        {segments.map((s, i) => {
+          const p1 = points[s.fromPoint];
+          const p2 = points[s.toPoint];
+          if (!p1 || !p2 || typeof p1.x !== 'number' || typeof p2.x !== 'number') return null;
+          return <Line.Segment key={`seg${i}`} point1={[p1.x, p1.y]} point2={[p2.x, p2.y]} color={s.color || Theme.indigo} />;
+        })}
         {curves.map((curve, i) => {
           if (!curve || !curve.formula || curve.kind !== 'implicit') return null;
           const compiled = safeCompile(curve.formula, curve.kind);

@@ -286,12 +286,12 @@ export const VIZ_PROMPT_MAFS_FUNCTION = `[이번 턴의 시각 자료 지시: ma
 // mafs Point/Line.Segment(+원인 경우 Circle) 로 그리는 평면도형 (삼각형, 각, 길이 등)
 export const VIZ_PROMPT_MAFS_SHAPE = `[이번 턴의 시각 자료 지시: mafs 도형]
 
-이 시각 자료가 실제로 어떻게 그려지는지: 코드는 visual.points 배열의 각 항목을 mafs의 <Point> 컴포넌트로, visual.segments 배열의 각 항목을 <Line.Segment> 컴포넌트(변·보조선)로 그린다. visual.curves에 원의 방정식을 넣으면 <Circle>로 그려지고, 원이 아닌 implicit 곡선(타원 등)을 넣으면 mathjs 기반 보조 렌더러로 자동 전환되어 그려진다. 즉 도형은 점(vertex)과 선분(edge)의 좌표 숫자로만 구성된다 — narration에 아무리 자세히 글로 묘사해도 그림 자체는 이 숫자들이 없으면 그려지지 않는다.
+이 시각 자료가 실제로 어떻게 그려지는지: 코드는 visual.points 배열의 각 항목을 mafs의 <Point> 컴포넌트로 찍고, visual.segments 배열의 각 항목은 "몇 번 점과 몇 번 점을 잇는가"(points 배열의 인덱스, 0부터 시작)만 보고 그 두 점의 현재 좌표를 찾아 <Line.Segment>로 잇는다. 즉 segments는 좌표를 직접 담지 않는다 — 오직 points 배열을 참조하는 인덱스 쌍이다. visual.curves에 원의 방정식을 넣으면 <Circle>로 그려지고, 원이 아닌 implicit 곡선(타원 등)을 넣으면 mathjs 기반 보조 렌더러로 자동 전환되어 그려진다. 도형은 점(vertex)과 그 점들을 잇는 관계(edge)로만 구성된다 — narration에 아무리 자세히 글로 묘사해도 이 데이터가 없으면 그려지지 않는다.
 
 반드시 채워야 하는 필드(하나라도 빠지면 도형이 전혀 나타나지 않는다):
 - visual.kind: "mafs_shape" (고정 문자열)
-- visual.points: 배열, 반드시 길이 1 이상(도형의 꼭짓점들). 각 항목 {x, y, label}, label은 "A"/"B"/"C"처럼 짧게.
-- visual.segments: 배열(도형의 변·보조선). 각 항목 {x1, y1, x2, y2, label}(label 선택). 삼각형이면 보통 변 3개, 사각형이면 4개.
+- visual.points: 배열, 반드시 길이 1 이상(도형의 꼭짓점들). 각 항목 {x, y, label}, label은 "A"/"B"/"C"처럼 짧게. 배열에 적은 순서가 곧 인덱스(0,1,2,3...)다.
+- visual.segments: 배열(도형의 변·보조선). 각 항목 {fromPoint, toPoint, label, color}에서 fromPoint/toPoint는 points 배열의 인덱스(정수)다. 좌표(x1,y1 등)를 여기 직접 쓰지 마라 — 반드시 인덱스로만 연결하라. 삼각형이면 보통 변 3개(예: {fromPoint:0,toPoint:1}, {fromPoint:1,toPoint:2}, {fromPoint:2,toPoint:0}), 사각형이면 4개.
 - visual.curves: 원이 필요할 때만(원주각, 내접원 등) kind:"implicit"인 원의 방정식 하나를 넣는다. 필요 없으면 빈 배열([])로 둬라 — 필드 자체는 있어야 하지만 비어 있어도 된다.
 - visual.xRange, visual.yRange: 도형 전체가 화면 안에 들어오는 범위(예: [-1, 8]). 점들의 좌표가 이 범위를 벗어나면 화면 밖으로 잘려서 안 보인다.
 
@@ -299,7 +299,7 @@ export const VIZ_PROMPT_MAFS_SHAPE = `[이번 턴의 시각 자료 지시: mafs 
 
 선택지별 미니 그래프(선택지 자체가 서로 다른 도형/각도 후보일 때): 선택지들이 서로 다른 도형 형태나 각의 크기 후보를 나타낸다면, points/segments 각 항목에 forChoiceIndex(그 선택지의 choices 배열 인덱스, 0부터 시작)를 달아라. forChoiceIndex가 없는 점·변은 "공통 배경"으로 모든 미니 그래프에 함께 표시된다. 이러면 각 선택지 버튼 바로 아래에 그 선택지 전용 미니 도형이 자동으로 그려진다. 선택지가 단순 문장 설명이면 forChoiceIndex는 쓰지 않아도 된다.
 
-최종 확인: visual.points 배열에 좌표가 있는가? 삼각형·사각형이라면 그 점들을 잇는 visual.segments도 채웠는가? 이 중 하나라도 비어 있으면 도형이 안 보인다.`;
+최종 확인: visual.points 배열에 좌표가 있는가? 삼각형·사각형이라면 그 점들을 잇는 visual.segments를 fromPoint/toPoint 인덱스로 정확히 채웠는가(좌표를 직접 쓰지 않았는가)? 이 중 하나라도 비어 있거나 잘못되면 도형이 안 보인다.`;
 
 // mafs Vector 로 그리는 벡터 (내적, 평행조건, 벡터 연산 등)
 export const VIZ_PROMPT_MAFS_VECTOR = `[이번 턴의 시각 자료 지시: mafs 벡터]
