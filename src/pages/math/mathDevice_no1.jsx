@@ -69,9 +69,6 @@ export const MATH_DEVICE_ITEM_NO1 = {
 };
 
 // 분모식이 0이 되는 지점(=0/0 구멍의 x좌표)을 xRange 안에서 찾는다.
-// 분모를 따로 알기 때문에 "값이 튀는 곳"을 추측할 필요 없이 분모=0을 직접 푼다:
-// 분모의 부호가 바뀌는 구간을 선형보간해 근을 잡는다. 이게 findSingularity보다
-// 훨씬 정확하다(부동소수점 오차로 특이점을 비껴가는 문제가 없다).
 function findHoleByDenominator(denomCompiled, xMin, xMax, steps = 2000) {
   const dx = (xMax - xMin) / steps;
   let prevX = null, prevV = null;
@@ -80,9 +77,9 @@ function findHoleByDenominator(denomCompiled, xMin, xMax, steps = 2000) {
     let val;
     try { val = denomCompiled.evaluate({ x }); } catch (e) { val = NaN; }
     if (!Number.isFinite(val)) { prevX = x; prevV = val; continue; }
-    if (Math.abs(val) < 1e-9) return x;                       // 정확히 0
+    if (Math.abs(val) < 1e-9) return x;
     if (prevV !== null && Number.isFinite(prevV) && (prevV < 0) !== (val < 0)) {
-      const t = prevV / (prevV - val);                        // 부호 전환 → 선형보간 근
+      const t = prevV / (prevV - val);
       return prevX + t * (x - prevX);
     }
     prevX = x; prevV = val;
@@ -90,20 +87,17 @@ function findHoleByDenominator(denomCompiled, xMin, xMax, steps = 2000) {
   return null;
 }
 
-// 사건 4~5용 "두 막대" 도형. 분자식·분모식을 각각 컴파일해 진짜 길이로 그린다.
-// 손잡이(x)를 목표로 밀면 |분자|, |분모| 둘 다 0으로 가고, 비율(분자÷분모)은 극한값으로 좁혀진다.
 function TwoBarsDevice({ numerCompiled, denomCompiled, currentX, limitValue }) {
   let numerVal, denomVal;
   try { numerVal = numerCompiled.evaluate({ x: currentX }); } catch (e) { numerVal = NaN; }
   try { denomVal = denomCompiled.evaluate({ x: currentX }); } catch (e) { denomVal = NaN; }
 
-  const numerLen = Number.isFinite(numerVal) ? Math.abs(numerVal) : NaN;  // 분자막대 길이(위)
-  const denomLen = Number.isFinite(denomVal) ? Math.abs(denomVal) : NaN;  // 분모막대 길이(아래)
+  const numerLen = Number.isFinite(numerVal) ? Math.abs(numerVal) : NaN;
+  const denomLen = Number.isFinite(denomVal) ? Math.abs(denomVal) : NaN;
   const ratio = (Number.isFinite(numerVal) && Number.isFinite(denomVal) && Math.abs(denomVal) > 1e-9)
     ? numerVal / denomVal
     : NaN;
 
-  // 화면 표시용 정규화(최대 막대 높이 120px). 두 막대를 같은 배율로 그려 길이 비교가 되게 한다.
   const maxLen = Math.max(numerLen || 0, denomLen || 0, 1e-6);
   const scale = 120 / maxLen;
   const numerH = Number.isFinite(numerLen) ? Math.min(120, numerLen * scale) : 0;
@@ -150,7 +144,6 @@ export function renderDevice_no1(log, logIdx, sharedXByLog, setSharedXByLog) {
   const compiled = safeCompile(c0.formula, c0.kind);
   if (!compiled) return null;
 
-  // 분자·분모식이 오면 진짜 막대를 그린다. 없으면 막대 층은 생략(곡선+드래그만).
   const numerCompiled = c0.numerFormula ? safeCompile(c0.numerFormula, 'explicit') : null;
   const denomCompiled = c0.denomFormula ? safeCompile(c0.denomFormula, 'explicit') : null;
   const canDrawBars = !!(numerCompiled && denomCompiled);
@@ -158,8 +151,6 @@ export function renderDevice_no1(log, logIdx, sharedXByLog, setSharedXByLog) {
   const xRange = toRange(v.xRange, [-10, 10]);
   const yRange = toRange(v.yRange, [-10, 10]);
 
-  // 목표 지점(구멍): 분모식이 있으면 그걸로 정확히 찾고, 없으면 합쳐진 함수의 좌우극한이
-  // 유한하게 모이는 지점을 찾는 대신 그냥 xRange 중앙을 기본값으로 둔다.
   let target = null;
   if (denomCompiled) {
     target = findHoleByDenominator(denomCompiled, xRange[0], xRange[1]);
@@ -170,8 +161,6 @@ export function renderDevice_no1(log, logIdx, sharedXByLog, setSharedXByLog) {
     ? (left + right) / 2
     : null;
 
-  // 드래그한 x 위치를 로그(장면 턴)별 공유 state에 저장한다. 이 x는 (A) 막대 손잡이와
-  // (B) 그래프 빨간 점이 함께 쓰는 연동 축이다. 없으면 매 렌더링마다 초기값으로 되돌아간다.
   const defaultX = target !== null ? target + (xRange[1] - target) * 0.3 : (xRange[0] + xRange[1]) / 2;
   const currentX = sharedXByLog?.[logIdx] ?? defaultX;
   const setCurrentX = (x) => {
@@ -183,7 +172,6 @@ export function renderDevice_no1(log, logIdx, sharedXByLog, setSharedXByLog) {
 
   return (
     <div className="viz-box">
-      {/* (A) 사건 4~5 — 두 막대 도형. 분자·분모식이 있을 때만 그린다. */}
       {canDrawBars && (
         <TwoBarsDevice
           numerCompiled={numerCompiled}
@@ -193,7 +181,6 @@ export function renderDevice_no1(log, logIdx, sharedXByLog, setSharedXByLog) {
         />
       )}
 
-      {/* 손잡이 슬라이더 — 막대와 그래프 빨간 점을 동시에 움직이는 하나의 축 */}
       <input
         type="range"
         min={xRange[0]}
@@ -204,18 +191,16 @@ export function renderDevice_no1(log, logIdx, sharedXByLog, setSharedXByLog) {
         style={{ width: '80%', display: 'block', margin: '2px auto 12px' }}
       />
 
-      {/* (B) 사건 6 — 곡선으로 펼쳐 확인. 빨간 점은 위 손잡이와 같은 x를 공유 */}
       <Mafs viewBox={{ x: xRange, y: yRange }} preserveAspectRatio={false} height={340}>
         <Coordinates.Cartesian />
         <Plot.OfX
           y={(x) => {
-            if (target !== null && Math.abs(x - target) < 1e-6) return NaN; // 목표 지점은 정의되지 않음(구멍)
+            if (target !== null && Math.abs(x - target) < 1e-6) return NaN;
             try { return compiled.evaluate({ x }); } catch (e) { return NaN; }
           }}
           color={Theme.blue}
         />
         {target !== null && limitValue !== null && (
-          // 목표 지점의 "빈 점"(정의되지 않지만 값이 수렴하는 자리)을 흰 점으로 표시.
           <Point x={target} y={limitValue} color="white" />
         )}
         <MovablePoint
