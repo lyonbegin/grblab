@@ -89,11 +89,16 @@ const VISUAL_SHAPE_PROPERTIES = {
       type: 'OBJECT',
       properties: {
         kind: { type: 'STRING', enum: ['explicit', 'implicit'] },
-        formula: { type: 'STRING' },
-        label: { type: 'STRING' },
+        // formula는 "y=", "x=" 없이 순수 수식 문자열만 담는다 (예: "3*x+2"). 절대 여기에 설명·추론
+        // 과정을 쓰지 마라 — 이 필드는 mathjs가 그대로 계산에 쓰는 값이다.
+        formula: { type: 'STRING', maxLength: 60 },
+        // label은 그래프에 짧게 표시될 이름표일 뿐이다(예: "A", "①"). 절대 여기에 설명·추론
+        // 과정이나 수식을 길게 풀어쓰지 마라 — 15자 넘는 텍스트는 전부 잘려나가 화면이 깨진다.
+        label: { type: 'STRING', maxLength: 15 },
         color: { type: 'STRING' },
         forChoiceIndex: { type: 'INTEGER', nullable: true }
-      }
+      },
+      required: ['kind', 'formula']
     }
   },
   // mafs_shape에서 저울(balance)로 쓸 때: points[0]=받침점(고정), points[1]=왼쪽 접시(고정 x, 초기 y),
@@ -105,9 +110,10 @@ const VISUAL_SHAPE_PROPERTIES = {
       properties: {
         x: { type: 'NUMBER' },
         y: { type: 'NUMBER' },
-        label: { type: 'STRING' },
+        label: { type: 'STRING', maxLength: 15 },
         forChoiceIndex: { type: 'INTEGER', nullable: true }
-      }
+      },
+      required: ['x', 'y']
     }
   },
   segments: {
@@ -119,9 +125,10 @@ const VISUAL_SHAPE_PROPERTIES = {
         y1: { type: 'NUMBER' },
         x2: { type: 'NUMBER' },
         y2: { type: 'NUMBER' },
-        label: { type: 'STRING' },
+        label: { type: 'STRING', maxLength: 15 },
         forChoiceIndex: { type: 'INTEGER', nullable: true }
-      }
+      },
+      required: ['x1', 'y1', 'x2', 'y2']
     }
   },
   vectors: {
@@ -133,12 +140,13 @@ const VISUAL_SHAPE_PROPERTIES = {
         y1: { type: 'NUMBER' },
         x2: { type: 'NUMBER' },
         y2: { type: 'NUMBER' },
-        label: { type: 'STRING' },
+        label: { type: 'STRING', maxLength: 15 },
         color: { type: 'STRING' }
-      }
+      },
+      required: ['x1', 'y1', 'x2', 'y2']
     }
   },
-  shadeFormula: { type: 'STRING' },
+  shadeFormula: { type: 'STRING', maxLength: 60 },
   shadeXMin: { type: 'NUMBER' },
   shadeXMax: { type: 'NUMBER' },
   bars: {
@@ -146,19 +154,20 @@ const VISUAL_SHAPE_PROPERTIES = {
     items: {
       type: 'OBJECT',
       properties: {
-        label: { type: 'STRING' },
+        label: { type: 'STRING', maxLength: 15 },
         value: { type: 'NUMBER' }
-      }
+      },
+      required: ['label', 'value']
     }
   },
-  vennLabelA: { type: 'STRING' },
-  vennLabelB: { type: 'STRING' },
+  vennLabelA: { type: 'STRING', maxLength: 15 },
+  vennLabelB: { type: 'STRING', maxLength: 15 },
   vennOnlyA: { type: 'NUMBER' },
   vennOnlyB: { type: 'NUMBER' },
   vennBoth: { type: 'NUMBER' },
   solidType: { type: 'STRING', enum: ['cube', 'cylinder', 'cone', 'sphere'] },
   dims: { type: 'ARRAY', items: { type: 'NUMBER' } },
-  solidLabel: { type: 'STRING' },
+  solidLabel: { type: 'STRING', maxLength: 15 },
   matrixRows: {
     type: 'ARRAY',
     items: { type: 'ARRAY', items: { type: 'NUMBER' } }
@@ -479,12 +488,20 @@ narration 초반에 이번 개념의 물리적 장치(중간 도구) 장면을 �
     const deviceBlock = getDeviceVisualPromptBlock(ctx);
     const vizSection = vizBlock ? `\n\n${vizBlock}` : '';
     const deviceSection = deviceBlock ? `\n\n${deviceBlock}` : '';
+    // curves/points/label 등에 사고 과정을 그대로 쏟아붓는 실패 사례가 실제로 있었다 — 강하게 막는다.
+    const fieldHygieneWarning = (vizBlock || deviceBlock) ? `
+
+[필드 작성 규칙 — 절대 위반 금지, 실제로 있었던 실패 사례]
+visual/device_visual 안의 curves[].formula, curves[].label, points[].label 같은 필드는 전부 화면에 그대로 노출되는 짧은 값이다. 여기에 "~로 표현됩니다", "~라고 가정하면", "선택지 0번이 정답이므로" 같은 설명·추론 과정을 절대 쓰지 마라.
+- formula는 mathjs가 그대로 계산할 순수 수식 문자열만 담는다. 최대 60자. 예: 옳음="3*x+2", 틀림="A요금제: 3x+2 (y=3x+2로 표현됨, 기울기 3)"
+- label은 그래프에 표시될 짧은 이름표만 담는다. 최대 15자. 예: 옳음="A", "①", 틀림="A사 비용 함수로 추정되는 직선형 요금 체계 모델(y=3x)"
+- 계산 과정이나 왜 이 값을 골랐는지는 이 필드들이 아니라 오직 origin_reason이나 네 생각 속에서만 정리하고, JSON의 위 필드들에는 최종 값만 깔끔하게 넣어라.` : '';
 
     if (!ctx.subjectForModule) {
       return `${SYSTEM_PROMPT_COMMON_BASE}
 
 [지금 이 턴의 지시]
-${ctx.instruction}${vizSection}${deviceSection}`;
+${ctx.instruction}${vizSection}${deviceSection}${fieldHygieneWarning}`;
     }
     const turnsBlock = ctx.mode === 'discovery' ? SYSTEM_PROMPT_TURNS_DISCOVERY : SYSTEM_PROMPT_TURNS_PROBLEM;
     const subjectModule = getSubjectPromptModule(ctx.subjectForModule, ctx.mode);
@@ -495,7 +512,7 @@ ${turnsBlock}
 ${subjectModule}
 
 [지금 이 턴의 지시]
-${ctx.instruction}${vizSection}${deviceSection}`;
+${ctx.instruction}${vizSection}${deviceSection}${fieldHygieneWarning}`;
   }
 
   // ===========================================================
