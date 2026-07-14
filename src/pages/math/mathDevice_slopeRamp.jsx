@@ -38,9 +38,16 @@ export function renderSlopeRamp(log, logIdx, sharedXByLog, setSharedXByLog) {
   // 기울기가 클수록 오른쪽 끝이 더 높이 올라간다.
   const SVG_W = 240, SVG_H = 200, PAD = 24;
   const baseY = SVG_H - PAD;          // 바닥
-  const leftX = PAD, rightX = SVG_W - PAD;
-  const runPx = rightX - leftX;       // 가로 이동량(고정)
-  const risePx = Math.min(baseY - PAD, runPx * slope); // 세로 상승량(기울기 비례, 위로 잘림)
+  const leftX = PAD;
+  const maxRun = SVG_W - PAD * 2;     // 최대 밑변 길이
+  const maxRise = baseY - PAD;        // 최대 높이(천장까지)
+  // 세로(rise)를 천장에 맞춰 고정하고, 밑변(run)을 기울기에 반비례시켜 각도로 가파름을 표현.
+  // 이렇게 하면 slope가 아무리 커도 삼각형이 천장에 잘리지 않는다.
+  // rise = maxRise 로 두고 run = maxRise / slope. 단 run이 너무 길면(=완만) maxRun으로 제한.
+  let risePx = maxRise;
+  let runPx = risePx / slope;
+  if (runPx > maxRun) { runPx = maxRun; risePx = runPx * slope; }
+  const rightX = leftX + runPx;
   const topY = baseY - risePx;
 
   const axisMax = 5;
@@ -76,12 +83,11 @@ export function renderSlopeRamp(log, logIdx, sharedXByLog, setSharedXByLog) {
               fill="#f0c070" stroke="#b5701a" strokeWidth="2" />
             {/* 미끄럼 라인 강조 */}
             <line x1={leftX} y1={baseY} x2={rightX} y2={topY} stroke="#b5701a" strokeWidth="3" />
-            {/* 가로 1, 세로 m 표시(직각 삼각형 느낌) */}
+            {/* 세로 높이(고정) 표시 */}
             <line x1={rightX} y1={baseY} x2={rightX} y2={topY} stroke="#2f5a99" strokeWidth="2" strokeDasharray="4 3" />
-            <text x={rightX - 6} y={(baseY + topY) / 2} fontSize="11" fill="#2f5a99" textAnchor="end">↑ {slope.toFixed(1)}</text>
-            <text x={(leftX + rightX) / 2} y={baseY + 14} fontSize="11" fill="#5f5e5a" textAnchor="middle">가로 →</text>
-            {/* 공 아이콘 */}
-            <circle cx={leftX + 8} cy={baseY - 8} r="7" fill="#e24b4a" />
+            <text x={(leftX + rightX) / 2} y={baseY + 14} fontSize="11" fill="#5f5e5a" textAnchor="middle">밑변이 짧을수록 가파름</text>
+            {/* 공 아이콘(꼭대기) */}
+            <circle cx={rightX} cy={topY - 8} r="7" fill="#e24b4a" />
           </svg>
         </div>
 
@@ -90,8 +96,13 @@ export function renderSlopeRamp(log, logIdx, sharedXByLog, setSharedXByLog) {
           <div style={{ fontSize: '12px', color: '#5f5e5a', textAlign: 'center' }}>그래프: 직선 y = 기울기 × x</div>
           <Mafs viewBox={{ x: [0, axisMax], y: [0, axisMax] }} preserveAspectRatio={false} height={200}>
             <Coordinates.Cartesian />
+            {/* 직선 y=slope·x: slope>1이면 y가 먼저 천장(axisMax)에 닿으므로 그 x에서 끊는다.
+                이렇게 해야 실제 기울기대로 그려지고 빨간 점이 직선에서 어긋나지 않는다. */}
             <Line.Segment point1={[0, 0]}
-              point2={[axisMax, Math.min(axisMax, slope * axisMax)]} color={Theme.blue} />
+              point2={slope * axisMax <= axisMax
+                ? [axisMax, slope * axisMax]
+                : [axisMax / slope, axisMax]}
+              color={Theme.blue} />
             <MovablePoint
               point={[1, slope]}
               constrain={(pos) => {
