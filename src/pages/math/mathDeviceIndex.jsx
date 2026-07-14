@@ -28,7 +28,13 @@ import { renderRange } from './mathDevice_range';
 import { renderBoundary } from './mathDevice_boundary';
 import { renderAboveRegion } from './mathDevice_aboveRegion';
 import { renderCrossBoundary } from './mathDevice_crossBoundary';
-
+import { renderParabolaShape } from './mathDevice_parabolaShape';
+import { renderParabolaSign } from './mathDevice_parabolaSign';
+import { renderSquarePositive } from './mathDevice_squarePositive';
+import { renderVertex } from './mathDevice_vertex';
+import { renderTranslate } from './mathDevice_translate';
+import { renderDipCount } from './mathDevice_dipCount';
+import { renderTangentBoundary } from './mathDevice_tangentBoundary';
 
 // deviceType(+선택 no) → 렌더러. 새 장치는 여기 한 줄만 추가.
 const REGISTRY = [
@@ -61,6 +67,13 @@ const REGISTRY = [
   { deviceType: 'boundary',       no: '9-5', render: renderBoundary,     needsDeviceVisual: false },
   { deviceType: 'above_region',   no: '9-6', render: renderAboveRegion,  needsDeviceVisual: false },
   { deviceType: 'cross_boundary', no: '9-7', render: renderCrossBoundary, needsDeviceVisual: false },
+  { deviceType: 'parabola_shape',    no: '10-1', render: renderParabolaShape,   needsDeviceVisual: false },
+  { deviceType: 'parabola_sign',     no: '10-2', render: renderParabolaSign,    needsDeviceVisual: false },
+  { deviceType: 'square_positive',   no: '10-3', render: renderSquarePositive,  needsDeviceVisual: false },
+  { deviceType: 'vertex',            no: '10-4', render: renderVertex,          needsDeviceVisual: false },
+  { deviceType: 'translate',         no: '10-5', render: renderTranslate,       needsDeviceVisual: false },
+  { deviceType: 'dip_count',         no: '10-6', render: renderDipCount,        needsDeviceVisual: false },
+  { deviceType: 'tangent_boundary',  no: '10-7', render: renderTangentBoundary, needsDeviceVisual: false },
 ];
 
 const BY_NO = {}, BY_DEVICE_TYPE = {};
