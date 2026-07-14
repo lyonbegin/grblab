@@ -9,6 +9,12 @@ import { renderSlopeRamp }     from './mathDevice_slopeRamp';
 import { renderSecant }        from './mathDevice_secant';
 import { renderSecantTangent } from './mathDevice_secantTangent';
 import { renderTangentJudge }  from './mathDevice_tangentJudge';
+import { renderUpDownIntro }   from './mathDevice_upDownIntro';
+import { renderRollPoint }     from './mathDevice_rollPoint';
+import { renderTangentArrow }  from './mathDevice_tangentArrow';
+import { renderIntervalSplit } from './mathDevice_intervalSplit';
+
+
 // deviceType(+선택 no) → 렌더러. 새 장치는 여기 한 줄만 추가.
 const REGISTRY = [
   { deviceType: 'balance',        no: '8', render: renderDevice_no8,   needsDeviceVisual: true },
@@ -22,6 +28,11 @@ const REGISTRY = [
   { deviceType: 'secant',          no: '2b', render: renderSecant,        needsDeviceVisual: false },
   { deviceType: 'secant_tangent',  no: '2c', render: renderSecantTangent, needsDeviceVisual: false },
   { deviceType: 'tangent_judge',   no: '2d', render: renderTangentJudge,  needsDeviceVisual: false },
+  { deviceType: 'up_down_intro',  no: '3a', render: renderUpDownIntro,   needsDeviceVisual: false },
+  { deviceType: 'roll_point',     no: '3b', render: renderRollPoint,     needsDeviceVisual: false },
+  { deviceType: 'tangent_arrow',  no: '3c', render: renderTangentArrow,  needsDeviceVisual: false },
+  { deviceType: 'interval_split', no: '3d', render: renderIntervalSplit, needsDeviceVisual: false },
+  
 ];
 
 const BY_NO = {}, BY_DEVICE_TYPE = {};
