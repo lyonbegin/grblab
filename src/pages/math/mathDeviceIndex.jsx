@@ -5,6 +5,10 @@ import { renderDivGt1 } from './mathDevice_div_gt1';
 import { renderDivLt1 } from './mathDevice_div_lt1';
 import { renderInfDiv } from './mathDevice_infdiv';
 import { renderZeroDiv } from './mathDevice_zerodiv';
+import { renderSlopeRamp }     from './mathDevice_slopeRamp';
+import { renderSecant }        from './mathDevice_secant';
+import { renderSecantTangent } from './mathDevice_secantTangent';
+import { renderTangentJudge }  from './mathDevice_tangentJudge';
 // deviceType(+선택 no) → 렌더러. 새 장치는 여기 한 줄만 추가.
 const REGISTRY = [
   { deviceType: 'balance',        no: '8', render: renderDevice_no8,   needsDeviceVisual: true },
@@ -14,6 +18,10 @@ const REGISTRY = [
    { deviceType: 'divide_grow',   no: 'div2', render: renderDivLt1,       needsDeviceVisual: false },
    { deviceType: 'inf_over_inf', no: 'infdiv', render: renderInfDiv, needsDeviceVisual: false },
    { deviceType: 'zero_over_zero', no: 'zerodiv', render: renderZeroDiv, needsDeviceVisual: false },
+   { deviceType: 'slope_ramp',      no: '2a', render: renderSlopeRamp,     needsDeviceVisual: false },
+  { deviceType: 'secant',          no: '2b', render: renderSecant,        needsDeviceVisual: false },
+  { deviceType: 'secant_tangent',  no: '2c', render: renderSecantTangent, needsDeviceVisual: false },
+  { deviceType: 'tangent_judge',   no: '2d', render: renderTangentJudge,  needsDeviceVisual: false },
 ];
 
 const BY_NO = {}, BY_DEVICE_TYPE = {};
