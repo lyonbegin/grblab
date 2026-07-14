@@ -21,6 +21,15 @@ import { renderTracePath } from './mathDevice_tracePath';
 import { renderTwoLines } from './mathDevice_twoLines';
 import { renderIntersectX } from './mathDevice_intersectX';
 import { renderCountCross } from './mathDevice_countCross';
+import { renderCompare } from './mathDevice_compare';
+import { renderHeightIsSize } from './mathDevice_heightIsSize';
+import { renderSwapOrder } from './mathDevice_swapOrder';
+import { renderRange } from './mathDevice_range';
+import { renderBoundary } from './mathDevice_boundary';
+import { renderAboveRegion } from './mathDevice_aboveRegion';
+import { renderCrossBoundary } from './mathDevice_crossBoundary';
+
+
 // deviceType(+선택 no) → 렌더러. 새 장치는 여기 한 줄만 추가.
 const REGISTRY = [
   { deviceType: 'balance',        no: '8', render: renderDevice_no8,   needsDeviceVisual: true },
@@ -45,6 +54,13 @@ const REGISTRY = [
   { deviceType: 'two_lines',       no: '8-5', render: renderTwoLines,       needsDeviceVisual: false },
   { deviceType: 'intersect_x',     no: '8-6', render: renderIntersectX,     needsDeviceVisual: false },
   { deviceType: 'count_cross',     no: '8-7', render: renderCountCross,     needsDeviceVisual: false },
+  { deviceType: 'compare',        no: '9-1', render: renderCompare,      needsDeviceVisual: false },
+  { deviceType: 'height_is_size', no: '9-2', render: renderHeightIsSize, needsDeviceVisual: false },
+  { deviceType: 'swap_order',     no: '9-3', render: renderSwapOrder,    needsDeviceVisual: false },
+  { deviceType: 'range',          no: '9-4', render: renderRange,        needsDeviceVisual: false },
+  { deviceType: 'boundary',       no: '9-5', render: renderBoundary,     needsDeviceVisual: false },
+  { deviceType: 'above_region',   no: '9-6', render: renderAboveRegion,  needsDeviceVisual: false },
+  { deviceType: 'cross_boundary', no: '9-7', render: renderCrossBoundary, needsDeviceVisual: false },
 ];
 
 const BY_NO = {}, BY_DEVICE_TYPE = {};
