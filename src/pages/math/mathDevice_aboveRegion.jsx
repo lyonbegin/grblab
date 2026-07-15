@@ -1,13 +1,13 @@
 // ===========================================================
 // no:"9-6" ★ "위인 구간이 부등식의 해다" (부등식=위/아래의 핵심개념)
 //
-// [초등학생 맞춤형 v4 — 로켓 고도 대결 & x축 투영 연관 사고 에디션]
-// - 물기둥 비교를 "파란 로켓 🚀 vs 주황 UFO 🛸" 대결로 리디자인했습니다.
-// - 부등식의 해를 x축 위에 직접 두꺼운 초록색 바(Bar)로 투영하여 표현했습니다.
-// - Mafs의 Polygon 컴포넌트를 사용하여 경계 구역을 깔끔하고 안정적으로 색칠했습니다.
+// [초등학생 맞춤형 v6 — 실물 직접 조종 & 패시브 그래프 인과관계 에디션]
+// - 그래프 조작 점을 완전히 없애고, 상단 시뮬레이터의 로켓(🚀)을 직접 드래그하게 변경했습니다.
+// - 로켓을 움직이는 손맛(원인)이 아래 그래프의 흔적과 정답 불빛(결과)으로 자동 기록됩니다.
+// - 모바일 터치와 데스크톱 마우스 드래그를 완벽하게 지원합니다.
 // ===========================================================
-import React from 'react';
-import { Mafs, Coordinates, Plot, Point, Line, Theme, MovablePoint, Polygon } from 'mafs';
+import React, { useState, useRef } from 'react';
+import { Mafs, Coordinates, Plot, Point, Line, Theme, Polygon } from 'mafs';
 import { safeCompile, toRange } from './mathDeviceShared';
 
 export function renderAboveRegion(log, logIdx, sharedXByLog, setSharedXByLog) {
@@ -56,153 +56,231 @@ export function renderAboveRegion(log, logIdx, sharedXByLog, setSharedXByLog) {
     if (dLeft > 0) { aLo = xRange[0]; aHi = cross; } else { aLo = cross; aHi = xRange[1]; }
   }
 
-  // 상단 발사대 시뮬레이터 수치 설정
-  const W = 220, H = 160, base = 135;
-  const scale = (H - 45) / (yRange[1] || 16);
+  // 상단 발사대 시뮬레이터 크기 설정
+  const W = 320, H = 180, base = 145;
+  const scale = (H - 55) / (yRange[1] || 16);
   const yaVal = Number.isFinite(ya) ? ya : 0;
   const ybVal = Number.isFinite(yb) ? yb : 0;
 
-  // 로켓과 UFO의 세로 위치 (SVG 좌표계는 위가 0이므로 빼줌)
+  // 로켓과 UFO의 세로 위치 (SVG는 Y축이 아래 방향이므로 변환 필요)
   const yPosA = base - yaVal * scale;
   const yPosB = base - ybVal * scale;
 
+  // 상단 드래그 조작을 위한 Pointer Event 처리
+  const svgRef = useRef(null);
+  const [isDragging, setIsDragging] = useState(false);
+
+  const paddingX = 40; // 양옆 여백
+  const trackWidth = W - paddingX * 2;
+
+  // 물리 좌표 -> SVG 가로 픽셀 좌표 변환
+  const getPixelX = (val) => {
+    const pct = (val - xRange[0]) / (xRange[1] - xRange[0]);
+    return paddingX + pct * trackWidth;
+  };
+
+  const handlePointerDown = (e) => {
+    e.preventDefault();
+    setIsDragging(true);
+    updateXFromEvent(e);
+    if (e.currentTarget.setPointerCapture) {
+      e.currentTarget.setPointerCapture(e.pointerId);
+    }
+  };
+
+  const handlePointerMove = (e) => {
+    if (!isDragging) return;
+    updateXFromEvent(e);
+  };
+
+  const handlePointerUp = (e) => {
+    setIsDragging(false);
+    if (e.currentTarget.releasePointerCapture) {
+      e.currentTarget.releasePointerCapture(e.pointerId);
+    }
+  };
+
+  const updateXFromEvent = (e) => {
+    if (!svgRef.current) return;
+    const rect = svgRef.current.getBoundingClientRect();
+    const clientX = e.clientX - rect.left;
+    const pct = Math.min(1, Math.max(0, (clientX - paddingX) / trackWidth));
+    const nx = xRange[0] + pct * (xRange[1] - xRange[0]);
+    setX(nx);
+  };
+
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', fontFamily: 'sans-serif' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', fontFamily: 'sans-serif', userSelect: 'none' }}>
       
-      {/* 1. 상단 컨트롤러 및 로켓 발사대 대결판 */}
-      <div className="viz-box" style={{ background: '#f5f6fa', borderRadius: '12px', padding: '12px', border: '2px solid #e2e8f0' }}>
-        <div style={{ textAlign: 'center', marginBottom: '8px', fontSize: '13px', color: '#475569', fontWeight: 'bold' }}>
-          ⏱️ 시간 슬라이더를 밀어 로켓들의 고도를 바꾸어 보세요!
+      {/* 1. 상단: 직접 조작하는 실물 비행 시뮬레이터 (원인 제공처) */}
+      <div className="viz-box" style={{ background: '#f0f4f8', borderRadius: '14px', padding: '14px', border: '2px solid #cbd5e1' }}>
+        <div style={{ textAlign: 'center', marginBottom: '8px', fontSize: '13px', color: '#1e293b', fontWeight: 'bold' }}>
+          🚀 아래 하늘나라 발사판에서 <span style={{ color: '#2563eb' }}><b>파란색 로켓을 손으로 쥐고 직접 좌우로 끌어보세요!</b></span>
         </div>
-        
-        {/* 슬라이더 컨트롤 */}
-        <input 
-          type="range" 
-          min={xRange[0]} 
-          max={xRange[1]} 
-          step={0.1} 
-          value={x}
-          onChange={(e) => setX(parseFloat(e.target.value))} 
-          style={{ width: '90%', display: 'block', margin: '0 auto 10px', accentColor: '#3b82f6' }} 
-        />
 
-        {/* 로켓 발사대 비주얼 */}
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '20px' }}>
-          <svg width={W} height={H} style={{ background: '#ffffff', borderRadius: '8px', border: '1px solid #cbd5e1' }}>
-            {/* 발사대 배경 가이드선 */}
-            <line x1={0} y1={base} x2={W} y2={base} stroke="#94a3b8" strokeWidth="2" />
-            <line x1={W/2} y1={10} x2={W/2} y2={base} stroke="#f1f5f9" strokeWidth="2" strokeDasharray="4 4" />
+        {/* 로켓 발사대 인터랙티브 영역 */}
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <svg 
+            ref={svgRef}
+            width={W} 
+            height={H} 
+            style={{ background: 'linear-gradient(to bottom, #e0f2fe, #ffffff)', borderRadius: '10px', border: '2px solid #94a3b8', cursor: 'grab', touchAction: 'none' }}
+            onPointerDown={handlePointerDown}
+            onPointerMove={handlePointerMove}
+            onPointerUp={handlePointerUp}
+          >
+            {/* 안전 발착지 수평 지면선 */}
+            <line x1={0} y1={base} x2={W} y2={base} stroke="#64748b" strokeWidth="3" />
 
-            {/* A 로켓이 출발하는 길 */}
-            <rect x={35} y={10} width={30} height={base - 10} fill="#f8fafc" stroke="#e2e8f0" rx="3" />
-            {/* B UFO가 출발하는 길 */}
-            <rect x={155} y={10} width={30} height={base - 10} fill="#f8fafc" stroke="#e2e8f0" rx="3" />
-
-            {/* A 로켓 (Emoji) */}
-            <text x={50} y={yPosA + 8} fontSize="24" textAnchor="middle" style={{ transition: 'all 0.1s ease-out' }}>🚀</text>
+            {/* 가로 조종 레일 점선 가이드 */}
+            <line x1={paddingX} y1={base} x2={W - paddingX} y2={base} stroke="#94a3b8" strokeWidth="2" strokeDasharray="5 5" />
             
-            {/* B UFO (Emoji) */}
-            <text x={170} y={yPosB + 8} fontSize="24" textAnchor="middle" style={{ transition: 'all 0.1s ease-out' }}>🛸</text>
+            {/* 현재 드래그 가이드 레이저선 (세로 보조선) */}
+            <line 
+              x1={getPixelX(x)} 
+              y1={10} 
+              x2={getPixelX(x)} 
+              y2={base} 
+              stroke="#cbd5e1" 
+              strokeWidth="2" 
+              strokeDasharray="3 3" 
+            />
 
-            {/* 고도 텍스트 라벨 */}
-            <text x={50} y={base + 16} fontSize="11" fontWeight="bold" textAnchor="middle" fill="#1d4ed8">A 로켓</text>
-            <text x={50} y={yPosA - 10} fontSize="10" textAnchor="middle" fill="#1e40af">{yaVal.toFixed(1)}m</text>
+            {/* UFO 🛸 (자동 추종 장치) */}
+            <g style={{ transition: 'transform 0.08s ease-out' }}>
+              <text 
+                x={getPixelX(x)} 
+                y={yPosB + 10} 
+                fontSize="28" 
+                textAnchor="middle"
+              >
+                🛸
+              </text>
+              <text x={getPixelX(x)} y={yPosB - 14} fontSize="9" fontWeight="bold" textAnchor="middle" fill="#ea580c">
+                {ybVal.toFixed(1)}m
+              </text>
+            </g>
 
-            <text x={170} y={base + 16} fontSize="11" fontWeight="bold" textAnchor="middle" fill="#ea580c">B UFO</text>
-            <text x={170} y={yPosB - 10} fontSize="10" textAnchor="middle" fill="#c2410c">{ybVal.toFixed(1)}m</text>
+            {/* 조종사 로켓 🚀 (직접 드래그하는 핵심 객체) */}
+            <g style={{ transition: 'transform 0.08s ease-out' }}>
+              <rect 
+                x={getPixelX(x) - 20} 
+                y={yPosA - 15} 
+                width="40" 
+                height="45" 
+                fill="#3b82f6" 
+                fillOpacity="0.05" 
+                rx="6" 
+                stroke={isDragging ? "#2563eb" : "transparent"} 
+                strokeDasharray="2 2"
+              />
+              <text 
+                x={getPixelX(x)} 
+                y={yPosA + 10} 
+                fontSize="32" 
+                textAnchor="middle"
+                style={{ cursor: 'grabbing' }}
+              >
+                🚀
+              </text>
+              <text x={getPixelX(x)} y={yPosA - 14} fontSize="9" fontWeight="bold" textAnchor="middle" fill="#2563eb">
+                {yaVal.toFixed(1)}m
+              </text>
+            </g>
+
+            {/* 조작 활성화 유도 메시지 (시작할 때만 작게 표시) */}
+            {x === xRange[0] && (
+              <text x={W / 2} y={base - 40} fontSize="11" fill="#94a3b8" textAnchor="middle" pointerEvents="none">
+                👈 로켓을 오른쪽으로 당겨 비행하기!
+              </text>
+            )}
           </svg>
         </div>
 
-        {/* 대결 실시간 중계 */}
+        {/* 대결 실시간 중계판 */}
         <div style={{ textAlign: 'center', fontSize: '14px', fontWeight: 'bold', marginTop: '10px', color: aAbove ? '#15803d' : '#b91c1c' }}>
           {aAbove 
-            ? '🎉 지금은 A 로켓이 더 높아요! (A > B, 해의 범위가 맞아요!)' 
-            : '🛸 지금은 B UFO가 더 높거나 같아요! (해의 범위가 아니에요)'}
+            ? '🎉 로켓이 UFO보다 위에 있어요! (A > B 영역에 진입 완료!)' 
+            : '🛸 UFO가 로켓과 같거나 위에 있어요! (A > B 영역 바깥)'}
         </div>
       </div>
 
-      {/* 2. 메인 그래프: 비행 궤도와 수학적 해의 투영 */}
-      <div className="viz-box" style={{ background: '#ffffff', borderRadius: '12px', padding: '10px', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
+      {/* 2. 하단: 자동 기록 그래프 (결과를 수동적으로 보여주는 도화지) */}
+      <div className="viz-box" style={{ background: '#ffffff', borderRadius: '14px', padding: '12px', boxShadow: '0 2px 8px rgba(0,0,0,0.05)', pointerEvents: 'none' }}>
         <div style={{ fontSize: '13px', fontWeight: 'bold', color: '#1e293b', marginBottom: '6px' }}>
-          📈 그래프 비행 분석 (A 로켓이 위를 달리는 구간이 바로 부등식의 정답!)
+          📊 비행 기록 장치 (로켓의 움직임에 따른 정답 구간 자동 추적)
         </div>
-        <Mafs viewBox={{ x: xRange, y: yRange }} preserveAspectRatio={false} height={260}>
-          <Coordinates.Cartesian />
-          
-          {/* A가 B보다 높은 구간을 채워주는 아름다운 연록색 안전 구역 (Polygon) */}
-          <Polygon
-            points={[
-              [aLo, yRange[0]],
-              [aHi, yRange[0]],
-              [aHi, yRange[1]],
-              [aLo, yRange[1]]
-            ]}
-            color="#2e7d32"
-            weight={0}
-            fillOpacity={0.12}
-          />
-
-          {/* 구간의 양쪽 경계선(교점 세로선) */}
-          {cross !== null && (
-            <Line.Segment 
-              point1={[cross, yRange[0]]} 
-              point2={[cross, yRange[1]]} 
-              color="#2e7d32" 
-              style={{ strokeDasharray: "4 4" }} 
+        <div style={{ position: 'relative' }}>
+          <Mafs viewBox={{ x: xRange, y: yRange }} preserveAspectRatio={false} height={240}>
+            <Coordinates.Cartesian />
+            
+            {/* [결과] A가 B보다 높은 구간을 채워주는 연록색 정답 영역 */}
+            <Polygon
+              points={[
+                [aLo, yRange[0]],
+                [aHi, yRange[0]],
+                [aHi, yRange[1]],
+                [aLo, yRange[1]]
+              ]}
+              color="#2e7d32"
+              weight={0}
+              fillOpacity={0.10}
             />
-          )}
 
-          {/* ★ 수학적 사고력 핵심: x축 상에 직접 그려지는 '부등식의 해'의 영역 투영 */}
-          <Line.Segment
-            point1={[aLo, 0.2]}
-            point2={[aHi, 0.2]}
-            color="#2e7d32"
-            weight={8}
-          />
+            {/* [결과] 구간 경계선 (교점 세로선) */}
+            {cross !== null && (
+              <Line.Segment 
+                point1={[cross, yRange[0]]} 
+                point2={[cross, yRange[1]]} 
+                color="#10b981" 
+                style={{ strokeDasharray: "4 4" }} 
+              />
+            )}
 
-          {/* A 로켓의 비행 궤도 (파란 곡선) */}
-          <Plot.OfX y={(t) => { try { return A.evaluate({ x: t }); } catch (e) { return NaN; } }} color={Theme.blue} weight={3} />
-          
-          {/* B UFO의 비행 궤도 (주황 곡선) */}
-          <Plot.OfX y={(t) => { try { return B.evaluate({ x: t }); } catch (e) { return NaN; } }} color={Theme.orange} weight={3} />
-          
-          {/* 두 발사체의 세로 동축 레이저 가이드선 */}
-          <Line.Segment
-            point1={[x, yRange[0]]}
-            point2={[x, yRange[1]]}
-            color="#94a3b8"
-            style={{ strokeDasharray: "3 3" }}
-          />
+            {/* [결과] ★ x축 투영: 부등식의 해가 되는 구간을 x축에 직접 칠함 */}
+            <Line.Segment
+              point1={[aLo, 0.25]}
+              point2={[aHi, 0.25]}
+              color="#10b981"
+              weight={8}
+            />
 
-          {/* UFO 실시간 비행 위치 표시 점 */}
-          <Point x={x} y={Number.isFinite(yb) ? yb : 0} color={Theme.orange} size={5} />
+            {/* A 로켓의 고도 함수 곡선 (파란 선) */}
+            <Plot.OfX y={(t) => { try { return A.evaluate({ x: t }); } catch (e) { return NaN; } }} color={Theme.blue} weight={3} />
+            
+            {/* B UFO의 고도 함수 곡선 (주황 선) */}
+            <Plot.OfX y={(t) => { try { return B.evaluate({ x: t }); } catch (e) { return NaN; } }} color={Theme.orange} weight={3} />
+            
+            {/* [실시간 기록선] 위쪽 조종사의 X 위치와 동축 매칭되는 세로 레이저 점선 */}
+            <Line.Segment
+              point1={[x, yRange[0]]}
+              point2={[x, yRange[1]]}
+              color="#3b82f6"
+              weight={1.5}
+              style={{ strokeDasharray: "4 4" }}
+            />
 
-          {/* 직접 드래그할 수 있는 로켓 실시간 비행 위치 조종기 */}
-          <MovablePoint
-            point={[x, Number.isFinite(ya) ? ya : 0]}
-            constrain={(pos) => {
-              const cx = Math.min(xRange[1], Math.max(xRange[0], pos[0]));
-              let y; try { y = A.evaluate({ x: cx }); } catch (e) { y = NaN; }
-              return [cx, Number.isFinite(y) ? y : pos[1]];
-            }}
-            color={Theme.blue}
-            onMove={(pos) => setX(pos[0])}
-          />
-        </Mafs>
+            {/* [실시간 기록선] 현재 로켓 위치 기록 점 */}
+            <Point x={x} y={yaVal} color={Theme.blue} size={6} />
+
+            {/* [실시간 기록선] 현재 UFO 위치 기록 점 */}
+            <Point x={x} y={ybVal} color={Theme.orange} size={6} />
+          </Mafs>
+        </div>
         <div style={{ fontSize: '11px', color: '#64748b', textAlign: 'center', marginTop: '6px' }}>
-          💡 궤도 위의 <b>파란 조종 점</b>을 직접 좌우로 끌어서 비행 위치를 바꿔볼 수도 있어요!
+          💡 기록지의 그래프는 사용자가 로켓을 움직이는 움직임의 <b>흔적(결과)</b>만을 기록합니다.
         </div>
       </div>
 
-      {/* 3. 초등 기하학 연관 학습 가이드 */}
-      <div style={{ background: '#ecfdf5', borderRadius: '12px', padding: '12px', border: '1px dashed #10b981' }}>
-        <div style={{ fontSize: '13px', fontWeight: 'bold', color: '#065f46', marginBottom: '4px' }}>
-          🎯 초록색 정답 구간의 비밀을 알아볼까요?
+      {/* 3. 초등 기하학 직관성 확립 가이드 */}
+      <div style={{ background: '#f0fdf4', borderRadius: '12px', padding: '12px', border: '1px dashed #10b981' }}>
+        <div style={{ fontSize: '13px', fontWeight: 'bold', color: '#166534', marginBottom: '4px' }}>
+          🎯 조종사가 발견한 수학의 원리!
         </div>
-        <div style={{ fontSize: '12px', color: '#047857', lineHeight: '1.5' }}>
-          * 파란 로켓 선이 주황 UFO 선보다 <b>위에 날아가고 있는 시간 범위 전체</b>가 초록색 구간으로 덮여 있어요![cite: 1]
+        <div style={{ fontSize: '12px', color: '#15803d', lineHeight: '1.5' }}>
+          * 위에서 🚀을 움직여 <b>UFO보다 높게 비행하는 동안</b>에는, 아래 기록계의 세로 레이저선이 정확히 <b>초록색 영역</b> 속을 지나갑니다![cite: 1]
           <br />
-          * 이 초록색 구간이 가리키는 <b>가로축(x축)의 범위</b>가 바로 수학에서 말하는 <b>부등식 "A &gt; B"의 멋진 해(정답)</b>가 된답니다![cite: 1]
+          * 이처럼 파란 선이 주황 선보다 <b>위에 떠 있는 가로축(x)의 구간 전체</b>가 바로 부등식 <b>"A &gt; B"의 완벽한 정답(해)</b>이 됩니다![cite: 1]
         </div>
       </div>
 
