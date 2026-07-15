@@ -1923,12 +1923,7 @@ JSON만 출력하라.`;
     }
     const linked = renderBalanceGraphLinked(log, logIdx);
     if (linked) return linked;
-    return (
-      <>
-        {log.deviceVisual && renderVisual(log.deviceVisual)}
-        {renderVisual(log.visual)}
-      </>
-    );
+    return null;
   }
 
   // ===========================================================
