@@ -190,12 +190,17 @@ function ShiftCurveDevice({ v, logIdx, sharedXByLog, setSharedXByLog }) {
   return (
     <div style={styles.container}>
       <style>{`
+        /* [버그수정] 기존 코드는 @keyframes 안에서 r, stroke-width 같은 SVG 속성을
+           CSS로 애니메이션하려 했다. 이건 유효한 CSS가 아니라서 파싱 에러가 났다.
+           SVG 도형을 확대/축소하려면 transform: scale()을 써야 한다. */
         @keyframes boundaryPulse {
-          0% { r: 6px; opacity: 1; stroke-width: 2px; }
-          100% { r: 25px; opacity: 0; stroke-width: 4px; }
+          0% { transform: scale(0.4); opacity: 1; }
+          100% { transform: scale(1.6); opacity: 0; }
         }
         .boundary-glow {
           animation: boundaryPulse 0.8s infinite ease-out;
+          transform-origin: center;
+          transform-box: fill-box;
         }
         .mafs-7c-engine .MafsView { background-color: transparent !important; }
         .mafs-7c-engine .MafsView svg { overflow: visible !important; }
@@ -262,13 +267,13 @@ function ShiftCurveDevice({ v, logIdx, sharedXByLog, setSharedXByLog }) {
           {/* 꼭대기 접촉 센서 지점 */}
           <circle cx={toSvgCoords(peakX, currentPeakY)[0]} cy={toSvgCoords(peakX, currentPeakY)[1]} r="6" fill="#10b981" />
           {isPeakTouching && (
-            <circle cx={toSvgCoords(peakX, 0)[0]} cy={seaY} r="18" fill="none" stroke="#10b981" className="boundary-glow" />
+            <circle cx={toSvgCoords(peakX, 0)[0]} cy={seaY} r="18" fill="none" stroke="#10b981" strokeWidth="3" className="boundary-glow" />
           )}
 
           {/* 골짜기 접촉 센서 지점 */}
           <circle cx={toSvgCoords(valleyX, currentValleyY)[0]} cy={toSvgCoords(valleyX, currentValleyY)[1]} r="6" fill="#ef4444" />
           {isValleyTouching && (
-            <circle cx={toSvgCoords(valleyX, 0)[0]} cy={seaY} r="18" fill="none" stroke="#ef4444" className="boundary-glow" />
+            <circle cx={toSvgCoords(valleyX, 0)[0]} cy={seaY} r="18" fill="none" stroke="#ef4444" strokeWidth="3" className="boundary-glow" />
           )}
 
           {/* [조작의 주체] 레일 중앙의 오렌지색 기하 핸들 */}

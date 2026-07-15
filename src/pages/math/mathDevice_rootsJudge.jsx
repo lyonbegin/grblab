@@ -17,6 +17,10 @@ export function renderRootsJudge(log, logIdx, sharedXByLog, setSharedXByLog) {
   );
 }
 
+// SVG viewBox 고정 좌표계 상수 (그리기와 드래그 계산이 반드시 같은 값을 써야 어긋나지 않음)
+const VB_W = 500;
+const VB_H = 180;
+
 // 2. 실제 디바이스 컴포넌트 (모든 훅은 이 안전지대 내부에서 무조건 100% 실행됨)
 function RootsJudgeDevice({ v, logIdx, sharedXByLog, setSharedXByLog }) {
   // 수학적 기초 3차 함수 정의
@@ -103,14 +107,23 @@ function RootsJudgeDevice({ v, logIdx, sharedXByLog, setSharedXByLog }) {
     if (!activeDrag) return;
 
     const handleMove = (e) => {
-      const rect = svgRef.current?.getBoundingClientRect();
-      if (!rect) return;
+      // 터치로 끌 때 페이지가 같이 스크롤되며 충돌하는 것을 막는다.
+      if (e.cancelable) e.preventDefault();
 
-      const clientY = e.clientX ?? e.touches?.[0]?.clientY;
+      const rect = svgRef.current?.getBoundingClientRect();
+      if (!rect || rect.height === 0) return;
+
+      // [버그수정] 기존 코드는 e.clientX(가로좌표)를 clientY 변수에 넣고 있었다.
+      // 위아래 드래그인데 가로 좌표를 읽으니 핸들이 엉뚱하게 움직였다.
+      const clientY = e.clientY ?? e.touches?.[0]?.clientY;
       if (clientY === undefined) return;
 
+      // [버그수정] toSvgCoords는 viewBox="0 0 500 180" 고정 좌표계로 그림을 그리는데
+      // 기존 코드는 rect.height(실제 화면 픽셀 높이)를 곱해서 좌표를 계산했다.
+      // 화면 크기가 달라질 때마다 rect.height도 달라지므로 손가락 위치와
+      // 실제 도형 위치가 계속 어긋났다. 반드시 viewBox 높이(180)를 써야 한다.
       const pctY = (clientY - rect.top) / rect.height;
-      const mathY = (110 - (pctY * rect.height)) / 80 * 4.0;
+      const mathY = (110 - (pctY * VB_H)) / 80 * 4.0;
 
       if (activeDrag === 'curve') {
         let targetK = mathY - fBase(3.5); // 궤도 중심점(x=3.5) 기준
@@ -139,7 +152,7 @@ function RootsJudgeDevice({ v, logIdx, sharedXByLog, setSharedXByLog }) {
 
     window.addEventListener('pointermove', handleMove);
     window.addEventListener('pointerup', handleUp);
-    window.addEventListener('touchmove', handleMove);
+    window.addEventListener('touchmove', handleMove, { passive: false });
     window.addEventListener('touchend', handleUp);
 
     return () => {
@@ -154,7 +167,9 @@ function RootsJudgeDevice({ v, logIdx, sharedXByLog, setSharedXByLog }) {
   const handleX = 3.5;
   const handleY = f(handleX);
   const [handlePx, handlePy] = toSvgCoords(handleX, handleY);
-  const [lineY] = toSvgCoords(handleX, cVal);
+  // [버그수정] toSvgCoords는 [sx, sy]를 반환한다. 기존 코드는 첫 번째(가로 sx)를
+  // lineY로 받아서 기준선이 엉뚱한 높이에 그려졌다. 두 번째(세로 sy)를 받아야 한다.
+  const [, lineY] = toSvgCoords(handleX, cVal);
 
   // 물리 레일 패스 빌드
   const pathPoints = [];
@@ -175,7 +190,9 @@ function RootsJudgeDevice({ v, logIdx, sharedXByLog, setSharedXByLog }) {
     },
     svgBox: {
       background: '#fafafa', borderRadius: '16px', border: '2px solid #cbd5e1',
-      overflow: 'hidden', position: 'relative'
+      overflow: 'hidden', position: 'relative',
+      // 터치 드래그 중 브라우저 기본 스크롤/줌 제스처가 끼어들지 않게 막는다.
+      touchAction: 'none'
     },
     htmlLabel: { position: 'absolute', pointerEvents: 'none', fontWeight: '900', fontSize: '11px', padding: '4px 8px', borderRadius: '6px', whiteSpace: 'nowrap', transition: 'all 0.1s ease-out' }
   };
@@ -231,7 +248,7 @@ function RootsJudgeDevice({ v, logIdx, sharedXByLog, setSharedXByLog }) {
 
       {/* 2. [상단] 직접 조작형 이중 액션 SVG 월드 */}
       <div ref={svgRef} style={styles.svgBox}>
-        <svg viewBox="0 0 500 180" style={{ display: 'block', width: '100%' }}>
+        <svg viewBox={`0 0 ${VB_W} ${VB_H}`} style={{ display: 'block', width: '100%', touchAction: 'none' }}>
           {/* 해수면 바닥 가이드 라인 (y=0, 실근 판단선) */}
           <line x1="10" y1="110" x2="490" y2="110" stroke="#94a3b8" strokeWidth="2" strokeDasharray="4,3" />
           <text x="15" y="104" fill="#64748b" fontSize="9" fontWeight="bold">X축 바닥 기준선 (Y = 0)</text>
