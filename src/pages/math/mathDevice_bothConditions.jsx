@@ -1,5 +1,6 @@
 import React from 'react';
-import { Mafs, Theme, MovablePoint, Point, Polygon, Plot } from 'mafs';
+// ⚠️ [해결] Coordinates를 다시 안전하게 import 추가했습니다!
+import { Mafs, Coordinates, Theme, MovablePoint, Point, Polygon, Plot } from 'mafs';
 
 const HI2 = 7; // 물뿌리개의 오른쪽 끝 경계선 (고정)
 
@@ -79,7 +80,7 @@ export function renderBothConditions(log, logIdx, sharedXByLog, setSharedXByLog)
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', fontFamily: 'sans-serif' }}>
       
-      {/* [1단계] 2D 평면 정원 놀이터 (잔디밭 테마 적용) */}
+      {/* [1단계] 2D 평면 정원 놀이터 (잔디밭 테마) */}
       <div className="viz-box" style={{ background: '#ffffff', borderRadius: '15px', padding: '12px', border: '2px solid #e2e8f0' }}>
         
         {/* 실시간 정원 스코어보드 */}
@@ -102,22 +103,21 @@ export function renderBothConditions(log, logIdx, sharedXByLog, setSharedXByLog)
           </div>
         </div>
 
-        {/* 🌿 검은 배경을 지우고 화사한 연초록 잔디밭 느낌으로 스타일 수정 */}
+        {/* 잔디밭 배경 스타일 */}
         <div style={{ 
           width: '100%', 
           overflow: 'hidden', 
           borderRadius: '10px', 
-          background: '#e2f5d3', // 산뜻한 연초록색 잔디밭 배경
+          background: '#e2f5d3', 
           border: '1px solid #c2e3a6'
         }}>
-          {/* css-overrides를 통과시켜 Mafs 자체의 검은색 디폴트 백그라운드를 무력화 */}
           <Mafs 
             viewBox={{ x: [-5.5, 6.5], y: [-2.2, 2.2] }} 
             preserveAspectRatio={true} 
             height={250}
-            style={{ '--mafs-bg': 'transparent' }} // Mafs 검은 배경 투명화
+            style={{ '--mafs-bg': 'transparent' }} // 검은 배경 투명화
           >
-            {/* ⚠️ 눈금과 좌표 숫자를 보여주는 Cartesian 컴포넌트를 완전히 삭제했습니다. */}
+            {/* 눈금과 숫자 좌표계(Cartesian)는 꽃밭의 자연스러움을 위해 생략 */}
             
             {/* 파란색 그늘막 영역 (반투명 채우기) */}
             <Polygon
@@ -167,7 +167,7 @@ export function renderBothConditions(log, logIdx, sharedXByLog, setSharedXByLog)
         </div>
       </div>
 
-      {/* [2단계] 결과 연동 그래프 (그래프 영역은 좌표가 남아있어야 학습이 되므로 유지) */}
+      {/* [2단계] 결과 연동 그래프 */}
       <div className="viz-box" style={{ background: '#ffffff', borderRadius: '15px', padding: '12px', border: '2px solid #e2e8f0' }}>
         <div style={{ fontSize: '14px', color: '#1e293b', fontWeight: 'bold', textAlign: 'center', marginBottom: '8px' }}>
           📈 중심 거리(<span style={{ color: '#ef4444' }}>가로 d</span>)와 <b>겹친 꽃밭 넓이(<span style={{ color: '#10b981' }}>세로 y</span>)</b> 연동 그래프
