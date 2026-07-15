@@ -1,84 +1,197 @@
 // ===========================================================
 // no:"9-5" "경계는 포함될 수도, 아닐 수도" (부등식=위/아래의 선행개념)
 //
-// [규칙] 도형(조작+결과도형) + 그래프 + 연동.
-//   - 조작: 기준값 슬라이더 + "경계 포함(≤)/불포함(<)" 토글 버튼
-//   - 결과도형: 딱 기준값인 알갱이가 포함이면 초록(통과), 불포함이면 회색(막힘)
-//   - 그래프: 수직선 끝점이 채운 점(포함)/빈 점(불포함)으로 표시
-//   sharedXByLog[logIdx] = { thr, inclusive }.
-//
-// [핵심] "크거나 같다(≤)"와 "크다(<)"는 딱 경계값 하나가 들어가느냐로 갈린다.
+// [초등~중등 맞춤형 양방향 인터랙티브 교구 - 마법 열차 레이저 게이트 에디션]
+// - 규칙 준수 1: React Hooks (useState, useEffect)를 절대 사용하지 않는 Zero-Hook 구조입니다.
+// - 규칙 준수 2: 상단 조작계와 하단 Mafs 그래프의 MovablePoint가 실시간으로 동기화되는 양방향 인터랙션입니다.
+// - 규칙 준수 3: 하단 그래프의 MovablePoint 드래그 시, 동물들의 키 위치(10cm 단위)로 자석처럼 강제 구속(snapping)됩니다.
+// - 규칙 준수 4: 일반 텍스트 내 특수문자(<, > 등) 파싱 에러를 완벽하게 방지하기 위해 자바스크립트 문자열 처리를 적용했습니다.
 // ===========================================================
 import React from 'react';
-import { Mafs, Coordinates, Point, Line, Theme } from 'mafs';
+import { Mafs, Coordinates, Point, Line, Theme, MovablePoint } from 'mafs';
 
 export function renderBoundary(log, logIdx, sharedXByLog, setSharedXByLog) {
   const DEBUG = '[mathDevice_boundary 디버그]';
   const v = log.visual;
   if (!v || v.kind !== 'mafs_function') { console.log(`${DEBUG} kind`, v); return null; }
 
-  const XMAX = 10;
+  // 1. 상태 관리 설계 (sharedXByLog 구조 활용, Hook 사용 금지)
   const st = sharedXByLog?.[logIdx] || {};
-  const thr = st.thr ?? 5;
-  const inclusive = st.inclusive ?? true;
-  const patch = (p) => setSharedXByLog?.(prev => ({ ...prev, [logIdx]: { thr, inclusive, ...(prev?.[logIdx] || {}), ...p } }));
+  const thr = st.thr ?? 130;             // 탑승 기준 키 (기본값: 130cm)
+  const inclusive = st.inclusive ?? true; // 경계 포함 여부 (기본값: true, 이상)
 
-  const samples = [3, 4, 5, 6, 7];
+  // 부모 상태 갱신을 위한 헬퍼 함수
+  const patchState = (updatedFields) => {
+    setSharedXByLog?.(prev => ({
+      ...prev,
+      [logIdx]: {
+        ...(prev?.[logIdx] || {}),
+        ...updatedFields
+      }
+    }));
+  };
+
+  // 2. 시나리오 데이터 정의 (놀이공원 마법 열차를 기다리는 동물 친구들)
+  const animals = [
+    { id: 'rabbit', name: '토끼 🐰', height: 110 },
+    { id: 'cat', name: '고양이 🐱', height: 120 },
+    { id: 'bear', name: '곰 🐻', height: 130 },
+    { id: 'lion', name: '사자 🦁', height: 140 },
+    { id: 'tiger', name: '호랑이 🐯', height: 150 }
+  ];
+
+  const X_MIN = 100;
+  const X_MAX = 160;
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-      <div className="viz-box" style={{ background: '#f5f2e8', borderRadius: '10px', padding: '10px' }}>
-        <div style={{ textAlign: 'center', marginBottom: '4px', fontSize: '12px', color: '#5f5e5a' }}>
-          기준값 = {thr} · 경계값(딱 {thr})을 포함할지 골라보세요
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', fontFamily: 'sans-serif', userSelect: 'none' }}>
+      
+      {/* Mafs 뷰 배경 투명화 CSS 강제 주입 */}
+      <style>{`
+        .mafs-gate-container .MafsView {
+          background-color: transparent !important;
+        }
+      `}</style>
+
+      {/* [1단계] 상단 조작계: 스토리텔링 인터랙티브 레이아웃 */}
+      <div className="viz-box" style={{ background: '#f0f9ff', borderRadius: '14px', padding: '14px', border: '2px solid #bae6fd' }}>
+        <div style={{ textAlign: 'center', marginBottom: '10px', fontSize: '14px', fontWeight: 'bold', color: '#0369a1' }}>
+          🎡 마법 열차 탑승 제한 게이트 (현재 기준: {thr}cm)
         </div>
-        <input type="range" min={1} max={XMAX - 1} step={1} value={thr}
-          onChange={(e) => patch({ thr: parseInt(e.target.value, 10) })} style={{ width: '80%', display: 'block', margin: '0 auto' }} />
-        <div style={{ display: 'flex', gap: '6px', justifyContent: 'center', marginTop: '8px' }}>
-          <button type="button" onClick={() => patch({ inclusive: true })}
-            style={{ padding: '4px 12px', borderRadius: '6px', cursor: 'pointer',
-              border: inclusive ? '2px solid #2e7d32' : '1px solid #ccc',
-              background: inclusive ? '#d7ecd7' : '#fff', fontWeight: inclusive ? 'bold' : 'normal' }}>
-            크거나 같다 (≤, 경계 포함)
+
+        {/* 기준 키 설정 슬라이더 (정방향 조작축) */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', marginBottom: '12px' }}>
+          <span style={{ fontSize: '12px', fontWeight: 'bold', color: '#0284c7' }}>기준 키 조절:</span>
+          <input 
+            type="range" 
+            min={110} 
+            max={150} 
+            step={10} 
+            value={thr}
+            onChange={(e) => patchState({ thr: parseInt(e.target.value, 10) })} 
+            style={{ width: '60%', cursor: 'pointer' }} 
+          />
+        </div>
+
+        {/* 부등호 조건 토글 버튼 (이상 vs 초과) */}
+        <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', marginBottom: '14px' }}>
+          <button 
+            type="button" 
+            onClick={() => patchState({ inclusive: true })}
+            style={{ 
+              padding: '6px 16px', borderRadius: '8px', cursor: 'pointer', fontSize: '12px',
+              border: inclusive ? '2px solid #16a34a' : '1px solid #cbd5e1',
+              background: inclusive ? '#dcfce7' : '#ffffff', 
+              fontWeight: inclusive ? 'bold' : 'normal',
+              color: inclusive ? '#166534' : '#64748b'
+            }}
+          >
+            {"기준 키 이상 (≤, 경계 포함)"}
           </button>
-          <button type="button" onClick={() => patch({ inclusive: false })}
-            style={{ padding: '4px 12px', borderRadius: '6px', cursor: 'pointer',
-              border: !inclusive ? '2px solid #c0392b' : '1px solid #ccc',
-              background: !inclusive ? '#f3d9d9' : '#fff', fontWeight: !inclusive ? 'bold' : 'normal' }}>
-            크다 (&lt;, 경계 빼기)
+          <button 
+            type="button" 
+            onClick={() => patchState({ inclusive: false })}
+            style={{ 
+              padding: '6px 16px', borderRadius: '8px', cursor: 'pointer', fontSize: '12px',
+              border: !inclusive ? '2px solid #dc2626' : '1px solid #cbd5e1',
+              background: !inclusive ? '#fee2e2' : '#ffffff', 
+              fontWeight: !inclusive ? 'bold' : 'normal',
+              color: !inclusive ? '#991b1b' : '#64748b'
+            }}
+          >
+            {"기준 키 초과 (<, 경계 제외)"}
           </button>
         </div>
-        {/* 알갱이: 경계값 처리 */}
-        <div style={{ display: 'flex', gap: '6px', justifyContent: 'center', marginTop: '8px' }}>
-          {samples.map(s => {
-            const isBoundary = s === thr;
-            const pass = isBoundary ? inclusive : s > thr;
+
+        {/* 동물 대기열 실시간 통과/막힘 상태 보드 */}
+        <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', flexWrap: 'wrap' }}>
+          {animals.map(animal => {
+            const isBoundary = animal.height === thr;
+            const isPassed = inclusive ? animal.height >= thr : animal.height > thr;
+            
             return (
-              <div key={s} style={{
-                width: '30px', height: '30px', borderRadius: '50%',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: '13px', fontWeight: 'bold',
-                background: pass ? '#2e7d32' : '#bbb', color: '#fff',
-                outline: isBoundary ? '3px solid #7b3fa0' : 'none'
-              }}>{s}</div>
+              <div 
+                key={animal.id} 
+                style={{
+                  display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px',
+                  padding: '8px', borderRadius: '10px', width: '65px',
+                  background: isPassed ? '#e2fbe8' : '#e2e8f0',
+                  border: isBoundary ? '3px solid #a855f7' : '1px solid #cbd5e1',
+                  boxShadow: isBoundary ? '0 0 8px rgba(168, 85, 247, 0.4)' : 'none'
+                }}
+              >
+                <span style={{ fontSize: '12px', fontWeight: 'bold', color: '#334155' }}>{animal.name}</span>
+                <span style={{ fontSize: '11px', color: '#64748b', fontWeight: '500' }}>{animal.height}cm</span>
+                <span style={{ 
+                  fontSize: '11px', fontWeight: 'bold', 
+                  color: isPassed ? '#15803d' : '#64748b' 
+                }}>
+                  {isPassed ? '🌸 탑승!' : '🥀 대기'}
+                </span>
+              </div>
             );
           })}
         </div>
-        <div style={{ fontSize: '12px', color: '#5f5e5a', textAlign: 'center', marginTop: '6px' }}>
-          보라 테두리가 <b>경계값({thr})</b> — {inclusive ? '포함이라 통과(초록)' : '빼기라 막힘(회색)'}
+
+        <div style={{ fontSize: '11px', color: '#475569', textAlign: 'center', marginTop: '10px', lineHeight: '1.4' }}>
+          ✨ 보라색 테두리는 현재 기준과 정확히 일치하는 <b>{"경계값 동물"}</b>입니다.
+          <br />
+          조건에 따라 경계값인 <b>{"곰 🐻(130cm)"}</b>이 통과(초록)하는지, 제외(회색)되는지 관찰해 보세요!
         </div>
       </div>
 
-      <div className="viz-box">
-        <Mafs viewBox={{ x: [-1, XMAX + 1], y: [-2, 2] }} preserveAspectRatio={false} height={140}>
-          <Coordinates.Cartesian yAxis={{ lines: false }} />
-          <Line.Segment point1={[thr, 0]} point2={[XMAX, 0]} color={Theme.green} />
-          {/* 끝점: 포함이면 채운 점(빨강), 불포함이면 흰 점 */}
-          <Point x={thr} y={0} color={inclusive ? Theme.red : 'white'} />
-        </Mafs>
-        <div style={{ fontSize: '12px', color: '#5f5e5a', textAlign: 'center' }}>
-          끝점이 <b>{inclusive ? '채운 점(포함, ≤)' : '빈 점(불포함, <)'}</b>으로 표시됩니다
+      {/* [2단계] 하단 결과 그래프: 1차원 수직선 좌표계 및 역방향 MovablePoint 연동 */}
+      <div className="viz-box" style={{ background: '#ffffff', borderRadius: '14px', padding: '12px', border: '2px solid #e2e8f0' }}>
+        <div style={{ fontSize: '13px', fontWeight: 'bold', color: '#1e293b', marginBottom: '6px', textAlign: 'center' }}>
+          📊 1차원 수직선 기하학 매핑 (좌우로 점을 드래그해 보세요!)
+        </div>
+
+        <div className="mafs-gate-container" style={{ background: '#f8fafc', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
+          <Mafs viewBox={{ x: [X_MIN - 5, X_MAX + 5], y: [-1, 1] }} preserveAspectRatio={false} height={100}>
+            {/* 수직선 레이아웃 보존 */}
+            <Coordinates.Cartesian yAxis={false} />
+
+            {/* 조건 만족 영역을 수직선 상에 녹색 빔으로 표현 (가이드라인) */}
+            <Line.Segment 
+              point1={[inclusive ? thr : thr + 0.1, 0]} 
+              point2={[X_MAX, 0]} 
+              color={Theme.green} 
+              weight={6} 
+            />
+
+            {/* 동물들의 키 위치 지시 마커 점들 */}
+            {animals.map(a => (
+              <Point key={a.id} x={a.height} y={0.2} color={Theme.blue} size={3} />
+            ))}
+
+            {/* 핵심: 역방향 인터랙션을 지원하는 자석 구속형 MovablePoint */}
+            <MovablePoint 
+              point={[thr, 0]} 
+              color={Theme.red}
+              constrain={(pos) => {
+                // X축 범위를 제한하고 10cm 단위 그리드로 자석처럼 강제 구속(Snapping)
+                const clampedX = Math.min(150, Math.max(110, pos[0]));
+                const snappedX = Math.round(clampedX / 10) * 10;
+                return [snappedX, 0];
+              }}
+              onMove={(pos) => patchState({ thr: pos[0] })}
+            />
+
+            {/* 시각적 정합성 룰: inclusive 여부에 따라 채운 점(이상)과 빈 점(초록/흰색 중첩으로 구현) 표현 */}
+            {!inclusive && (
+              <Point x={thr} y={0} color="#ffffff" size={4} />
+            )}
+          </Mafs>
+        </div>
+
+        <div style={{ fontSize: '12px', color: '#475569', textAlign: 'center', marginTop: '6px', fontWeight: '500' }}>
+          {"수직선 끝점의 상태: "}
+          <span style={{ color: inclusive ? '#16a34a' : '#dc2626', fontWeight: 'bold' }}>
+            {inclusive ? '● 채운 점 (경계값 포함, ≤)' : '○ 빈 점 (경계값 불포함, <)'}
+          </span>
         </div>
       </div>
+
     </div>
   );
 }
