@@ -18,7 +18,7 @@ export function renderShadeBand(log, logIdx, sharedXByLog, setSharedXByLog) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
       {/* 도형: 곡선 y=x^2 + 기준선(드래그) + 음영 */}
-      <div className="viz-box" style={{ background: '#f5f2e8', borderRadius: '10px', padding: '6px' }}>
+      <div className="viz-box" style={{ background: '#ffffff', borderRadius: '10px', padding: '6px' }}>
         <div style={{ fontSize: '12px', color: '#5f5e5a', textAlign: 'center' }}>
           👉 <b>초록 기준선 점</b>을 위아래로 끌어보세요
         </div>
