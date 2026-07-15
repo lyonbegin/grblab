@@ -2,16 +2,29 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Mafs, Coordinates, Plot, Point, Line } from 'mafs';
 import { safeCompile, toRange } from './mathDeviceShared';
 
+// 1. 부모 래퍼 (안전 조건 검사 전용 - 훅을 절대 사용하지 않음)
 export function renderRootsJudge(log, logIdx, sharedXByLog, setSharedXByLog) {
   const v = log.visual;
-  if (!v || v.kind !== 'mafs_function') return null;
+  if (!v || v.kind !== 'mafs_function') return null; // 여기서 탈출해도 하위 훅에 영향을 주지 않음!
 
-  // 1. 수학적 기초 3차 함수 정의
+  return (
+    <RootsJudgeDevice
+      v={v}
+      logIdx={logIdx}
+      sharedXByLog={sharedXByLog}
+      setSharedXByLog={setSharedXByLog}
+    />
+  );
+}
+
+// 2. 실제 디바이스 컴포넌트 (모든 훅은 이 안전지대 내부에서 무조건 100% 실행됨)
+function RootsJudgeDevice({ v, logIdx, sharedXByLog, setSharedXByLog }) {
+  // 수학적 기초 3차 함수 정의
   const formula = (v.curves || [])[0]?.formula || '0.15*x*x*x - 1.2*x*x + 2*x + 3';
   const compiled = safeCompile(formula, 'explicit');
-  if (!compiled) return null;
 
   const fBase = (x) => {
+    if (!compiled) return 0.15 * x * x * x - 1.2 * x * x + 2 * x + 3;
     try {
       return compiled.evaluate({ x });
     } catch (e) {
@@ -28,7 +41,7 @@ export function renderRootsJudge(log, logIdx, sharedXByLog, setSharedXByLog) {
   const valleyX = 4.30;
   const valleyYBase = fBase(valleyX); // 약 1.34
 
-  // 2. 통합 연동 상태 관리 (kShift: 궤도 높이, cVal: 위험 기준선 높이)
+  // 통합 연동 상태 관리 (kShift: 궤도 높이, cVal: 위험 기준선 높이)
   const st = sharedXByLog?.[logIdx] || {};
   const kShift = st.kShift ?? 0.0;
   const cVal = st.cVal ?? 0.8;
@@ -44,7 +57,7 @@ export function renderRootsJudge(log, logIdx, sharedXByLog, setSharedXByLog) {
   // 평행이동이 반영된 실시간 함수 f(x) = fBase(x) + kShift
   const f = (x) => fBase(x) + kShift;
 
-  // 3. [수학 엔진] 실시간 X축과의 교점(실근) 탐색 알고리즘
+  // [수학 엔진] 실시간 X축과의 교점(실근) 탐색 알고리즘
   const findRoots = (fFunc) => {
     const roots = [];
     const step = 0.05;
@@ -75,7 +88,7 @@ export function renderRootsJudge(log, logIdx, sharedXByLog, setSharedXByLog) {
   const isPeakTouchingX = Math.abs(currentPeakY) < 0.12;
   const isValleyTouchingX = Math.abs(currentValleyY) < 0.12;
 
-  // 4. 직접 드래그 인터랙션 제어부 (SVG 물리 디바이스용 이중 조작계)
+  // 직접 드래그 인터랙션 제어부 (SVG 물리 디바이스용 이중 조작계)
   const svgRef = useRef(null);
   const [activeDrag, setActiveDrag] = useState(null); // 'curve' | 'line' | null
 
@@ -93,7 +106,7 @@ export function renderRootsJudge(log, logIdx, sharedXByLog, setSharedXByLog) {
       const rect = svgRef.current?.getBoundingClientRect();
       if (!rect) return;
 
-      const clientY = e.clientY ?? e.touches?.[0]?.clientY;
+      const clientY = e.clientX ?? e.touches?.[0]?.clientY;
       if (clientY === undefined) return;
 
       const pctY = (clientY - rect.top) / rect.height;

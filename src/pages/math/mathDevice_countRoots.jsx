@@ -2,11 +2,24 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Mafs, Coordinates, Plot, Point, Line } from 'mafs';
 import { safeCompile, toRange } from './mathDeviceShared';
 
+// 1. 부모 래퍼 (안전 조건 검사 전용 - 훅을 절대 사용하지 않음)
 export function renderCountRoots(log, logIdx, sharedXByLog, setSharedXByLog) {
   const v = log.visual;
-  if (!v || v.kind !== 'mafs_function') return null;
+  if (!v || v.kind !== 'mafs_function') return null; // 여기서 탈출해도 자식 훅에 영향 없음!
 
-  // 1. 교육 목적에 맞춰 엄격하게 설계된 4가지 기본 곡선 (0개, 1개, 2개, 3개 해)
+  return (
+    <CountRootsDevice
+      v={v}
+      logIdx={logIdx}
+      sharedXByLog={sharedXByLog}
+      setSharedXByLog={setSharedXByLog}
+    />
+  );
+}
+
+// 2. 실제 디바이스 컴포넌트 (모든 훅은 이 안전지대 내부에서 무조건 100% 실행됨)
+function CountRootsDevice({ v, logIdx, sharedXByLog, setSharedXByLog }) {
+  // 4가지 기본 곡선 코스 정의 (0개, 1개, 2개, 3개 해)
   const defaultFormulas = [
     '0.15*(x-3.5)*(x-3.5) + 1.5',       // 코스 0: 지면에 안 닿음 (0개)
     '0.15*(x-3.5)*(x-3.5)',             // 코스 1: 딱 한 번 스침 (1개)
@@ -14,7 +27,6 @@ export function renderCountRoots(log, logIdx, sharedXByLog, setSharedXByLog) {
     '-0.05*(x-1.5)*(x-3.5)*(x-5.5)'     // 코스 3: 세 번 요동 (3개)
   ];
 
-  // 커스텀 curves가 주어지면 매핑하고, 없으면 완벽한 디폴트 코스 세트 제공
   const curvesList = Array.isArray(v.curves) && v.curves.length >= 3
     ? v.curves.map(c => c.formula)
     : defaultFormulas;
@@ -38,9 +50,9 @@ export function renderCountRoots(log, logIdx, sharedXByLog, setSharedXByLog) {
   // 활성 포뮬러 컴파일 및 계산식 구현
   const formula = curvesList[activeCourse] || defaultFormulas[activeCourse];
   const compiled = safeCompile(formula, 'explicit');
-  if (!compiled) return null;
 
   const f = (x) => {
+    if (!compiled) return 0;
     try {
       return compiled.evaluate({ x });
     } catch (e) {
@@ -48,7 +60,7 @@ export function renderCountRoots(log, logIdx, sharedXByLog, setSharedXByLog) {
     }
   };
 
-  // 2. [수학 엔진] 기하학적으로 X축과 만나는 정밀한 교점(실근) 실시간 탐색 알고리즘
+  // [수학 엔진] 실시간 X축과의 교점(실근) 탐색 알고리즘
   const findRoots = (fFunc) => {
     const roots = [];
     const step = 0.05;
@@ -56,7 +68,6 @@ export function renderCountRoots(log, logIdx, sharedXByLog, setSharedXByLog) {
     for (let x = 0.55; x <= 6.5; x += step) {
       const currY = fFunc(x);
       if (prevY * currY <= 0) {
-        // 부호가 바뀌는 순간의 가로 위치를 보간법으로 정확하게 짚어냅니다.
         const exactX = x - step * (currY / (currY - prevY));
         if (roots.length === 0 || Math.abs(exactX - roots[roots.length - 1]) > 0.25) {
           roots.push(parseFloat(exactX.toFixed(2)));
@@ -74,13 +85,13 @@ export function renderCountRoots(log, logIdx, sharedXByLog, setSharedXByLog) {
   const isAtGround = currentRoots.some(rx => Math.abs(xVal - rx) < 0.18);
   const activeRoot = currentRoots.find(rx => Math.abs(xVal - rx) < 0.18) || null;
 
-  // 3. 직접 드래그 인터랙션 제어부 (SVG 물리 디바이스용)
+  // 직접 드래그 인터랙션 제어부 (SVG 물리 디바이스용)
   const svgRef = useRef(null);
   const [isDragging, setIsDragging] = useState(false);
 
   // SVG 픽셀과 수학 좌표 1:1 정밀 기하 매핑
   const toSvgCoords = (mx, my) => {
-    const sx = 50 + ((mx - 0.5) / 6.0) * 400; // 가로 400px 폭 매핑
+    const sx = 50 + ((mx - 0.5) / 6.0) * 400; // 가로 400px 폭
     const sy = 125 - (my / 5.0) * 100;       // 세로 지면(y=0) 기준 125px 매핑
     return [sx, sy];
   };

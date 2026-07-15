@@ -2,18 +2,30 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Mafs, Coordinates, Plot, Point, Line } from 'mafs';
 import { safeCompile, toRange } from './mathDeviceShared';
 
+// 1. 부모 래퍼 (안전 조건 검사 전용 - 훅을 절대 사용하지 않음)
 export function renderShiftCurve(log, logIdx, sharedXByLog, setSharedXByLog) {
   const v = log.visual;
-  if (!v || v.kind !== 'mafs_function') return null;
+  if (!v || v.kind !== 'mafs_function') return null; // 여기서 탈출해도 자식 훅에 전혀 영향 없음!
 
-  // 1. 수학적 기초 수식 정의 (기본 3차 곡선)
+  return (
+    <ShiftCurveDevice
+      v={v}
+      logIdx={logIdx}
+      sharedXByLog={sharedXByLog}
+      setSharedXByLog={setSharedXByLog}
+    />
+  );
+}
+
+// 2. 실제 디바이스 컴포넌트 (모든 훅은 이 안전지대 내부에서 무조건 100% 실행됨)
+function ShiftCurveDevice({ v, logIdx, sharedXByLog, setSharedXByLog }) {
+  // 수학적 기초 수식 정의 (기본 3차 곡선)
   // f(x) = 0.15x^3 - 1.2x^2 + 2x + 3
-  // 이 식은 극대(꼭대기) 약 x ≈ 1.03 (y ≈ 3.95), 극소(골짜기) 약 x ≈ 4.30 (y ≈ 1.34)을 가집니다.
   const formula = (v.curves || [])[0]?.formula || '0.15*x*x*x - 1.2*x*x + 2*x + 3';
   const compiled = safeCompile(formula, 'explicit');
-  if (!compiled) return null;
 
   const fBase = (x) => {
+    if (!compiled) return 0.15 * x * x * x - 1.2 * x * x + 2 * x + 3;
     try {
       return compiled.evaluate({ x });
     } catch (e) {
@@ -30,9 +42,9 @@ export function renderShiftCurve(log, logIdx, sharedXByLog, setSharedXByLog) {
   const valleyX = 4.30;
   const valleyYBase = fBase(valleyX); // 약 1.34
 
-  // 2. 통합 연동용 Y축 평행이동 값 k 상태 관리 (기본값은 0, 즉 기본 높이)
+  // 통합 연동용 Y축 평행이동 값 k 상태 관리
   const st = sharedXByLog?.[logIdx] || {};
-  const kShift = st.kShift ?? 0.0; // Y축 이동량
+  const kShift = st.kShift ?? 0.0;
 
   const patchState = (updatedFields) => {
     if (typeof setSharedXByLog !== 'function') return;
@@ -42,10 +54,10 @@ export function renderShiftCurve(log, logIdx, sharedXByLog, setSharedXByLog) {
     }));
   };
 
-  // 평행이동이 반영된 실시간 최종 함수 f(x) = fBase(x) + kShift
+  // 평행이동이 반영된 실시간 최종 함수
   const f = (x) => fBase(x) + kShift;
 
-  // 3. [수학 엔진] 실시간 X축과의 교점(실근) 탐색 알고리즘
+  // [수학 엔진] 실시간 X축과의 교점(실근) 탐색 알고리즘
   const findRoots = (fFunc) => {
     const roots = [];
     const step = 0.05;
@@ -74,7 +86,7 @@ export function renderShiftCurve(log, logIdx, sharedXByLog, setSharedXByLog) {
   const isValleyTouching = Math.abs(currentValleyY) < 0.12;
   const isAtBoundary = isPeakTouching || isValleyTouching;
 
-  // 4. 직접 드래그 인터랙션 제어부 (SVG 물리 디바이스용)
+  // 직접 드래그 인터랙션 제어부 (SVG 물리 디바이스용)
   const svgRef = useRef(null);
   const [isDragging, setIsDragging] = useState(false);
 
@@ -95,20 +107,16 @@ export function renderShiftCurve(log, logIdx, sharedXByLog, setSharedXByLog) {
       const clientY = e.clientY ?? e.touches?.[0]?.clientY;
       if (clientY === undefined) return;
 
-      // 마우스 세로 좌표를 수학의 Y축 평행이동 값 kShift로 기하학적 역연산
       const pctY = (clientY - rect.top) / rect.height;
       const mathY = (110 - (pctY * rect.height)) / 80 * 4.0; 
 
-      // 드래그 제어 범위를 kShift 기준 [-4.5, 0.5]로 제한
-      let targetK = mathY - fBase(3.5); // 궤도 중심점(x=3.5) 기준 오프셋 계산
+      let targetK = mathY - fBase(3.5); // 궤도 중심점(x=3.5) 기준
       targetK = Math.min(0.5, Math.max(-4.5, targetK));
 
-      // [초등 선행용 챡! 자석 스냅 구현]
-      // 1) 꼭대기가 바닥(Y=0)에 아주 가까워지면 정확히 극대 접점 상태로 스냅 고정
+      // [초등 선행용 자석 스냅 구현]
       if (Math.abs(peakYBase + targetK) < 0.15) {
         targetK = -peakYBase;
       }
-      // 2) 골짜기가 바닥(Y=0)에 아주 가까워지면 정확히 극소 접점 상태로 스냅 고정
       else if (Math.abs(valleyYBase + targetK) < 0.15) {
         targetK = -valleyYBase;
       }
@@ -129,9 +137,9 @@ export function renderShiftCurve(log, logIdx, sharedXByLog, setSharedXByLog) {
       window.removeEventListener('touchmove', handleMove);
       window.removeEventListener('touchend', handleUp);
     };
-  }, [isDragging]);
+  }, [isDragging, kShift]);
 
-  // 핸들 조작 위치 계산 (궤도의 수평 중앙인 x = 3.5 지점에 대형 높이 조절 핸들 배치)
+  // 핸들 조작 위치 계산
   const handleX = 3.5;
   const handleY = f(handleX);
   const [handlePx, handlePy] = toSvgCoords(handleX, handleY);
@@ -245,7 +253,7 @@ export function renderShiftCurve(log, logIdx, sharedXByLog, setSharedXByLog) {
             <circle cx={toSvgCoords(valleyX, 0)[0]} cy={seaY} r="18" fill="none" stroke="#ef4444" className="boundary-glow" />
           )}
 
-          {/* [조작의 주체] 레일 중앙에 고정되어 위아래 슬라이딩을 책임지는 오렌지색 기하 핸들 */}
+          {/* [조작의 주체] 레일 중앙의 오렌지색 기하 핸들 */}
           <g transform={`translate(${handlePx}, ${handlePy})`}>
             <circle cx="0" cy="0" r="15" fill="#f97316" stroke="#ffffff" strokeWidth="2.5" />
             <line x1="-8" y1="0" x2="8" y2="0" stroke="#ffffff" strokeWidth="3" />

@@ -2,18 +2,28 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Mafs, Coordinates, Plot, Point, Line } from 'mafs';
 import { toRange } from './mathDeviceShared';
 
+// 1. 부모 래퍼 (안전 조건 검사 전용 - 훅을 절대 사용하지 않음)
 export function renderFloorTouch(log, logIdx, sharedXByLog, setSharedXByLog) {
   const v = log.visual;
-  if (!v || v.kind !== 'mafs_function') return null;
+  if (!v || v.kind !== 'mafs_function') return null; // 여기서 안전하게 탈출하므로 하위 훅에 영향을 주지 않음!
 
-  // 1. 수학적 기초 수식 정의: f(x) = 0.4 * (x - 2) * (x - 5)
-  // 해(Roots)는 x = 2, x = 5인 지점입니다.
+  return (
+    <FloorTouchDevice 
+      v={v} 
+      logIdx={logIdx} 
+      sharedXByLog={sharedXByLog} 
+      setSharedXByLog={setSharedXByLog} 
+    />
+  );
+}
+
+// 2. 실제 디바이스 컴포넌트 (모든 훅은 이 안전지대 내부에서 무조건 100% 실행됨)
+function FloorTouchDevice({ v, logIdx, sharedXByLog, setSharedXByLog }) {
   const f = (x) => 0.4 * (x - 2) * (x - 5);
 
   const xRange = toRange(v.xRange, [0.2, 6.8]);
   const yRange = toRange(v.yRange, [-1.5, 4.5]);
 
-  // 2. 통합 연동용 X 좌표 상태 관리 (기본값은 0.8)
   const st = sharedXByLog?.[logIdx] || {};
   const xVal = st.xVal ?? 0.8;
 
@@ -25,20 +35,15 @@ export function renderFloorTouch(log, logIdx, sharedXByLog, setSharedXByLog) {
     }));
   };
 
-  // 3. 직접 드래그 인터랙션 제어부 (SVG 물리 디바이스용)
   const svgRef = useRef(null);
   const [isDragging, setIsDragging] = useState(false);
 
-  // SVG 픽셀 좌표와 수학 좌표평면 간의 정밀 매핑 함수
   const toSvgCoords = (mx, my) => {
-    // x: 0.5 -> 50px, 6.5 -> 450px (너비 400px 활용)
     const sx = 50 + ((mx - 0.5) / 6.0) * 400;
-    // y: -1.2 -> 160px, 4.5 -> 20px (높이 140px 활용)
     const sy = 160 - ((my - (-1.2)) / 5.7) * 140;
     return [sx, sy];
   };
 
-  // 마우스/터치 드래그 연동 로직
   useEffect(() => {
     if (!isDragging) return;
 
@@ -49,9 +54,8 @@ export function renderFloorTouch(log, logIdx, sharedXByLog, setSharedXByLog) {
       const clientX = e.clientX ?? e.touches?.[0]?.clientX;
       if (clientX === undefined) return;
 
-      // 마우스 위치 백분율 계산 및 수치 구속
       const pct = (clientX - rect.left) / rect.width;
-      const mathPct = (pct - 0.1) / 0.8; // 좌우 마진 50px 보정
+      const mathPct = (pct - 0.1) / 0.8;
       const targetX = 0.5 + Math.min(1, Math.max(0, mathPct)) * 6.0;
 
       patchState({ xVal: targetX });
@@ -73,18 +77,14 @@ export function renderFloorTouch(log, logIdx, sharedXByLog, setSharedXByLog) {
   }, [isDragging]);
 
   const yVal = f(xVal);
-
-  // 현재 해수면(y=0) 돌파 상태 판정
   const isNearRoot2 = Math.abs(xVal - 2) < 0.15;
   const isNearRoot5 = Math.abs(xVal - 5) < 0.15;
   const isAtFloor = isNearRoot2 || isNearRoot5;
   const activeRoot = isNearRoot2 ? 2 : (isNearRoot5 ? 5 : null);
 
-  // SVG 화면 렌더링용 변수들
   const [subX, subY] = toSvgCoords(xVal, yVal);
   const [seaY] = toSvgCoords(xVal, 0);
 
-  // 물리 궤적 패스 선 생성
   const pathPoints = [];
   for (let x = 0.5; x <= 6.5; x += 0.05) {
     const [px, py] = toSvgCoords(x, f(x));
@@ -177,7 +177,7 @@ export function renderFloorTouch(log, logIdx, sharedXByLog, setSharedXByLog) {
           <circle cx={toSvgCoords(2, 0)[0]} cy={seaY} r="8" fill="#15803d" opacity="0.7" />
           <circle cx={toSvgCoords(5, 0)[0]} cy={seaY} r="8" fill="#15803d" opacity="0.7" />
 
-          {/* 바닥 터치 웅장한 물보라 파동 (Splash 이펙트) */}
+          {/* 바닥 터치 물보라 파동 */}
           {isAtFloor && (
             <circle 
               cx={toSvgCoords(activeRoot, 0)[0]} 
@@ -189,15 +189,12 @@ export function renderFloorTouch(log, logIdx, sharedXByLog, setSharedXByLog) {
             />
           )}
 
-          {/* 움직이는 주인공 잠수 오렌지 탐험선 */}
+          {/* 움직이는 주인공 잠수 탐험선 */}
           <g transform={`translate(${subX}, ${subY})`}>
-            {/* 탐험선 동체 드래그 핸들 앵커 */}
             <circle cx="0" cy="0" r="14" fill="#f97316" stroke="#ffffff" strokeWidth="2" />
             <rect x="-10" y="-4" width="20" height="8" rx="3" fill="#f97316" />
-            {/* 조종 잠망경 */}
             <rect x="2" y="-12" width="4" height="8" fill="#cbd5e1" />
             <circle cx="6" cy="-12" r="2" fill="#ef4444" />
-            {/* 프로펠러 */}
             <line x1="-14" y1="-8" x2="-14" y2="8" stroke="#334155" strokeWidth="2.5" />
           </g>
         </svg>
@@ -229,7 +226,7 @@ export function renderFloorTouch(log, logIdx, sharedXByLog, setSharedXByLog) {
             <Point x={2} y={0} color="#15803d" svgCircleProps={{ r: 5 }} />
             <Point x={5} y={0} color="#15803d" svgCircleProps={{ r: 5 }} />
 
-            {/* 동기화되어 실시간으로 굴러다니는 추적 노드 */}
+            {/* 동기화되어 실시간으로 움직이는 추적 노드 */}
             <Point 
               x={xVal} 
               y={yVal} 
@@ -238,8 +235,7 @@ export function renderFloorTouch(log, logIdx, sharedXByLog, setSharedXByLog) {
             />
           </Mafs>
 
-          {/* 4. 기하 궤적과 정합되는 실시간 HTML 플로팅 라벨 */}
-          {/* 추적기 머리 위의 실시간 좌표 가이드 */}
+          {/* 4. 실시간 수치 플로팅 라벨 */}
           <div style={{
             ...styles.htmlLabel,
             left: `${((xVal - xRange[0]) / (xRange[1] - xRange[0])) * 100}%`,
