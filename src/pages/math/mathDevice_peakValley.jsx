@@ -1,10 +1,7 @@
 // ===========================================================
 // no:"4a" "봉우리와 골 — 오르내림 판독기로 찾는 산꼭대기와 골짜기"
 //
-// [초등학생 맞춤형 v4 — 기하학적 연관 사고 훈련 에디션]
-// - 계단식 그래프와 이산적 순위 비교를 제거했습니다.
-// - "오르막/내리막의 기울기(변화율)"를 연속적인 경사도 그래프로 시각화합니다.
-// - "꼭대기/골짜기 = 경사도가 0"이라는 미적분의 핵심 직관을 선 그래프로 연결합니다.
+// [초등학생 맞춤형 v4 — 기하학적 연관 사고 훈련 에디션 - 버그 수정본]
 // ===========================================================
 import React from 'react';
 import { Mafs, Coordinates, Plot, Point, Line, Theme, MovablePoint } from 'mafs';
@@ -130,8 +127,13 @@ export function renderPeakValley(log, logIdx, sharedXByLog, setSharedXByLog) {
           {/* 가로축과 세로 격자 표시 */}
           <Coordinates.Cartesian xAxis={{ lines: 1 }} yAxis={{ lines: 1 }} />
           
-          {/* 경사가 정확히 0이 되는 '완전히 평평한 지점' 안내선 */}
-          <Line.Horizontal y={0} color="#7f8c8d" style="dashed" />
+          {/* [수정] 경사가 정확히 0이 되는 기준선 (Line.Segment로 안전하게 대체) */}
+          <Line.Segment
+            point1={[xRange[0], 0]}
+            point2={[xRange[1], 0]}
+            color="#7f8c8d"
+            style={{ strokeDasharray: "4 4" }}
+          />
 
           {/* 경사도 곡선 (미분 그래프) */}
           <Plot.OfX y={df} color={Theme.purple} weight={3} />
@@ -144,7 +146,7 @@ export function renderPeakValley(log, logIdx, sharedXByLog, setSharedXByLog) {
             point1={[px, 0]}
             point2={[px, currentSlope]}
             color="#95a5a6"
-            style="dashed"
+            style={{ strokeDasharray: "3 3" }}
           />
         </Mafs>
       </div>
