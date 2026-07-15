@@ -61,7 +61,7 @@ import { renderIntersectX } from './mathDevice_intersectX';           // 8-3: �
 import { renderCountCross } from './mathDevice_countCross';           // 8-4: 궤적 시프트와 해의 개수
 import { renderDevice_no8 } from './mathDevice_no8';                  // 8  : 양팔저울 마스터판
 
-
+import { renderInflectionJudge } from './mathDevice_inflectionJudge';
 
 // deviceType(+선택 no) → 렌더러. 새 장치는 여기 한 줄만 추가.
 const REGISTRY = [
@@ -97,7 +97,7 @@ const REGISTRY = [
 //   { deviceType: 'intersect_x',     no: '8-6', render: renderIntersectX,     needsDeviceVisual: false },
 //   { deviceType: 'count_cross',     no: '8-7', render: renderCountCross,     needsDeviceVisual: false },
 
-
+{ deviceType: 'inflection_judge', no: '5e', render: renderInflectionJudge, needsDeviceVisual: false },
 
   { deviceType: 'compare',        no: '9-1', render: renderCompare,      needsDeviceVisual: false },
   { deviceType: 'height_is_size', no: '9-2', render: renderHeightIsSize, needsDeviceVisual: false },
