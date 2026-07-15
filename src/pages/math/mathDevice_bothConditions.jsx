@@ -1,10 +1,10 @@
 import React from 'react';
-// ⚠️ [해결] Coordinates를 다시 안전하게 import 추가했습니다!
-import { Mafs, Coordinates, Theme, MovablePoint, Point, Polygon, Plot } from 'mafs';
+// ⚠️ [수정] 꽃을 수학 좌표에 제대로 심기 위해 'Text' 컴포넌트를 추가로 불러왔습니다!
+import { Mafs, Coordinates, Theme, MovablePoint, Point, Polygon, Plot, Text } from 'mafs';
 
 const HI2 = 7; // 물뿌리개의 오른쪽 끝 경계선 (고정)
 
-// 원형 그늘막/물뿌리개를 매끄럽게 그리기 위한 360도 좌표 계산 함수
+// 완벽한 원형 면적을 그리기 위한 좌표 계산 함수
 const getCirclePoints = (cx, cy, r) => {
   const points = [];
   for (let i = 0; i <= 40; i++) {
@@ -48,16 +48,17 @@ export function renderBothConditions(log, logIdx, sharedXByLog, setSharedXByLog)
     }
   }
 
-  // 🌿 1. 빽빽한 꽃밭 좌표 및 실시간 상태 동적 생성 (약 150송이)
+  // 🌿 1. 넓은 꽃밭에 150송이 꽃 좌표 생성
   const flowerPositions = [];
   let bloomingCount = 0;
   let wiltedCount = 0;
 
-  // 가로 -5.2부터 6.2까지, 세로 -2.0부터 2.0까지 촘촘하게 심기
-  for (let x = -5.2; x <= 6.2; x += 0.7) {
-    for (let y = -2.0; y <= 2.0; y += 0.65) {
-      const jitterX = Math.sin(x * 11.5 + y * 8.3) * 0.15;
-      const jitterY = Math.cos(x * 7.1 + y * 13.9) * 0.15;
+  // 가로 -5.5 ~ 5.5 / 세로 -2.5 ~ 2.5 범위에 촘촘히 심기
+  for (let x = -5.5; x <= 5.5; x += 0.8) {
+    for (let y = -2.5; y <= 2.5; y += 0.8) {
+      // 바둑판처럼 보이지 않게 미세하게 위치를 흔들어 자연스러운 정원 연출
+      const jitterX = Math.sin(x * 11 + y * 7) * 0.2;
+      const jitterY = Math.cos(x * 8 + y * 13) * 0.2;
       const fx = x + jitterX;
       const fy = y + jitterY;
 
@@ -66,10 +67,10 @@ export function renderBothConditions(log, logIdx, sharedXByLog, setSharedXByLog)
 
       let emoji = '🌱';
       if (inShade && inWater) {
-        emoji = '🌸'; // 둘 다 만족하면 활짝!
+        emoji = '🌸';
         bloomingCount++;
       } else if (inShade || inWater) {
-        emoji = '🥀'; // 하나만 만족하면 시듦!
+        emoji = '🥀';
         wiltedCount++;
       }
 
@@ -80,10 +81,17 @@ export function renderBothConditions(log, logIdx, sharedXByLog, setSharedXByLog)
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', fontFamily: 'sans-serif' }}>
       
-      {/* [1단계] 2D 평면 정원 놀이터 (잔디밭 테마) */}
+      {/* ⚠️ [해결] Mafs의 고질적인 검은 배경을 강제로 지우는 CSS 주입 */}
+      <style>{`
+        .mafs-garden-container .MafsView {
+          background-color: transparent !important;
+        }
+      `}</style>
+
+      {/* [1단계] 2D 평면 정원 놀이터 */}
       <div className="viz-box" style={{ background: '#ffffff', borderRadius: '15px', padding: '12px', border: '2px solid #e2e8f0' }}>
         
-        {/* 실시간 정원 스코어보드 */}
+        {/* 실시간 꽃밭 현황판 */}
         <div style={{ 
           display: 'flex', 
           justifyContent: 'space-around', 
@@ -103,76 +111,47 @@ export function renderBothConditions(log, logIdx, sharedXByLog, setSharedXByLog)
           </div>
         </div>
 
-        {/* 잔디밭 배경 스타일 */}
-        <div style={{ 
+        {/* 🌿 진짜 연초록색 잔디밭 배경 박스 */}
+        <div className="mafs-garden-container" style={{ 
           width: '100%', 
           overflow: 'hidden', 
           borderRadius: '10px', 
-          background: '#e2f5d3', 
-          border: '1px solid #c2e3a6'
+          background: '#e8f5e9', // 화사한 잔디밭 색상
+          border: '1px solid #c8e6c9'
         }}>
+          {/* ⚠️ [해결] 찌그러짐 방지를 위해 viewBox 비율(12:6 = 2:1)을 정확히 맞춤 */}
           <Mafs 
-            viewBox={{ x: [-5.5, 6.5], y: [-2.2, 2.2] }} 
+            viewBox={{ x: [-6, 6], y: [-3, 3] }} 
             preserveAspectRatio={true} 
             height={250}
-            style={{ '--mafs-bg': 'transparent' }} // 검은 배경 투명화
           >
-            {/* 눈금과 숫자 좌표계(Cartesian)는 꽃밭의 자연스러움을 위해 생략 */}
+            {/* 파란색 그늘막 영역 */}
+            <Polygon points={getCirclePoints(b1, 0, R)} color={Theme.blue} fillOpacity={0.15} />
             
-            {/* 파란색 그늘막 영역 (반투명 채우기) */}
-            <Polygon
-              points={getCirclePoints(b1, 0, R)}
-              color={Theme.blue}
-              fillOpacity={0.15}
-            />
-            
-            {/* 주황색 물뿌리개 영역 (반투명 채우기) */}
-            <Polygon
-              points={getCirclePoints(b2, 0, R)}
-              color={Theme.orange}
-              fillOpacity={0.15}
-            />
+            {/* 주황색 물뿌리개 영역 */}
+            <Polygon points={getCirclePoints(b2, 0, R)} color={Theme.orange} fillOpacity={0.15} />
 
-            {/* 생성된 150여 개의 꽃들을 평면 상에 렌더링 */}
+            {/* ⚠️ [해결] 뭉쳐있던 꽃들을 원래 수학 위치(x, y)에 넓게 심어줌 */}
             {flowerPositions.map((f, idx) => (
-              <text
-                key={idx}
-                x={f.x}
-                y={f.y}
-                fontSize="15px"
-                dominantBaseline="middle"
-                textAnchor="middle"
-                style={{ userSelect: 'none', transition: 'all 0.15s ease' }}
-              >
+              <Text key={idx} x={f.x} y={f.y} size={18}>
                 {f.emoji}
-              </text>
+              </Text>
             ))}
 
-            {/* 그늘막 조종 파란 점 */}
-            <MovablePoint
-              point={[b1, 0]}
-              constrain={(pos) => [Math.min(5, Math.max(-5, pos[0])), 0]}
-              color={Theme.blue}
-              onMove={(pos) => setB1(pos[0])}
-            />
-
-            {/* 물뿌리개 조종 주황 점 */}
-            <MovablePoint
-              point={[b2, 0]}
-              constrain={(pos) => [Math.min(5, Math.max(-5, pos[0])), 0]}
-              color={Theme.orange}
-              onMove={(pos) => setB2(pos[0])}
-            />
+            {/* 조종 핸들 (그늘막/물뿌리개) */}
+            <MovablePoint point={[b1, 0]} constrain={(pos) => [Math.min(5, Math.max(-5, pos[0])), 0]} color={Theme.blue} onMove={(pos) => setB1(pos[0])} />
+            <MovablePoint point={[b2, 0]} constrain={(pos) => [Math.min(5, Math.max(-5, pos[0])), 0]} color={Theme.orange} onMove={(pos) => setB2(pos[0])} />
           </Mafs>
         </div>
       </div>
 
-      {/* [2단계] 결과 연동 그래프 */}
+      {/* [2단계] 거리(x) vs 면적(y) 결과 연동 그래프 */}
       <div className="viz-box" style={{ background: '#ffffff', borderRadius: '15px', padding: '12px', border: '2px solid #e2e8f0' }}>
         <div style={{ fontSize: '14px', color: '#1e293b', fontWeight: 'bold', textAlign: 'center', marginBottom: '8px' }}>
           📈 중심 거리(<span style={{ color: '#ef4444' }}>가로 d</span>)와 <b>겹친 꽃밭 넓이(<span style={{ color: '#10b981' }}>세로 y</span>)</b> 연동 그래프
         </div>
 
+        {/* 이 그래프는 넓이값을 보여주므로 좌표 눈금(Cartesian)을 남겨둡니다 */}
         <Mafs viewBox={{ x: [-0.5, 5.0], y: [-1, 14] }} preserveAspectRatio={false} height={180}>
           <Coordinates.Cartesian />
           
@@ -187,13 +166,12 @@ export function renderBothConditions(log, logIdx, sharedXByLog, setSharedXByLog)
             weight={4}
           />
           
-          {/* 현재 거리 d와 겹친 실제 면적을 가리키는 붉은 점 */}
           <Point x={d} y={overlapArea} color={Theme.red} size={6} />
         </Mafs>
 
         <div style={{ display: 'flex', justifyContent: 'space-between', background: '#f8fafc', padding: '8px', borderRadius: '8px', fontSize: '12px', color: '#475569', marginTop: '6px', fontWeight: '500' }}>
-          <span>📏 두 원 중심 사이의 거리: <b style={{ color: '#ef4444' }}>{d.toFixed(1)}칸</b></span>
-          <span>🟢 동시에 만족하는 넓이(y): <b style={{ color: '#16a34a' }}>{overlapArea.toFixed(1)}</b></span>
+          <span>📏 중심 거리(x축): <b style={{ color: '#ef4444' }}>{d.toFixed(1)}칸</b></span>
+          <span>🟢 겹친 넓이(y축): <b style={{ color: '#16a34a' }}>{overlapArea.toFixed(1)}</b></span>
         </div>
       </div>
 
