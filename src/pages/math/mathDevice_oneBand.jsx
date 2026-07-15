@@ -1,11 +1,8 @@
 // ===========================================================
-// no:"11-1" "한 조건은 하나의 띠를 만든다"
-// x = 왼끝 위치(lo, 오른끝 hi=8 고정), y = 띠 길이(hi-lo). 1차 직선(감소).
-// [도형] 투명 배경 위 실제 띠(막대) — MovablePoint로 왼끝을 직접 끈다.
-// [그래프] x,y 진짜 좌표축 있는 그래프. lo를 밀 때 점이 y=hi-lo 직선을 따라 움직인다.
+// no:"11-1" "한 조건은 하나의 띠를 만든다" — window addEventListener + rAF 드래그
 // ===========================================================
 import React from 'react';
-import { Mafs, Coordinates, Line, Point, Theme, MovablePoint } from 'mafs';
+import { Mafs, Coordinates, Line, Point, Theme } from 'mafs';
 
 const HI = 8;
 
@@ -15,27 +12,34 @@ export function renderOneBand(log, logIdx, sharedXByLog, setSharedXByLog) {
   const lo = sharedXByLog?.[logIdx]?.lo ?? 2;
   const setLo = (l) => setSharedXByLog?.(prev => ({ ...prev, [logIdx]: { ...(prev?.[logIdx] || {}), lo: Math.min(HI, Math.max(0, l)) } }));
   const length = HI - lo;
+  const px = (val) => (val / 10) * 320;
+
+  const onDown = (e) => {
+    const svg = e.currentTarget.ownerSVGElement || e.currentTarget.closest('svg');
+    const rect = svg.getBoundingClientRect();
+    let rafId = null, lastClientX = e.clientX;
+    const apply = () => {
+      rafId = null;
+      const xVal = Math.round(((lastClientX - rect.left) / rect.width) * 10);
+      setLo(Math.min(HI, Math.max(0, xVal)));
+    };
+    const onMove = (ev) => { lastClientX = ev.clientX; if (rafId === null) rafId = requestAnimationFrame(apply); };
+    const onUp = () => { window.removeEventListener('pointermove', onMove); window.removeEventListener('pointerup', onUp); };
+    window.addEventListener('pointermove', onMove);
+    window.addEventListener('pointerup', onUp);
+  };
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-      {/* 도형: 실제 띠, 좌표축 없이 순수 배경 */}
-      <div className="viz-box" style={{ background: '#ffffff', borderRadius: '10px', padding: '10px', position: 'relative' }}>
-        <div style={{ fontSize: '12px', color: '#5f5e5a', textAlign: 'center', marginBottom: '4px' }}>
-          👉 <b>왼쪽 끝</b>을 손가락으로 밀어 띠 길이를 바꿔보세요
-        </div>
-        <div style={{ position: 'relative', height: '50px' }}>
-          <div style={{ position: 'absolute', left: `${(lo / 10) * 100}%`, width: `${(length / 10) * 100}%`, top: '15px', height: '20px', background: '#5a86c4', opacity: 0.8, borderRadius: '4px' }} />
-        </div>
+      <div className="viz-box" style={{ background: '#ffffff', borderRadius: '10px', padding: '6px', border: '1px solid #e5e0d3' }}>
+        <div style={{ fontSize: '12px', color: '#5f5e5a', textAlign: 'center' }}>👉 <b>파란 띠</b>를 손가락으로 직접 밀어 길이를 바꿔보세요</div>
+        <svg width="100%" height="60" viewBox="0 0 320 60" style={{ touchAction: 'none', display: 'block' }}>
+          <rect x={px(lo)} y={18} width={px(length)} height={22} fill="#5a86c488" stroke="#2f5a99" strokeWidth="2" rx="4"
+            style={{ cursor: 'grab', touchAction: 'none' }} onPointerDown={onDown} />
+        </svg>
         <div style={{ fontSize: '12px', color: '#5f5e5a', textAlign: 'center' }}>구간: {lo} ~ {HI} · 길이 {length}</div>
-        {/* 조작용 MovablePoint (숨겨진 mafs, 실제 조작은 이 위에서) */}
-        <div style={{ position: 'absolute', inset: 0, opacity: 0 }}>
-          <Mafs viewBox={{ x: [0, 10], y: [-1, 1] }} preserveAspectRatio={false} height={80}>
-            <MovablePoint point={[lo, 0]} constrain={(pos) => [Math.min(HI, Math.max(0, Math.round(pos[0]))), 0]} onMove={(pos) => setLo(Math.min(HI, Math.max(0, Math.round(pos[0]))))} />
-          </Mafs>
-        </div>
       </div>
 
-      {/* 그래프: x=왼끝, y=길이. 진짜 직선 */}
       <div className="viz-box">
         <Mafs viewBox={{ x: [0, 10], y: [0, 10] }} preserveAspectRatio={false} height={240}>
           <Coordinates.Cartesian />
