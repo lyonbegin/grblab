@@ -60,8 +60,24 @@ import { renderUnionBand } from './mathDevice_unionBand';
 import { renderEmptySet } from './mathDevice_emptySet';
 import { renderBothConditions } from './mathDevice_bothConditions';
 import { renderNoSolution } from './mathDevice_noSolution';
+
+import { renderCoordPoint } from './mathDevice_coordPoint';           // 8-1: 레이저 스캔 교차
+import { renderFormulaMachine } from './mathDevice_formulaMachine';   // 8-2: 네온 레일 자취
+import { renderIntersectX } from './mathDevice_intersectX';           // 8-3: 두 레일 충돌과 x축
+import { renderCountCross } from './mathDevice_countCross';           // 8-4: 궤적 시프트와 해의 개수
+import { renderDevice_no8 } from './mathDevice_no8';                  // 8  : 양팔저울 마스터판
+
+
+
 // deviceType(+선택 no) → 렌더러. 새 장치는 여기 한 줄만 추가.
 const REGISTRY = [
+
+  { deviceType: 'coord_point',     no: '8-1', render: renderCoordPoint,     needsDeviceVisual: false },
+  { deviceType: 'formula_machine', no: '8-2', render: renderFormulaMachine, needsDeviceVisual: false },
+  { deviceType: 'intersect_x',     no: '8-3', render: renderIntersectX,     needsDeviceVisual: false },
+  { deviceType: 'count_cross',     no: '8-4', render: renderCountCross,     needsDeviceVisual: false },
+  { deviceType: 'balance',         no: '8',   render: renderDevice_no8,     needsDeviceVisual: true  },
+  
   { deviceType: 'balance',        no: '8', render: renderDevice_no8,   needsDeviceVisual: true },
   { deviceType: 'limit_approach', no: '1', render: renderDevice_no1,   linkedRender: renderLimitApproachLinked, needsDeviceVisual: true },
   { deviceType: 'limit_approach', no: '0', render: renderDevice_no1_1, needsDeviceVisual: true },
@@ -77,13 +93,18 @@ const REGISTRY = [
   { deviceType: 'roll_point',     no: '3b', render: renderRollPoint,     needsDeviceVisual: false },
   { deviceType: 'tangent_arrow',  no: '3c', render: renderTangentArrow,  needsDeviceVisual: false },
   { deviceType: 'interval_split', no: '3d', render: renderIntervalSplit, needsDeviceVisual: false },
-{ deviceType: 'coord_point',     no: '8-1', render: renderCoordPoint,     needsDeviceVisual: false },
-  { deviceType: 'formula_machine', no: '8-2', render: renderFormulaMachine, needsDeviceVisual: false },
-  { deviceType: 'substitute',      no: '8-3', render: renderSubstitute,     needsDeviceVisual: false },
-  { deviceType: 'trace_path',      no: '8-4', render: renderTracePath,      needsDeviceVisual: false },
-  { deviceType: 'two_lines',       no: '8-5', render: renderTwoLines,       needsDeviceVisual: false },
-  { deviceType: 'intersect_x',     no: '8-6', render: renderIntersectX,     needsDeviceVisual: false },
-  { deviceType: 'count_cross',     no: '8-7', render: renderCountCross,     needsDeviceVisual: false },
+
+
+// { deviceType: 'coord_point',     no: '8-1', render: renderCoordPoint,     needsDeviceVisual: false },
+//   { deviceType: 'formula_machine', no: '8-2', render: renderFormulaMachine, needsDeviceVisual: false },
+//   { deviceType: 'substitute',      no: '8-3', render: renderSubstitute,     needsDeviceVisual: false },
+//   { deviceType: 'trace_path',      no: '8-4', render: renderTracePath,      needsDeviceVisual: false },
+//   { deviceType: 'two_lines',       no: '8-5', render: renderTwoLines,       needsDeviceVisual: false },
+//   { deviceType: 'intersect_x',     no: '8-6', render: renderIntersectX,     needsDeviceVisual: false },
+//   { deviceType: 'count_cross',     no: '8-7', render: renderCountCross,     needsDeviceVisual: false },
+
+
+
   { deviceType: 'compare',        no: '9-1', render: renderCompare,      needsDeviceVisual: false },
   { deviceType: 'height_is_size', no: '9-2', render: renderHeightIsSize, needsDeviceVisual: false },
   { deviceType: 'swap_order',     no: '9-3', render: renderSwapOrder,    needsDeviceVisual: false },
