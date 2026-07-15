@@ -92,6 +92,8 @@ function ShiftCurveDevice({ v, logIdx, sharedXByLog, setSharedXByLog }) {
   const [isDragging, setIsDragging] = useState(false);
 
   // SVG 픽셀 좌표와 수학 좌표 1:1 기하 매핑
+  // viewBox="0 0 500 180" 고정 좌표계 기준. 실제 렌더 크기가 달라져도
+  // 이 함수가 그리는 도형은 항상 이 고정 좌표계를 쓴다.
   const toSvgCoords = (mx, my) => {
     const sx = 50 + ((mx - 0.5) / 6.0) * 400; // 가로 400px 폭
     const sy = 110 - (my / 4.0) * 80;        // 세로 해수면(y=0) 기준 110px 매핑
@@ -102,6 +104,9 @@ function ShiftCurveDevice({ v, logIdx, sharedXByLog, setSharedXByLog }) {
     if (!isDragging) return;
 
     const handleMove = (e) => {
+      // 터치 드래그 중 페이지가 함께 스크롤되며 충돌하는 것을 막는다.
+      if (e.cancelable) e.preventDefault();
+
       const rect = svgRef.current?.getBoundingClientRect();
       // rect 높이가 0이거나 없을 때의 오동작 방지 예외처리 추가
       if (!rect || rect.height === 0) return;
@@ -110,8 +115,12 @@ function ShiftCurveDevice({ v, logIdx, sharedXByLog, setSharedXByLog }) {
       const clientY = e.clientY ?? e.touches?.[0]?.clientY;
       if (clientY === undefined || clientX === undefined) return;
 
+      // [수정] rect.height(실제 화면 픽셀)가 아니라 viewBox 고정 좌표계(180)를 써야
+      // toSvgCoords가 그린 도형과 좌표가 일치한다. 화면 크기가 달라질 때마다
+      // rect.height도 달라지는데, 그걸 그대로 곱하면 손가락 위치와 핸들 위치가
+      // 어긋나면서 터치할 때마다 핸들이 엉뚱한 데로 튀는 원인이 됐다.
       const pctY = (clientY - rect.top) / rect.height;
-      const mathY = (110 - (pctY * rect.height)) / 80 * 4.0; 
+      const mathY = (110 - (pctY * 180)) / 80 * 4.0;
 
       let targetK = mathY - fBase(3.5); // 궤도 중심점(x=3.5) 기준
       targetK = Math.min(0.5, Math.max(-4.5, targetK));
@@ -147,7 +156,7 @@ function ShiftCurveDevice({ v, logIdx, sharedXByLog, setSharedXByLog }) {
   const handleX = 3.5;
   const handleY = f(handleX);
   const [handlePx, handlePy] = toSvgCoords(handleX, handleY);
-  
+
   // 🚀 [해결] 기존의 잘못된 destructuring [seaY]를 [, seaY]로 수정하여 Y좌표를 정확히 분해해 옴
   const [, seaY] = toSvgCoords(handleX, 0);
 
@@ -170,7 +179,9 @@ function ShiftCurveDevice({ v, logIdx, sharedXByLog, setSharedXByLog }) {
     },
     svgBox: {
       background: '#f8fafc', borderRadius: '16px', border: '2px solid #cbd5e1',
-      overflow: 'hidden', position: 'relative', cursor: isDragging ? 'grabbing' : 'grab'
+      overflow: 'hidden', position: 'relative', cursor: isDragging ? 'grabbing' : 'grab',
+      // 터치로 드래그하는 동안 브라우저의 기본 스크롤/줌 제스처가 끼어들지 않게 막는다.
+      touchAction: 'none'
     },
     htmlLabel: { position: 'absolute', pointerEvents: 'none', fontWeight: '900', fontSize: '11px', padding: '4px 8px', borderRadius: '6px', whiteSpace: 'nowrap', transition: 'all 0.1s ease-out' }
   };
@@ -227,15 +238,15 @@ function ShiftCurveDevice({ v, logIdx, sharedXByLog, setSharedXByLog }) {
       </div>
 
       {/* 2. [상단] 핸들을 직접 조작하는 해저 궤도 기지 (SVG) */}
-      <div 
-        ref={svgRef} 
+      <div
+        ref={svgRef}
         style={styles.svgBox}
         onPointerDown={(e) => {
           e.preventDefault();
           setIsDragging(true);
         }}
       >
-        <svg viewBox="0 0 500 180" style={{ display: 'block', width: '100%' }}>
+        <svg viewBox="0 0 500 180" style={{ display: 'block', width: '100%', touchAction: 'none' }}>
           {/* 바다 상단/하단 영역 렌더링 */}
           <rect x="0" y="0" width="500" height={seaY} fill="#e0f2fe" />
           <rect x="0" y={seaY} width="500" height={180 - seaY} fill="#0284c7" opacity="0.9" />
