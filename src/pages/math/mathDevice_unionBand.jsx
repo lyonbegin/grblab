@@ -1,31 +1,35 @@
 // ===========================================================
-// no:"11-4" "합치는 부분 = 합집합" — 막대 스타일, 손잡이를 직접 드래그.
-// recharts는 드래그가 안 되므로 순수 SVG 막대로 바꾸고, 막대 위쪽 손잡이를
-// pointer 이벤트로 끌어 값이 실시간 변하게 한다.
+// no:"11-4" "합치는 부분 = 합집합" — 막대 손잡이 드래그.
+// [수정] Hook(useRef) 제거 — 이 함수는 React 컴포넌트가 아니라 부모 렌더 중
+// 호출되는 일반 함수라 Hook을 쓰면 React #310(Hook 순서 위반)이 난다.
+// pointer 이벤트 안에서 e.target.closest('svg')로 매번 DOM을 찾는다.
 // ===========================================================
-import React, { useRef } from 'react';
+import React from 'react';
 
 function DraggableBar({ x, label, value, max, color, onChange }) {
   const H = 160, baseY = 170, W = 46;
-  const dragging = useRef(false);
-  const svgRootRef = useRef(null);
+  let isDragging = false;
 
-  const yToVal = (clientY) => {
-    const rect = svgRootRef.current.getBoundingClientRect();
+  const yToVal = (svg, clientY) => {
+    const rect = svg.getBoundingClientRect();
     const svgY = ((clientY - rect.top) / rect.height) * 200;
     const val = Math.round(((baseY - svgY) / H) * max);
     return Math.min(max, Math.max(0, val));
   };
 
-  const onDown = (e) => { dragging.current = true; svgRootRef.current = e.target.closest('svg'); e.target.setPointerCapture?.(e.pointerId); };
-  const onMove = (e) => { if (!dragging.current) return; onChange(yToVal(e.clientY)); };
-  const onUp = () => { dragging.current = false; };
+  const onDown = (e) => { isDragging = true; e.target.setPointerCapture?.(e.pointerId); };
+  const onMove = (e) => {
+    if (!isDragging) return;
+    const svg = e.target.closest('svg');
+    if (!svg) return;
+    onChange(yToVal(svg, e.clientY));
+  };
+  const onUp = () => { isDragging = false; };
 
   const barH = (value / max) * H;
   return (
     <g>
       <rect x={x} y={baseY - barH} width={W} height={barH} fill={color} opacity="0.75" />
-      {/* 손잡이 */}
       <rect x={x - 4} y={baseY - barH - 10} width={W + 8} height={16} fill={color} rx="4"
         style={{ cursor: 'ns-resize', touchAction: 'none' }}
         onPointerDown={onDown} onPointerMove={onMove} onPointerUp={onUp} />

@@ -1,7 +1,7 @@
 // ===========================================================
-// no:"11-5" "겹침이 없을 수도 있다" — venn 스타일, 원을 직접 드래그(11-3 자매).
+// no:"11-5" "겹침이 없을 수도 있다" — venn 스타일, 원 드래그. Hook 없이 구현(React #310 방지).
 // ===========================================================
-import React, { useRef, useCallback } from 'react';
+import React from 'react';
 
 export function renderEmptySet(log, logIdx, sharedXByLog, setSharedXByLog) {
   const v = log.visual;
@@ -15,15 +15,16 @@ export function renderEmptySet(log, logIdx, sharedXByLog, setSharedXByLog) {
   const dist = Math.abs(cxB - cxA);
   const hasOverlap = dist < 2 * R;
 
-  const svgRef = useRef(null);
-  const dragging = useRef(false);
-  const toSvgX = useCallback((clientX) => {
-    const rect = svgRef.current.getBoundingClientRect();
-    return ((clientX - rect.left) / rect.width) * 320;
-  }, []);
-  const onPointerDown = (e) => { dragging.current = true; e.target.setPointerCapture?.(e.pointerId); };
-  const onPointerMove = (e) => { if (!dragging.current) return; setCxB(toSvgX(e.clientX)); };
-  const onPointerUp = () => { dragging.current = false; };
+  let isDragging = false;
+  const onPointerDown = (e) => { isDragging = true; e.target.setPointerCapture?.(e.pointerId); };
+  const onPointerMove = (e) => {
+    if (!isDragging) return;
+    const svg = e.target.closest('svg');
+    if (!svg) return;
+    const rect = svg.getBoundingClientRect();
+    setCxB(((e.clientX - rect.left) / rect.width) * 320);
+  };
+  const onPointerUp = () => { isDragging = false; };
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
@@ -33,7 +34,7 @@ export function renderEmptySet(log, logIdx, sharedXByLog, setSharedXByLog) {
         </div>
       </div>
       <div className="viz-box">
-        <svg ref={svgRef} width="320" height="200" viewBox="0 0 320 200" style={{ touchAction: 'none' }}>
+        <svg width="320" height="200" viewBox="0 0 320 200" style={{ touchAction: 'none' }}>
           <circle cx={cxA} cy={cy} r={R} fill="#3b6d1133" stroke="#3b6d11" strokeWidth="2" />
           <circle
             cx={cxB} cy={cy} r={R} fill="#d85a3033" stroke="#d85a30" strokeWidth="2"

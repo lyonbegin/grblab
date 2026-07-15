@@ -1,9 +1,11 @@
 // ===========================================================
 // no:"11-3" "겹치는 부분 = 교집합" — venn 스타일, 원을 직접 드래그.
-// 슬라이더 대신 주황 원(조건2) 자체를 마우스/손가락으로 끌어 초록 원(조건1)과
-// 겹치게 만든다. 순수 SVG라 mafs 없이 pointer 이벤트로 드래그 구현.
+// [수정] 이 함수는 React 컴포넌트가 아니라 부모 렌더 중 호출되는 일반 함수라
+// useRef/useCallback 같은 Hook을 쓰면 Hook 순서 위반(React #310)이 난다.
+// 그래서 Hook 없이 pointer 이벤트 안에서 e.target.closest('svg')로 그때그때
+// DOM을 찾는 방식으로 구현한다.
 // ===========================================================
-import React, { useRef, useCallback } from 'react';
+import React from 'react';
 
 export function renderIntersectBand(log, logIdx, sharedXByLog, setSharedXByLog) {
   const v = log.visual;
@@ -18,17 +20,17 @@ export function renderIntersectBand(log, logIdx, sharedXByLog, setSharedXByLog) 
   const overlapRatio = Math.max(0, Math.min(1, 1 - dist / (2 * R)));
   const hasOverlap = dist < 2 * R;
 
-  const svgRef = useRef(null);
-  const dragging = useRef(false);
-
-  const toSvgX = useCallback((clientX) => {
-    const rect = svgRef.current.getBoundingClientRect();
-    return ((clientX - rect.left) / rect.width) * 320;
-  }, []);
-
-  const onPointerDown = (e) => { dragging.current = true; e.target.setPointerCapture?.(e.pointerId); };
-  const onPointerMove = (e) => { if (!dragging.current) return; setCxB(toSvgX(e.clientX)); };
-  const onPointerUp = () => { dragging.current = false; };
+  let isDragging = false;
+  const onPointerDown = (e) => { isDragging = true; e.target.setPointerCapture?.(e.pointerId); };
+  const onPointerMove = (e) => {
+    if (!isDragging) return;
+    const svg = e.target.closest('svg');
+    if (!svg) return;
+    const rect = svg.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 320;
+    setCxB(x);
+  };
+  const onPointerUp = () => { isDragging = false; };
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
@@ -38,7 +40,7 @@ export function renderIntersectBand(log, logIdx, sharedXByLog, setSharedXByLog) 
         </div>
       </div>
       <div className="viz-box">
-        <svg ref={svgRef} width="320" height="200" viewBox="0 0 320 200" style={{ touchAction: 'none' }}>
+        <svg width="320" height="200" viewBox="0 0 320 200" style={{ touchAction: 'none' }}>
           <circle cx={cxA} cy={cy} r={R} fill="#3b6d1133" stroke="#3b6d11" strokeWidth="2" />
           <circle
             cx={cxB} cy={cy} r={R} fill="#d85a3033" stroke="#d85a30" strokeWidth="2"
