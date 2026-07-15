@@ -37,7 +37,7 @@ export function renderBothConditions(log, logIdx, sharedXByLog, setSharedXByLog)
     <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
       <div className="viz-box" style={{ background: '#f5f2e8', borderRadius: '10px', padding: '10px' }}>
         <div style={{ fontSize: '12px', color: '#5f5e5a', textAlign: 'center', marginBottom: '6px' }}>
-          각 칸을 눌러 조건1·조건2 통과 여부를 정해보세요
+          👉 <b>칸을 손가락으로 눌러</b> 조건1·조건2 통과(O/X)를 직접 바꿔보세요
         </div>
         <table style={{ borderCollapse: 'collapse', margin: '0 auto' }}>
           <tbody>

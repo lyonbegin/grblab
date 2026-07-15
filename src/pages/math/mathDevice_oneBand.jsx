@@ -20,7 +20,7 @@ export function renderOneBand(log, logIdx, sharedXByLog, setSharedXByLog) {
     <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
       <div className="viz-box" style={{ background: '#f5f2e8', borderRadius: '10px', padding: '8px' }}>
         <div style={{ fontSize: '12px', color: '#5f5e5a', textAlign: 'center', marginBottom: '4px' }}>
-          두 점을 끌어 띠(구간)를 만드세요
+          👉 <b>빨간 점 두 개</b>를 손가락으로 양옆으로 끌어 띠(구간)를 만드세요
         </div>
         <Mafs viewBox={{ x: [-1, XMAX + 1], y: [-1, 3] }} preserveAspectRatio={false} height={160}>
           <Coordinates.Cartesian yAxis={{ lines: false }} />
