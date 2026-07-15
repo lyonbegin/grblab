@@ -24,12 +24,13 @@ function ShiftCurveDevice({ v, logIdx, sharedXByLog, setSharedXByLog }) {
   const formula = (v.curves || [])[0]?.formula || '0.15*x*x*x - 1.2*x*x + 2*x + 3';
   const compiled = safeCompile(formula, 'explicit');
 
+  // safeCompile 실패 시의 Fallback 가이드라인 적용
   const fBase = (x) => {
     if (!compiled) return 0.15 * x * x * x - 1.2 * x * x + 2 * x + 3;
     try {
       return compiled.evaluate({ x });
     } catch (e) {
-      return NaN;
+      return 0.15 * x * x * x - 1.2 * x * x + 2 * x + 3;
     }
   };
 
@@ -54,7 +55,7 @@ function ShiftCurveDevice({ v, logIdx, sharedXByLog, setSharedXByLog }) {
     }));
   };
 
-  // 평행이동이 반영된 실시간 최종 함수
+  // 평행이동이 반영된 실시간 최종 함수 f(x) = fBase(x) + kShift
   const f = (x) => fBase(x) + kShift;
 
   // [수학 엔진] 실시간 X축과의 교점(실근) 탐색 알고리즘
@@ -102,10 +103,12 @@ function ShiftCurveDevice({ v, logIdx, sharedXByLog, setSharedXByLog }) {
 
     const handleMove = (e) => {
       const rect = svgRef.current?.getBoundingClientRect();
-      if (!rect) return;
+      // rect 높이가 0이거나 없을 때의 오동작 방지 예외처리 추가
+      if (!rect || rect.height === 0) return;
 
+      const clientX = e.clientX ?? e.touches?.[0]?.clientX;
       const clientY = e.clientY ?? e.touches?.[0]?.clientY;
-      if (clientY === undefined) return;
+      if (clientY === undefined || clientX === undefined) return;
 
       const pctY = (clientY - rect.top) / rect.height;
       const mathY = (110 - (pctY * rect.height)) / 80 * 4.0; 
@@ -126,9 +129,10 @@ function ShiftCurveDevice({ v, logIdx, sharedXByLog, setSharedXByLog }) {
 
     const handleUp = () => setIsDragging(false);
 
+    // pointermove와 touchmove 시에 전역 이벤트를 매끄럽게 처리
     window.addEventListener('pointermove', handleMove);
     window.addEventListener('pointerup', handleUp);
-    window.addEventListener('touchmove', handleMove);
+    window.addEventListener('touchmove', handleMove, { passive: false });
     window.addEventListener('touchend', handleUp);
 
     return () => {
@@ -137,13 +141,15 @@ function ShiftCurveDevice({ v, logIdx, sharedXByLog, setSharedXByLog }) {
       window.removeEventListener('touchmove', handleMove);
       window.removeEventListener('touchend', handleUp);
     };
-  }, [isDragging, kShift]);
+  }, [isDragging]); // 🚀 kShift 의존성을 완전히 제거하여 드래그 렉 현상을 원천 차단!
 
   // 핸들 조작 위치 계산
   const handleX = 3.5;
   const handleY = f(handleX);
   const [handlePx, handlePy] = toSvgCoords(handleX, handleY);
-  const [seaY] = toSvgCoords(handleX, 0);
+  
+  // 🚀 [해결] 기존의 잘못된 destructuring [seaY]를 [, seaY]로 수정하여 Y좌표를 정확히 분해해 옴
+  const [, seaY] = toSvgCoords(handleX, 0);
 
   // 물리 궤도 패스 빌드
   const pathPoints = [];
