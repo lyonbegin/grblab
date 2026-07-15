@@ -35,7 +35,31 @@ import { renderVertex } from './mathDevice_vertex';
 import { renderTranslate } from './mathDevice_translate';
 import { renderDipCount } from './mathDevice_dipCount';
 import { renderTangentBoundary } from './mathDevice_tangentBoundary';
+import { renderPeakValley }        from './mathDevice_peakValley';
+import { renderExtremumZeroSlope } from './mathDevice_extremumZeroSlope';
+import { renderExtremumTurn }      from './mathDevice_extremumTurn';
+import { renderExtremumJudge }     from './mathDevice_extremumJudge';
+import { renderBowlShape }       from './mathDevice_bowlShape';
+import { renderCurveBend }       from './mathDevice_curveBend';
+import { renderTangentSide }     from './mathDevice_tangentSide';
+import { renderInflectionPoint } from './mathDevice_inflectionPoint';
+import { renderHighestPoint }      from './mathDevice_highestPoint';
+import { renderWindowSlide }       from './mathDevice_windowSlide';
+import { renderEndpointCandidate } from './mathDevice_endpointCandidate';
+import { renderMaxMinJudge }       from './mathDevice_maxMinJudge';
+import { renderFloorTouch } from './mathDevice_floorTouch';
+import { renderCountRoots } from './mathDevice_countRoots';
+import { renderShiftCurve } from './mathDevice_shiftCurve';
+import { renderRootsJudge } from './mathDevice_rootsJudge';
 
+
+import { renderOneBand } from './mathDevice_oneBand';
+import { renderShadeBand } from './mathDevice_shadeBand';
+import { renderIntersectBand } from './mathDevice_intersectBand';
+import { renderUnionBand } from './mathDevice_unionBand';
+import { renderEmptySet } from './mathDevice_emptySet';
+import { renderBothConditions } from './mathDevice_bothConditions';
+import { renderNoSolution } from './mathDevice_noSolution';
 // deviceType(+선택 no) → 렌더러. 새 장치는 여기 한 줄만 추가.
 const REGISTRY = [
   { deviceType: 'balance',        no: '8', render: renderDevice_no8,   needsDeviceVisual: true },
@@ -74,6 +98,29 @@ const REGISTRY = [
   { deviceType: 'translate',         no: '10-5', render: renderTranslate,       needsDeviceVisual: false },
   { deviceType: 'dip_count',         no: '10-6', render: renderDipCount,        needsDeviceVisual: false },
   { deviceType: 'tangent_boundary',  no: '10-7', render: renderTangentBoundary, needsDeviceVisual: false },
+  { deviceType: 'peak_valley',         no: '4a', render: renderPeakValley,        needsDeviceVisual: false },
+  { deviceType: 'extremum_zero_slope', no: '4b', render: renderExtremumZeroSlope, needsDeviceVisual: false },
+  { deviceType: 'extremum_turn',       no: '4c', render: renderExtremumTurn,      needsDeviceVisual: false },
+  { deviceType: 'extremum_judge',      no: '4d', render: renderExtremumJudge,     needsDeviceVisual: false },
+  { deviceType: 'bowl_shape',       no: '5a', render: renderBowlShape,       needsDeviceVisual: false },
+  { deviceType: 'curve_bend',       no: '5b', render: renderCurveBend,       needsDeviceVisual: false },
+  { deviceType: 'tangent_side',     no: '5c', render: renderTangentSide,     needsDeviceVisual: false },
+  { deviceType: 'inflection_point', no: '5d', render: renderInflectionPoint, needsDeviceVisual: false },
+  { deviceType: 'highest_point',       no: '6a', render: renderHighestPoint,      needsDeviceVisual: false },
+  { deviceType: 'window_slide',        no: '6b', render: renderWindowSlide,       needsDeviceVisual: false },
+  { deviceType: 'endpoint_candidate',  no: '6c', render: renderEndpointCandidate, needsDeviceVisual: false },
+  { deviceType: 'max_min_judge',       no: '6d', render: renderMaxMinJudge,       needsDeviceVisual: false },
+  { deviceType: 'floor_touch', no: '7a', render: renderFloorTouch, needsDeviceVisual: false },
+  { deviceType: 'count_roots', no: '7b', render: renderCountRoots, needsDeviceVisual: false },
+  { deviceType: 'shift_curve', no: '7c', render: renderShiftCurve, needsDeviceVisual: false },
+  { deviceType: 'roots_judge', no: '7d', render: renderRootsJudge, needsDeviceVisual: false },
+  { deviceType: 'one_band',        no: '11-1', render: renderOneBand,        needsDeviceVisual: false },
+  { deviceType: 'shade_band',      no: '11-2', render: renderShadeBand,      needsDeviceVisual: false },
+  { deviceType: 'intersect_band',  no: '11-3', render: renderIntersectBand,  needsDeviceVisual: false },
+  { deviceType: 'union_band',      no: '11-4', render: renderUnionBand,      needsDeviceVisual: false },
+  { deviceType: 'empty_set',       no: '11-5', render: renderEmptySet,       needsDeviceVisual: false },
+  { deviceType: 'both_conditions', no: '11-6', render: renderBothConditions, needsDeviceVisual: false },
+  { deviceType: 'no_solution',     no: '11-7', render: renderNoSolution,     needsDeviceVisual: false },
 ];
 
 const BY_NO = {}, BY_DEVICE_TYPE = {};
