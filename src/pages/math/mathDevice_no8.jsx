@@ -90,7 +90,7 @@ export function renderDevice_no8(log, logIdx, sharedXByLog, setSharedXByLog) {
     badge: '시소 탐색 중'
   };
 
-  if (isEquilibrium) {
+  if (isBalanced) {
     consoleTitle = "🎉 미션 성공! 저울대가 완벽하게 평평해졌습니다!";
     consoleDetail = "양쪽 요금의 무게가 똑같아져 저울이 평평해진 바로 그 순간, 우측 수학 모눈종이 위에서는 두 요금 그래프 선이 정확하게 크로스하는 [교점 P(3, 7)]이 기적처럼 켜집니다!";
     panelTheme = { bg: '#eff6ff', border: '#bfdbfe', text: '#1e40af', cardInk: '#16a34a', badge: '⚖️ 완전 평형 달성' };
