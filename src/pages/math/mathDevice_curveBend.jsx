@@ -2,7 +2,8 @@ import React from 'react';
 import { Mafs, Coordinates, Plot, Theme, MovablePoint, Point, Text } from 'mafs';
 import { toRange } from './mathDeviceShared';
 
-export function renderSpaceshipAndStone(log, logIdx, sharedXByLog, setSharedXByLog) {
+// renderSpaceshipAndStone 대신 원래 규격인 renderCurveBend로 변경하여 export 합니다.
+export function renderCurveBend(log, logIdx, sharedXByLog, setSharedXByLog) {
   const v = log.visual;
   if (!v || v.kind !== 'mafs_function') return null;
 
