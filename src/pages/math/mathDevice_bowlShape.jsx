@@ -1,203 +1,174 @@
-// ===========================================================
-// no:"5a" "그릇 모양 — 받친 그릇 vs 엎어놓은 그릇" 전용 인터랙션. (오목볼록 세트 첫 칸)
-//
-// [핵심] 아래로 볼록(∪, 물 담기는 그릇) vs 위로 볼록(∩, 엎어놓은 그릇) 구분. 반전 없음.
-//   - 규칙 준수 1: React Hooks (useState, useEffect)를 절대 사용하지 않는 Zero-Hook 구조입니다.
-//   - 규칙 준수 2: 상단 조작계와 하단 Mafs 그래프의 MovablePoint(꼭짓점)가 실시간으로 연동되는 양방향 인터랙션입니다.
-//   - 규칙 준수 3: preserveAspectRatio={true}를 적용하여 수학적으로 정확한 곡률을 유지합니다.
-//   - 규칙 준수 4: 텍스트 내 특수문자 파싱 에러 방지를 위해 자바스크립트 문자열 표현식을 완벽하게 바인딩했습니다.
-// ===========================================================
 import React from 'react';
-import { Mafs, Coordinates, Plot, Theme, MovablePoint, Polygon, Line, Point } from 'mafs';
-import { safeCompile, toRange } from './mathDeviceShared';
+import { Mafs, Coordinates, Plot, Theme, MovablePoint, Point, Line, Text } from 'mafs';
+import { toRange } from './mathDeviceShared';
 
 export function renderBowlShape(log, logIdx, sharedXByLog, setSharedXByLog) {
-  const DEBUG = '[mathDevice_bowlShape 디버그]';
   const v = log.visual;
-  if (!v || v.kind !== 'mafs_function') { console.log(`${DEBUG} kind`, v); return null; }
+  if (!v || v.kind !== 'mafs_function') return null;
 
-  // 1. 수식 컴파일 및 기본값 세팅
-  const upFormula = (v.curves || [])[0]?.formula || '0.4*(x-3)*(x-3)+1';   // ∪ 골짜기 기본값
-  const downFormula = (v.curves || [])[1]?.formula || '-0.4*(x-3)*(x-3)+7'; // ∩ 언덕 기본값
-  
-  const cUp = safeCompile(upFormula, 'explicit');
-  const cDown = safeCompile(downFormula, 'explicit');
-  if (!cUp || !cDown) return null;
+  const xRange = toRange(v.xRange, [0, 10]);
+  const yRange = toRange(v.yRange, [-4, 4]);
 
-  const xRange = toRange(v.xRange, [0, 6]);
-  const yRange = toRange(v.yRange, [0, 8]);
-  const xCenterOrig = (xRange[0] + xRange[1]) / 2; // 원본 수식의 기준 중심축 (3.0)
-
-  // 2. 상태 관리 설계 (sharedXByLog 구조 활성화, Hook 절대 금지)
-  const st = sharedXByLog?.[logIdx] || {};
-  const which = st.which ?? 'up'; // 'up'=∪ (골짜기), 'down'=∩ (언덕)
-  const cx = st.cx ?? xCenterOrig; // 지형의 중심축 X 좌표 (양방향 연동 대상)
-
-  const patchState = (updatedFields) => {
-    setSharedXByLog?.(prev => ({
-      ...prev,
-      [logIdx]: {
-        ...(prev?.[logIdx] || {}),
-        ...updatedFields
-      }
-    }));
+  // 1. 워터슬라이드의 2D 곡선 경로 정의 (S자 슬라이드 경로)
+  // fSlide(x)는 슬라이드의 높낮이/경로를 결정합니다.
+  const fSlide = (x) => {
+    return 2.5 * Math.sin(x * 0.9) * Math.cos(x * 0.3);
   };
 
-  // 3. 지형 이동(shift) 메커니즘을 적용한 실시간 함수 정의
-  const dx = cx - xCenterOrig;
-  
-  const fUp = (x) => { 
-    try { return cUp.evaluate({ x: x - dx }); } catch (e) { return NaN; } 
+  // 2. 수학적인 곡률(Curvature) 계산 함수 (곡선의 급하기 y)
+  // 1계 도함수(f')와 2계 도함수(f'')를 이용하여 곡선이 꺾이는 정도를 계산합니다.
+  const getCurvature = (x) => {
+    const h = 0.01;
+    const f0 = fSlide(x - h);
+    const f1 = fSlide(x);
+    const f2 = fSlide(x + h);
+
+    const df = (f2 - f0) / (2 * h); // 1차 미분 (기울기)
+    const ddf = (f2 - 2 * f1 + f0) / (h * h); // 2차 미분 (휘어짐)
+
+    // 곡률 공식: |f''| / (1 + f'^2)^(1.5)
+    const k = Math.abs(ddf) / Math.pow(1 + df * df, 1.5);
+    
+    // 아이들이 보기 좋은 수치로 스케일 조정 (최대 대략 5 정도로 맵핑)
+    return Math.min(5, k * 3);
   };
-  const fDown = (x) => { 
-    try { return cDown.evaluate({ x: x - dx }); } catch (e) { return NaN; } 
-  };
 
-  const isUp = which === 'up';
-  const f = isUp ? fUp : fDown;
+  // 3. 상태 관리 (Zero-Hook 규칙 준수, 부모 sharedXByLog 사용)
+  // t: 슬라이드 위의 현재 튜브 위치 (x좌표, 기본값 2)
+  const t = sharedXByLog?.[logIdx]?.t ?? 2;
+  const setT = (val) => setSharedXByLog?.(prev => ({
+    ...prev,
+    [logIdx]: { ...(prev?.[logIdx] || {}), t: Math.min(9.5, Math.max(0.5, val)) }
+  }));
 
-  // 4. 시각적 피드백: 오목(∪)일 때 물이 고이는 레이어 생성 (정밀 샘플링 폴리곤)
-  const waterPoints = [];
-  if (isUp) {
-    const yWaterLevel = fUp(cx) + 1.4; // 꼭짓점으로부터 일정 높이까지 물이 차오름
-    const steps = 20;
-    const wWidth = 1.6;
-    const xStart = cx - wWidth;
-    const xEnd = cx + wWidth;
+  const currentY = fSlide(t); // 현재 튜브의 y위치
+  const curvatureVal = getCurvature(t); // 현재 위치의 곡선 급하기(곡률)
 
-    for (let i = 0; i <= steps; i++) {
-      const sx = xStart + (xEnd - xStart) * (i / steps);
-      waterPoints.push([sx, Math.min(yWaterLevel, fUp(sx))]);
-    }
-    waterPoints.push([xEnd, yWaterLevel]);
-    waterPoints.push([xStart, yWaterLevel]);
+  // 4. 물보라(Water Splash) 이펙트 좌표들 동적 계산
+  // 곡선 급하기(곡률)가 클수록 더 많고 거대한 물보라 이펙트를 주변에 흩뿌립니다.
+  const splashParticles = [];
+  const splashCount = Math.floor(curvatureVal * 4); // 급할수록 물보라 개수 증가
+
+  for (let i = 0; i < splashCount; i++) {
+    // 튜브 주변으로 퍼져나가는 물방울 계산
+    const angle = (i / splashCount) * 2 * Math.PI + t;
+    const radius = 0.3 + (curvatureVal * 0.2) * (1 + Math.sin(i * 3));
+    const sx = t + radius * Math.cos(angle);
+    const sy = currentY + radius * Math.sin(angle);
+    splashParticles.push({ x: sx, y: sy, char: i % 2 === 0 ? '💦' : '💧' });
   }
 
-  const word = isUp ? '아래로 볼록 (∪) — 물을 안전하게 담는 골짜기 그릇' : '위로 볼록 (∩) — 모두 흘러내리는 엎어놓은 그릇';
-  const themeColor = isUp ? '#0284c7' : '#d97706';
+  // 5. 텍스트 피드백 메시지
+  let statusText = '🛣️ 평온하게 미끄러지는 중... (직선에 가까워요)';
+  let bgTheme = '#e0f2fe'; // 하늘색
+  let textTheme = '#0369a1';
+
+  if (curvatureVal > 1.2 && curvatureVal <= 3.0) {
+    statusText = '🌊 몸이 부드럽게 쏠려요! (완만한 커브)';
+    bgTheme = '#e0f2fe';
+    textTheme = '#0284c7';
+  } else if (curvatureVal > 3.0) {
+    statusText = '⚡ 쏠림 최고조! 물보라 대폭발! (엄청 급한 코너!)';
+    bgTheme = '#fee2e2'; // 붉은색 경고 테마
+    textTheme = '#dc2626';
+  }
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', fontFamily: 'sans-serif', userSelect: 'none' }}>
       
+      {/* Mafs 기본 검은 배경 지우기 */}
       <style>{`
-        .mafs-bowl-container .MafsView {
+        .mafs-slide-container .MafsView {
           background-color: transparent !important;
         }
       `}</style>
 
-      {/* [1단계] 상단 조작계: 스토리텔링 콘텍스트 패널 */}
-      <div className="viz-box" style={{ background: '#fefcf8', borderRadius: '14px', padding: '14px', border: '2px solid #f3eae0' }}>
-        <div style={{ textAlign: 'center', marginBottom: '8px', fontSize: '14px', fontWeight: 'bold', color: '#451a03' }}>
-          🌧️ 구름 요정의 물주기 대작전 (지형 중심: {cx.toFixed(1)})
+      {/* [1단계] 상단 조작계: 구불구불 워터슬라이드 평면 (하늘색 수영장 테마) */}
+      <div className="viz-box" style={{ background: '#ffffff', borderRadius: '15px', padding: '12px', border: '2px solid #e2e8f0' }}>
+        <div style={{ textAlign: 'center', marginBottom: '8px', fontSize: '14px', fontWeight: 'bold', color: '#1e293b' }}>
+          🌊 <b>[워터슬라이드 실험실]</b> 튜브를 밀어 급커브를 탈출해 보세요!
         </div>
         
-        <div style={{ fontSize: '12px', color: '#57534e', textAlign: 'center', marginBottom: '10px', lineHeight: '1.4' }}>
-          하늘에서 비가 내릴 때, 땅의 모양에 따라 물의 운명은 어떻게 될까요?
-          <br />
-          <b>{"두 지형을 전환하고, 그래프 위의 빨간 꼭짓점을 좌우로 직접 드래그해 보세요!"}</b>
+        <div style={{ fontSize: '12px', color: '#64748b', textAlign: 'center', marginBottom: '10px', lineHeight: '1.4' }}>
+          구불구불한 물길 위의 <b>빨간색 튜브(MovablePoint)</b>를 손가락으로 잡고 슈우욱 미끄러뜨려 보세요.
         </div>
 
-        {/* 지형 전환 버튼 세트 */}
-        <div style={{ display: 'flex', gap: '10px', justifyContent: 'center', marginBottom: '12px' }}>
-          <button 
-            type="button" 
-            onClick={() => patchState({ which: 'up' })}
-            style={{ 
-              padding: '6px 16px', borderRadius: '8px', cursor: 'pointer', fontSize: '13px',
-              border: isUp ? '2px solid #0284c7' : '1px solid #cbd5e1', 
-              background: isUp ? '#e0f2fe' : '#ffffff',
-              fontWeight: isUp ? 'bold' : 'normal', color: isUp ? '#0369a1' : '#64748b' 
-            }}
-          >
-            {"∪ 골짜기 모양 (받친 그릇)"}
-          </button>
-          <button 
-            type="button" 
-            onClick={() => patchState({ which: 'down' })}
-            style={{ 
-              padding: '6px 16px', borderRadius: '8px', cursor: 'pointer', fontSize: '13px',
-              border: !isUp ? '2px solid #d97706' : '1px solid #cbd5e1', 
-              background: !isUp ? '#fef3c7' : '#ffffff',
-              fontWeight: !isUp ? 'bold' : 'normal', color: !isUp ? '#b45309' : '#64748b' 
-            }}
-          >
-            {"∩ 언덕 모양 (엎은 그릇)"}
-          </button>
+        {/* 워터슬라이드 판넬 배경 */}
+        <div className="mafs-slide-container" style={{ 
+          width: '100%', 
+          overflow: 'hidden', 
+          borderRadius: '10px', 
+          background: '#e0f2fe', // 시원한 풀장 하늘색 배경
+          border: '1px solid #bae6fd'
+        }}>
+          <Mafs viewBox={{ x: [0, 10], y: [-3.5, 3.5] }} preserveAspectRatio={true} height={220}>
+            {/* 눈금과 축은 없애고 슬라이드만 직관적으로 노출 */}
+
+            {/* 슬라이드 물길 가이드 (두꺼운 하늘색 파이프 형태) */}
+            <Plot.OfX y={fSlide} color="#38bdf8" weight={16} />
+            <Plot.OfX y={fSlide} color="#0284c7" weight={2} />
+
+            {/* 실시간 물보라 파티클 렌더링 (곡선이 급할수록 활성화) */}
+            {splashParticles.map((sp, idx) => (
+              <Text key={idx} x={sp.x} y={sp.y} size={16}>
+                {sp.char}
+              </Text>
+            ))}
+
+            {/* 슬라이드 위를 달리는 빨간색 튜브 (조종 핸들) */}
+            <MovablePoint
+              point={[t, currentY]}
+              color={Theme.red}
+              constrain={(pos) => {
+                const clampedX = Math.min(9.5, Math.max(0.5, pos[0]));
+                return [clampedX, fSlide(clampedX)];
+              }}
+              onMove={(pos) => setT(pos[0])}
+            />
+          </Mafs>
         </div>
 
-        {/* 지형 중심 슬라이더 */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}>
-          <span style={{ fontSize: '11px', fontWeight: 'bold', color: '#78716c' }}>위치 조절:</span>
-          <input 
-            type="range" 
-            min={xRange[0] + 0.8} 
-            max={xRange[1] - 0.8} 
-            step={0.1} 
-            value={cx}
-            onChange={(e) => patchState({ cx: parseFloat(e.target.value) })} 
-            style={{ width: '50%', cursor: 'pointer' }} 
-          />
-        </div>
-
-        <div style={{ fontSize: '14px', fontWeight: 'bold', color: themeColor, marginTop: '10px', textAlign: 'center' }}>
-          {word}
+        {/* 물보라 및 쏠림 피드백 실시간 출력 창 */}
+        <div style={{ 
+          marginTop: '10px', 
+          padding: '8px', 
+          borderRadius: '8px', 
+          background: bgTheme, 
+          color: textTheme, 
+          fontSize: '13px', 
+          fontWeight: 'bold', 
+          textAlign: 'center',
+          transition: 'all 0.2s ease'
+        }}>
+          {statusText}
         </div>
       </div>
 
-      {/* [2단계] 하단 결과 그래프 */}
+      {/* [2단계] 하단 결과 매핑 그래프: 현재 튜브 위치의 곡률(y) 표시 */}
       <div className="viz-box" style={{ background: '#ffffff', borderRadius: '14px', padding: '12px', border: '2px solid #e2e8f0' }}>
-        <div className="mafs-bowl-container" style={{ background: '#f8fafc', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
-          
-          <Mafs viewBox={{ x: xRange, y: yRange }} preserveAspectRatio={true} height={280}>
-            <Coordinates.Cartesian />
-
-            {/* 오목(∪)일 때 물 레이어 */}
-            {isUp && waterPoints.length > 0 && (
-              <Polygon points={waterPoints} color={Theme.blue} opacity={0.35} />
-            )}
-
-            {/* 볼록(∩)일 때 흘러내림 효과 */}
-            {!isUp && (
-              <>
-                <Line.Segment point1={[cx, fDown(cx) + 1.2]} point2={[cx, fDown(cx) + 0.2]} color={Theme.blue} style="dashed" weight={2} />
-                <Line.Segment point1={[cx - 0.2, fDown(cx - 0.2)]} point2={[cx - 1.2, fDown(cx - 1.2)]} color={Theme.orange} weight={3} />
-                <Line.Segment point1={[cx + 0.2, fDown(cx + 0.2)]} point2={[cx + 1.2, fDown(cx + 1.2)]} color={Theme.orange} weight={3} />
-                <Point x={cx - 0.8} y={fDown(cx - 0.8)} color={Theme.blue} size={3} />
-                <Point x={cx + 0.8} y={fDown(cx + 0.8)} color={Theme.blue} size={3} />
-              </>
-            )}
-
-            <Plot.OfX y={f} color={isUp ? Theme.blue : Theme.orange} weight={4} />
-
-            {/* 양방향 연동 자석 꼭짓점 */}
-            <MovablePoint 
-              point={[cx, f(cx)]} 
-              color={Theme.red}
-              constrain={(pos) => {
-                const clampedX = Math.min(xRange[1] - 0.8, Math.max(xRange[0] + 0.8, pos[0]));
-                return [clampedX, f(clampedX)];
-              }}
-              onMove={(pos) => patchState({ cx: pos[0] })}
-            />
-          </Mafs>
-          
+        <div style={{ fontSize: '13px', color: '#1e293b', fontWeight: 'bold', textAlign: 'center', marginBottom: '8px' }}>
+          📈 슬라이드 위치(<span style={{ color: '#0284c7' }}>가로 x</span>)에 따른 <b>코너의 급하기(<span style={{ color: '#dc2626' }}>세로 y축 = 쏠림의 크기</span>)</b>
         </div>
 
-        {/* 하단 설명 블록 */}
-        <div style={{ fontSize: '12px', color: '#475569', textAlign: 'center', marginTop: '8px', lineHeight: '1.4' }}>
-          {isUp ? (
-            <span>
-              💧 주변보다 가장 아래에 있는 꼭짓점(최솟값)으로 물이 모여 <b>{"안정적인 호수"}</b>를 이룹니다.
-            </span>
-          ) : (
-            <span>
-              ⛰️ 주변보다 가장 높이 솟은 꼭짓점(최대값)에 닿은 물은 중심에 고이지 못하고 <b>{"양옆으로 흘러내립니다."}</b>
-            </span>
-          )}
-          <br />
-          <span style={{ fontSize: '11px', color: '#94a3b8', marginTop: '4px', display: 'block' }}>
-            이 그릇의 형태(휨의 방향) 감각은 훗날 미분에서 <b>{"'오목과 볼록(곡률)'"}</b>을 결정하는 결정적 토대가 됩니다.
-          </span>
+        {/* 실시간 꺾은선 곡률 그래프 */}
+        <Mafs viewBox={{ x: [0, 10], y: [-0.5, 5.5] }} preserveAspectRatio={false} height={160}>
+          <Coordinates.Cartesian />
+          
+          {/* 전체 슬라이드의 곡률 변화선을 미리 그리는 가이드라인 */}
+          <Plot.OfX
+            y={(x) => getCurvature(x)}
+            color={Theme.green}
+            weight={3}
+          />
+          
+          {/* 현재 튜브 위치에서의 곡선 급하기(곡률)를 실시간으로 가리키는 빨간 점 */}
+          <Point x={t} y={curvatureVal} color={Theme.red} size={6} />
+        </Mafs>
+
+        {/* 실시간 수학 데이터 매핑 뷰어 */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', background: '#f8fafc', padding: '8px', borderRadius: '8px', fontSize: '12px', color: '#475569', marginTop: '6px' }}>
+          <span>📏 슬라이드 내려온 거리: <b>{t.toFixed(1)}m</b></span>
+          <span style={{ color: '#be123c' }}>💥 <b>옆으로 쏠리는 힘(곡선 급하기): {curvatureVal.toFixed(1)}</b></span>
         </div>
       </div>
 
