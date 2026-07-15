@@ -1912,17 +1912,20 @@ JSON만 출력하라.`;
         if (linkedCustom) return linkedCustom;
       }
       const custom = reg.render(log, logIdx, sharedXByLog, setSharedXByLog);
-      if (custom) {
-        return (
-          <>
-            {log.deviceVisual && renderVisual(log.deviceVisual)}
-            {custom}
-          </>
-        );
-      }
+      // [수정] custom 장치는 도형+그래프를 스스로 다 그리므로, API가 보낸 원본
+      // deviceVisual을 표준 renderVisual로 또 그릴 필요가 없다(검은 격자 중복 원인).
+      if (custom) return custom;
     }
-    const linked = renderBalanceGraphLinked(log, logIdx);
-    if (linked) return linked;
+    // [주석 처리] 커스텀 장치가 없을 때 표준 그래프로 폴백하던 부분 — placeholder formula만
+    // 있는 빈 검은 격자를 그리는 원인이라 완전히 껐다.
+    // const linked = renderBalanceGraphLinked(log, logIdx);
+    // if (linked) return linked;
+    // return (
+    //   <>
+    //     {log.deviceVisual && renderVisual(log.deviceVisual)}
+    //     {renderVisual(log.visual)}
+    //   </>
+    // );
     return null;
   }
 
