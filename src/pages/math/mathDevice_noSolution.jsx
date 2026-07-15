@@ -32,11 +32,12 @@ export function renderNoSolution(log, logIdx, sharedXByLog, setSharedXByLog) {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-      <div className="viz-box" style={{ background: '#ffffff', borderRadius: '10px', padding: '6px' }}>
+      <div className="viz-box" style={{ background: '#f5f2e8', borderRadius: '10px', padding: '6px' }}>
         <div style={{ fontSize: '12px', color: '#5f5e5a', textAlign: 'center' }}>👉 <b>원(빨간 점)</b>을 끌어 떨어뜨려보세요 — 동시 만족이 가능할까요?</div>
       </div>
       <div className="viz-box" style={{ position: 'relative' }}>
         <Mafs viewBox={{ x: X_RANGE, y: Y_RANGE }} preserveAspectRatio={false} height={200}>
+          <Coordinates.Cartesian xAxis={{ lines: false }} yAxis={{ lines: false }} />
           <MovablePoint point={[cxB, 0]} constrain={(pos) => [Math.min(6, Math.max(-6, pos[0])), 0]} color="transparent" onMove={(pos) => setCxB(pos[0])} />
         </Mafs>
         <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>

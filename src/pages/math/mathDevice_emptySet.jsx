@@ -18,7 +18,7 @@ export function renderEmptySet(log, logIdx, sharedXByLog, setSharedXByLog) {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-      <div className="viz-box" style={{ background: '#ffffff', borderRadius: '10px', padding: '10px', position: 'relative' }}>
+      <div className="viz-box" style={{ background: '#f5f2e8', borderRadius: '10px', padding: '10px', position: 'relative' }}>
         <div style={{ fontSize: '12px', color: '#5f5e5a', textAlign: 'center', marginBottom: '4px' }}>
           👉 <b>주황 띠</b>를 오른쪽으로 밀어 겹침을 없애보세요
         </div>

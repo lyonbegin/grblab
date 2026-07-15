@@ -18,7 +18,7 @@ export function renderBothConditions(log, logIdx, sharedXByLog, setSharedXByLog)
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-      <div className="viz-box" style={{ background: '#ffffff', borderRadius: '10px', padding: '10px', position: 'relative' }}>
+      <div className="viz-box" style={{ background: '#f5f2e8', borderRadius: '10px', padding: '10px', position: 'relative' }}>
         <div style={{ fontSize: '12px', color: '#5f5e5a', textAlign: 'center', marginBottom: '4px' }}>
           👉 <b>조건1 경계(파랑 화살표)</b>를 밀어보세요 — 조건2(노랑, 3~7)는 고정입니다
         </div>
