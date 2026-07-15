@@ -19,7 +19,11 @@ export function renderShiftCurve(log, logIdx, sharedXByLog, setSharedXByLog) {
 
 // 2. 실제 디바이스 컴포넌트 (모든 훅은 이 안전지대 내부에서 무조건 100% 실행됨)
 function ShiftCurveDevice({ v, logIdx, sharedXByLog, setSharedXByLog }) {
-  // 수학적 기초 수식 정의 (기본 3차 곡선)
+  // ===== 훅 선언 (항상 최상단에서 무조건 실행) =====
+  const svgRef = useRef(null);
+  const [isDragging, setIsDragging] = useState(false);
+
+  // ===== 수학적 기초 수식 정의 (기본 3차 곡선) =====
   // f(x) = 0.15x^3 - 1.2x^2 + 2x + 3
   const formula = (v.curves || [])[0]?.formula || '0.15*x*x*x - 1.2*x*x + 2*x + 3';
   const compiled = safeCompile(formula, 'explicit');
@@ -43,7 +47,7 @@ function ShiftCurveDevice({ v, logIdx, sharedXByLog, setSharedXByLog }) {
   const valleyX = 4.30;
   const valleyYBase = fBase(valleyX); // 약 1.34
 
-  // 통합 연동용 Y축 평행이동 값 k 상태 관리
+  // ===== 상태값 읽기 (styles보다 반드시 먼저!) =====
   const st = sharedXByLog?.[logIdx] || {};
   const kShift = st.kShift ?? 0.0;
 
@@ -82,14 +86,10 @@ function ShiftCurveDevice({ v, logIdx, sharedXByLog, setSharedXByLog }) {
   const currentPeakY = peakYBase + kShift;
   const currentValleyY = valleyYBase + kShift;
 
-  // 임계 경계선 스냅 상태 감지
+  // 임계 경계선 스냅 상태 감지 (styles보다 반드시 먼저!)
   const isPeakTouching = Math.abs(currentPeakY) < 0.12;
   const isValleyTouching = Math.abs(currentValleyY) < 0.12;
   const isAtBoundary = isPeakTouching || isValleyTouching;
-
-  // 직접 드래그 인터랙션 제어부 (SVG 물리 디바이스용)
-  const svgRef = useRef(null);
-  const [isDragging, setIsDragging] = useState(false);
 
   // SVG 픽셀 좌표와 수학 좌표 1:1 기하 매핑
   // viewBox="0 0 500 180" 고정 좌표계 기준. 실제 렌더 크기가 달라져도
@@ -150,14 +150,14 @@ function ShiftCurveDevice({ v, logIdx, sharedXByLog, setSharedXByLog }) {
       window.removeEventListener('touchmove', handleMove);
       window.removeEventListener('touchend', handleUp);
     };
-  }, [isDragging]); // 🚀 kShift 의존성을 완전히 제거하여 드래그 렉 현상을 원천 차단!
+  }, [isDragging]); // kShift 의존성을 제거하여 드래그 렉 현상을 원천 차단
 
   // 핸들 조작 위치 계산
   const handleX = 3.5;
   const handleY = f(handleX);
   const [handlePx, handlePy] = toSvgCoords(handleX, handleY);
 
-  // 🚀 [해결] 기존의 잘못된 destructuring [seaY]를 [, seaY]로 수정하여 Y좌표를 정확히 분해해 옴
+  // 해수면(y=0)의 SVG y좌표만 분해해서 가져옴
   const [, seaY] = toSvgCoords(handleX, 0);
 
   // 물리 궤도 패스 빌드
@@ -168,6 +168,7 @@ function ShiftCurveDevice({ v, logIdx, sharedXByLog, setSharedXByLog }) {
   }
   const pathD = `M ${pathPoints.join(' L ')}`;
 
+  // ===== styles는 위의 모든 변수가 정의된 뒤에 선언 =====
   const styles = {
     container: { display: 'flex', flexDirection: 'column', gap: '14px', fontFamily: 'sans-serif', userSelect: 'none' },
     card: { background: '#f8fafc', border: '2px solid #e2e8f0', borderRadius: '16px', padding: '16px', textAlign: 'center' },
