@@ -1,10 +1,10 @@
 // ===========================================================
 // no:"4c" "전환점 — 앞뒤 방향으로 극대·극소를 가린다"  (극값 세트 셋째 칸)
 //
-// [초등학생 맞춤형 v4.1 — 순간 기울기 직관 연동 에디션]
-// - 기존의 모든 디자인 구조, 레이아웃, 카드 로직을 100% 유지합니다.
-// - 2단계 그래프를 난해한 '휘어짐(곡률)'에서 직관적인 '순간 기울기(경사)'로 변경했습니다.
-// - 1단계 그래프의 빨간 점 주위에 기울기를 보여주는 보라색 접선을 추가하여 두 그래프의 연계성을 극대화했습니다.
+// [초등학생 맞춤형 v4 — 3연속 내비게이션 & 휘어짐 판독 연관 사고 에디션]
+// - 지루한 O/X 격자표와 순간이동하는 계단 그래프를 제거했습니다.
+// - 상하 그래프를 일치시켜 생각하도록 돕는 '세로 레이저 가이드선'을 추가했습니다.
+// - 아래쪽 2단계 그래프를 '순간 기울기 곡선(df)'으로 교체하여 연동했습니다.
 // ===========================================================
 import React from 'react';
 import { Mafs, Coordinates, Plot, Point, Line, Theme, MovablePoint } from 'mafs';
@@ -33,10 +33,11 @@ export function renderExtremumTurn(log, logIdx, sharedXByLog, setSharedXByLog) {
   const slopeL = df(px - D); // 지나온 길(뒤)의 경사
   const slopeR = df(px + D); // 다가올 길(앞)의 경사
 
-  // [기존 휘어짐 대신] "그 점이 있을 때의 실제 기울기"
-  const currentSlope = df(px);
+  // "길의 휘어짐(곡률)" 함수 (오른쪽 경사 - 왼쪽 경사)
+  const bend = (x) => df(x + D) - df(x - D);
+  const currentBend = bend(px);
 
-  // 앞뒤 경사 변화를 바탕으로 한 상태 판정 (기존 로직 100% 유지)
+  // 앞뒤 경사 변화를 바탕으로 한 상태 판정
   const beforeUp = slopeL > 0.05;
   const afterUp = slopeR > 0.05;
 
@@ -58,7 +59,7 @@ export function renderExtremumTurn(log, logIdx, sharedXByLog, setSharedXByLog) {
     emoji = '⛺';
   }
 
-  // 앞뒤 정보 카드 공통 스타일 (기존 디자인 유지)
+  // 앞뒤 정보 카드 공통 스타일
   const cardStyle = (active, color) => ({
     flex: 1,
     padding: '8px',
@@ -75,7 +76,7 @@ export function renderExtremumTurn(log, logIdx, sharedXByLog, setSharedXByLog) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', fontFamily: 'sans-serif' }}>
       
-      {/* 1. 상단 현재 상태 창 (기존 원본 유지) */}
+      {/* 1. 상단 현재 상태 창 */}
       <div style={{ background: '#f8f9fa', borderRadius: '12px', padding: '12px', border: `2px solid ${stateColor}`, textAlign: 'center' }}>
         <div style={{ fontSize: '22px', marginBottom: '4px' }}>{emoji}</div>
         <div style={{ fontSize: '15px', fontWeight: 'bold', color: stateColor }}>{stateText}</div>
@@ -84,7 +85,7 @@ export function renderExtremumTurn(log, logIdx, sharedXByLog, setSharedXByLog) {
         </div>
       </div>
 
-      {/* 2. 내비게이션 화살표 표지판 삼형제 (기존 원본 유지) */}
+      {/* 2. 내비게이션 화살표 표지판 삼형제 (OX 표 대체) */}
       <div style={{ display: 'flex', gap: '8px', justifyContent: 'space-between' }}>
         <div style={cardStyle(true, beforeUp ? '#2e7d32' : '#c0392b')}>
           <div style={{ fontSize: '10px', color: '#64748b', marginBottom: '2px' }}>◀ 방금 지나온 길 (뒤)</div>
@@ -107,7 +108,7 @@ export function renderExtremumTurn(log, logIdx, sharedXByLog, setSharedXByLog) {
       {/* 3. 상단 그래프: 산길과 앞뒤 가이드 점 */}
       <div className="viz-box" style={{ background: '#ffffff', borderRadius: '12px', padding: '10px', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
         <div style={{ fontSize: '13px', fontWeight: 'bold', color: '#2c3e50', marginBottom: '6px' }}>
-          🏔️ 1단계: 등산 코스와 내 위치 (내 위치의 경사를 확인해보세요!)
+          🏔️ 1단계: 등산 코스와 내 위치 (앞뒤 점이 오르막인지 내리막인지 알려줘요!)
         </div>
         <Mafs viewBox={{ x: xRange, y: yRange }} preserveAspectRatio={false} height={200}>
           <Coordinates.Cartesian />
@@ -122,14 +123,6 @@ export function renderExtremumTurn(log, logIdx, sharedXByLog, setSharedXByLog) {
 
           {/* 원래 산길 곡선 */}
           <Plot.OfX y={f} color={Theme.blue} weight={4} />
-
-          {/* 내 위치에서의 접선(순간 기울기) 표시 - 하단 보라색 곡선값과 시각적 연동 */}
-          <Line.Segment
-            point1={[px - 0.7, f(px) - 0.7 * currentSlope]}
-            point2={[px + 0.7, f(px) + 0.7 * currentSlope]}
-            color={Theme.purple}
-            weight={3.5}
-          />
 
           {/* 지나온 길 참고 점 (뒤) */}
           <Point x={px - D} y={f(px - D)} color={beforeUp ? Theme.green : Theme.red} size={5} />
@@ -149,27 +142,27 @@ export function renderExtremumTurn(log, logIdx, sharedXByLog, setSharedXByLog) {
           />
         </Mafs>
         <div style={{ fontSize: '11px', color: '#7f8c8d', textAlign: 'center', marginTop: '4px' }}>
-          초록 점 = 오르막 구역에 있음 | 빨간 점 = 내리막 구역에 있음 | <b>보라색 선</b> = 내 위치의 순간 기울기
+          초록 점 = 오르막 구역에 있음 | 빨간 점 = 내리막 구역에 있음
         </div>
       </div>
 
-      {/* 4. 하단 그래프: 순간 기울기 판독기 (곡률 대신 기울기로 완벽 교체) */}
+      {/* 4. 하단 그래프: 순간 기울기 판독기 (곡선 플롯 및 조작 연동만 df로 교체) */}
       <div className="viz-box" style={{ background: '#ffffff', borderRadius: '12px', padding: '10px', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
         <div style={{ fontSize: '13px', fontWeight: 'bold', color: '#2c3e50', marginBottom: '6px' }}>
-          📈 2단계: 순간 기울기 판독기 (길의 순간 경사 곡선)
+          📈 2단계: 길의 순간 기울기 판독기 (순간 기울기 곡선)
         </div>
-        <Mafs viewBox={{ x: xRange, y: [-2.0, 3.5] }} preserveAspectRatio={false} height={160}>
+        <Mafs viewBox={{ x: xRange, y: [-2.5, 3.5] }} preserveAspectRatio={false} height={160}>
           <Coordinates.Cartesian />
           
           {/* 가로 좌표 동기화를 위한 세로 레이저 점선 */}
           <Line.Segment
-            point1={[px, -2.0]}
+            point1={[px, -2.5]}
             point2={[px, 3.5]}
             color="#d1d8e0"
             style={{ strokeDasharray: "4 4" }}
           />
 
-          {/* 수평 기준선 (기울기 = 0, 완벽한 평지 상태) */}
+          {/* 수평 기준선 (기울기가 없는 평평한 상태) */}
           <Line.Segment
             point1={[xRange[0], 0]}
             point2={[xRange[1], 0]}
@@ -177,12 +170,12 @@ export function renderExtremumTurn(log, logIdx, sharedXByLog, setSharedXByLog) {
             style={{ strokeDasharray: "3 3" }}
           />
 
-          {/* 기울기 곡선 (도함수 f') */}
+          {/* 순간 기울기 곡선 (도함수 df 플롯) */}
           <Plot.OfX y={df} color={Theme.purple} weight={3} />
 
-          {/* 현재 내 위치의 기울기 값을 나타내는 빨간 점 */}
+          {/* 현재 내 위치의 순간 기울기 값을 나타내는 빨간 점 */}
           <MovablePoint
-            point={[px, currentSlope]}
+            point={[px, df(px)]}
             constrain={(pos) => {
               const cx = Math.min(xMax, Math.max(xMin, pos[0]));
               return [cx, df(cx)];
@@ -192,21 +185,21 @@ export function renderExtremumTurn(log, logIdx, sharedXByLog, setSharedXByLog) {
           />
         </Mafs>
         <div style={{ fontSize: '12px', color: '#5f5e5a', textAlign: 'center', marginTop: '4px' }}>
-          가로=위치, 세로=그 점에서의 기울기 (<b>위(+) 영역</b>: 오르막길, <b>아래(-) 영역</b>: 내리막길)
+          가로=위치, 세로=길의 기울기 (<b>위(+) 영역</b>: 오르막, <b>아래(-) 영역</b>: 내리막)
         </div>
       </div>
 
-      {/* 5. 초등 기하학적 연관 가이드 (수정된 경사 논리에 맞춤) */}
+      {/* 5. 초등 기하학적 연관 가이드 */}
       <div style={{ background: '#fffbeb', borderRadius: '12px', padding: '12px', border: '1px dashed #f59e0b' }}>
         <div style={{ fontSize: '13px', fontWeight: 'bold', color: '#b45309', marginBottom: '4px' }}>
           🎯 그래프 연계 사고 미션!
         </div>
         <div style={{ fontSize: '12px', color: '#78350f', lineHeight: '1.5' }}>
-          위의 빨간 점을 잡고 움직이며 아래 보라색 그래프 점의 높낮이를 살펴보세요.
+          위의 빨간 점을 잡고 움직이며 아래 보라색 그래프의 높낮이를 살펴보세요.
           <br />
-          👉 등산가가 <b>산꼭대기 👑</b>나 <b>골짜기 ⛺</b>에 정확히 도달했을 때: 아래 그래프의 점은 정확히 <b>중앙 수평선(0)</b>에 걸치게 됩니다! (순간적으로 발판이 평평해지기 때문이에요)
+          👉 등산가가 <b>산꼭대기 👑</b>를 지날 때: 아래 그래프의 점은 <b>가장 아래쪽(-)</b>으로 쑤욱 들어갑니다! (길이 아래로 ∩ 굽기 때문이에요)
           <br />
-          👉 등산가가 <b>오르막길 ↗</b>을 오를 때: 아래 그래프의 점은 <b>위쪽(+)</b>에 있고, <b>내리막길 ↘</b>을 내려갈 때는 <b>아래쪽(-)</b>에 위치합니다.
+          👉 등산가가 <b>골짜기 ⛺</b>를 지날 때: 아래 그래프의 점은 <b>가장 위쪽(+)</b>으로 높게 올라갑니다! (길이 위로 ∪ 굽기 때문이에요)
         </div>
       </div>
 
