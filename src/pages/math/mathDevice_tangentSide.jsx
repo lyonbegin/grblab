@@ -1,5 +1,5 @@
 import React from 'react';
-import { Mafs, Coordinates, Plot, Theme, MovablePoint, Point, Text } from 'mafs';
+import { Mafs, Coordinates, Plot, Theme, MovablePoint, Point, Text, Line } from 'mafs';
 
 export function renderTangentSide(log, logIdx, sharedXByLog, setSharedXByLog) {
   const v = log.visual;
@@ -48,6 +48,9 @@ export function renderTangentSide(log, logIdx, sharedXByLog, setSharedXByLog) {
   const realFutureY = f(futureX); // 실제 미래 가격
   const predictedFutureY = getTangentY(futureX, t); // 접선 자가 예측한 미래 가격
   const gap = realFutureY - predictedFutureY; // 오차 (양수면 잭팟, 음수면 대폭락)
+
+  // [추가] 차이 함수: 모든 x에서 (실제값 - 자의 예측값). 아래 새 그래프에서 그대로 그린다.
+  const diffFn = (x) => f(x) - getTangentY(x, t);
 
   // 5. 상황별 피드백 데코레이션 및 설명 텍스트
   const isBubble = mode === 'bubble';
@@ -189,6 +192,26 @@ export function renderTangentSide(log, logIdx, sharedXByLog, setSharedXByLog) {
           transition: 'all 0.2s ease'
         }}>
           {bannerText}
+        </div>
+      </div>
+
+      {/* [추가] 실제값과 자의 예측값의 차이를 보여주는 별도 그래프.
+          x=날짜, y=(실제값-예측값). t에서는 0이고, 그 외 지점에서 벌어진다.
+          ∪(가속)이면 벌어지는 방향이 위(+), ∩(둔화)이면 아래(-). */}
+      <div className="viz-box" style={{ background: '#ffffff', borderRadius: '15px', padding: '12px', border: '2px solid #e2e8f0' }}>
+        <div style={{ textAlign: 'center', marginBottom: '8px', fontSize: '14px', fontWeight: 'bold', color: '#1e293b' }}>
+          📊 자의 예측값과 실제값의 차이
+        </div>
+        <Mafs viewBox={{ x: [0, 6], y: [-1.5, 1.5] }} preserveAspectRatio={false} height={220}>
+          <Coordinates.Cartesian />
+          <Line.Segment point1={[0, 0]} point2={[6, 0]} color="#cbd5e1" />
+          <Plot.OfX y={diffFn} color={isBubble ? '#10b981' : '#f43f5e'} />
+          <Point x={t} y={0} color={Theme.red} />
+          <Point x={futureX} y={diffFn(futureX)} color={isBubble ? '#059669' : '#dc2626'} />
+        </Mafs>
+        <div style={{ fontSize: '12px', color: '#5f5e5a', textAlign: 'center', marginTop: '6px' }}>
+          가로=날짜, 세로=(실제값 − 자의 예측값) — 자를 댄 t에서는 딱 0이고,
+          {isBubble ? ' 멀어질수록 실제가 예측보다 더 커집니다(자 위로 벗어남)' : ' 멀어질수록 실제가 예측보다 더 작아집니다(자 아래로 벗어남)'}
         </div>
       </div>
 
