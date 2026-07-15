@@ -1,4 +1,4 @@
-import { renderDevice_no8 } from './mathDevice_no8';
+
 import { renderDevice_no1, renderLimitApproachLinked } from './mathDevice_no1';
 import { renderDevice_no1_1 } from './mathDevice_no1_1';
 import { renderDivGt1 } from './mathDevice_div_gt1';
@@ -14,13 +14,7 @@ import { renderRollPoint }     from './mathDevice_rollPoint';
 import { renderTangentArrow }  from './mathDevice_tangentArrow';
 import { renderIntervalSplit } from './mathDevice_intervalSplit';
 
-import { renderCoordPoint } from './mathDevice_coordPoint';
-import { renderFormulaMachine } from './mathDevice_formulaMachine';
-import { renderSubstitute } from './mathDevice_substitute';
-import { renderTracePath } from './mathDevice_tracePath';
-import { renderTwoLines } from './mathDevice_twoLines';
-import { renderIntersectX } from './mathDevice_intersectX';
-import { renderCountCross } from './mathDevice_countCross';
+
 import { renderCompare } from './mathDevice_compare';
 import { renderHeightIsSize } from './mathDevice_heightIsSize';
 import { renderSwapOrder } from './mathDevice_swapOrder';
@@ -77,7 +71,7 @@ const REGISTRY = [
   { deviceType: 'intersect_x',     no: '8-3', render: renderIntersectX,     needsDeviceVisual: false },
   { deviceType: 'count_cross',     no: '8-4', render: renderCountCross,     needsDeviceVisual: false },
   { deviceType: 'balance',         no: '8',   render: renderDevice_no8,     needsDeviceVisual: true  },
-  
+
   { deviceType: 'balance',        no: '8', render: renderDevice_no8,   needsDeviceVisual: true },
   { deviceType: 'limit_approach', no: '1', render: renderDevice_no1,   linkedRender: renderLimitApproachLinked, needsDeviceVisual: true },
   { deviceType: 'limit_approach', no: '0', render: renderDevice_no1_1, needsDeviceVisual: true },
