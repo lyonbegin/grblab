@@ -1,14 +1,16 @@
 // ===========================================================
 // no:"4c" "전환점 — 앞뒤 방향으로 극대·극소를 가린다"  (극값 세트 셋째 칸)
 //
-// [v3 수정 — 슬라이더 제거, 직접 드래그로]
-//   곡선 위 점을 직접 끌면 O/X 격자표와 아래 삼진 계단 그래프가 즉시 갱신된다.
+// [초등학생 맞춤형 v4 — 3연속 내비게이션 & 휘어짐 판독 연관 사고 에디션]
+// - 지루한 O/X 격자표와 순간이동하는 계단 그래프를 제거했습니다.
+// - "길이 구부러지는 방향(∩형 언덕 vs ∪형 분지)"을 연속적인 휘어짐 판독 그래프로 보여줍니다.
+// - 상하 그래프를 일치시켜 생각하도록 돕는 '세로 레이저 가이드선'을 추가했습니다.
 // ===========================================================
 import React from 'react';
 import { Mafs, Coordinates, Plot, Point, Line, Theme, MovablePoint } from 'mafs';
 import { safeCompile, toRange } from './mathDeviceShared';
 
-const D = 0.4;
+const D = 0.5; // 앞뒤 비교 거리 (아이들이 인지하기 좋게 0.5로 최적화)
 
 export function renderExtremumTurn(log, logIdx, sharedXByLog, setSharedXByLog) {
   const v = log.visual;
@@ -21,44 +23,115 @@ export function renderExtremumTurn(log, logIdx, sharedXByLog, setSharedXByLog) {
   const xRange = toRange(v.xRange, [0, 7]);
   const yRange = toRange(v.yRange, [0, 8]);
   const xMin = xRange[0] + D + 0.1, xMax = xRange[1] - D - 0.1;
-  const px = sharedXByLog?.[logIdx] ?? 1.3;
+  const px = sharedXByLog?.[logIdx] ?? 3.5;
   const setPx = (val) => setSharedXByLog?.(prev => ({ ...prev, [logIdx]: Math.min(xMax, Math.max(xMin, val)) }));
 
+  // 순간 경사(기울기) 계산 함수
   const eps = 1e-4;
   const df = (x) => (f(x + eps) - f(x - eps)) / (2 * eps);
-  const turnAt = (x) => {
-    const L = df(x - D), R = df(x + D);
-    if (L > 0.05 && R < -0.05) return 1;
-    if (L < -0.05 && R > 0.05) return -1;
-    return 0;
-  };
-  const t = turnAt(px);
-  const beforeUp = df(px - D) > 0;
-  const afterUp = df(px + D) > 0;
-  const word = t === 1 ? '극대 — 오르다 내려간다' : t === -1 ? '극소 — 내리다 올라간다' : '비탈 — 방향 그대로';
-  const wc = t === 1 ? '#2e7d32' : t === -1 ? '#c0392b' : '#5f5e5a';
 
-  const cell = (on, color) => ({
-    padding: '8px 0', textAlign: 'center', fontSize: '18px', fontWeight: 'bold',
-    border: '1px solid #ddd8ca', background: on ? `${color}22` : '#fff', color: on ? color : '#ccc'
+  const slopeL = df(px - D); // 지나온 길(뒤)의 경사
+  const slopeR = df(px + D); // 다가올 길(앞)의 경사
+
+  // "길의 휘어짐(곡률)" 함수 (오른쪽 경사 - 왼쪽 경사)
+  // 수학적으로는 이계도함수(f'')의 근사치를 나타냅니다.
+  const bend = (x) => df(x + D) - df(x - D);
+  const currentBend = bend(px);
+
+  // 앞뒤 경사 변화를 바탕으로 한 상태 판정
+  const beforeUp = slopeL > 0.05;
+  const afterUp = slopeR > 0.05;
+
+  let turnState = 0; // 1: 극대(꼭대기), -1: 극소(골짜기), 0: 비탈
+  if (beforeUp && !afterUp) turnState = 1;
+  else if (!beforeUp && afterUp) turnState = -1;
+
+  let stateText = '가던 방향 그대로 쭉 흘러가는 비탈길이에요 🧗';
+  let stateColor = '#5f5e5a';
+  let emoji = '🧗';
+
+  if (turnState === 1) {
+    stateText = '올라갔다가 내려가는 전환점, 산꼭대기(극대)입니다! 👑';
+    stateColor = '#2e7d32';
+    emoji = '👑';
+  } else if (turnState === -1) {
+    stateText = '내려갔다가 올라가는 전환점, 골짜기(극소)입니다! ⛺';
+    stateColor = '#c0392b';
+    emoji = '⛺';
+  }
+
+  // 앞뒤 정보 카드 공통 스타일
+  const cardStyle = (active, color) => ({
+    flex: 1,
+    padding: '8px',
+    borderRadius: '10px',
+    textAlign: 'center',
+    border: `2px solid ${active ? color : '#e2e8f0'}`,
+    background: active ? `${color}11` : '#ffffff',
+    color: active ? color : '#94a3b8',
+    fontWeight: 'bold',
+    transition: 'all 0.2s',
+    fontSize: '13px'
   });
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-      <div style={{ background: '#efe9db', borderRadius: '10px', padding: '8px', textAlign: 'center' }}>
-        <div style={{ fontSize: '13px', color: '#5f5e5a' }}>
-          👉 <b>빨간 점을 곡선 위에서 직접 끌어</b> 앞은 오르막인지 뒤는 내리막인지 표로 확인하자
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', fontFamily: 'sans-serif' }}>
+      
+      {/* 1. 상단 현재 상태 창 */}
+      <div style={{ background: '#f8f9fa', borderRadius: '12px', padding: '12px', border: `2px solid ${stateColor}`, textAlign: 'center' }}>
+        <div style={{ fontSize: '22px', marginBottom: '4px' }}>{emoji}</div>
+        <div style={{ fontSize: '15px', fontWeight: 'bold', color: stateColor }}>{stateText}</div>
+        <div style={{ fontSize: '11px', color: '#7f8c8d', marginTop: '4px' }}>
+          👉 아래 산길 위의 빨간 점을 좌우로 끌며 내비게이션의 변화를 관찰해보세요!
         </div>
-        <div style={{ fontSize: '15px', fontWeight: 'bold', color: wc, marginTop: '2px' }}>{word}</div>
       </div>
 
-      {/* 도형: 곡선 위 직접 드래그 (앞뒤 참고점도 함께 표시) */}
-      <div className="viz-box">
-        <Mafs viewBox={{ x: xRange, y: yRange }} preserveAspectRatio={false} height={220}>
+      {/* 2. 내비게이션 화살표 표지판 삼형제 (OX 표 대체) */}
+      <div style={{ display: 'flex', gap: '8px', justifyContent: 'space-between' }}>
+        <div style={cardStyle(true, beforeUp ? '#2e7d32' : '#c0392b')}>
+          <div style={{ fontSize: '10px', color: '#64748b', marginBottom: '2px' }}>◀ 방금 지나온 길 (뒤)</div>
+          <div style={{ fontSize: '18px' }}>{beforeUp ? '↗ 오르막' : '↘ 내리막'}</div>
+        </div>
+        
+        <div style={cardStyle(true, stateColor)}>
+          <div style={{ fontSize: '10px', color: '#64748b', marginBottom: '2px' }}>● 내 위치 (나)</div>
+          <div style={{ fontSize: '18px' }}>
+            {turnState === 1 ? '👑 꼭대기' : turnState === -1 ? '⛺ 골짜기' : '🧗 비탈길'}
+          </div>
+        </div>
+
+        <div style={cardStyle(true, afterUp ? '#2e7d32' : '#c0392b')}>
+          <div style={{ fontSize: '10px', color: '#64748b', marginBottom: '2px' }}>곧 마주할 길 (앞) ▶</div>
+          <div style={{ fontSize: '18px' }}>{afterUp ? '↗ 오르막' : '↘ 내리막'}</div>
+        </div>
+      </div>
+
+      {/* 3. 상단 그래프: 산길과 앞뒤 가이드 점 */}
+      <div className="viz-box" style={{ background: '#ffffff', borderRadius: '12px', padding: '10px', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
+        <div style={{ fontSize: '13px', fontWeight: 'bold', color: '#2c3e50', marginBottom: '6px' }}>
+          🏔️ 1단계: 등산 코스와 내 위치 (앞뒤 점이 오르막인지 내리막인지 알려줘요!)
+        </div>
+        <Mafs viewBox={{ x: xRange, y: yRange }} preserveAspectRatio={false} height={200}>
           <Coordinates.Cartesian />
-          <Plot.OfX y={f} color={Theme.blue} />
-          <Point x={px - D} y={f(px - D)} color={beforeUp ? Theme.green : Theme.red} />
-          <Point x={px + D} y={f(px + D)} color={afterUp ? Theme.green : Theme.red} />
+          
+          {/* 가로 좌표 동기화를 위한 세로 레이저 점선 */}
+          <Line.Segment
+            point1={[px, yRange[0]]}
+            point2={[px, yRange[1]]}
+            color="#d1d8e0"
+            style={{ strokeDasharray: "4 4" }}
+          />
+
+          {/* 원래 산길 곡선 */}
+          <Plot.OfX y={f} color={Theme.blue} weight={4} />
+
+          {/* 지나온 길 참고 점 (뒤) */}
+          <Point x={px - D} y={f(px - D)} color={beforeUp ? Theme.green : Theme.red} size={5} />
+          
+          {/* 다가올 길 참고 점 (앞) */}
+          <Point x={px + D} y={f(px + D)} color={afterUp ? Theme.green : Theme.red} size={5} />
+
+          {/* 내 위치 (MovablePoint) */}
           <MovablePoint
             point={[px, f(px)]}
             constrain={(pos) => {
@@ -69,53 +142,68 @@ export function renderExtremumTurn(log, logIdx, sharedXByLog, setSharedXByLog) {
             onMove={(pos) => setPx(pos[0])}
           />
         </Mafs>
-        <div style={{ fontSize: '11px', color: '#5f5e5a', textAlign: 'center' }}>
-          작은 점 = 앞·뒤 참고 지점(초록=오르막 쪽, 빨강=내리막 쪽)
+        <div style={{ fontSize: '11px', color: '#7f8c8d', textAlign: 'center', marginTop: '4px' }}>
+          초록 점 = 오르막 구역에 있음 | 빨간 점 = 내리막 구역에 있음
         </div>
       </div>
 
-      {/* O/X 격자표(결과 확인용) */}
-      <div className="viz-box" style={{ background: '#ffffff', borderRadius: '10px', padding: '8px' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse', maxWidth: '340px', margin: '0 auto' }}>
-          <thead>
-            <tr>
-              <th style={{ padding: '6px', fontSize: '12px', color: '#5f5e5a', border: '1px solid #ddd8ca' }}></th>
-              <th style={{ padding: '6px', fontSize: '12px', color: '#2e7d32', border: '1px solid #ddd8ca' }}>오르막 ↗</th>
-              <th style={{ padding: '6px', fontSize: '12px', color: '#c0392b', border: '1px solid #ddd8ca' }}>내리막 ↘</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td style={{ padding: '6px', fontSize: '12px', fontWeight: 'bold', color: '#5f5e5a', border: '1px solid #ddd8ca' }}>앞</td>
-              <td style={cell(beforeUp, '#2e7d32')}>{beforeUp ? 'O' : 'X'}</td>
-              <td style={cell(!beforeUp, '#c0392b')}>{!beforeUp ? 'O' : 'X'}</td>
-            </tr>
-            <tr>
-              <td style={{ padding: '6px', fontSize: '12px', fontWeight: 'bold', color: '#5f5e5a', border: '1px solid #ddd8ca' }}>뒤</td>
-              <td style={cell(afterUp, '#2e7d32')}>{afterUp ? 'O' : 'X'}</td>
-              <td style={cell(!afterUp, '#c0392b')}>{!afterUp ? 'O' : 'X'}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+      {/* 4. 하단 그래프: 휘어짐 판독기 (삼진 계단 대체) */}
+      <div className="viz-box" style={{ background: '#ffffff', borderRadius: '12px', padding: '10px', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
+        <div style={{ fontSize: '13px', fontWeight: 'bold', color: '#2c3e50', marginBottom: '6px' }}>
+          📈 2단계: 길의 휘어짐 판독기 (길이 구부러지는 모양 곡선)
+        </div>
+        <Mafs viewBox={{ x: xRange, y: [-2.5, 2.5] }} preserveAspectRatio={false} height={160}>
+          <Coordinates.Cartesian />
+          
+          {/* 가로 좌표 동기화를 위한 세로 레이저 점선 */}
+          <Line.Segment
+            point1={[px, -2.5]}
+            point2={[px, 2.5]}
+            color="#d1d8e0"
+            style={{ strokeDasharray: "4 4" }}
+          />
 
-      {/* 그래프: 삼진 계단 */}
-      <div className="viz-box">
-        <Mafs viewBox={{ x: xRange, y: [-1.6, 1.6] }} preserveAspectRatio={false} height={160}>
-          <Coordinates.Cartesian yAxis={{ lines: 1 }} />
-          {Array.from({ length: 150 }).map((_, i) => {
-            const x1 = xMin + ((xMax - xMin) * i) / 150;
-            const x2 = xMin + ((xMax - xMin) * (i + 1)) / 150;
-            const tt = turnAt((x1 + x2) / 2);
-            return <Line.Segment key={i} point1={[x1, tt]} point2={[x2, tt]}
-              color={tt === 1 ? Theme.green : tt === -1 ? Theme.red : Theme.blue} />;
-          })}
-          <Point x={px} y={t} color={Theme.red} />
+          {/* 수평 기준선 (휘어짐이 없는 평평한 상태) */}
+          <Line.Segment
+            point1={[xRange[0], 0]}
+            point2={[xRange[1], 0]}
+            color="#7f8c8d"
+            style={{ strokeDasharray: "3 3" }}
+          />
+
+          {/* 휘어짐 곡선 (미분 차이 곡선) */}
+          <Plot.OfX y={bend} color={Theme.purple} weight={3} />
+
+          {/* 현재 내 위치의 휘어짐 정도를 나타내는 점 */}
+          <MovablePoint
+            point={[px, currentBend]}
+            constrain={(pos) => {
+              const cx = Math.min(xMax, Math.max(xMin, pos[0]));
+              return [cx, bend(cx)];
+            }}
+            color={Theme.red}
+            onMove={(pos) => setPx(pos[0])}
+          />
         </Mafs>
-        <div style={{ fontSize: '12px', color: '#5f5e5a', textAlign: 'center' }}>
-          가로=점 위치, 세로=전환 종류(+1 극대 / 0 비탈 / −1 극소)
+        <div style={{ fontSize: '12px', color: '#5f5e5a', textAlign: 'center', marginTop: '4px' }}>
+          가로=위치, 세로=길의 휨 모양 (<b>위(+) 영역</b>: ∪모양 분지, <b>아래(-) 영역</b>: ∩모양 꼭대기)
         </div>
       </div>
+
+      {/* 5. 초등 기하학적 연관 가이드 */}
+      <div style={{ background: '#fffbeb', borderRadius: '12px', padding: '12px', border: '1px dashed #f59e0b' }}>
+        <div style={{ fontSize: '13px', fontWeight: 'bold', color: '#b45309', marginBottom: '4px' }}>
+          🎯 그래프 연계 사고 미션!
+        </div>
+        <div style={{ fontSize: '12px', color: '#78350f', lineHeight: '1.5' }}>
+          위의 빨간 점을 잡고 움직이며 아래 보라색 그래프의 높낮이를 살펴보세요.
+          <br />
+          👉 등산가가 <b>산꼭대기 👑</b>를 지날 때: 아래 그래프의 점은 <b>가장 아래쪽(-)</b>으로 쑤욱 들어갑니다! (길이 아래로 ∩ 굽기 때문이에요)
+          <br />
+          👉 등산가가 <b>골짜기 ⛺</b>를 지날 때: 아래 그래프의 점은 <b>가장 위쪽(+)</b>으로 높게 올라갑니다! (길이 위로 ∪ 굽기 때문이에요)
+        </div>
+      </div>
+
     </div>
   );
 }
