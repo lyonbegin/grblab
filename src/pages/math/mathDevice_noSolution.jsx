@@ -1,52 +1,56 @@
 // ===========================================================
-// no:"11-7" ★ "겹침이 없으면 해가 없다" — venn 스타일, 원 드래그. Hook 없이 구현(React #310 방지).
+// no:"11-7" ★ "겹침이 없으면 해가 없다" — MovablePoint 기반(11-3/11-5 자매).
 // ===========================================================
 import React from 'react';
+import { Mafs, Coordinates, Theme, MovablePoint } from 'mafs';
+
+const X_RANGE = [-6, 6], Y_RANGE = [-3, 3];
+
+function CircleOverlay({ cx, cy, r, fill, stroke, tag, tagColor }) {
+  const xr = X_RANGE[1] - X_RANGE[0], yr = Y_RANGE[1] - Y_RANGE[0];
+  const leftPct = ((cx - r - X_RANGE[0]) / xr) * 100;
+  const topPct = ((Y_RANGE[1] - (cy + r)) / yr) * 100;
+  const wPct = ((2 * r) / xr) * 100;
+  const hPct = ((2 * r) / yr) * 100;
+  return (
+    <div style={{ position: 'absolute', left: `${leftPct}%`, top: `${topPct}%`, width: `${wPct}%`, height: `${hPct}%`,
+      borderRadius: '50%', background: fill, border: `2px solid ${stroke}`, pointerEvents: 'none',
+      display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column' }}>
+      <span style={{ fontSize: '11px', color: tagColor, fontWeight: 'bold' }}>{tag}</span>
+    </div>
+  );
+}
 
 export function renderNoSolution(log, logIdx, sharedXByLog, setSharedXByLog) {
   const v = log.visual;
   if (!v || v.kind !== 'mafs_function') return null;
 
-  const cxB = sharedXByLog?.[logIdx]?.cxB ?? 290;
-  const setCxB = (x) => setSharedXByLog?.(prev => ({ ...prev, [logIdx]: { ...(prev?.[logIdx] || {}), cxB: Math.min(310, Math.max(30, x)) } }));
+  const R = 1.7;
+  const cxA = -3.2;
+  const cxB = sharedXByLog?.[logIdx]?.cxB ?? -0.3;
+  const setCxB = (x) => setSharedXByLog?.(prev => ({ ...prev, [logIdx]: { ...(prev?.[logIdx] || {}), cxB: Math.min(6, Math.max(-6, x)) } }));
 
-  const R = 65;
-  const cxA = 90, cy = 100;
   const dist = Math.abs(cxB - cxA);
   const hasOverlap = dist < 2 * R;
-
-  let isDragging = false;
-  const onPointerDown = (e) => { isDragging = true; e.target.setPointerCapture?.(e.pointerId); };
-  const onPointerMove = (e) => {
-    if (!isDragging) return;
-    const svg = e.target.closest('svg');
-    if (!svg) return;
-    const rect = svg.getBoundingClientRect();
-    setCxB(((e.clientX - rect.left) / rect.width) * 320);
-  };
-  const onPointerUp = () => { isDragging = false; };
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
       <div className="viz-box" style={{ background: '#f5f2e8', borderRadius: '10px', padding: '6px' }}>
         <div style={{ fontSize: '12px', color: '#5f5e5a', textAlign: 'center' }}>
-          👉 두 원을 각각 <b>손가락으로 끌어</b> 서로 떨어뜨려보세요 — 각각은 답이 있어도 동시에는?
+          👉 <b>빨간 점</b>을 끌어 두 원을 떨어뜨려보세요 — 각각은 답이 있어도 동시에는?
         </div>
       </div>
-      <div className="viz-box">
-        <svg width="320" height="200" viewBox="0 0 320 200" style={{ touchAction: 'none' }}>
-          <circle cx={cxA} cy={cy} r={R} fill="#3b6d1133" stroke="#3b6d11" strokeWidth="2" />
-          <circle
-            cx={cxB} cy={cy} r={R} fill="#d85a3033" stroke="#d85a30" strokeWidth="2"
-            style={{ cursor: 'grab' }}
-            onPointerDown={onPointerDown} onPointerMove={onPointerMove} onPointerUp={onPointerUp}
-          />
-          <text x={cxA} y={cy - 5} fontSize="12" textAnchor="middle" fill="#3b6d11">조건1 답</text>
-          <text x={cxA} y={cy + 15} fontSize="10" textAnchor="middle" fill="#3b6d11">(예: 2,3)</text>
-          <text x={cxB} y={cy - 5} fontSize="12" textAnchor="middle" fill="#d85a30">조건2 답</text>
-          <text x={cxB} y={cy + 15} fontSize="10" textAnchor="middle" fill="#d85a30">(예: 7,8)</text>
-        </svg>
-        <div style={{ fontSize: '13px', textAlign: 'center', fontWeight: 'bold', color: hasOverlap ? '#2e7d32' : '#c0392b' }}>
+      <div className="viz-box" style={{ position: 'relative' }}>
+        <Mafs viewBox={{ x: X_RANGE, y: Y_RANGE }} preserveAspectRatio={false} height={220}>
+          <Coordinates.Cartesian xAxis={{ lines: false }} yAxis={{ lines: false }} />
+          <MovablePoint point={[cxB, 0]} constrain={(pos) => [Math.min(6, Math.max(-6, pos[0])), 0]}
+            color={Theme.red} onMove={(pos) => setCxB(pos[0])} />
+        </Mafs>
+        <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
+          <CircleOverlay cx={cxA} cy={0} r={R} fill="#3b6d1133" stroke="#3b6d11" tag="조건1 답 있음" tagColor="#3b6d11" />
+          <CircleOverlay cx={cxB} cy={0} r={R} fill="#d85a3033" stroke="#d85a30" tag="조건2 답 있음" tagColor="#d85a30" />
+        </div>
+        <div style={{ fontSize: '13px', textAlign: 'center', fontWeight: 'bold', color: hasOverlap ? '#2e7d32' : '#c0392b', marginTop: '4px' }}>
           {hasOverlap ? '겹치는 부분이 있어 동시 만족 가능' : '겹치는 부분이 없어 동시에는 불가능 — 연립의 해는 없습니다'}
         </div>
       </div>
