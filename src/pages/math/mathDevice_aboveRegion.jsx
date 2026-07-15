@@ -1,12 +1,12 @@
 // ===========================================================
 // no:"9-6" ★ "위인 구간이 부등식의 해다" (부등식=위/아래의 핵심개념)
 //
-// [초등학생 맞춤형 v6 — 실물 직접 조종 & 패시브 그래프 인과관계 에디션]
-// - 그래프 조작 점을 완전히 없애고, 상단 시뮬레이터의 로켓(🚀)을 직접 드래그하게 변경했습니다.
-// - 로켓을 움직이는 손맛(원인)이 아래 그래프의 흔적과 정답 불빛(결과)으로 자동 기록됩니다.
-// - 모바일 터치와 데스크톱 마우스 드래그를 완벽하게 지원합니다.
+// [초등학생 맞춤형 v7 — 무결점 무상태(Zero-Hook) 에디션]
+// - React Error #310 해결을 위해 useRef, useState 등의 모든 Hooks를 완벽히 제거했습니다.
+// - 루프(.map) 내부나 조건부 렌더링 환경에서도 절대 크래시가 나지 않는 순수 함수 구조입니다.
+// - HTML5 Pointer Capture와 DOM 속성을 이용해 드래그 인터랙션을 매끄럽게 처리합니다.
 // ===========================================================
-import React, { useState, useRef } from 'react';
+import React from 'react';
 import { Mafs, Coordinates, Plot, Point, Line, Theme, Polygon } from 'mafs';
 import { safeCompile, toRange } from './mathDeviceShared';
 
@@ -66,10 +66,6 @@ export function renderAboveRegion(log, logIdx, sharedXByLog, setSharedXByLog) {
   const yPosA = base - yaVal * scale;
   const yPosB = base - ybVal * scale;
 
-  // 상단 드래그 조작을 위한 Pointer Event 처리
-  const svgRef = useRef(null);
-  const [isDragging, setIsDragging] = useState(false);
-
   const paddingX = 40; // 양옆 여백
   const trackWidth = W - paddingX * 2;
 
@@ -79,34 +75,36 @@ export function renderAboveRegion(log, logIdx, sharedXByLog, setSharedXByLog) {
     return paddingX + pct * trackWidth;
   };
 
-  const handlePointerDown = (e) => {
-    e.preventDefault();
-    setIsDragging(true);
-    updateXFromEvent(e);
-    if (e.currentTarget.setPointerCapture) {
-      e.currentTarget.setPointerCapture(e.pointerId);
-    }
-  };
-
-  const handlePointerMove = (e) => {
-    if (!isDragging) return;
-    updateXFromEvent(e);
-  };
-
-  const handlePointerUp = (e) => {
-    setIsDragging(false);
-    if (e.currentTarget.releasePointerCapture) {
-      e.currentTarget.releasePointerCapture(e.pointerId);
-    }
-  };
-
-  const updateXFromEvent = (e) => {
-    if (!svgRef.current) return;
-    const rect = svgRef.current.getBoundingClientRect();
+  // 마우스/터치 좌표 계산 함수 (DOM Element 직접 수신)
+  const updateXFromEvent = (e, svgElement) => {
+    if (!svgElement) return;
+    const rect = svgElement.getBoundingClientRect();
     const clientX = e.clientX - rect.left;
     const pct = Math.min(1, Math.max(0, (clientX - paddingX) / trackWidth));
     const nx = xRange[0] + pct * (xRange[1] - xRange[0]);
     setX(nx);
+  };
+
+  // Pointer Event 핸들러 (State/Ref 없이 DOM Element와 Capture API를 활용)
+  const handlePointerDown = (e) => {
+    e.preventDefault();
+    const svg = e.currentTarget;
+    svg.setPointerCapture(e.pointerId);
+    svg.setAttribute('data-dragging', 'true');
+    updateXFromEvent(e, svg);
+  };
+
+  const handlePointerMove = (e) => {
+    const svg = e.currentTarget;
+    if (svg.getAttribute('data-dragging') === 'true') {
+      updateXFromEvent(e, svg);
+    }
+  };
+
+  const handlePointerUp = (e) => {
+    const svg = e.currentTarget;
+    svg.releasePointerCapture(e.pointerId);
+    svg.removeAttribute('data-dragging');
   };
 
   return (
@@ -121,7 +119,6 @@ export function renderAboveRegion(log, logIdx, sharedXByLog, setSharedXByLog) {
         {/* 로켓 발사대 인터랙티브 영역 */}
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           <svg 
-            ref={svgRef}
             width={W} 
             height={H} 
             style={{ background: 'linear-gradient(to bottom, #e0f2fe, #ffffff)', borderRadius: '10px', border: '2px solid #94a3b8', cursor: 'grab', touchAction: 'none' }}
@@ -171,7 +168,8 @@ export function renderAboveRegion(log, logIdx, sharedXByLog, setSharedXByLog) {
                 fill="#3b82f6" 
                 fillOpacity="0.05" 
                 rx="6" 
-                stroke={isDragging ? "#2563eb" : "transparent"} 
+                stroke="#2563eb" 
+                strokeWidth="1"
                 strokeDasharray="2 2"
               />
               <text 
@@ -278,9 +276,9 @@ export function renderAboveRegion(log, logIdx, sharedXByLog, setSharedXByLog) {
           🎯 조종사가 발견한 수학의 원리!
         </div>
         <div style={{ fontSize: '12px', color: '#15803d', lineHeight: '1.5' }}>
-          * 위에서 🚀을 움직여 <b>UFO보다 높게 비행하는 동안</b>에는, 아래 기록계의 세로 레이저선이 정확히 <b>초록색 영역</b> 속을 지나갑니다![cite: 1]
+          * 위에서 🚀을 움직여 <b>UFO보다 높게 비행하는 동안</b>에는, 아래 기록계의 세로 레이저선이 정확히 <b>초록색 영역</b> 속을 지나갑니다!
           <br />
-          * 이처럼 파란 선이 주황 선보다 <b>위에 떠 있는 가로축(x)의 구간 전체</b>가 바로 부등식 <b>"A &gt; B"의 완벽한 정답(해)</b>이 됩니다![cite: 1]
+          * 이처럼 파란 선이 주황 선보다 <b>위에 떠 있는 가로축($x$)의 구간 전체</b>가 바로 부등식 <b>"$A > B$"의 완벽한 정답(해)</b>이 됩니다!
         </div>
       </div>
 
