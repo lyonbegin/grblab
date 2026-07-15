@@ -1,10 +1,9 @@
 // ===========================================================
 // no:"9-6" ★ "위인 구간이 부등식의 해다" (부등식=위/아래의 핵심개념)
 //
-// [초등학생 맞춤형 v7 — 무결점 무상태(Zero-Hook) 에디션]
-// - React Error #310 해결을 위해 useRef, useState 등의 모든 Hooks를 완벽히 제거했습니다.
-// - 루프(.map) 내부나 조건부 렌더링 환경에서도 절대 크래시가 나지 않는 순수 함수 구조입니다.
-// - HTML5 Pointer Capture와 DOM 속성을 이용해 드래그 인터랙션을 매끄럽게 처리합니다.
+// [초등학생 맞춤형 v9 — JSX 특수문자 컴파일 에러 완벽 해결 에디션]
+// - 일반 텍스트 영역의 '>' 기호로 인한 컴파일 에러를 방지하기 위해 {"$A > B$"}로 안전하게 감쌌습니다.
+// - React Hooks를 쓰지 않는 Zero-Hook 구조와 sharedXByLog 드래그 연동은 그대로 유지됩니다.
 // ===========================================================
 import React from 'react';
 import { Mafs, Coordinates, Plot, Point, Line, Theme, Polygon } from 'mafs';
@@ -24,12 +23,9 @@ export function renderAboveRegion(log, logIdx, sharedXByLog, setSharedXByLog) {
   const xRange = toRange(v.xRange, [0, 8]);
   const yRange = toRange(v.yRange, [0, 16]);
   
-  // 가로축 위치 x (시간 또는 제어 변수)
+  // 가로축 위치 x 및 드래그 상태를 공유 객체로부터 안전하게 획득
   const x = sharedXByLog?.[logIdx]?.x ?? xRange[0];
-  const setX = (nx) => {
-    const cx = Math.min(xRange[1], Math.max(xRange[0], nx));
-    setSharedXByLog?.(prev => ({ ...prev, [logIdx]: { ...(prev?.[logIdx] || {}), x: cx } }));
-  };
+  const isDragging = sharedXByLog?.[logIdx]?.isDragging ?? false;
 
   let ya, yb; 
   try { ya = A.evaluate({ x }); } catch (e) { ya = NaN; }
@@ -75,36 +71,67 @@ export function renderAboveRegion(log, logIdx, sharedXByLog, setSharedXByLog) {
     return paddingX + pct * trackWidth;
   };
 
-  // 마우스/터치 좌표 계산 함수 (DOM Element 직접 수신)
-  const updateXFromEvent = (e, svgElement) => {
-    if (!svgElement) return;
+  // 터치/마우스 좌표를 x 값으로 변환하는 공통 함수
+  const calculateXFromEvent = (e, svgElement) => {
+    if (!svgElement) return x;
     const rect = svgElement.getBoundingClientRect();
     const clientX = e.clientX - rect.left;
     const pct = Math.min(1, Math.max(0, (clientX - paddingX) / trackWidth));
-    const nx = xRange[0] + pct * (xRange[1] - xRange[0]);
-    setX(nx);
+    return xRange[0] + pct * (xRange[1] - xRange[0]);
   };
 
-  // Pointer Event 핸들러 (State/Ref 없이 DOM Element와 Capture API를 활용)
+  // Pointer Event 핸들러: 드래그 상태를 부모 State로 완벽 동기화
   const handlePointerDown = (e) => {
     e.preventDefault();
     const svg = e.currentTarget;
-    svg.setPointerCapture(e.pointerId);
-    svg.setAttribute('data-dragging', 'true');
-    updateXFromEvent(e, svg);
+    try {
+      svg.setPointerCapture(e.pointerId);
+    } catch (err) {
+      console.warn('Pointer capture failed', err);
+    }
+
+    const nx = calculateXFromEvent(e, svg);
+    setSharedXByLog?.(prev => ({
+      ...prev,
+      [logIdx]: {
+        ...(prev?.[logIdx] || {}),
+        x: nx,
+        isDragging: true
+      }
+    }));
   };
 
   const handlePointerMove = (e) => {
+    if (!isDragging) return;
     const svg = e.currentTarget;
-    if (svg.getAttribute('data-dragging') === 'true') {
-      updateXFromEvent(e, svg);
-    }
+    const nx = calculateXFromEvent(e, svg);
+    setSharedXByLog?.(prev => ({
+      ...prev,
+      [logIdx]: {
+        ...(prev?.[logIdx] || {}),
+        x: nx,
+        isDragging: true
+      }
+    }));
   };
 
   const handlePointerUp = (e) => {
     const svg = e.currentTarget;
-    svg.releasePointerCapture(e.pointerId);
-    svg.removeAttribute('data-dragging');
+    try {
+      if (svg.hasPointerCapture(e.pointerId)) {
+        svg.releasePointerCapture(e.pointerId);
+      }
+    } catch (err) {
+      // 캡처 해제 예외 안전하게 무시
+    }
+
+    setSharedXByLog?.(prev => ({
+      ...prev,
+      [logIdx]: {
+        ...(prev?.[logIdx] || {}),
+        isDragging: false
+      }
+    }));
   };
 
   return (
@@ -116,21 +143,28 @@ export function renderAboveRegion(log, logIdx, sharedXByLog, setSharedXByLog) {
           🚀 아래 하늘나라 발사판에서 <span style={{ color: '#2563eb' }}><b>파란색 로켓을 손으로 쥐고 직접 좌우로 끌어보세요!</b></span>
         </div>
 
-        {/* 로켓 발사대 인터랙티브 영역 */}
+        {/* 로켓 발사대 인터랙티브 영역 (부드러운 조작을 위해 하위 요소 pointerEvents="none" 처리) */}
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           <svg 
             width={W} 
             height={H} 
-            style={{ background: 'linear-gradient(to bottom, #e0f2fe, #ffffff)', borderRadius: '10px', border: '2px solid #94a3b8', cursor: 'grab', touchAction: 'none' }}
+            style={{ 
+              background: 'linear-gradient(to bottom, #e0f2fe, #ffffff)', 
+              borderRadius: '10px', 
+              border: '2px solid #94a3b8', 
+              cursor: isDragging ? 'grabbing' : 'grab', 
+              touchAction: 'none' 
+            }}
             onPointerDown={handlePointerDown}
             onPointerMove={handlePointerMove}
             onPointerUp={handlePointerUp}
+            onPointerCancel={handlePointerUp}
           >
             {/* 안전 발착지 수평 지면선 */}
-            <line x1={0} y1={base} x2={W} y2={base} stroke="#64748b" strokeWidth="3" />
+            <line x1={0} y1={base} x2={W} y2={base} stroke="#64748b" strokeWidth="3" pointerEvents="none" />
 
             {/* 가로 조종 레일 점선 가이드 */}
-            <line x1={paddingX} y1={base} x2={W - paddingX} y2={base} stroke="#94a3b8" strokeWidth="2" strokeDasharray="5 5" />
+            <line x1={paddingX} y1={base} x2={W - paddingX} y2={base} stroke="#94a3b8" strokeWidth="2" strokeDasharray="5 5" pointerEvents="none" />
             
             {/* 현재 드래그 가이드 레이저선 (세로 보조선) */}
             <line 
@@ -141,10 +175,11 @@ export function renderAboveRegion(log, logIdx, sharedXByLog, setSharedXByLog) {
               stroke="#cbd5e1" 
               strokeWidth="2" 
               strokeDasharray="3 3" 
+              pointerEvents="none"
             />
 
             {/* UFO 🛸 (자동 추종 장치) */}
-            <g style={{ transition: 'transform 0.08s ease-out' }}>
+            <g style={{ transition: 'transform 0.08s ease-out' }} pointerEvents="none">
               <text 
                 x={getPixelX(x)} 
                 y={yPosB + 10} 
@@ -159,7 +194,7 @@ export function renderAboveRegion(log, logIdx, sharedXByLog, setSharedXByLog) {
             </g>
 
             {/* 조종사 로켓 🚀 (직접 드래그하는 핵심 객체) */}
-            <g style={{ transition: 'transform 0.08s ease-out' }}>
+            <g style={{ transition: 'transform 0.08s ease-out' }} pointerEvents="none">
               <rect 
                 x={getPixelX(x) - 20} 
                 y={yPosA - 15} 
@@ -169,7 +204,7 @@ export function renderAboveRegion(log, logIdx, sharedXByLog, setSharedXByLog) {
                 fillOpacity="0.05" 
                 rx="6" 
                 stroke="#2563eb" 
-                strokeWidth="1"
+                strokeWidth={isDragging ? "2" : "1"}
                 strokeDasharray="2 2"
               />
               <text 
@@ -177,7 +212,6 @@ export function renderAboveRegion(log, logIdx, sharedXByLog, setSharedXByLog) {
                 y={yPosA + 10} 
                 fontSize="32" 
                 textAnchor="middle"
-                style={{ cursor: 'grabbing' }}
               >
                 🚀
               </text>
@@ -186,7 +220,7 @@ export function renderAboveRegion(log, logIdx, sharedXByLog, setSharedXByLog) {
               </text>
             </g>
 
-            {/* 조작 활성화 유도 메시지 (시작할 때만 작게 표시) */}
+            {/* 조작 활성화 유도 메시지 (시작할 때만 표시) */}
             {x === xRange[0] && (
               <text x={W / 2} y={base - 40} fontSize="11" fill="#94a3b8" textAnchor="middle" pointerEvents="none">
                 👈 로켓을 오른쪽으로 당겨 비행하기!
@@ -276,9 +310,9 @@ export function renderAboveRegion(log, logIdx, sharedXByLog, setSharedXByLog) {
           🎯 조종사가 발견한 수학의 원리!
         </div>
         <div style={{ fontSize: '12px', color: '#15803d', lineHeight: '1.5' }}>
-          * 위에서 🚀을 움직여 <b>UFO보다 높게 비행하는 동안</b>에는, 아래 기록계의 세로 레이저선이 정확히 <b>초록색 영역</b> 속을 지나갑니다!
+          * 위에서 🚀을 움직여 <b>UFO보다 높게 비행하는 동안</b>에는, 아래 기록계의 세로 레이저선이 정확히 <b>초록색 영역</b> 속을 지나갑니다![cite: 1]
           <br />
-          * 이처럼 파란 선이 주황 선보다 <b>위에 떠 있는 가로축($x$)의 구간 전체</b>가 바로 부등식 <b>"$A > B$"의 완벽한 정답(해)</b>이 됩니다!
+          * 이처럼 파란 선이 주황 선보다 <b>위에 떠 있는 가로축(x)의 구간 전체</b>가 바로 부등식 <b><b>{"$A > B$"}</b>의 완벽한 정답(해)</b>이 됩니다![cite: 1]
         </div>
       </div>
 
