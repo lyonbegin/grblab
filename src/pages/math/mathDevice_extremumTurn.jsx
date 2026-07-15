@@ -1,27 +1,14 @@
 // ===========================================================
 // no:"4c" "전환점 — 앞뒤 방향으로 극대·극소를 가린다"  (극값 세트 셋째 칸)
 //
-// [재설계 요지 — 11번 세트 형식에 맞춤]
-//   기존: 세로선만 긋고 결과가 글자로 떴다. x→y 함수 그래프가 없었다.
-//   수정: (1) 시각언어를 matrix(O/X 격자표)로 → "앞=오르막? 뒤=내리막?" 논리 조합이
-//             표로 명시된다. 네 조합(↑↓ / ↓↑ / ↑↑ / ↓↓) 중 어디인지 한눈에 보인다.
-//         (2) x→y 함수 그래프 추가 → x=점 위치, y=전환 종류(+1 극대/0 비탈/−1 극소).
-//             이진 계단(세 값 사이 점프).
-//
-// [개념] 앞은 오르막·뒤는 내리막 → 극대. 앞은 내리막·뒤는 오르막 → 극소.
-//   방향이 안 바뀌면(↑↑ 또는 ↓↓) 그냥 비탈.
-//
-// [시각언어] matrix — 2행(앞/뒤) × 상태 격자에 O/X 표시.
-// [조작] 슬라이더로 점 이동 → 격자의 O/X가 실시간으로 바뀐다.
-// [그래프] x=점 위치, y=전환 종류(+1/0/−1). 이진(삼진) 계단.
-//
-// [검증 완료] x=1.28→+1(극대), x=4.55→−1(극소), x=2.92·0.30→0(비탈)
+// [v3 수정 — 슬라이더 제거, 직접 드래그로]
+//   곡선 위 점을 직접 끌면 O/X 격자표와 아래 삼진 계단 그래프가 즉시 갱신된다.
 // ===========================================================
 import React from 'react';
-import { Mafs, Coordinates, Point, Line, Theme } from 'mafs';
+import { Mafs, Coordinates, Plot, Point, Line, Theme, MovablePoint } from 'mafs';
 import { safeCompile, toRange } from './mathDeviceShared';
 
-const D = 0.4; // 앞뒤로 살펴보는 거리
+const D = 0.4;
 
 export function renderExtremumTurn(log, logIdx, sharedXByLog, setSharedXByLog) {
   const v = log.visual;
@@ -32,6 +19,7 @@ export function renderExtremumTurn(log, logIdx, sharedXByLog, setSharedXByLog) {
   const f = (x) => { try { return compiled.evaluate({ x }); } catch (e) { return NaN; } };
 
   const xRange = toRange(v.xRange, [0, 7]);
+  const yRange = toRange(v.yRange, [0, 8]);
   const xMin = xRange[0] + D + 0.1, xMax = xRange[1] - D - 0.1;
   const px = sharedXByLog?.[logIdx] ?? 1.3;
   const setPx = (val) => setSharedXByLog?.(prev => ({ ...prev, [logIdx]: Math.min(xMax, Math.max(xMin, val)) }));
@@ -40,18 +28,16 @@ export function renderExtremumTurn(log, logIdx, sharedXByLog, setSharedXByLog) {
   const df = (x) => (f(x + eps) - f(x - eps)) / (2 * eps);
   const turnAt = (x) => {
     const L = df(x - D), R = df(x + D);
-    if (L > 0.05 && R < -0.05) return 1;    // 오르다 내려감 = 극대
-    if (L < -0.05 && R > 0.05) return -1;   // 내리다 오름 = 극소
-    return 0;                                // 비탈
+    if (L > 0.05 && R < -0.05) return 1;
+    if (L < -0.05 && R > 0.05) return -1;
+    return 0;
   };
   const t = turnAt(px);
-  const beforeUp = df(px - D) > 0;   // 앞이 오르막인가
-  const afterUp = df(px + D) > 0;    // 뒤가 오르막인가
-
+  const beforeUp = df(px - D) > 0;
+  const afterUp = df(px + D) > 0;
   const word = t === 1 ? '극대 — 오르다 내려간다' : t === -1 ? '극소 — 내리다 올라간다' : '비탈 — 방향 그대로';
   const wc = t === 1 ? '#2e7d32' : t === -1 ? '#c0392b' : '#5f5e5a';
 
-  // O/X 격자표 (matrix 시각언어)
   const cell = (on, color) => ({
     padding: '8px 0', textAlign: 'center', fontSize: '18px', fontWeight: 'bold',
     border: '1px solid #ddd8ca', background: on ? `${color}22` : '#fff', color: on ? color : '#ccc'
@@ -59,18 +45,37 @@ export function renderExtremumTurn(log, logIdx, sharedXByLog, setSharedXByLog) {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-      {/* 조작 */}
-      <div style={{ background: '#efe9db', borderRadius: '10px', padding: '10px', textAlign: 'center' }}>
-        <div style={{ fontSize: '13px', color: '#5f5e5a', marginBottom: '4px' }}>
-          점을 옮기며 <b>앞은 오르막인지, 뒤는 내리막인지</b> 표로 확인하자
+      <div style={{ background: '#efe9db', borderRadius: '10px', padding: '8px', textAlign: 'center' }}>
+        <div style={{ fontSize: '13px', color: '#5f5e5a' }}>
+          👉 <b>빨간 점을 곡선 위에서 직접 끌어</b> 앞은 오르막인지 뒤는 내리막인지 표로 확인하자
         </div>
-        <input type="range" min={xMin} max={xMax} step={0.02} value={px}
-          onChange={(e) => setPx(parseFloat(e.target.value))} style={{ width: '80%' }} />
         <div style={{ fontSize: '15px', fontWeight: 'bold', color: wc, marginTop: '2px' }}>{word}</div>
       </div>
 
-      {/* 도형: O/X 격자표 (matrix 시각언어) */}
-      <div className="viz-box" style={{ background: '#ffffff', borderRadius: '10px', padding: '10px' }}>
+      {/* 도형: 곡선 위 직접 드래그 (앞뒤 참고점도 함께 표시) */}
+      <div className="viz-box">
+        <Mafs viewBox={{ x: xRange, y: yRange }} preserveAspectRatio={false} height={220}>
+          <Coordinates.Cartesian />
+          <Plot.OfX y={f} color={Theme.blue} />
+          <Point x={px - D} y={f(px - D)} color={beforeUp ? Theme.green : Theme.red} />
+          <Point x={px + D} y={f(px + D)} color={afterUp ? Theme.green : Theme.red} />
+          <MovablePoint
+            point={[px, f(px)]}
+            constrain={(pos) => {
+              const cx = Math.min(xMax, Math.max(xMin, pos[0]));
+              return [cx, f(cx)];
+            }}
+            color={Theme.red}
+            onMove={(pos) => setPx(pos[0])}
+          />
+        </Mafs>
+        <div style={{ fontSize: '11px', color: '#5f5e5a', textAlign: 'center' }}>
+          작은 점 = 앞·뒤 참고 지점(초록=오르막 쪽, 빨강=내리막 쪽)
+        </div>
+      </div>
+
+      {/* O/X 격자표(결과 확인용) */}
+      <div className="viz-box" style={{ background: '#ffffff', borderRadius: '10px', padding: '8px' }}>
         <table style={{ width: '100%', borderCollapse: 'collapse', maxWidth: '340px', margin: '0 auto' }}>
           <thead>
             <tr>
@@ -81,26 +86,22 @@ export function renderExtremumTurn(log, logIdx, sharedXByLog, setSharedXByLog) {
           </thead>
           <tbody>
             <tr>
-              <td style={{ padding: '6px', fontSize: '12px', fontWeight: 'bold', color: '#5f5e5a', border: '1px solid #ddd8ca' }}>앞 (왼쪽)</td>
+              <td style={{ padding: '6px', fontSize: '12px', fontWeight: 'bold', color: '#5f5e5a', border: '1px solid #ddd8ca' }}>앞</td>
               <td style={cell(beforeUp, '#2e7d32')}>{beforeUp ? 'O' : 'X'}</td>
               <td style={cell(!beforeUp, '#c0392b')}>{!beforeUp ? 'O' : 'X'}</td>
             </tr>
             <tr>
-              <td style={{ padding: '6px', fontSize: '12px', fontWeight: 'bold', color: '#5f5e5a', border: '1px solid #ddd8ca' }}>뒤 (오른쪽)</td>
+              <td style={{ padding: '6px', fontSize: '12px', fontWeight: 'bold', color: '#5f5e5a', border: '1px solid #ddd8ca' }}>뒤</td>
               <td style={cell(afterUp, '#2e7d32')}>{afterUp ? 'O' : 'X'}</td>
               <td style={cell(!afterUp, '#c0392b')}>{!afterUp ? 'O' : 'X'}</td>
             </tr>
           </tbody>
         </table>
-        <div style={{ fontSize: '11px', color: '#5f5e5a', textAlign: 'center', marginTop: '6px' }}>
-          앞 <b>오르막</b> + 뒤 <b>내리막</b> = <b style={{ color: '#2e7d32' }}>극대</b> ·
-          앞 <b>내리막</b> + 뒤 <b>오르막</b> = <b style={{ color: '#c0392b' }}>극소</b>
-        </div>
       </div>
 
-      {/* 그래프: x=점 위치, y=전환 종류. 삼진 계단 */}
+      {/* 그래프: 삼진 계단 */}
       <div className="viz-box">
-        <Mafs viewBox={{ x: xRange, y: [-1.6, 1.6] }} preserveAspectRatio={false} height={180}>
+        <Mafs viewBox={{ x: xRange, y: [-1.6, 1.6] }} preserveAspectRatio={false} height={160}>
           <Coordinates.Cartesian yAxis={{ lines: 1 }} />
           {Array.from({ length: 150 }).map((_, i) => {
             const x1 = xMin + ((xMax - xMin) * i) / 150;
@@ -112,7 +113,7 @@ export function renderExtremumTurn(log, logIdx, sharedXByLog, setSharedXByLog) {
           <Point x={px} y={t} color={Theme.red} />
         </Mafs>
         <div style={{ fontSize: '12px', color: '#5f5e5a', textAlign: 'center' }}>
-          가로=점 위치, 세로=전환 종류(+1 극대 / 0 비탈 / −1 극소) — <b>세 값 사이를 뛰는 계단</b>입니다
+          가로=점 위치, 세로=전환 종류(+1 극대 / 0 비탈 / −1 극소)
         </div>
       </div>
     </div>

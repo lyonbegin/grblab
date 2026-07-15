@@ -1,25 +1,16 @@
 // ===========================================================
-// no:"4a" "봉우리와 골 — 주변 셋 중 내가 몇 등?"  (극값 세트 첫 칸)
+// no:"4a" "봉우리와 골 — 오르내림 판독기로 찾는 산꼭대기와 골짜기"
 //
-// [재설계 요지 — 11번 세트 형식에 맞춤]
-//   기존: 곡선 위 점만 굴리고 결과가 글자로만 떴다(x→y 함수 그래프 없음, 4칸 모두 같은 화면).
-//   수정: (1) 시각언어를 bar_chart(막대 높이 비교)로 → 국소 비교의 정의가 눈에 보인다.
-//         (2) x→y 함수 그래프를 추가 → x=점 위치, y=주변 3점 중 순위(1~3). 계단 그래프.
-//
-// [개념] 봉우리 = 주변(왼·나·오른) 셋 중 내가 1등. 골 = 내가 3등(꼴찌). 비탈 = 2등.
-//   "주변에서만"이라는 국소의 씨앗을 순위로 몸에 익힌다.
-//
-// [시각언어] bar_chart — 왼/나/오른 3개 막대의 높이를 직접 비교.
-// [조작] 슬라이더로 점 위치 이동 → 3막대 높이가 실시간으로 바뀐다.
-// [그래프] x=점 위치, y=순위(1~3). 봉우리에서 1, 골에서 3으로 뚝뚝 떨어지는 계단.
-//
-// [검증 완료] 곡선 0.12x³-1.05x²+2.1x+2.5 → 극대 x=1.28(순위1), 극소 x=4.55(순위3), 비탈(순위2)
+// [초등학생 맞춤형 v4 — 기하학적 연관 사고 훈련 에디션]
+// - 계단식 그래프와 이산적 순위 비교를 제거했습니다.
+// - "오르막/내리막의 기울기(변화율)"를 연속적인 경사도 그래프로 시각화합니다.
+// - "꼭대기/골짜기 = 경사도가 0"이라는 미적분의 핵심 직관을 선 그래프로 연결합니다.
 // ===========================================================
 import React from 'react';
-import { Mafs, Coordinates, Plot, Point, Line, Theme } from 'mafs';
+import { Mafs, Coordinates, Plot, Point, Line, Theme, MovablePoint } from 'mafs';
 import { safeCompile, toRange } from './mathDeviceShared';
 
-const STEP = 0.6; // 이웃까지의 거리
+const STEP = 0.6;
 
 export function renderPeakValley(log, logIdx, sharedXByLog, setSharedXByLog) {
   const v = log.visual;
@@ -27,86 +18,155 @@ export function renderPeakValley(log, logIdx, sharedXByLog, setSharedXByLog) {
   const formula = (v.curves || [])[0]?.formula || '0.12*x*x*x-1.05*x*x+2.1*x+2.5';
   const compiled = safeCompile(formula, 'explicit');
   if (!compiled) return null;
+  
+  // 원래 곡선 함수 f(x)
   const f = (x) => { try { return compiled.evaluate({ x }); } catch (e) { return NaN; } };
+
+  // 수치 미분을 통한 오르내림 경사도(기울기) 함수 df(x)
+  const df = (x) => {
+    const h = 0.001;
+    try {
+      return (f(x + h) - f(x - h)) / (2 * h);
+    } catch (e) {
+      return 0;
+    }
+  };
 
   const xRange = toRange(v.xRange, [0, 7]);
   const yRange = toRange(v.yRange, [0, 8]);
-  const xMin = xRange[0] + STEP, xMax = xRange[1] - STEP;
-  const px = sharedXByLog?.[logIdx] ?? 1.3;
+  const xMin = xRange[0] + 0.1, xMax = xRange[1] - 0.1;
+  
+  // 공유되는 빨간 점(등산가)의 x 좌표
+  const px = sharedXByLog?.[logIdx] ?? 3.5;
   const setPx = (val) => setSharedXByLog?.(prev => ({ ...prev, [logIdx]: Math.min(xMax, Math.max(xMin, val)) }));
 
-  // 주변 3점 높이와 순위
-  const yL = f(px - STEP), yC = f(px), yR = f(px + STEP);
-  const rankOf = (x) => {
-    const a = f(x - STEP), b = f(x), c = f(x + STEP);
-    return [a, b, c].filter(y => y > b + 1e-9).length + 1; // 1=봉우리, 3=골
-  };
-  const rank = rankOf(px);
-  const word = rank === 1 ? '1등 — 봉우리! (주변보다 높음)' : rank === 3 ? '3등 — 골! (주변보다 낮음)' : '2등 — 비탈 (오르내리는 중)';
-  const wc = rank === 1 ? '#2e7d32' : rank === 3 ? '#c0392b' : '#5f5e5a';
+  const currentY = f(px);
+  const currentSlope = df(px);
 
-  // 막대 그리기(SVG)
-  const BW = 260, BH = 120, PAD = 24;
-  const maxY = Math.max(yL, yC, yR, 1);
-  const bars = [
-    { label: '왼쪽', y: yL, color: '#b0b8c4' },
-    { label: '나', y: yC, color: rank === 1 ? '#3b6d11' : rank === 3 ? '#d85a30' : '#5a86c4' },
-    { label: '오른쪽', y: yR, color: '#b0b8c4' },
-  ];
+  // 캐릭터 상태 판단 (초등 눈높이에 맞춘 감성 피드백)
+  let stateText = '';
+  let stateColor = '#5f5e5a';
+  let emoji = '🧗';
+  const slopeThreshold = 0.15; // 꼭대기/바닥을 판정하기 위한 완만한 구간 역치
+
+  if (Math.abs(currentSlope) <= slopeThreshold) {
+    // 꼭대기(극대)인지 골짜기(극소)인지 좌우 높이로 판정
+    const leftY = f(px - 0.4);
+    const rightY = f(px + 0.4);
+    if (currentY > leftY && currentY > rightY) {
+      stateText = '산꼭대기(봉우리) 도착! 주변에서 내가 가장 높아! 👑';
+      stateColor = '#2e7d32'; // 초록
+      emoji = '👑';
+    } else if (currentY < leftY && currentY < rightY) {
+      stateText = '골짜기(바닥) 도착! 가장 낮은 아늑한 곳이야! ⛺';
+      stateColor = '#c0392b'; // 빨강
+      emoji = '⛺';
+    } else {
+      stateText = '완만하고 평평한 길을 걷고 있어 🪵';
+      stateColor = '#7f8c8d';
+      emoji = '🚶';
+    }
+  } else if (currentSlope > slopeThreshold) {
+    stateText = '영차영차! 오르막길을 올라가는 중이야 🧗';
+    stateColor = '#2980b9'; // 파랑
+    emoji = '🧗';
+  } else {
+    stateText = '슈우웅~ 신나게 내려막길을 내려가는 중이야 🏂';
+    stateColor = '#e67e22'; // 주황
+    emoji = '🏂';
+  }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-      {/* 조작 */}
-      <div style={{ background: '#efe9db', borderRadius: '10px', padding: '10px', textAlign: 'center' }}>
-        <div style={{ fontSize: '13px', color: '#5f5e5a', marginBottom: '4px' }}>
-          점을 옮기며 <b>주변 셋(왼쪽·나·오른쪽) 중 내가 몇 등</b>인지 보자
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', fontFamily: 'sans-serif' }}>
+      
+      {/* 1. 현재 등산가의 상태창 */}
+      <div style={{ background: '#f5f6fa', borderRadius: '12px', padding: '12px', border: `2px solid ${stateColor}`, textAlign: 'center', transition: 'all 0.2s' }}>
+        <div style={{ fontSize: '24px', marginBottom: '4px' }}>{emoji}</div>
+        <div style={{ fontSize: '16px', fontWeight: 'bold', color: stateColor }}>
+          {stateText}
         </div>
-        <input type="range" min={xMin} max={xMax} step={0.02} value={px}
-          onChange={(e) => setPx(parseFloat(e.target.value))} style={{ width: '80%' }} />
-        <div style={{ fontSize: '15px', fontWeight: 'bold', color: wc, marginTop: '2px' }}>{word}</div>
-      </div>
-
-      {/* 도형: 막대 높이 비교 (bar_chart 시각언어) */}
-      <div className="viz-box" style={{ background: '#ffffff', borderRadius: '10px', padding: '8px' }}>
-        <svg width="100%" height={BH + 26} viewBox={`0 0 ${BW} ${BH + 26}`} style={{ display: 'block', margin: '0 auto' }}>
-          {bars.map((b, i) => {
-            const bw = 52, gap = 26;
-            const x = PAD + i * (bw + gap);
-            const h = Math.max(2, (b.y / maxY) * (BH - 20));
-            const y = BH - h;
-            return (
-              <g key={i}>
-                <rect x={x} y={y} width={bw} height={h} fill={b.color} stroke="#5f5e5a" strokeWidth="1" rx="3" />
-                <text x={x + bw / 2} y={BH + 12} fontSize="11" fill="#5f5e5a" textAnchor="middle">{b.label}</text>
-                <text x={x + bw / 2} y={y - 4} fontSize="10" fill="#5f5e5a" textAnchor="middle">{b.y.toFixed(1)}</text>
-              </g>
-            );
-          })}
-          <line x1={0} y1={BH} x2={BW} y2={BH} stroke="#c9c0aa" strokeWidth="1.5" />
-        </svg>
-        <div style={{ fontSize: '11px', color: '#5f5e5a', textAlign: 'center' }}>
-          가운데(나) 막대가 양옆보다 높으면 봉우리, 낮으면 골입니다 — <b>주변 셋만 견줍니다</b>
+        <div style={{ fontSize: '12px', color: '#7f8c8d', marginTop: '4px' }}>
+          👉 아래 산길 위의 빨간 점을 직접 좌우로 끌어보세요!
         </div>
       </div>
 
-      {/* 그래프: x=점 위치, y=순위. 계단 */}
-      <div className="viz-box">
-        <Mafs viewBox={{ x: xRange, y: [0.5, 3.5] }} preserveAspectRatio={false} height={180}>
-          <Coordinates.Cartesian yAxis={{ lines: 1 }} />
-          {/* 순위 계단: 곡선 전체를 훑어 순위를 선분으로 */}
-          {Array.from({ length: 120 }).map((_, i) => {
-            const x1 = xMin + ((xMax - xMin) * i) / 120;
-            const x2 = xMin + ((xMax - xMin) * (i + 1)) / 120;
-            const r = rankOf((x1 + x2) / 2);
-            return <Line.Segment key={i} point1={[x1, r]} point2={[x2, r]}
-              color={r === 1 ? Theme.green : r === 3 ? Theme.red : Theme.blue} />;
-          })}
-          <Point x={px} y={rank} color={Theme.red} />
+      {/* 2. 메인 그래프: 내가 걷는 산길 */}
+      <div className="viz-box" style={{ background: '#ffffff', borderRadius: '12px', padding: '8px', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
+        <div style={{ fontSize: '13px', fontWeight: 'bold', color: '#2c3e50', marginBottom: '6px', display: 'flex', alignItems: 'center', gap: '4px' }}>
+          <span>🏔️</span> 1단계: 등산가의 위치와 산길 (높이 그래프)
+        </div>
+        <Mafs viewBox={{ x: xRange, y: yRange }} preserveAspectRatio={false} height={200}>
+          <Coordinates.Cartesian />
+          {/* 산길 곡선 */}
+          <Plot.OfX y={f} color={Theme.blue} weight={4} />
+          
+          {/* 현재 위치에서의 경사 상태를 직관적으로 보여주는 노란 접선 막대 */}
+          <Line.Segment
+            point1={[px - 0.5, currentY - 0.5 * currentSlope]}
+            point2={[px + 0.5, currentY + 0.5 * currentSlope]}
+            color={Theme.yellow}
+            weight={4}
+          />
+
+          {/* 직접 드래그하는 등산가 점 (MovablePoint) */}
+          <MovablePoint
+            point={[px, currentY]}
+            constrain={(pos) => {
+              const cx = Math.min(xMax, Math.max(xMin, pos[0]));
+              return [cx, f(cx)];
+            }}
+            color={Theme.red}
+            onMove={(pos) => setPx(pos[0])}
+          />
         </Mafs>
-        <div style={{ fontSize: '12px', color: '#5f5e5a', textAlign: 'center' }}>
-          가로=점 위치, 세로=주변 셋 중 순위 — <b>계단처럼 1(봉우리)·2(비탈)·3(골)로 뚝뚝 바뀝니다</b>
-        </div>
       </div>
+
+      {/* 3. 연계 그래프: 오르내림 판독기 */}
+      <div className="viz-box" style={{ background: '#ffffff', borderRadius: '12px', padding: '8px', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
+        <div style={{ fontSize: '13px', fontWeight: 'bold', color: '#2c3e50', marginBottom: '6px', display: 'flex', alignItems: 'center', gap: '4px' }}>
+          <span>📈</span> 2단계: 오르내림 판독기 (경사도 그래프)
+        </div>
+        <Mafs viewBox={{ x: xRange, y: [-3, 3] }} preserveAspectRatio={false} height={140}>
+          {/* 가로축과 세로 격자 표시 */}
+          <Coordinates.Cartesian xAxis={{ lines: 1 }} yAxis={{ lines: 1 }} />
+          
+          {/* 경사가 정확히 0이 되는 '완전히 평평한 지점' 안내선 */}
+          <Line.Horizontal y={0} color="#7f8c8d" style="dashed" />
+
+          {/* 경사도 곡선 (미분 그래프) */}
+          <Plot.OfX y={df} color={Theme.purple} weight={3} />
+
+          {/* 위 등산가의 가로 위치와 연동되는 오르내림 판독 점 */}
+          <Point x={px} y={currentSlope} color={Theme.red} size={6} />
+
+          {/* 위 그래프의 x좌표와 아래 그래프의 x좌표를 연결하여 생각하도록 돕는 가이드 점선 */}
+          <Line.Segment
+            point1={[px, 0]}
+            point2={[px, currentSlope]}
+            color="#95a5a6"
+            style="dashed"
+          />
+        </Mafs>
+      </div>
+
+      {/* 4. 그래프 연관 사고 가이드 북 */}
+      <div style={{ background: '#fffbeb', borderRadius: '12px', padding: '12px', border: '1px dashed #f59e0b' }}>
+        <div style={{ fontSize: '13px', fontWeight: 'bold', color: '#b45309', marginBottom: '6px' }}>
+          💡 꼭 찾아봐야 할 그래프의 비밀! (그래프 연관 훈련)
+        </div>
+        <ul style={{ margin: 0, paddingLeft: '20px', fontSize: '12px', color: '#78350f', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+          <li>
+            <b>비밀 1:</b> 등산가가 <b>산꼭대기 👑</b>나 <b>골짜기 ⛺</b>에 서면, 아래 판독기의 빨간 점은 정확히 <b>가운데 선(0)</b>에 걸치게 돼요! (경사가 없으니까요!)
+          </li>
+          <li>
+            <b>비밀 2:</b> <b>오르막길 🧗</b>을 올라갈 때는 아래 판독기 그래프가 <b>가운데 선보다 위쪽(+)</b>에 그려져요.
+          </li>
+          <li>
+            <b>비밀 3:</b> <b>내려막길 🏂</b>을 내려갈 때는 아래 판독기 그래프가 <b>가운데 선보다 아래쪽(-)</b>에 그려져요.
+          </li>
+        </ul>
+      </div>
+
     </div>
   );
 }
