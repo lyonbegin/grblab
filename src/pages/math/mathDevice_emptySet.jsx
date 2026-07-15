@@ -1,70 +1,44 @@
 // ===========================================================
-// no:"11-5" "겹침이 아예 없을 수도 있다 (공집합)" (연립부등식의 선행개념)
-//
-// [규칙] 도형(조작+결과도형) + 그래프 + 연동.
-//   - 조작: 두 띠를 좌우로 미는 슬라이더 (거리 조절)
-//   - 결과도형: 두 띠를 떼어놓으면 겹침이 사라지고 "없음" 표시
-//   - 그래프: 수직선에 아무 구간도 안 남음
-//   sharedXByLog[logIdx] = { aPos, bPos }.
-//
-// [핵심] 조건이 서로 어긋나면 만족하는 값이 하나도 없을 수 있다 — 답이 없음(공집합).
+// no:"11-5" "겹침이 없을 수도 있다" — venn 스타일 재구성(11-3과 자매, 극단 케이스).
+// 기존 renderVenn 시각언어를 그대로 쓰되, 두 원을 완전히 떼어놓아 vennBoth가 0이
+// 되는 순간(공집합)을 학생이 직접 만들어보게 한다.
+// [조작] 두 원 거리 슬라이더(0~아주 멀리) [결과도형] 벤다이어그램
+// [그래프] 같은 벤다이어그램 — 겹침 0이면 "해 없음" 배지
 // ===========================================================
 import React from 'react';
-import { Mafs, Coordinates, Line, Theme } from 'mafs';
 
 export function renderEmptySet(log, logIdx, sharedXByLog, setSharedXByLog) {
-  const DEBUG = '[mathDevice_emptySet 디버그]';
   const v = log.visual;
-  if (!v || v.kind !== 'mafs_function') { console.log(`${DEBUG} kind`, v); return null; }
+  if (!v || v.kind !== 'mafs_function') return null;
 
-  const XMAX = 10, WIDTH = 3; // 각 띠의 폭 고정
-  const st = sharedXByLog?.[logIdx] || {};
-  const aPos = st.aPos ?? 1;
-  const bPos = st.bPos ?? 6;
-  const patch = (p) => setSharedXByLog?.(prev => ({ ...prev, [logIdx]: { aPos, bPos, ...(prev?.[logIdx] || {}), ...p } }));
+  const dist = sharedXByLog?.[logIdx]?.dist ?? 200;
+  const setDist = (d) => setSharedXByLog?.(prev => ({ ...prev, [logIdx]: { ...(prev?.[logIdx] || {}), dist: Math.min(260, Math.max(0, d)) } }));
 
-  const aLo = aPos, aHi = aPos + WIDTH;
-  const bLo = bPos, bHi = bPos + WIDTH;
-  const oLo = Math.max(aLo, bLo), oHi = Math.min(aHi, bHi);
-  const hasOverlap = oLo <= oHi;
-
-  const W = 300, PAD = 20, barW = W - PAD * 2;
-  const px = (x) => PAD + (x / XMAX) * barW;
+  const R = 70;
+  const half = Math.min(dist / 2, 150);
+  const cxA = 160 - half, cxB = 160 + half;
+  const cy = 100;
+  const hasOverlap = dist < 2 * R;
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-      <div className="viz-box" style={{ background: '#f5f2e8', borderRadius: '10px', padding: '10px' }}>
-        <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap' }}>
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <div style={{ fontSize: '12px', color: '#5f5e5a' }}>A띠 위치</div>
-            <input type="range" min={0} max={XMAX - WIDTH} step={0.5} value={aPos}
-              onChange={(e) => patch({ aPos: parseFloat(e.target.value) })} style={{ width: '110px' }} />
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <div style={{ fontSize: '12px', color: '#5f5e5a' }}>B띠 위치</div>
-            <input type="range" min={0} max={XMAX - WIDTH} step={0.5} value={bPos}
-              onChange={(e) => patch({ bPos: parseFloat(e.target.value) })} style={{ width: '110px' }} />
-          </div>
+      <div className="viz-box" style={{ background: '#f5f2e8', borderRadius: '10px', padding: '8px' }}>
+        <div style={{ fontSize: '12px', color: '#5f5e5a', textAlign: 'center', marginBottom: '4px' }}>
+          두 원을 멀리 떼어놓아 겹침을 없애보세요
         </div>
-        <svg width={W} height={70} viewBox={`0 0 ${W} 70`} style={{ display: 'block', margin: '8px auto 0' }}>
-          <rect x={px(aLo)} y={10} width={px(aHi) - px(aLo)} height={14} fill="#5a86c4" opacity="0.6" />
-          <rect x={px(bLo)} y={28} width={px(bHi) - px(bLo)} height={14} fill="#e8a13a" opacity="0.6" />
-          {hasOverlap
-            ? <rect x={px(oLo)} y={48} width={px(oHi) - px(oLo)} height={14} fill="#2e7d32" />
-            : <text x={W / 2} y={60} fontSize="13" textAnchor="middle" fill="#c0392b" fontWeight="bold">겹침 없음 — 답 없음!</text>}
-        </svg>
-        <div style={{ fontSize: '13px', textAlign: 'center', fontWeight: 'bold', color: hasOverlap ? '#2e7d32' : '#c0392b' }}>
-          {hasOverlap ? `겹침 있음: ${oLo.toFixed(1)} ~ ${oHi.toFixed(1)}` : '두 조건을 동시에 만족하는 값이 하나도 없습니다'}
-        </div>
+        <input type="range" min={0} max={260} step={4} value={dist}
+          onChange={(e) => setDist(parseFloat(e.target.value))} style={{ width: '80%', display: 'block', margin: '0 auto' }} />
       </div>
-
       <div className="viz-box">
-        <Mafs viewBox={{ x: [-1, XMAX + 1], y: [-2, 2] }} preserveAspectRatio={false} height={130}>
-          <Coordinates.Cartesian yAxis={{ lines: false }} />
-          {hasOverlap && <Line.Segment point1={[oLo, 0]} point2={[oHi, 0]} color={Theme.green} />}
-        </Mafs>
-        <div style={{ fontSize: '12px', color: '#5f5e5a', textAlign: 'center' }}>
-          {hasOverlap ? '겹치는 구간이 답입니다' : '수직선에 아무것도 안 남습니다 — 이것이 답 없음(공집합)'}
+        <svg width="320" height="200" viewBox="0 0 320 200">
+          <circle cx={cxA} cy={cy} r={R} fill="#3b6d1133" stroke="#3b6d11" strokeWidth="2" />
+          <circle cx={cxB} cy={cy} r={R} fill="#d85a3033" stroke="#d85a30" strokeWidth="2" />
+          <text x={Math.max(10, cxA - 45)} y="55" fontSize="14" fill="#3b6d11">조건1</text>
+          <text x={Math.min(280, cxB + 15)} y="55" fontSize="14" fill="#d85a30">조건2</text>
+          {!hasOverlap && <text x="160" y="105" fontSize="15" textAnchor="middle" fontWeight="bold" fill="#c0392b">겹침 없음 = 답 없음</text>}
+        </svg>
+        <div style={{ fontSize: '12px', color: hasOverlap ? '#5f5e5a' : '#c0392b', textAlign: 'center', fontWeight: hasOverlap ? 'normal' : 'bold' }}>
+          {hasOverlap ? '아직 겹침이 있습니다' : '두 조건을 동시에 만족하는 값이 하나도 없습니다(공집합)'}
         </div>
       </div>
     </div>
