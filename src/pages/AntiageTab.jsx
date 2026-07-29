@@ -667,7 +667,7 @@ export default function AntiageTab() {
                   <section className="ta-block">
                     <h3>후원 음악회 개요</h3>
                     <ul className="ta-list">
-                      <li><b>일시</b> 2027. 9. 29 (화) 오후 2시</li>
+                      <li><b>일시</b> 2026. 9. 29 (화) 오후 2시</li>
                       <li><b>장소</b> 부산시민회관 대극장 (1,624석 규모)</li>
                       <li><b>지원</b> 입상 팀 도쿄 대회 참가비용(참가비·항공료·체류비 등) 전액 지원</li>
                     </ul>
