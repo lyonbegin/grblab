@@ -593,7 +593,7 @@ export default function AntiageTab() {
                       <label className="ta-field"><span>팀명(합창단/중창단명) <b>*</b></span><input type="text" name="팀명" required /></label>
                       <label className="ta-field"><span>소속단체</span><input type="text" name="소속단체" /></label>
                       <label className="ta-field"><span>담당자 <b>*</b></span><input type="text" name="담당자" required /></label>
-                      <label className="ta-field"><span>연락처(휴대전화) <b>*</b></span><input type="tel" name="연락처" placeholder="010-1234-5678" pattern="01[0-9]-\d{3,4}-\d{4}" required /></label>
+                      <label className="ta-field"><span>연락처(휴대전화) <b>*</b></span><input type="tel" name="연락처" placeholder="010-1234-5678" pattern="01[0-9]-?\d{3,4}-?\d{4}" title="휴대전화 번호를 010-1234-5678 형식(11자리)으로 입력해주세요." required /></label>
                       <label className="ta-field ta-full"><span>이메일 <b>*</b></span><input type="email" name="이메일" placeholder="example@email.com" required /></label>
                     </div>
                     {applyState === 'error' && <p className="ta-error">전송에 실패했습니다. 잠시 후 다시 시도해주세요.</p>}
