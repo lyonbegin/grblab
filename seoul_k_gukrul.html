@@ -1,0 +1,1931 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<title>오픈투어 GLOBAL — 아원 首爾 K-Gukrul(국룰) 투어 & K-TaxBack</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://yaimg.yanolja.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --font-inter: 'Inter', sans-serif;
+    --accent: #3b4ef6;
+    --accent-ink: #2c3ce0;
+    --accent-soft: #eef0ff;
+    --ink: #1a1a2e;
+    --sub2: #5c6270;
+    --line: #eef0f4;
+    --soft: #f5f6fa;
+    --shadow-pop: 0 12px 40px rgba(30,40,90,.12);
+  }
+  body {
+    font-family: 'Pretendard Variable', Pretendard, var(--font-inter), -apple-system, sans-serif;
+    background-color: #fafbfe;
+    color: var(--ink);
+  }
+  .glass-header {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+  .tour-card {
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease;
+  }
+  .tour-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 30px rgba(59, 78, 246, 0.08);
+  }
+  
+  /* 빌더 세그먼트 및 판넬 */
+  .builder-bar {
+    box-shadow: 0 4px 24px rgba(20,20,40,.08);
+  }
+  .seg.active {
+    box-shadow: inset 0 0 0 2px var(--ink);
+  }
+  .panel {
+    display: none;
+    animation: pp 0.16s ease;
+  }
+  .panel.open {
+    display: block;
+  }
+  @keyframes pp {
+    from { opacity: 0; transform: translateY(-6px); }
+    to { opacity: 1; transform: none; }
+  }
+  
+  /* 달력 스타일링 */
+  .cg {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px;
+  }
+  .dow {
+    text-align: center;
+    font-size: 11px;
+    color: var(--sub2);
+    padding: 6px 0;
+    font-weight: 700;
+  }
+  .dy {
+    aspect-ratio: 1;
+    display: grid;
+    place-items: center;
+    font-size: 13px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: 0.1s;
+  }
+  .dy.mut {
+    color: #d3d6dd;
+    cursor: default;
+  }
+  .dy:not(.mut):hover {
+    background: var(--soft);
+  }
+  .dy.pick {
+    background: var(--ink);
+    color: #fff;
+    font-weight: 700;
+  }
+
+  /* 가속 스크롤바 디자인 정의 */
+  .trend-scroll-container {
+    scrollbar-width: none; /* Firefox */
+  }
+  .trend-scroll-container::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+  }
+  
+  /* 그랩 드래깅 커서 */
+  .cursor-grab {
+    cursor: grab;
+  }
+  .cursor-grabbing {
+    cursor: grabbing;
+  }
+</style>
+</head>
+<body class="antialiased text-[#1a1a2e]">
+
+<header class="sticky top-0 z-50 glass-header border-b border-gray-100">
+  <div class="max-w-[1240px] mx-auto px-5 lg:px-10 h-16 md:h-20 flex items-center justify-between">
+    <div class="flex items-center gap-6">
+      <div class="text-2xl md:text-3xl font-black tracking-tighter text-[#3b4ef6] cursor-pointer" onclick="resetAllFilters()">오픈투어 GLOBAL</div>
+      <div class="hidden md:flex items-center gap-1.5 text-xs font-bold text-[#3b4ef6] bg-[#eef0ff] px-2.5 py-1 rounded-full uppercase tracking-wider">
+        一隻阿圓 72H Exclusive Partner
+      </div>
+    </div>
+    
+    <div class="flex items-center gap-4 md:gap-7">
+      <a class="flex flex-col items-center gap-1 text-[11px] font-semibold text-[#5c6270] hover:text-[#1a1a2e] transition cursor-pointer">
+        <svg class="w-[22px] h-[22px]" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>
+        <span data-i18n="gnbMy">마이</span>
+      </a>
+      <a class="flex flex-col items-center gap-1 text-[11px] font-semibold text-[#5c6270] hover:text-[#1a1a2e] transition cursor-pointer">
+        <svg class="w-[22px] h-[22px]" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M12 21s-7-4.35-9.5-8.5C.5 8.5 3 5 6.5 5 9 5 12 8 12 8s3-3 5.5-3C21 5 23.5 8.5 21.5 12.5 19 16.65 12 21 12 21z"/></svg>
+        <span data-i18n="gnbWish">찜</span>
+      </a>
+      <div class="relative" id="langWrap">
+        <button onclick="toggleLanguage()" class="flex items-center gap-1.5 bg-[#f5f6fa] border border-gray-200 hover:border-gray-300 transition rounded-full px-3.5 py-1.5 text-xs font-bold text-[#1a1a2e]">
+          <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.5 3.5 6 3.5 9s-1 6.5-3.5 9c-2.5-2.5-3.5-6-3.5-9s1-6.5 3.5-9z"/></svg>
+          <span id="langLabel">한국어</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section id="video-section" class="bg-[#0f172a] text-white py-10 overflow-hidden">
+  <div class="max-w-[1240px] mx-auto px-5 lg:px-10 flex flex-col lg:flex-row gap-8 items-center">
+    
+    <!-- Left: Live YouTube hero player (autoplay muted on load) -->
+    <!-- 영상 교체 시 아래 iframe src의 embed/{ID} 값만 바꾸면 됩니다.
+         현재 ID: _Dv0qR2BLGM (사용자 지정) -->
+    <div class="w-full lg:w-1/2 aspect-video bg-slate-900 rounded-2xl overflow-hidden shadow-2xl relative border border-white/10">
+      <iframe
+        class="w-full h-full"
+        src="https://www.youtube-nocookie.com/embed/_Dv0qR2BLGM?autoplay=1&mute=1&playsinline=1&rel=0&modestbranding=1"
+        title="YouTube hero video player"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        referrerpolicy="strict-origin-when-cross-origin"
+        allowfullscreen>
+      </iframe>
+    </div>
+
+    <!-- Right: Video Description & Meta -->
+    <div class="w-full lg:w-1/2 space-y-4">
+      <div class="inline-flex items-center gap-2 bg-[#ff3b30] text-white text-[11px] font-black tracking-wider uppercase px-2.5 py-1 rounded">
+        🔴 <span data-i18n="videoLabel">아원 首爾 K-Gukrul(국룰) 소스 비디오</span>
+      </div>
+      <h1 class="text-2xl md:text-3xl font-black tracking-tight leading-[1.2]" data-i18n="videoTitle">
+        韓國首爾自由行三天兩夜怎麼玩！72小時逛街、美食、流行必去、現在紅什麼！｜一隻阿圓
+      </h1>
+      <p class="text-gray-400 text-xs md:text-sm leading-relaxed" data-i18n="videoDesc">
+        이 페이지는 대만 메가 인플루언서 아원(一隻阿圓)의 서울 72시간 벼락치기 브이로그 전용 웰컴 공간입니다. 영상 속 아원 크루가 직접 구매하고 다녀갔던 미식과 쇼핑 스팟을 확인하고, 1/N 전용 공동구매 셔틀과 즉시 면세 K-TaxBack 결제를 누려보세요!
+      </p>
+      
+      <!-- Video Seek Shorts -->
+      <div class="pt-2">
+        <span class="text-xs font-bold text-gray-400 block mb-2" data-i18n="seekLabel">📍 각 투어의 첫 매칭 영상 구간 미리 보기</span>
+        <div class="flex flex-wrap gap-2">
+          <div class="px-3 py-1.5 text-xs font-bold bg-white/10 rounded-lg text-white">
+            🥐 성수 소금빵 (02:22)
+          </div>
+          <div class="px-3 py-1.5 text-xs font-bold bg-white/10 rounded-lg text-white">
+            👖 한남 마틴킴 (02:40)
+          </div>
+          <div class="px-3 py-1.5 text-xs font-bold bg-white/10 rounded-lg text-white">
+            🐙 광장시장 산낙지 (37:02)
+          </div>
+          <div class="px-3 py-1.5 text-xs font-bold bg-white/10 rounded-lg text-white">
+            💄 올리브영 언박싱 (44:15)
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section id="builder" class="max-w-[1240px] mx-auto px-5 lg:px-10 -mt-8 relative z-30">
+  <div class="builder-bar bg-white rounded-3xl border border-gray-100 p-2 flex flex-col lg:flex-row items-stretch gap-2">
+    
+    <!-- segment 1: AM -->
+    <button class="seg flex-1 text-left px-6 py-4 rounded-3xl hover:bg-gray-50 transition active" id="segAm">
+      <span class="l block text-xs font-bold text-blue-600 mb-1">
+        <span class="n inline-grid place-items-center w-4 h-4 rounded bg-blue-50 text-blue-600 text-[10px] font-black mr-1.5 align-middle">1</span>
+        <span data-i18n="segAmLabel">오전 국룰코스</span>
+      </span>
+      <span class="v text-[15px] font-extrabold text-[#1a1a2e]" id="amVal" data-i18n="amValDefault">전체 오전 코스</span>
+    </button>
+    
+    <div class="vl hidden lg:block w-px bg-gray-100 my-3"></div>
+    
+    <!-- segment 2: PM -->
+    <button class="seg flex-1 text-left px-6 py-4 rounded-3xl hover:bg-gray-50 transition" id="segPm">
+      <span class="l block text-xs font-bold text-indigo-600 mb-1">
+        <span class="n inline-grid place-items-center w-4 h-4 rounded bg-indigo-50 text-indigo-600 text-[10px] font-black mr-1.5 align-middle">2</span>
+        <span data-i18n="segPmLabel">오후 국룰코스</span>
+      </span>
+      <span class="v text-[15px] font-extrabold text-gray-400" id="pmVal" data-i18n="pmValDefault">오후 코스를 골라주세요</span>
+    </button>
+    
+    <div class="vl hidden lg:block w-px bg-gray-100 my-3"></div>
+    
+    <!-- segment 3: Date -->
+    <button class="seg flex-1 text-left px-6 py-4 rounded-3xl hover:bg-gray-50 transition lock" id="segDate">
+      <span class="l block text-xs font-bold text-gray-400 mb-1">
+        <span class="n inline-grid place-items-center w-4 h-4 rounded bg-gray-100 text-gray-400 text-[10px] font-black mr-1.5 align-middle">3</span>
+        <span data-i18n="segDateLabel">날짜</span>
+      </span>
+      <span class="v text-[15px] font-extrabold text-gray-400" id="dateVal" data-i18n="dateValDefault">언제 떠날까요</span>
+    </button>
+    
+    <button class="b-go bg-[#3b4ef6] hover:bg-[#2c3ce0] text-white font-extrabold text-[15px] px-8 py-4 lg:py-0 rounded-2xl transition flex items-center justify-center gap-2 shadow-[0_8px_20px_rgba(59,78,246,0.15)] active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed" id="goBtn" disabled>
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
+      <span data-i18n="searchBtn">검색</span>
+    </button>
+  </div>
+
+  <!-- Place Selector Panel -->
+  <div class="panel bg-white border border-gray-100 rounded-3xl shadow-[0_12px_40px_rgba(30,40,90,0.08)] p-6 mt-4" id="panelPlace">
+    <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-6 pb-4 border-b border-gray-50">
+      <h3 class="text-[17px] font-black text-[#1a1a2e]" id="openWhatLabel" data-i18n="panelPlaceTitle">어떤 코스로 버스를 오픈할까요?</h3>
+      <button class="am-toggle border border-gray-200 bg-white hover:bg-gray-50 text-gray-500 font-extrabold text-xs px-4 py-2 rounded-full transition" id="amNoneToggle" type="button" data-i18n="amNoneToggle">오전 일정 안함</button>
+    </div>
+    
+    <!-- Category selectors -->
+    <div class="types flex flex-wrap gap-2 mb-5" id="typeRow"></div>
+    
+    <!-- Region tab selectors -->
+    <div id="regionWrap" class="mb-5">
+      <div class="rtabs flex flex-wrap gap-2" id="regionRow"></div>
+    </div>
+    
+    <!-- Near alternatives routing note -->
+    <div id="nearNote" class="near inline-flex items-center gap-2 bg-blue-50 text-blue-600 text-xs font-bold px-4 py-3 rounded-xl mb-5 hidden w-full"></div>
+    
+    <div class="fl text-xs font-black text-gray-400 uppercase tracking-wider mb-3"><span data-i18n="popularCourse">인기 코스</span> <span class="h font-normal normal-case text-gray-300 ml-2" data-i18n="popularCourseDesc">많이 찾는 순</span></div>
+    
+    <!-- Places grid -->
+    <div class="pl-grid grid grid-cols-2 md:grid-cols-4 gap-4" id="placeList"></div>
+    
+    <!-- Panel Footer buttons -->
+    <div class="pfoot flex justify-between items-center mt-6 pt-5 border-t border-gray-100">
+      <button class="pf-link text-sm font-bold text-gray-400 hover:text-gray-900 underline" id="clearBtn" data-i18n="reset">초기화</button>
+      <button class="pf-next bg-[#1a1a2e] text-white font-extrabold text-sm px-6 py-3 rounded-xl hover:bg-black transition disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed" id="nextBtn" disabled data-i18n="nextStep">다음 단계</button>
+    </div>
+  </div>
+
+  <!-- Calendar Selector Panel -->
+  <div class="panel bg-white border border-gray-100 rounded-3xl shadow-[0_12px_40px_rgba(30,40,90,0.08)] p-6 mt-4" id="panelDate">
+    <div class="caltabs flex bg-gray-50 p-1 rounded-full max-w-[280px] mb-6">
+      <button class="ct on flex-1 py-2 text-xs font-black text-gray-800 rounded-full transition bg-white shadow-sm" data-i18n="pickDate">날짜 지정</button>
+      <button class="ct flex-1 py-2 text-xs font-bold text-gray-400 rounded-full transition" data-i18n="flexDate">유연한 일정</button>
+    </div>
+    
+    <div class="cals grid grid-cols-1 md:grid-cols-2 gap-8 mb-6">
+      <div class="cal">
+        <h4 class="text-sm font-extrabold text-center mb-4 text-gray-800" data-i18n="monthAug">2026년 8월</h4>
+        <div class="cg" id="cg1"></div>
+      </div>
+      <div class="cal">
+        <h4 class="text-sm font-extrabold text-center mb-4 text-gray-800" data-i18n="monthSept">2026년 9월</h4>
+        <div class="cg" id="cg2"></div>
+      </div>
+    </div>
+    
+    <div class="fl text-xs font-black text-gray-400 uppercase tracking-wider mb-3"><span data-i18n="flexRange">여행 범위</span> <span class="h font-normal normal-case text-gray-300 ml-2" data-i18n="flexRangeDesc">± 유연하게</span></div>
+    <div class="fx flex flex-wrap gap-2" id="flexRow">
+      <button class="fc on border-2 border-black bg-black text-white text-xs font-black px-4 py-2 rounded-full transition" data-f="0" data-i18n="exactDate">정확한 날짜</button>
+      <button class="fc border border-gray-200 bg-white text-gray-500 hover:bg-gray-50 text-xs font-bold px-4 py-2 rounded-full transition" data-f="1">± 1일</button>
+      <button class="fc border border-gray-200 bg-white text-gray-500 hover:bg-gray-50 text-xs font-bold px-4 py-2 rounded-full transition" data-f="2">± 2일</button>
+      <button class="fc border border-gray-200 bg-white text-gray-500 hover:bg-gray-50 text-xs font-bold px-4 py-2 rounded-full transition" data-f="3">± 3일</button>
+    </div>
+    
+    <div class="pfoot flex justify-between items-center mt-6 pt-5 border-t border-gray-100">
+      <button class="pf-link text-sm font-bold text-gray-400 hover:text-gray-900 underline" id="dateClear" data-i18n="reset">초기화</button>
+      <button class="pf-next bg-[#1a1a2e] text-white font-extrabold text-sm px-6 py-3 rounded-xl hover:bg-black transition" id="dateDone" data-i18n="apply">적용</button>
+    </div>
+  </div>
+</section>
+
+<main class="max-w-[1240px] mx-auto px-5 lg:px-10 py-12">
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+    
+    <!-- LEFT: Tour Products Grid -->
+    <div class="lg:col-span-8 space-y-6">
+      
+      <!-- Search results dynamic anchor -->
+      <div id="results" class="hidden"></div>
+      
+      <div class="flex items-center justify-between border-b border-gray-100 pb-4">
+        <div>
+          <h2 class="text-xl md:text-2xl font-black tracking-tight flex items-center gap-2" data-i18n="toursHeader">
+            🚌 아원 首爾 K-Gukrul(국룰) 투어 상품
+          </h2>
+          <p class="text-xs text-[#5c6270] mt-1 font-semibold" id="tourSearchMeta">
+            오전 코스 <span class="text-blue-600">전체</span> · 오후 코스 <span class="text-indigo-600">전체</span> · 총 9개 매칭 완료
+          </p>
+        </div>
+        <button onclick="resetAllFilters(); playTapSound();" class="text-xs font-bold text-gray-400 hover:text-gray-900 transition">
+          🔄 <span data-i18n="resetFilter">필터 리셋</span>
+        </button>
+      </div>
+
+      <!-- Container of products -->
+      <div class="space-y-5" id="toursContainer">
+        <!-- Renders dynamically from A_ROUTES with newly strengthened Vlog connections -->
+      </div>
+    </div>
+
+    <!-- RIGHT: Logistics Card & Ah-Won's K-Select Shop -->
+    <div class="lg:col-span-4 space-y-6 lg:sticky lg:top-24">
+      
+      <!-- Logistics Benefits summary -->
+      <div class="bg-gradient-to-br from-indigo-50 to-blue-50 border border-blue-100 p-5 rounded-2xl relative overflow-hidden">
+        <h3 class="text-sm font-black text-indigo-950 mb-1 flex items-center gap-1.5" data-i18n="benefitTitle">
+          👜 1,280 TWD로 우아한 공주 쇼핑을!
+        </h3>
+        <p class="text-xs text-indigo-900/80 font-medium leading-relaxed" data-i18n="benefitDesc">
+          서울 지하철 계단과 무거운 짐 폭탄에서 해방되세요. 오전에 산 전리품들을 전용 전세버스 트렁크에 바로 보관하여 양손을 완전히 가볍게 다닐 수 있습니다!
+        </p>
+      </div>
+
+      <!-- K-Select Shop -->
+      <div class="bg-white border border-gray-100 rounded-2xl p-5 shadow-[0_10px_30px_rgba(0,0,0,0.02)]">
+        <div class="flex items-center justify-between border-b border-gray-100 pb-3 mb-4">
+          <div>
+            <h3 class="text-[17px] font-black tracking-tight" data-i18n="shopTitle">🛍️ 아원's K-Select Shop</h3>
+            <p class="text-[11px] text-[#5c6270] font-semibold" data-i18n="shopSub">이 영상에서 아원이 싹쓸이한 모든 서울 전리품 모음</p>
+          </div>
+          <span class="text-[10px] bg-red-50 text-red-600 font-extrabold px-2 py-0.5 rounded-full" data-i18n="instantRefund">즉시 환급</span>
+        </div>
+
+        <!-- Products List -->
+        <div class="space-y-4" id="selectShopContainer">
+          <!-- Populated from JS -->
+        </div>
+
+        <div class="mt-5 pt-4 border-t border-gray-100 flex items-start gap-2.5 text-[11px] text-[#5c6270] font-medium leading-relaxed">
+          <svg class="w-4 h-4 text-[#3b4ef6] flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 17h.01M12 13.5V11"/></svg>
+          <span data-i18n="taxbackDisclaimer">
+            제품 결제 즉시 아원 크루에게 정산 후원 수수료가 지급되며, 모바일 K-TaxBack 기술을 통해 면세 세후 가격으로 직접 결제됩니다.
+          </span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<div id="fullCalendarModal" class="fixed inset-0 bg-[#1a1a2e]/60 z-[110] flex items-center justify-center p-4 hidden backdrop-blur-sm">
+  <div class="bg-white w-full max-w-2xl rounded-3xl overflow-hidden shadow-2xl border border-gray-100 relative animate-[pp_0.22s_ease-out] flex flex-col max-h-[90vh]">
+    
+    <!-- Modal Header -->
+    <div class="p-6 pb-4 border-b border-gray-100 flex items-center justify-between bg-gradient-to-r from-blue-50/50 to-white">
+      <div>
+        <span class="text-xs font-bold text-blue-600 uppercase tracking-wide" data-i18n="scHeaderTag">🗓️ 스카이스캐너형 날짜별 공동구매가 비교</span>
+        <h3 id="scModalRouteTitle" class="text-lg font-black text-[#1a1a2e] mt-0.5">투어 노선 상세 요금</h3>
+      </div>
+      <button onclick="closeFullCalendarModal(); playTapSound();" class="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-500 font-bold text-sm flex items-center justify-center transition">✕</button>
+    </div>
+
+    <!-- Scrollable content -->
+    <div class="p-6 overflow-y-auto space-y-6">
+      
+      <!-- Route mini spec summary -->
+      <div class="bg-slate-50 rounded-2xl p-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+        <div>
+          <p id="scModalRouteCaption" class="text-xs text-indigo-600 font-extrabold"></p>
+          <p id="scModalRouteDesc" class="text-sm font-bold text-slate-800 mt-1"></p>
+        </div>
+        <div class="text-left sm:text-right">
+          <span class="text-[10px] text-gray-400 font-semibold block" data-i18n="scLowestStandard">기본 공구 요금</span>
+          <span id="scModalBasePrice" class="text-base font-extrabold text-slate-500"></span>
+        </div>
+      </div>
+
+      <!-- Month Selector Tabs -->
+      <div class="flex border-b border-gray-100">
+        <button id="scBtnAug" onclick="switchFullCalendarMonth(8); playTapSound();" class="flex-1 pb-3 text-center text-sm font-extrabold border-b-2 border-blue-600 text-blue-600">
+          2026년 8월 <span class="text-xs font-normal" data-i18n="scRecruitingMonth">모집 활성화</span>
+        </button>
+        <button id="scBtnSept" onclick="switchFullCalendarMonth(9); playTapSound();" class="flex-1 pb-3 text-center text-sm font-bold border-b-2 border-transparent text-gray-400 hover:text-gray-800">
+          2026년 9월 <span class="text-xs font-normal" data-i18n="scRecruitingMonth">모집 활성화</span>
+        </button>
+      </div>
+
+      <!-- Dynamic Calendar Grid -->
+      <div>
+        <div class="grid grid-cols-7 text-center text-[11px] font-bold text-gray-400 mb-2">
+          <div class="text-red-500" data-i18n="sun">일</div>
+          <div data-i18n="mon">월</div>
+          <div data-i18n="tue">화</div>
+          <div data-i18n="wed">수</div>
+          <div data-i18n="thu">목</div>
+          <div data-i18n="fri">금</div>
+          <div class="text-blue-500" data-i18n="sat">토</div>
+        </div>
+        <div id="scCalendarGrid" class="grid grid-cols-7 gap-1">
+          <!-- Days populated dynamically from JS -->
+        </div>
+      </div>
+
+      <!-- 1/N dynamic pricing details section -->
+      <div class="bg-blue-50/50 rounded-2xl p-4 border border-blue-100">
+        <h4 class="text-xs font-black text-indigo-950 mb-1 flex items-center gap-1.5">
+          💡 <span data-i18n="dynamicPricingLabel">1/N 공동구매 다이나믹 프라이싱 요금 원리</span>
+        </h4>
+        <p class="text-[11px] text-indigo-900/80 leading-relaxed" data-i18n="dynamicPricingDesc">
+          출발 인원이 목표 정원(25명)에 가까워지거나 확정될수록 전세버스 임대 및 물류 분담비가 낮아져, 실시간 자동 할인이 들어갑니다! <b>가장 인원이 많이 모인 날을 공략하면 비용이 최대 15% 추가 할인</b>됩니다.
+        </p>
+      </div>
+
+      <!-- Legend Indicator info -->
+      <div class="flex flex-wrap gap-4 text-xs font-semibold text-slate-500 border-t border-gray-100 pt-4">
+        <div class="flex items-center gap-1.5">
+          <span class="w-2.5 h-2.5 rounded-full bg-[#12b25f]"></span>
+          <span data-i18n="statusConfirmed">출발 확정 (최대 할인 ₩)</span>
+        </div>
+        <div class="flex items-center gap-1.5">
+          <span class="w-2.5 h-2.5 rounded-full bg-[#f59e0b]"></span>
+          <span data-i18n="statusImminent">출발 임박 (18~24명 / 8% 할인)</span>
+        </div>
+        <div class="flex items-center gap-1.5">
+          <span class="w-2.5 h-2.5 rounded-full bg-slate-300"></span>
+          <span data-i18n="statusWaiting">대기중 (기본가)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sticky selection status and action footer -->
+    <div class="p-6 bg-slate-50 border-t border-gray-100 flex flex-col sm:flex-row justify-between items-center gap-4">
+      <div class="text-left w-full sm:w-auto">
+        <p class="text-[11px] text-gray-400 font-bold" data-i18n="scSelectedDate">선택한 투어 희망일</p>
+        <p id="scSelectedDateSummary" class="text-base font-black text-slate-900 mt-0.5">날짜를 선택해주세요</p>
+      </div>
+      <button id="scConfirmBookingBtn" disabled onclick="bookSelectedScTour(); playTapSound();" class="w-full sm:w-auto bg-[#3b4ef6] hover:bg-[#2c3ce0] disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed text-white font-extrabold text-sm px-8 py-3.5 rounded-2xl transition shadow-lg shrink-0">
+        <span data-i18n="scConfirmBookingBtn">선택 날짜로 즉시 공구 예약</span>
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<!-- Premium K-TaxBack Checkout Modal -->
+<div id="taxBackModal" class="fixed inset-0 bg-[#1a1a2e]/60 z-[120] flex items-center justify-center p-4 hidden backdrop-blur-sm">
+  <div class="bg-white w-full max-w-md rounded-3xl overflow-hidden shadow-2xl border border-gray-100 relative animate-[pp_0.22s_ease-out]">
+    
+    <div class="p-6 pb-4 border-b border-gray-100 flex items-center justify-between bg-gradient-to-r from-blue-50 to-white">
+      <div class="flex items-center gap-2">
+        <span class="w-7 h-7 rounded-lg bg-blue-600 text-white font-black text-xs flex items-center justify-center">K</span>
+        <div>
+          <h3 class="text-base font-extrabold text-[#1a1a2e]" data-i18n="taxbackModalTitle">K-TaxBack 즉시 면세 결제</h3>
+          <p class="text-[10px] text-gray-400 font-bold" data-i18n="taxbackModalSub">오픈투어 x 아원 제휴 후원 채널</p>
+        </div>
+      </div>
+      <button onclick="closeTaxBackModal(); playTapSound();" class="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-500 font-bold text-sm flex items-center justify-center transition">✕</button>
+    </div>
+
+    <div class="p-6 space-y-4">
+      <div class="flex gap-4 items-center bg-gray-50 p-3 rounded-2xl">
+        <div class="w-16 h-16 bg-white rounded-xl overflow-hidden relative border border-gray-100">
+          <img id="modalItemImg" src="" alt="" class="w-full h-full object-cover">
+        </div>
+        <div>
+          <span class="text-[10px] text-blue-600 font-extrabold uppercase bg-blue-50 px-2 py-0.5 rounded-md" data-i18n="taxbackSupport">아원(阿圓) 후원 적립 연동 완료</span>
+          <h4 id="modalItemTitle" class="text-sm font-extrabold text-[#1a1a2e] mt-1">제품명</h4>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3">
+        <div class="border border-gray-100 rounded-xl p-3 bg-white">
+          <span class="text-[10px] text-gray-400 font-bold block mb-1" data-i18n="normalPrice">매장 진열가</span>
+          <span id="modalOriginalPrice" class="text-base font-extrabold text-gray-400 line-through">₩0</span>
+        </div>
+        <div class="border border-blue-200 rounded-xl p-3 bg-[#eef0ff]">
+          <span class="text-[10px] text-blue-600 font-black block mb-1" data-i18n="taxfreePrice">K-TaxBack 즉시 면세가</span>
+          <span id="modalTaxFreePrice" class="text-lg font-black text-blue-600">₩0</span>
+        </div>
+      </div>
+
+      <!-- Logistic options for pickup -->
+      <div>
+        <label class="text-xs font-extrabold text-gray-400 block mb-2" data-i18n="taxfreeDeliveryMethod">📦 면세 상품 수령 방법</label>
+        <div class="grid grid-cols-2 gap-2">
+          <button id="pickupBus" onclick="setPickup('bus'); playTapSound();" class="border-2 border-blue-600 bg-blue-50 text-blue-600 font-extrabold text-xs p-3 rounded-xl flex flex-col items-center justify-center gap-1 transition">
+            <span class="text-base">🚌</span>
+            <span data-i18n="deliveryBus">공구 버스에서 수령</span>
+            <span class="text-[9px] opacity-75" data-i18n="deliveryBusSub">내 버스 캐리어 트렁크 적재</span>
+          </button>
+          <button id="pickupAirport" onclick="setPickup('airport'); playTapSound();" class="border border-gray-100 bg-white hover:bg-gray-50 text-gray-600 font-bold text-xs p-3 rounded-xl flex flex-col items-center justify-center gap-1 transition">
+            <span class="text-base">✈️</span>
+            <span data-i18n="deliveryAirport">공항 카운터 수령</span>
+            <span class="text-[9px] text-gray-400 font-normal" data-i18n="deliveryAirportSub">출국 시 인도장에서 간편 인도</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="bg-[#e8f7f0] text-[#12b25f] text-[11px] font-semibold leading-relaxed p-3.5 rounded-xl border border-emerald-100" data-i18n="taxbackBenefitDesc">
+        💖 본 결제 진행 시 제품의 10% 세후 금액이 즉시 면세 적용되며, 결제 마진 일부가 아원(阿圓)의 여행 콘텐츠 정산 수수료로 즉시 후원 적립됩니다.
+      </div>
+    </div>
+
+    <div class="p-6 pt-0">
+      <button onclick="processTaxBackCheckout(); playTapSound();" class="w-full bg-[#3b4ef6] hover:bg-[#2c3ce0] text-white font-extrabold py-4 rounded-xl transition shadow-md text-sm" data-i18n="taxbackPayBtn">
+        즉시 면세 결제하고 아원 지원하기
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<!-- Floating Premium Toast Notification -->
+<div id="toast" class="fixed bottom-5 right-5 bg-[#1a1a2e] text-white px-5 py-4 rounded-2xl shadow-2xl z-[200] transition-all duration-300 transform translate-y-20 opacity-0 pointer-events-none flex items-center gap-3 border border-white/10 max-w-sm">
+  <div class="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center text-sm font-black flex-shrink-0" id="toastIcon">🎉</div>
+  <div class="text-xs font-semibold leading-normal" id="toastMsg">알림 메시지</div>
+</div>
+
+<footer class="bg-white border-t border-gray-100 py-12 mt-20">
+  <div class="max-w-[1240px] mx-auto px-5 lg:px-10">
+    <div class="text-2xl font-black text-[#3b4ef6] mb-4">오픈투어 GLOBAL</div>
+    <p class="text-xs text-[#5c6270] leading-relaxed max-w-2xl" data-i18n="footerText">
+      (주)오픈투어 · 서울특별시 강남구 테헤란로 000 · 통신판매업신고 2026-서울강남-00000 <br>
+      오픈투어는 메가 크리에이터 제휴 1/N 전세버스 공동구매 플랫폼 및 사후환급 K-TaxBack 기술을 운영합니다. <br>
+      최소 탑승인원(25명) 미달 시 버스 공구 일정은 전액 환불 처리됩니다.
+    </p>
+  </div>
+</footer>
+
+<script>
+// Web Audio Synth to generate physical 'click' feedback sound without loading mp3 files
+var audioCtx = null;
+function playTapSound() {
+  try {
+    if (!audioCtx) {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    if (audioCtx.state === 'suspended') {
+      audioCtx.resume();
+    }
+    var osc = audioCtx.createOscillator();
+    var gain = audioCtx.createGain();
+    
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(880, audioCtx.currentTime); 
+    osc.frequency.exponentialRampToValueAtTime(110, audioCtx.currentTime + 0.1);
+    
+    gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+    
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    
+    osc.start();
+    osc.stop(audioCtx.currentTime + 0.1);
+  } catch(e) {
+    // Web Audio unsupported or blocked gracefully fallback
+  }
+}
+</script>
+
+<script>
+// Plain YouTube embed iframe approach (no JS IFrame API dependency).
+// Uses youtube-nocookie host + referrer meta to avoid Error 153.
+var YT_VIDEO_ID = 'wNCOdyiJ_bE';
+var activeIframeCards = {}; // cardId -> true when an iframe is mounted
+
+function ytEmbedSrc(seconds) {
+  return "https://www.youtube-nocookie.com/embed/" + YT_VIDEO_ID
+    + "?autoplay=1&start=" + seconds
+    + "&rel=0&playsinline=1&modestbranding=1";
+}
+
+// Reset another card's container back to its original thumbnail markup
+function resetCardMedia(id) {
+  var c = document.getElementById("media-container-" + id);
+  if (c && c.dataset.thumbHtml) {
+    c.innerHTML = c.dataset.thumbHtml;
+  }
+  delete activeIframeCards[id];
+}
+
+// Spawns/updates a plain YouTube iframe inside the specified card
+function playLocalSegment(cardId, seconds) {
+  var mediaContainer = document.getElementById("media-container-" + cardId);
+  if (!mediaContainer) return;
+
+  // 1. Stop any other card that is currently playing (prevents audio overlap)
+  Object.keys(activeIframeCards).forEach(function(id) {
+    if (id !== cardId) resetCardMedia(id);
+  });
+
+  // Preserve original thumbnail markup once, so we can restore it later
+  if (!mediaContainer.dataset.thumbHtml) {
+    mediaContainer.dataset.thumbHtml = mediaContainer.innerHTML;
+  }
+
+  // Focus effect: flash card border momentarily
+  var cardDiv = mediaContainer.closest(".tour-card");
+  if (cardDiv) {
+    cardDiv.classList.add("ring-2", "ring-[#3b4ef6]");
+    setTimeout(function() {
+      cardDiv.classList.remove("ring-2", "ring-[#3b4ef6]");
+    }, 1000);
+  }
+
+  var iframe = mediaContainer.querySelector("iframe");
+
+  if (!iframe) {
+    // First play in this card: mount the iframe
+    mediaContainer.innerHTML =
+      '<iframe class="w-full h-full rounded-2xl" '
+      + 'src="' + ytEmbedSrc(seconds) + '" '
+      + 'frameborder="0" '
+      + 'allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" '
+      + 'referrerpolicy="strict-origin-when-cross-origin" '
+      + 'allowfullscreen></iframe>';
+    activeIframeCards[cardId] = true;
+  } else {
+    // Iframe already mounted: just jump to the requested segment
+    iframe.src = ytEmbedSrc(seconds);
+  }
+}
+</script>
+
+<script>
+var curLang = "ko";
+var L_DICT = {
+  ko: {
+    gnbMy: "마이", gnbWish: "찜", videoLabel: "아원 首爾 K-Gukrul(국룰) 소스 비디오",
+    videoTitle: "韓國首爾自由行三天難忘72小時怎麼玩！逛街、美食、流行必去、現在紅什麼！｜一隻阿圓",
+    videoDesc: "이 페이지는 대만 메가 인플루언서 아원(一隻阿圓)의 서울 72시간 벼락치기 브이로그 전용 웰컴 공간입니다. 영상 속 아원 크루가 직접 구매하고 다녀갔던 미식과 쇼핑 스팟을 확인하고, 1/N 전용 공동구매 셔틀과 즉시 면세 K-TaxBack 결제를 누려보세요!",
+    seekLabel: "📍 각 투어의 첫 매칭 영상 구간 미리 보기",
+    segAmLabel: "오전 국룰코스", segPmLabel: "오후 국룰코스", segDateLabel: "날짜", searchBtn: "검색",
+    amValDefault: "전체 오전 코스", pmValDefault: "오후 코스를 골라주세요", dateValDefault: "언제 떠날까요",
+    panelPlaceTitle: "어떤 코스로 버스를 오픈할까요?", amNoneToggle: "오전 일정 안함",
+    popularCourse: "인기 코스", popularCourseDesc: "많이 찾는 순", reset: "초기화", nextStep: "다음 단계",
+    pickDate: "날짜 지정", flexDate: "유연한 일정", monthAug: "2026년 8월", monthSept: "2026년 9월",
+    flexRange: "여행 범위", flexRangeDesc: "± 유연하게", exactDate: "정확한 날짜", apply: "적용",
+    toursHeader: "🚌 아원 首爾 K-Gukrul(국룰) 투어 상품", resetFilter: "필터 리셋",
+    benefitTitle: "👜 1,280 TWD로 우아한 공주 쇼핑을!",
+    benefitDesc: "서울 지하철 계단과 무거운 짐 폭탄에서 해방되세요. 오전에 산 전리품들을 전용 전세버스 트렁크에 바로 보관하여 양손을 완전히 가볍게 다닐 수 있습니다!",
+    shopTitle: "🛍️ 아원's K-Select Shop", shopSub: "이 영상에서 아원이 싹쓸이한 모든 서울 전리품 모음",
+    instantRefund: "즉시 환급", taxbackDisclaimer: "제품 결제 즉시 아원 크루에게 정산 후원 수수료가 지급되며, 모바일 K-TaxBack 기술을 통해 면세 세후 가격으로 직접 결제됩니다.",
+    taxbackModalTitle: "K-TaxBack 즉시 면세 결제", taxbackModalSub: "오픈투어 x 아원 제휴 후원 채널",
+    taxbackSupport: "아원(阿圓) 후원 적립 연동 완료", normalPrice: "매장 진열가", taxfreePrice: "K-TaxBack 즉시 면세가",
+    taxfreeDeliveryMethod: "📦 면세 상품 수령 방법", deliveryBus: "공구 버스에서 수령", deliveryBusSub: "내 버스 캐리어 트렁크 적재",
+    deliveryAirport: "공항 카운터 수령", deliveryAirportSub: "출국 시 인도장에서 간편 인도",
+    taxbackBenefitDesc: "💖 본 결제 진행 시 제품의 10% 세후 금액이 즉시 면세 적용되며, 결제 마진 일부가 아원(阿圓)의 여행 콘텐츠 정산 수수료로 즉시 후원 적립됩니다.",
+    taxbackPayBtn: "즉시 면세 결제하고 아원 지원하기",
+    trendTitle: "📅 출발 트렌드 스케줄 (가로 드래그로 날짜 더 보기)", scHeaderTag: "🗓️ 스카이스캐너형 날짜별 공동구매가 비교",
+    scRecruitingMonth: "모집 활성화", sun: "일", mon: "월", tue: "화", wed: "수", thu: "목", fri: "금", sat: "토",
+    statusConfirmed: "출발 확정 (최대 할인 ₩)", statusImminent: "출발 임박 (18~24명 / 8% 할인)", statusWaiting: "대기중 (기본가)",
+    scSelectedDate: "선택한 투어 희망일", scConfirmBookingBtn: "선택 날짜로 즉시 공구 예약",
+    scLowestStandard: "기본 공구 요금", scBtnCompare: "날짜 전체 비교 보기 ›",
+    dynamicPricingLabel: "1/N 공동구매 다이나믹 프라이싱 요금 원리",
+    dynamicPricingDesc: "출발 인원이 목표 정원(25명)에 가까워지거나 확정될수록 전세버스 임대 및 물류 분담비가 낮아져, 실시간 자동 할인이 들어갑니다! 가장 인원이 많이 모인 날을 공략하면 비용이 최대 15% 추가 할인됩니다.",
+    footerText: "(주)오픈투어 · 서울특별시 강남구 테헤란로 000 · 통신판매업신고 2026-서울강남-00000 <br> 오픈투어는 메가 크리에이터 제휴 1/N 전세버스 공동구매 플랫폼 및 사후환급 K-TaxBack 기술을 운영합니다. <br> 최소 탑승인원(25명) 미달 시 버스 공구 일정은 전액 환불 처리됩니다."
+  },
+  tw: {
+    gnbMy: "個人中心", gnbWish: "我的收藏", videoLabel: "阿圓 首爾 K-Gukrul 來源影片",
+    videoTitle: "韓國首爾自由行三天兩夜怎麼玩！72小時逛街、美食、流行必去、現在紅什麼！｜一隻阿圓",
+    videoDesc: "本頁面為台灣百萬網紅一隻阿圓（阿圓）首爾72小時特快Vlog專屬合作空間。輕鬆探索影片同款熱門美食與血拼勝地，並享有專屬 1/N 拼團巴士與 K-TaxBack 即時免稅購物折抵！",
+    seekLabel: "📍 快速定位至影片對應精彩時段",
+    segAmLabel: "上午熱體行程", segPmLabel: "下午熱門行程", segDateLabel: "出發日期", searchBtn: "開始搜尋",
+    amValDefault: "全部上午行程", pmValDefault: "請選擇下午行程", dateValDefault: "預計何時出發",
+    panelPlaceTitle: "您想開啟哪條路線의 專屬巴士？", amNoneToggle: "不安排上午行程",
+    popularCourse: "人氣路線", popularCourseDesc: "按熱門度排序", reset: "重設", nextStep: "下一步",
+    pickDate: "指定日期", flexDate: "彈性日程", monthAug: "2026年 8月", monthSept: "2026년 9월",
+    flexRange: "彈性範圍", flexRangeDesc: "彈性天數", exactDate: "準確日期", apply: "確認套用",
+    toursHeader: "🚌 阿圓 首爾 K-Gukrul 專屬拼團行程", resetFilter: "重設篩選",
+    benefitTitle: "👜 1,280 TWD 即可像公主一樣優雅購物！",
+    benefitDesc: "解放雙手！不用背著大包小包爬地鐵階梯。早上買的戰利品可直接寄存於專屬巴士行李廂中，購物全程最輕鬆！",
+    shopTitle: "🛍️ 阿圓精選 K-Select Shop", shopSub: "阿圓在影片中瘋狂掃貨的所有首爾好物清單",
+    instantRefund: "即時免稅", taxbackDisclaimer: "結帳後將即時向阿圓團隊撥付推廣與贊助佣金，並透過行動 K-TaxBack 科技直接以稅後免稅價格完成付款。",
+    taxbackModalTitle: "K-TaxBack 即時免稅結帳", taxbackModalSub: "OpenTour x 阿圓 專屬贊助管道",
+    taxbackSupport: "已成功連結阿圓專屬贊助佣金", normalPrice: "門市原價", taxfreePrice: "K-TaxBack 免稅回饋價",
+    taxfreeDeliveryMethod: "📦 免稅商品領取方式", deliveryBus: "巴士現場領取", deliveryBusSub: "直接放入我預訂的巴士行李廂",
+    deliveryAirport: "機場櫃檯領取", deliveryAirportSub: "回國出境時於機場免稅提領處輕鬆提取",
+    taxbackBenefitDesc: "💖 本結帳流程已自動折抵 10% 退稅金額，結帳利潤部分將直接作為阿圓（阿圓）旅遊影音創作的專屬後援贊助金。",
+    taxbackPayBtn: "即時免稅結帳並支持阿圓",
+    trendTitle: "📅 出發趨勢行程 (橫向拖動看更多)", scHeaderTag: "🗓️ 類 Skyscanner 每日拼團價格比較系統",
+    scRecruitingMonth: "熱烈招生中", sun: "日", mon: "一", tue: "二", wed: "三", thu: "四", fri: "五", sat: "六",
+    statusConfirmed: "成團確定 (享最高折扣 ₩)", statusImminent: "即將成團 (18~24人 / 享8%折)", statusWaiting: "募集預約中 (基本價)",
+    scSelectedDate: "已選出發日期", scConfirmBookingBtn: "以選定日期即刻預約拼團",
+    scLowestStandard: "基本拼團運費", scBtnCompare: "查看完整日期價格對比 ›",
+    dynamicPricingLabel: "1/N 團購動態定價省錢機制",
+    dynamicPricingDesc: "當出發人數越接近目標定額(25人)或成功成團時，巴士租金 및 營運物流分攤成本就會隨之下降！選擇人數最多的黃金出發日，旅費最高可享受額外 15% 的現折優惠！",
+    footerText: "(股)OpenTour · 首爾特別시江南區德黑蘭路 000 · 網商申報 2026-首爾江南-00000 <br> OpenTour 專注於大型創作者合作之 1/N 前進包車拼團平台與 K-TaxBack 事後免稅科技運營。若未達最低乘車人數(25人)則拼團不成立並全額退款."
+  }
+};
+
+function toggleLanguage() {
+  curLang = (curLang === "ko") ? "tw" : "ko";
+  document.getElementById("langLabel").textContent = (curLang === "ko") ? "한국어" : "繁體中文";
+  
+  document.querySelectorAll("[data-i18n]").forEach(function(el) {
+    var key = el.getAttribute("data-i18n");
+    if (L_DICT[curLang][key]) {
+      el.innerHTML = L_DICT[curLang][key];
+    }
+  });
+  
+  renderFilteredTours(currentActiveRouteList);
+  renderSelectShop();
+}
+</script>
+
+<script>
+var U = "https://images.unsplash.com/";
+var Q = "?w=600&q=80&auto=format&fit=crop";
+var PID = {
+  gwangjang: "photo-1580651315530-69c8e0026377", 
+  euljiro: "photo-1517154421773-0529f29ea451",
+  myeongdong: "photo-1538485399081-7191377e8241", 
+  dongdaemun: "photo-1523986371872-9d3ba2e2f642",
+  gyeongbok: "photo-1548115184-bc6544d06a58", 
+  namsan: "photo-1546874177-9e664107314e",
+  haeundae: "photo-1601731739543-6c78e0e3e5a3", 
+  gamcheon: "photo-1583833008338-31a6657917ab",
+  seomyeon: "photo-1534430480872-3498386e7856",
+  hero: "photo-1601731739543-6c78e0e3e5a3"
+};
+
+function unsUrl(key) { 
+  var id = PID[key] || PID.hero; 
+  return U + id + Q; 
+}
+
+function hydrateImages(root) {
+  (root || document).querySelectorAll(".img-slot").forEach(function(s) {
+    var img = document.createElement("img");
+    img.className = "w-full h-full object-cover rounded-xl";
+    img.src = unsUrl(s.dataset.key);
+    s.replaceWith(img);
+  });
+}
+
+var ALL_PRODUCTS = [
+  {id:"emis-01", brand:"EMIS", title:"EMIS 볼캡 & 레오파드 에코백", original:38000, taxFree:34200, imgKey:"euljiro", rate:"10% Off", sec:160, desc:"카리나가 실제로 써서 대만인들에게 대유행 중인 볼캡/에코백"},
+  {id:"mk-02", brand:"Matin Kim", title:"메탈 로고 카드지갑 & 티셔츠", original:58000, taxFree:51000, imgKey:"myeongdong", rate:"12% Off", sec:160, desc:"대만 2030 여성들의 선물용 부동의 1순위 시그니처 셋업"},
+  {id:"tb-03", brand:"Tamburins", title:"제니 에그 향수 & 라탄 패키지", original:45000, taxFree:38250, imgKey:"namsan", rate:"15% Off", sec:2222, desc:"고감도의 감성이 뛰어난 인스타 업로드 전용 향수 아이템"},
+  {id:"ov-04", brand:"Olive Young", title:"올영 메이크업 픽서 & 닥터큐 패키지", original:29000, taxFree:26680, imgKey:"gwangjang", rate:"8% Off", sec:2655, desc:"대만 현지인들이 오면 무조건 사재기하는 필수 픽서와 젤리"},
+  {id:"bg-05", brand:"Mardi Mercredi", title:"마르디 플라워 클래식 티셔츠", original:42000, taxFree:37800, imgKey:"gamcheon", rate:"10% Off", sec:160, desc:"대만 스트리트 패션을 정복한 시그니처 꽃 자수 티셔츠"}
+];
+
+/* Highly Synced Signature Exclusive Tours with Video Connections & Ahwon Voice Quotes */
+var A_ROUTES = [
+  {
+    id: "SS-HN-01", 
+    departure: "성수동 연무장길", 
+    am: "s_f1", 
+    pm: "s_sh3", 
+    price: "1,280 TWD", 
+    krw: "55,000", 
+    joined: 18, 
+    desc: "[潮流聖地雙城線] 성수동 ➔ 한남동 K-Gukrul(국룰) 투어", 
+    img: "euljiro", 
+    discount: "12% OFF",
+    items: ["emis-01", "mk-02"],
+    caption: "성수 소금빵 오픈런 ➔ EMIS ➔ 한남 마틴킴 투어",
+    vlogMatch: 100, // 100% Matches Ahwon's chronological vlog path
+    vlogQuotes: {
+      ko: "아원의 찐반응: '여기 소금빵은 무조건 대만인 취향 저격! EMIS 쇼핑하고 마틴킴까지 양손 무겁게 가자구~' 🥐",
+      tw: "阿圓真心話：'這家鹽可頌絕對正中台灣人口味！買完EMIS跟Matin Kim兩手空空上車寄存太爽了~' 🥐"
+    },
+    timeline: [
+      { name: "🥐 성수동 소금빵", sec: 142 },
+      { name: "👖 EMIS & 마틴킴 쇼핑", sec: 160 }
+    ]
+  },
+  {
+    id: "SS-YI-02", 
+    departure: "성수동 연무장길", 
+    am: "s_f1", 
+    pm: "s_sh4", 
+    price: "1,350 TWD", 
+    krw: "58,000", 
+    joined: 12, 
+    desc: "[文青美妝室內線] 성수동 ➔ 여의도 더현대 K-Gukrul(국룰) 투어", 
+    img: "gyeongbok", 
+    discount: "10% OFF",
+    items: ["tb-03", "ov-04"],
+    caption: "성수 소품샵 ➔ 여의도 더현대 탬버린즈 & 올영 싹쓸이 코스",
+    vlogMatch: 85, 
+    vlogQuotes: {
+      ko: "아원의 찐반응: '여의도 더현대는 실내 쇼핑 끝판왕이에요. 올리브영에서 산 것 언박싱한 것도 확인하세요!' 💄",
+      tw: "阿圓真心話：'汝矣島現代百貨是室內血拼終極聖地，快來看我的藥妝開箱分享！' 💄"
+    },
+    timeline: [
+      { name: "🥐 성수동 소공원", sec: 142 },
+      { name: "💅 더현대 올리브영 언박싱", sec: 2655 }
+    ]
+  },
+  {
+    id: "SS-GN-03", 
+    departure: "성수동 연무장길", 
+    am: "s_f1", 
+    pm: "s_f4", 
+    price: "1,400 TWD", 
+    krw: "60,000", 
+    joined: 24, 
+    desc: "[血拼完大口吃肉線] 성수동 ➔ 강남역 K-Gukrul(국룰) 투어", 
+    img: "namsan", 
+    discount: "15% OFF",
+    items: ["emis-01", "ov-04"],
+    caption: "감성 소품 쇼핑하고 강남 쫄깃 삼겹살에 진한 말차 마무리",
+    vlogMatch: 75,
+    vlogQuotes: {
+      ko: "아원의 찐반응: '쇼핑만 하면 배고프잖아요! 강남 삼겹살에 소주 한잔 마무리는 진짜 정석입니다.' 🥩",
+      tw: "阿圓真心話：'買完東西當然會餓！江南五花肉配燒酒做結尾，真的是首爾最正宗的行程。' 🥩"
+    },
+    timeline: [
+      { name: "🥐 성수동 EMIS", sec: 160 },
+      { name: "🥩 강남역 고기 골목", sec: 2222 }
+    ]
+  },
+  {
+    id: "SS-HD-04", 
+    departure: "성수동 연무장길", 
+    am: "s_f1", 
+    pm: "s_sh5", 
+    price: "1,250 TWD", 
+    krw: "53,000", 
+    joined: 8, 
+    desc: "[MZ世代必征服線] 성수동 ➔ 홍대 K-Gukrul(국룰) 투어", 
+    img: "myeongdong", 
+    discount: "12% OFF",
+    items: ["mk-02", "bg-05"],
+    caption: "서울에서 가장 힙한 성수동과 홍대 상권의 매력만 쏙쏙",
+    vlogMatch: 80,
+    vlogQuotes: {
+      ko: "아원의 찐반응: '대만의 서문정 같은 홍대의 바이브는 꼭 봐야 해요. 예쁜 티셔츠가 가득합니다!' 👕",
+      tw: "阿圓真心話：'像台灣西門町一樣的弘大氛圍必看！到處都是超好看的小眾設計衣服！' 👕"
+    },
+    timeline: [
+      { name: "🥐 성수 한남 쇼핑", sec: 160 },
+      { name: "🎸 홍대 걷고싶은거리", sec: 2655 }
+    ]
+  },
+  {
+    id: "GJ-HD-05", 
+    departure: "종로 광장시장", 
+    am: "s_f2", 
+    pm: "s_sh5", 
+    price: "1,180 TWD", 
+    krw: "50,000", 
+    joined: 25, 
+    desc: "[傳統美食與潮流線] 광장시장 ➔ 홍대 K-Gukrul(국룰) 투어", 
+    img: "gwangjang", 
+    discount: "18% OFF",
+    items: ["emis-01", "ov-04"],
+    caption: "낮에는 광장시장 탕탕이, 오후엔 카리나 젠몬 피팅 완료",
+    vlogMatch: 100,
+    vlogQuotes: {
+      ko: "아원의 찐반응: '광장시장에서 꿈틀거리는 낙지탕탕이를 먹을 때 그 맛! 홍대 올영까지 이어지는 오리지널 동선!' 🐙",
+      tw: "阿圓真心話：'在廣島市場吃生章魚刺身的絕妙滋味！直接接軌弘大藥妝採購，100%還原當天精彩！' 🐙"
+    },
+    timeline: [
+      { name: "🐙 광장시장 산낙지", sec: 2222 },
+      { name: "💄 홍대 올리브영 언박싱", sec: 2655 }
+    ]
+  },
+  {
+    id: "GJ-YI-06", 
+    departure: "종로 광장시장", 
+    am: "s_f2", 
+    pm: "s_sh4", 
+    price: "1,200 TWD", 
+    krw: "51,000", 
+    joined: 15, 
+    desc: "[在地老店饕客線] 광장시장 ➔ 여의도 더현대 K-Gukrul(국룰) 투어", 
+    img: "dongdaemun", 
+    discount: "10% OFF",
+    items: ["tb-03", "ov-04"],
+    caption: "시장 빈대떡 투어 후 시원한 실내 더현대 디즈니 닭한마리",
+    vlogMatch: 90,
+    vlogQuotes: {
+      ko: "아원의 찐반응: '더울 땐 무조건 광장시장에서 가볍게 먹고 대형 시원한 더현대로 이동하는 게 국룰이에요!' 🥬",
+      tw: "阿圓真心話：'熱天一定要先在廣藏市場吃個點心，再坐冷氣巴士去超大超涼的現代百貨！' 🥬"
+    },
+    timeline: [
+      { name: "🐙 광장시장 낙지/빈대떡", sec: 2222 },
+      { name: "🏬 여의도 더현대 탬버린즈", sec: 2530 }
+    ]
+  },
+  {
+    id: "GJ-HN-07", 
+    departure: "종로 광장시장", 
+    am: "s_f2", 
+    pm: "s_sh3", 
+    price: "1,300 TWD", 
+    krw: "56,000", 
+    joined: 15, 
+    desc: "[傳統市場與高奢線] 광장시장 ➔ 한남동 K-Gukrul(국룰) 투어", 
+    img: "haeundae", 
+    discount: "12% OFF",
+    items: ["mk-02", "bg-05"],
+    caption: "광장시장 탕탕이 미식과 한남동 고감도 골목을 하루에 해결",
+    vlogMatch: 80,
+    vlogQuotes: {
+      ko: "아원의 찐반응: '광장시장 산낙지는 쫄깃함이 예술이에요. 든든히 먹고 한남 마틴킴에서 예쁜 지갑 쇼핑!' 👛",
+      tw: "阿圓真心話：'廣藏市場的活章魚口感真的絕妙。吃飽後直奔漢南洞Matin Kim搶購最紅金屬錢包！' 👛"
+    },
+    timeline: [
+      { name: "🐙 광장시장 낙지체험", sec: 2222 },
+      { name: "👖 한남동 디자이너 쇼핑", sec: 160 }
+    ]
+  },
+  {
+    id: "HD-YI-08", 
+    departure: "홍대 쇼핑거리", 
+    am: "s_f3", 
+    pm: "s_sh4", 
+    price: "1,380 TWD", 
+    krw: "59,000", 
+    joined: 19, 
+    desc: "[瘋狂美妝盲盒線] 홍대 ➔ 여의도 더현대 K-Gukrul(국룰) 투어", 
+    img: "gamcheon", 
+    discount: "15% OFF",
+    items: ["ov-04", "tb-03"],
+    caption: "홍대에서 응원봉 사냥하고 더현대 팝마트 가챠 싹쓸이",
+    vlogMatch: 70,
+    vlogQuotes: {
+      ko: "아원의 찐반응: '홍대 길거리 구경하고, 여의도 더현대에서 럭셔리 화장품 면세 쇼핑하면 최고의 하루 완성!' ✨",
+      tw: "阿圓真心話：'逛完弘大街頭秀，再到汝矣島現代百貨買頂級Tamburins香氛免稅，太奢華啦！' ✨"
+    },
+    timeline: [
+      { name: "🎸 홍대 길거리투어", sec: 2655 },
+      { name: "🏬 더현대 탬버린즈 피팅", sec: 2530 }
+    ]
+  },
+  {
+    id: "HD-GN-09", 
+    departure: "홍대 쇼핑거리", 
+    am: "s_f3", 
+    pm: "s_f4", 
+    price: "1,450 TWD", 
+    krw: "62,000", 
+    joined: 11, 
+    desc: "[首爾不夜城蹦迪線] 홍대 ➔ 강남역 K-Gukrul(국룰) 투어", 
+    img: "seomyeon", 
+    discount: "8% OFF",
+    items: ["mk-02", "emis-01"],
+    caption: "낮에는 백밥도둑 간장게장, 밤에는 강남 오빠 삼겹살 고기 골목",
+    vlogMatch: 65,
+    vlogQuotes: {
+      ko: "아원의 찐반응: '서울에 왔으면 밤 늦게까지 멈출 수 없죠! 홍대에서 강남까지 정복하는 최강 루트입니다.' 🔥",
+      tw: "阿圓真心話：'來到首爾晚上根本不想睡！這是征服從弘大到江南最狂熱的不夜城路線。' 🔥"
+    },
+    timeline: [
+      { name: "👖 홍대 트렌디 브랜드숍", sec: 160 },
+      { name: "🥩 강남 고기골목 먹방", sec: 2222 }
+    ]
+  }
+];
+
+function customToast(msg, isSuccess) {
+  var toast = document.getElementById("toast");
+  var icon = document.getElementById("toastIcon");
+  var mText = document.getElementById("toastMsg");
+  
+  icon.innerHTML = isSuccess ? "🎉" : "ℹ️";
+  icon.className = isSuccess 
+    ? "w-8 h-8 rounded-full bg-emerald-500 text-white flex items-center justify-center text-sm font-black flex-shrink-0"
+    : "w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center text-sm font-black flex-shrink-0";
+  mText.innerText = msg;
+  
+  toast.classList.remove("translate-y-20", "opacity-0", "pointer-events-none");
+  setTimeout(function() {
+    toast.classList.add("translate-y-20", "opacity-0", "pointer-events-none");
+  }, 4500);
+}
+
+var TYPES = [{id:"all",t:"전체"}, {id:"food", t:"맛거리"}, {id:"shop", t:"쇼핑거리"}, {id:"view", t:"관광명소"}];
+var REGIONS = ["성수동", "광장시장", "홍대"];
+var MIN_PEOPLE = 25;
+
+var PLACES = {
+  "성수동": {
+    food: [{id:"s_f1", nm:"성수동 연무장길", mt:"🥐 소금빵 베이커리 & 아침 핫플", rate:"4.9", cnt:"4,821", img:"euljiro"}],
+    shop: [{id:"s_sh3", nm:"한남동 카페거리", mt:"👖 마틴킴 & 마르디 패션 성지", rate:"4.8", cnt:"3,912", img:"myeongdong"}],
+    view: [{id:"s_sh4", nm:"여의도 더현대 서울", mt:"🏬 탬버린즈 라탄향수 & 올리브영", rate:"4.7", cnt:"6,330", img:"namsan"}]
+  },
+  "광장시장": {
+    food: [{id:"s_f2", nm:"종로 광장시장", mt:"🐙 산낙지 육회 탕탕이 & 빈대떡", rate:"4.8", cnt:"8,129", img:"gwangjang"}],
+    shop: [], view: []
+  },
+  "홍대": {
+    food: [{id:"s_f3", nm:"홍대 간장게장 & 닭볶음탕", mt:"🦀 백밥도둑 게장 & 70년 노포", rate:"4.7", cnt:"2,341", img:"seomyeon"}],
+    shop: [{id:"s_sh5", nm:"홍대 걷고싶은거리", mt:"💄 젠틀몬스터 · 락피쉬 · K팝 굿즈", rate:"4.8", cnt:"4,510", img:"gamcheon"}],
+    view: [{id:"s_f4", nm:"강남역 고기골목", mt:"🥩 두툼한 삼겹살 & 딥말차 디저트", rate:"4.6", cnt:"3,021", img:"night"}]
+  }
+};
+
+var NEAR = {
+  "s_f1": ["s_sh3", "s_sh4", "s_f4", "s_sh5"],
+  "s_f2": ["s_sh3", "s_sh4", "s_sh5"],
+  "s_f3": ["s_sh4", "s_f4"]
+};
+
+var PLACE_INDEX = {};
+Object.keys(PLACES).forEach(function(region) {
+  var bt = PLACES[region];
+  Object.keys(bt).forEach(function(type) {
+    bt[type].forEach(function(p) {
+      PLACE_INDEX[p.id] = Object.assign({}, p, {region: region, type: type});
+    });
+  });
+});
+
+var st = {
+  active: "am", 
+  am: {type: "all", region: "성수동", place: null}, 
+  pm: {type: "all", place: null}, 
+  date: {day: 15, month: 8, flex: 0}
+};
+
+function nameOf(id) {
+  if (!id) return null;
+  if (id === "NONE_AM") return null;
+  return PLACE_INDEX[id] ? PLACE_INDEX[id].nm : null;
+}
+</script>
+
+<script>
+function updateBar() {
+  var amNone = (st.am.place === "NONE_AM");
+  var a = nameOf(st.am.place), p = nameOf(st.pm.place), d = st.date.day;
+  var amSet = !!a || amNone;
+  
+  document.getElementById("amVal").textContent = amNone ? "오전 일정 없음" : (a || "전체 오전 코스");
+  document.getElementById("amVal").classList.toggle("text-[#1a1a2e]", amSet);
+  document.getElementById("amVal").classList.toggle("text-gray-400", !amSet);
+  
+  document.getElementById("pmVal").textContent = p || "오후 코스를 골라주세요";
+  document.getElementById("pmVal").classList.toggle("text-[#1a1a2e]", !!p);
+  document.getElementById("pmVal").classList.toggle("text-gray-400", !p);
+  
+  document.getElementById("segDate").classList.toggle("lock", !p);
+  
+  document.getElementById("dateVal").textContent = d 
+    ? (st.date.month + "월 " + d + "일" + (st.date.flex ? " ±" + st.date.flex + "일" : "")) 
+    : (p ? "언제 떠날까요" : "코스 먼저 골라요");
+  document.getElementById("dateVal").classList.toggle("text-[#1a1a2e]", !!d);
+  document.getElementById("dateVal").classList.toggle("text-gray-400", !d);
+  
+  document.getElementById("goBtn").disabled = !(st.am.place && st.pm.place && st.date.day);
+}
+
+function setActive(seg) {
+  st.active = seg;
+  var segAm = document.getElementById("segAm");
+  var segPm = document.getElementById("segPm");
+  var segDate = document.getElementById("segDate");
+  var panelPlace = document.getElementById("panelPlace");
+  var panelDate = document.getElementById("panelDate");
+  
+  [segAm, segPm, segDate].forEach(function(s) { s.classList.remove("active", "border-2", "border-black"); });
+  panelPlace.classList.remove("open");
+  panelDate.classList.remove("open");
+  
+  if (seg === "am") {
+    segAm.classList.add("active");
+    openPlace("am");
+  }
+  if (seg === "pm") {
+    if (!st.am.place) {
+      st.am.place = "NONE_AM";
+      st.am.type = null;
+      updateBar();
+    }
+    segPm.classList.add("active");
+    openPlace("pm");
+  }
+  if (seg === "date") {
+    if (!st.pm.place) {
+      setActive("pm");
+      return;
+    }
+    segDate.classList.add("active");
+    panelDate.classList.add("open");
+    renderCal();
+  }
+}
+
+document.getElementById("segAm").onclick = function() { playTapSound(); setActive("am"); };
+document.getElementById("segPm").onclick = function() { if (!this.classList.contains("lock")) { playTapSound(); setActive("pm"); } };
+document.getElementById("segDate").onclick = function() { if (!this.classList.contains("lock")) { playTapSound(); setActive("date"); } };
+
+document.getElementById("amNoneToggle").onclick = function() {
+  playTapSound();
+  if (st.am.place === "NONE_AM") {
+    st.am = {type: "all", region: st.am.region, place: null};
+    st.pm = {type: st.pm.type, place: null};
+    setActive("am");
+    updateBar();
+  } else {
+    st.am = {type: "all", region: st.am.region, place: "NONE_AM"};
+    setActive("pm");
+    updateBar();
+  }
+};
+
+function placesFor(region, type) {
+  var bt = PLACES[region] || {};
+  if (type === "all" || !type) {
+    var acc = [];
+    Object.keys(bt).forEach(function(k) { acc = acc.concat(bt[k]); });
+    return acc;
+  }
+  return bt[type] || [];
+}
+</script>
+
+<script>
+function openPlace(seg) {
+  document.getElementById("panelPlace").classList.add("open");
+  var cur = st[seg];
+  
+  var amNoneToggle = document.getElementById("amNoneToggle");
+  if (amNoneToggle) {
+    amNoneToggle.style.display = (seg === "am") ? "" : "none";
+    amNoneToggle.classList.toggle("bg-black", st.am.place === "NONE_AM");
+    amNoneToggle.classList.toggle("text-white", st.am.place === "NONE_AM");
+  }
+  
+  var th = "";
+  TYPES.forEach(function(t) {
+    th += "<button class='tp border border-gray-200 bg-white hover:bg-gray-50 text-gray-700 font-bold text-xs px-4 py-2 rounded-full transition" + (cur.type === t.id ? " bg-black text-white border-black" : "") + "' data-t='" + t.id + "'>" + t.t + "</button>";
+  });
+  document.getElementById("typeRow").innerHTML = th;
+  document.getElementById("typeRow").querySelectorAll(".tp").forEach(function(b) {
+    b.onclick = function() {
+      playTapSound();
+      cur.type = b.dataset.t;
+      cur.place = null;
+      openPlace(seg);
+      updateBar();
+    };
+  });
+  
+  var amChosen = (st.am.place && st.am.place !== "NONE_AM");
+  var regionWrap = document.getElementById("regionWrap");
+  var nearNote = document.getElementById("nearNote");
+  
+  if (seg === "pm" && amChosen) {
+    regionWrap.classList.add("hidden");
+    nearNote.classList.remove("hidden");
+    nearNote.innerHTML = "오전 <b>" + PLACE_INDEX[st.am.place].nm + "</b>에서 차량 이동 1시간 이내 오후 연계 코스만 필터링합니다.";
+  } else {
+    regionWrap.classList.remove("hidden");
+    nearNote.classList.add("hidden");
+    var rh = "";
+    REGIONS.forEach(function(r) {
+      rh += "<button class='rt border border-gray-200 bg-white hover:bg-gray-50 text-gray-700 font-bold text-xs px-4 py-2 rounded-full transition" + (cur.region === r ? " bg-black text-white border-black" : "") + "' data-r='" + r + "'>" + r + "</button>";
+    });
+    document.getElementById("regionRow").innerHTML = rh;
+    document.getElementById("regionRow").querySelectorAll(".rt").forEach(function(t) {
+      t.onclick = function() {
+        playTapSound();
+        cur.region = t.dataset.r;
+        cur.place = null;
+        openPlace(seg);
+      };
+    });
+  }
+  
+  var list = [];
+  if (seg === "am") {
+    list = placesFor(cur.region, cur.type);
+  } else if (amChosen) {
+    list = (NEAR[st.am.place] || []).map(function(id) { return PLACE_INDEX[id]; }).filter(function(p) {
+      return p && (cur.type === "all" || !cur.type || p.type === cur.type);
+    });
+  } else {
+    list = placesFor(cur.region, cur.type); 
+  }
+  
+  var placeList = document.getElementById("placeList");
+  if (list.length === 0) {
+    placeList.innerHTML = "<div class='empty col-span-4 text-center py-10 text-gray-400 font-bold text-sm'>이 권역에 맞는 코스가 없습니다. 다른 카테고리나 권역을 선택해보세요!</div>";
+  } else {
+    var ph = "";
+    list.forEach(function(p) {
+      var isSel = (cur.place === p.id);
+      ph += `
+        <div class="plc cursor-pointer transition border ${isSel ? 'border-[#3b4ef6] bg-blue-50/20' : 'border-gray-100 hover:border-gray-200'} rounded-2xl p-3 relative" data-p="${p.id}">
+          <div class="t w-full aspect-[4/3] rounded-xl overflow-hidden relative bg-gray-50 mb-2">
+            <span class="img-slot" data-key="${p.img}"></span>
+            <div class="chk absolute top-2 left-2 bg-[#3b4ef6] text-white text-[10px] font-black px-2 py-0.5 rounded transition ${isSel ? 'opacity-100' : 'opacity-0'}">선택됨</div>
+          </div>
+          <div class="nm font-extrabold text-sm text-gray-900 leading-snug">${p.nm}</div>
+          <div class="mt text-[11px] text-[#5c6270] mt-1">${p.mt}</div>
+          <div class="rv text-[10px] font-semibold text-gray-400 mt-2">평점 <b class="text-[#3b4ef6]">${p.rate}</b> · 후기 ${p.cnt}</div>
+        </div>
+      `;
+    });
+    placeList.innerHTML = ph;
+    hydrateImages(placeList);
+    placeList.querySelectorAll(".plc").forEach(function(c) {
+      c.onclick = function() {
+        playTapSound();
+        cur.place = c.dataset.p;
+        openPlace(seg);
+        updateBar();
+      };
+    });
+  }
+  document.getElementById("nextBtn").disabled = !cur.place;
+}
+
+document.getElementById("nextBtn").onclick = function() {
+  playTapSound();
+  if (st.active === "am" && st.am.place) setActive("pm");
+  else if (st.active === "pm" && st.pm.place) setActive("date");
+};
+
+document.getElementById("clearBtn").onclick = function() {
+  playTapSound();
+  var s = st.active;
+  if (s === "am") {
+    st.am = {type: "all", region: st.am.region, place: null};
+    st.pm = {type: "all", place: null};
+  } else {
+    st.pm = {type: "all", place: null};
+  }
+  openPlace(s);
+  updateBar();
+};
+</script>
+
+<script>
+function month(grid, y, m) {
+  var dows = ["일", "월", "화", "수", "목", "금", "토"];
+  var h = "";
+  dows.forEach(function(d) { h += "<div class='dow'>" + d + "</div>"; });
+  
+  var first = new Date(y, m - 1, 1).getDay();
+  var days = new Date(y, m, 0).getDate();
+  var today = new Date(2026, 6, 19); 
+  
+  for (var i = 0; i < first; i++) h += "<div class='dy mut'></div>";
+  for (var d = 1; d <= days; d++) {
+    var dt = new Date(y, m - 1, d);
+    var past = dt < today;
+    var pick = (st.date.day === d && st.date.month === m);
+    h += "<div class='dy" + (past ? " mut" : "") + (pick ? " pick bg-[#1a1a2e] text-white font-extrabold" : "") + "' " + (past ? "" : ("data-d='" + d + "' data-m='" + m + "'")) + ">" + d + "</div>";
+  }
+  grid.innerHTML = h;
+  grid.querySelectorAll(".dy[data-d]").forEach(function(x) {
+    x.onclick = function() {
+      playTapSound();
+      st.date.day = +x.dataset.d;
+      st.date.month = +x.dataset.m;
+      renderCal();
+      updateBar();
+    };
+  });
+}
+
+function renderCal() {
+  month(document.getElementById("cg1"), 2026, 8);
+  month(document.getElementById("cg2"), 2026, 9);
+}
+
+document.querySelectorAll(".fc").forEach(function(c) {
+  c.onclick = function() {
+    playTapSound();
+    document.querySelectorAll(".fc").forEach(function(x) {
+      x.className = "fc border border-gray-200 bg-white text-gray-500 hover:bg-gray-50 text-xs font-bold px-4 py-2 rounded-full transition";
+    });
+    c.className = "fc border-2 border-black bg-black text-white text-xs font-black px-4 py-2 rounded-full transition";
+    st.date.flex = +c.dataset.f;
+    updateBar();
+  };
+});
+
+document.querySelectorAll(".ct").forEach(function(t) {
+  t.onclick = function() {
+    playTapSound();
+    document.querySelectorAll(".ct").forEach(function(x) {
+      x.className = "ct flex-1 py-2 text-xs font-bold text-gray-400 rounded-full transition text-center";
+    });
+    t.className = "ct flex-1 py-2 text-xs font-black text-gray-800 rounded-full transition bg-white shadow-sm text-center";
+  };
+});
+
+document.getElementById("dateClear").onclick = function() {
+  playTapSound();
+  st.date = {day: null, month: null, flex: 0};
+  renderCal();
+  updateBar();
+};
+
+document.getElementById("dateDone").onclick = function() {
+  playTapSound();
+  document.getElementById("panelDate").classList.remove("open");
+  document.getElementById("segDate").classList.remove("active");
+  st.active = null;
+  if (st.date.day && st.am.place && st.pm.place) {
+    document.getElementById("goBtn").click();
+  }
+};
+
+document.getElementById("goBtn").onclick = function() {
+  playTapSound();
+  document.getElementById("panelPlace").classList.remove("open");
+  document.getElementById("panelDate").classList.remove("open");
+  
+  ["segAm", "segPm", "segDate"].forEach(function(id) {
+    document.getElementById(id).classList.remove("active");
+  });
+  
+  var amId = st.am.place;
+  var pmId = st.pm.place;
+  var amNone = (amId === "NONE_AM");
+  
+  var filtered = A_ROUTES.filter(function(r) {
+    var matchAm = amNone || r.am === amId;
+    var matchPm = r.pm === pmId;
+    return matchAm && matchPm;
+  });
+  
+  renderFilteredTours(filtered);
+};
+</script>
+
+<script>
+function getRouteSchedule(routeId, month, day) {
+  var rCharSum = routeId.split('').reduce(function(acc, char) { return acc + char.charCodeAt(0); }, 0);
+  var seed = (rCharSum + day * 11 + month * 17) % 31;
+  
+  var joined = (seed % 24) + 5; 
+  var baseKrw = 55000;
+  var baseTwd = 1280;
+  
+  var routeObj = A_ROUTES.find(function(r) { return r.id === routeId; });
+  if (routeObj) {
+    baseKrw = parseInt(routeObj.krw.replace(/,/g, ''));
+    baseTwd = parseInt(routeObj.price.replace(/[^0-9]/g, ''));
+  }
+  
+  var status = "waiting"; 
+  var discountPercent = 0;
+  
+  if (joined >= 25) {
+    status = "confirmed";
+    discountPercent = 15; 
+  } else if (joined >= 18) {
+    status = "imminent";
+    discountPercent = 8;  
+  }
+  
+  var finalKrw = Math.round(baseKrw * (1 - discountPercent / 100));
+  var finalTwd = Math.round(baseTwd * (1 - discountPercent / 100));
+  
+  return {
+    day: day,
+    month: month,
+    joined: joined,
+    priceKrw: finalKrw,
+    priceTwd: finalTwd,
+    status: status,
+    discountPercent: discountPercent
+  };
+}
+</script>
+
+<script>
+var currentActiveRouteList = [];
+
+function renderFilteredTours(list) {
+  currentActiveRouteList = list;
+  var container = document.getElementById("toursContainer");
+  
+  if (list.length === 0) {
+    container.innerHTML = `
+      <div class="bg-white border border-gray-100 rounded-2xl p-12 text-center text-gray-400">
+        <span class="text-3xl block mb-2">🔍</span>
+        <p class="text-sm font-bold" data-i18n="noTourMatch">지정하신 조건에 딱 맞는 아원 전용 버스 노선이 존재하지 않습니다.</p>
+        <button onclick="resetAllFilters()" class="mt-4 text-xs font-bold text-blue-600 bg-blue-50 px-3 py-1.5 rounded-full" data-i18n="backToAll">전체 보기로 돌아가기</button>
+      </div>
+    `;
+    return;
+  }
+  
+  renderToursMarkup(list, container);
+  initializeDragScroll(); 
+}
+
+function renderToursMarkup(list, container) {
+  var html = "";
+  list.forEach(function(r) {
+    var isConfirmed = r.joined >= 25;
+    var pct = Math.min(100, Math.round(r.joined / 25 * 100));
+    var badgeHtml = isConfirmed 
+      ? `<span class="bg-[#e8f7f0] text-[#12b25f] text-[10px] font-black px-2 py-0.5 rounded-md" data-i18n="statusConfirmed">출발 확정</span>` 
+      : `<span class="bg-red-50 text-red-600 text-[10px] font-black px-2 py-0.5 rounded-md"><span data-i18n="statusImminent">출발 임박</span> (남은자리 ${25 - r.joined}석)</span>`;
+
+    // Device 3: Vlog Match Indicator styling
+    var matchColor = r.vlogMatch === 100 ? "from-red-500 to-orange-500" : "from-blue-500 to-indigo-500";
+    var matchLabel = r.vlogMatch === 100 ? "VLOG 오리지널 오피셜 코스" : `VLOG 추천 연계 코스 (${r.vlogMatch}%)`;
+    if (curLang === "tw") {
+      matchLabel = r.vlogMatch === 100 ? "VLOG 100% 官方還原路線" : `VLOG 精選推薦路線 (${r.vlogMatch}%)`;
+    }
+
+    // Spawn sub-item tax free goodies
+    var subItemsHtml = "";
+    r.items.forEach(function(itemId) {
+      var prod = ALL_PRODUCTS.find(function(p) { return p.id === itemId; });
+      if (prod) {
+        subItemsHtml += `
+          <div class="flex items-center gap-2 bg-gray-50/70 border border-gray-100 hover:border-blue-200 hover:bg-blue-50/30 p-2 rounded-xl cursor-pointer transition" 
+               onclick="event.stopPropagation(); playTapSound(); openTaxBackModal('${prod.title}', ${prod.original}, ${prod.taxFree}, '${prod.imgKey}')">
+            <div class="w-10 h-10 rounded-lg overflow-hidden relative flex-shrink-0 bg-white border border-gray-100">
+              <span class="img-slot" data-key="${prod.imgKey}"></span>
+            </div>
+            <div class="min-w-0">
+              <p class="text-[11px] font-bold text-gray-800 truncate">${prod.brand}</p>
+              <p class="text-[10px] text-blue-600 font-extrabold truncate">${prod.rate} K-TaxBack ›</p>
+            </div>
+          </div>
+        `;
+      }
+    });
+
+    // Device 1: Interactive Local Timeline Step Seekers (Replacing top scrolls)
+    var timelineHtml = "";
+    r.timeline.forEach(function(step) {
+      var m = Math.floor(step.sec / 60);
+      var s = step.sec % 60;
+      var timeStr = (m < 10 ? "0" + m : m) + ":" + (s < 10 ? "0" + s : s);
+      
+      timelineHtml += `
+        <button onclick="event.stopPropagation(); playTapSound(); playLocalSegment('${r.id}', ${step.sec});" 
+                class="flex items-center gap-1.5 bg-slate-100 hover:bg-red-50 hover:text-[#ff3b30] text-slate-700 text-xs font-bold px-3 py-1.5 rounded-full transition shrink-0 border border-slate-200/60 hover:border-red-200">
+          <span class="text-[10px]">▶</span>
+          <span>${step.name}</span>
+          <span class="text-[10px] font-bold text-gray-400 group-hover:text-[#ff3b30] ml-0.5">${timeStr}</span>
+        </button>
+      `;
+    });
+
+    // Device 2: Real Vlog quotes from Ah-won
+    var ahwonQuote = r.vlogQuotes[curLang] || r.vlogQuotes['ko'];
+
+    // Generate 15 Days scrollable trend timelines
+    var trendBarItemsHtml = "";
+    var baseDay = st.date.day ? st.date.day : 15; 
+    var baseMonth = st.date.month ? st.date.month : 8; 
+    var weekdaysShort = (curLang === "ko") ? ["일", "월", "화", "수", "목", "금", "토"] : ["日", "一", "二", "三", "四", "五", "六"];
+
+    for (var offset = -4; offset <= 10; offset++) {
+      var calculatedDate = new Date(2026, baseMonth - 1, baseDay + offset);
+      var targetDay = calculatedDate.getDate();
+      var targetMonth = calculatedDate.getMonth() + 1;
+      var dayOfWeekStr = weekdaysShort[calculatedDate.getDay()];
+      
+      var sData = getRouteSchedule(r.id, targetMonth, targetDay);
+      var dotColorClass = "bg-slate-300";
+      
+      if (sData.status === "confirmed") {
+        dotColorClass = "bg-[#12b25f]"; 
+      } else if (sData.status === "imminent") {
+        dotColorClass = "bg-[#f59e0b]"; 
+      }
+      
+      var isAnchor = (offset === 0);
+      var anchorStyles = isAnchor 
+        ? "ring-2 ring-blue-600 bg-blue-50 border-blue-300 z-10 scale-[1.03] shadow-sm" 
+        : "border-gray-100 bg-slate-50 hover:border-indigo-300";
+
+      trendBarItemsHtml += `
+        <div onclick="if(this.parentElement.isDragging) return; event.stopPropagation(); playTapSound(); openFullCalendarModal('${r.id}', ${targetMonth}, ${targetDay})" 
+             class="flex-1 border ${anchorStyles} transition-all rounded-xl p-2.5 flex flex-col items-center justify-between min-w-[72px] cursor-pointer text-center relative group">
+          <div class="absolute -top-1 right-1 flex h-2 w-2">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full ${dotColorClass} opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2 ${dotColorClass}"></span>
+          </div>
+          <span class="text-[10px] font-bold text-gray-400 group-hover:text-[#3b4ef6] transition">${targetMonth}/${targetDay}(${dayOfWeekStr})</span>
+          <span class="text-xs font-black text-slate-800 mt-1">${sData.priceTwd}元</span>
+          <span class="text-[9px] font-black scale-90 ${sData.status === 'confirmed' ? 'text-emerald-500' : sData.status === 'imminent' ? 'text-amber-500' : 'text-slate-400'}">
+            ${sData.joined}/25명
+          </span>
+          ${isAnchor ? `<span class="absolute -bottom-1.5 bg-blue-600 text-[8px] text-white px-1 py-px rounded font-black scale-75">CHOICE</span>` : ''}
+        </div>
+      `;
+    }
+
+    html += `
+      <div class="tour-card bg-white border border-gray-100 rounded-3xl overflow-hidden p-5 flex flex-col relative shadow-[0_4px_24px_rgba(0,0,0,0.02)]">
+        
+        <!-- Vlog official sync indicator header banner -->
+        <div class="flex items-center justify-between border-b border-gray-50 pb-3 mb-4 flex-wrap gap-2">
+          <div class="flex items-center gap-2">
+            <span class="inline-flex items-center bg-gradient-to-r ${matchColor} text-white text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+              🎬 ${matchLabel}
+            </span>
+            <span class="text-xs font-extrabold text-[#3b4ef6]">${r.caption}</span>
+          </div>
+          <div class="flex items-center gap-1">
+            <span class="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"></span>
+            <span class="text-[10px] text-red-500 font-extrabold">VLOG 원본 로컬 연동</span>
+          </div>
+        </div>
+
+        <div class="flex flex-col md:flex-row gap-5">
+          <!-- Swappable Media Container (Thumbnail Image or YouTube Player Iframe) -->
+          <div id="media-container-${r.id}" class="w-full md:w-[220px] aspect-[16/10] md:aspect-[4/3] rounded-2xl overflow-hidden relative flex-shrink-0 bg-slate-900 border border-gray-200 shadow-sm">
+            <span class="img-slot" data-key="${r.img}"></span>
+            <div class="absolute inset-0 bg-black/40 flex flex-col justify-end p-2 pb-3 cursor-pointer" onclick="playLocalSegment('${r.id}', ${r.timeline[0].sec}); playTapSound();">
+              <div class="bg-black/60 hover:bg-[#3b4ef6] text-white font-bold text-[10px] px-2 py-1.5 rounded-xl flex items-center justify-center gap-1 mx-auto max-w-[150px] transition">
+                <span>▶</span> 영상 바로 재생
+              </div>
+            </div>
+            <div class="absolute top-2 left-2 bg-black/60 text-white text-[9px] font-black px-1.5 py-0.5 rounded">
+              ${r.id}
+            </div>
+          </div>
+
+          <div class="flex-grow flex flex-col justify-between py-1">
+            <div>
+              <div class="flex items-center gap-2 mb-2 flex-wrap">
+                <span class="bg-blue-50 text-blue-600 text-[10px] font-extrabold px-2 py-0.5 rounded-md">${r.id}</span>
+                ${badgeHtml}
+              </div>
+              <h3 class="text-base md:text-lg font-black text-[#1a1a2e] mb-1 leading-snug">
+                ${r.desc}
+              </h3>
+              
+              <!-- Direct Timeline Seeker buttons inside card -->
+              <div class="my-3">
+                <span class="text-[10px] font-bold text-gray-400 uppercase block mb-1.5">📍 이 코스의 맞춤 영상 조각 (클릭 시 현장에서 재생)</span>
+                <div class="flex flex-wrap gap-1.5">
+                  ${timelineHtml}
+                </div>
+              </div>
+            </div>
+
+            <div class="space-y-1.5 mt-2">
+              <div class="flex justify-between text-[11px] font-bold text-gray-400">
+                <span>참여인원 <b class="text-gray-900">${r.joined}명</b> / 25명</span>
+                <span class="${isConfirmed ? 'text-[#12b25f]' : 'text-[#3b4ef6]'}">${isConfirmed ? '출발확정' : '출발확정 대기중'}</span>
+              </div>
+              <div class="h-1.5 w-full bg-gray-100 rounded-full overflow-hidden">
+                <div class="h-full rounded-full transition-all duration-500" style="width: ${pct}%; background: ${isConfirmed ? '#12b25f' : '#3b4ef6'};"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="w-full md:w-[150px] border-t md:border-t-0 md:border-l border-gray-100 pt-4 md:pt-0 md:pl-5 flex flex-col justify-between text-left md:text-right flex-shrink-0">
+            <div>
+              <span class="text-[10px] font-bold text-gray-400 block mb-0.5" data-i18n="scLowestStandard">1/N 공구 최저가</span>
+              <span class="text-xl font-black text-[#1a1a2e] block">${r.price}</span>
+              <span class="text-xs font-bold text-[#3b4ef6] block">(${r.krw}원)</span>
+            </div>
+            
+            <div class="space-y-1.5 mt-3">
+              <button onclick="bookTour('${r.id}')" class="w-full bg-[#3b4ef6] hover:bg-[#2c3ce0] text-white font-extrabold text-xs py-3 rounded-xl transition shadow-md active:scale-95">
+                이 버스 공구 예약
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Ahwon's physical reaction voice bubbles inside the card -->
+        <div class="mt-4 p-3 bg-rose-50/50 border border-rose-100/70 rounded-2xl flex gap-2.5 items-start">
+          <div class="w-8 h-8 rounded-full bg-rose-500 text-white flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">阿</div>
+          <div class="text-[11px] text-rose-950 font-bold leading-relaxed">
+            ${ahwonQuote}
+          </div>
+        </div>
+
+        <!-- 미니 트렌드 바 (15일 가로 스크롤 타임라인) -->
+        <div class="mt-4 pt-3 border-t border-dashed border-gray-100 bg-indigo-50/20 p-3 rounded-2xl relative">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-[11px] text-[#3b4ef6] font-black uppercase tracking-wider flex items-center gap-1">
+              📅 <span data-i18n="trendTitle">출발 트렌드 스케줄 (가로 드래그로 날짜 더 보기)</span>
+            </span>
+            <button onclick="playTapSound(); openFullCalendarModal('${r.id}', ${baseMonth}, ${baseDay})" class="text-[10px] text-indigo-600 font-extrabold hover:underline" data-i18n="scBtnCompare">
+              날짜 전체 비교 보기 ›
+            </button>
+          </div>
+          
+          <div class="trend-scroll-container flex gap-1.5 overflow-x-auto pb-2 scroll-smooth select-none cursor-grab active:cursor-grabbing">
+            ${trendBarItemsHtml}
+          </div>
+          
+          <div class="text-[9px] text-slate-400 mt-1 flex justify-between items-center px-1 font-bold">
+            <span>◀ 이전 날짜 (좌로 드래그)</span>
+            <span>다음 날짜 (우로 드래그) ▶</span>
+          </div>
+        </div>
+
+        <!-- 전리품 수첩 -->
+        <div class="mt-3 pt-3 border-t border-gray-100">
+          <span class="text-[10px] text-gray-400 font-bold block mb-2 uppercase tracking-wider">📦 이 노선의 영상 속 아원 전리품 (클릭 시 K-TaxBack 면세 결제 연동)</span>
+          <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
+            ${subItemsHtml}
+          </div>
+        </div>
+      </div>
+    `;
+  });
+  
+  container.innerHTML = html;
+  hydrateImages(container);
+}
+
+function initializeDragScroll() {
+  var sliders = document.querySelectorAll('.trend-scroll-container');
+  sliders.forEach(function(slider) {
+    var isDown = false;
+    var startX;
+    var scrollLeft;
+    slider.isDragging = false; 
+
+    slider.addEventListener('mousedown', function(e) {
+      isDown = true;
+      slider.isDragging = false;
+      slider.classList.remove('cursor-grab');
+      slider.classList.add('cursor-grabbing');
+      startX = e.pageX - slider.offsetLeft;
+      scrollLeft = slider.scrollLeft;
+    });
+
+    slider.addEventListener('mouseleave', function() {
+      isDown = false;
+      slider.classList.remove('cursor-grabbing');
+      slider.classList.add('cursor-grab');
+    });
+
+    slider.addEventListener('mouseup', function() {
+      isDown = false;
+      slider.classList.remove('cursor-grabbing');
+      slider.classList.add('cursor-grab');
+      setTimeout(function() {
+        slider.isDragging = false;
+      }, 40);
+    });
+
+    slider.addEventListener('mousemove', function(e) {
+      if (!isDown) return;
+      e.preventDefault();
+      var x = e.pageX - slider.offsetLeft;
+      var walk = (x - startX) * 1.5; 
+      
+      if (Math.abs(walk) > 5) {
+        slider.isDragging = true;
+      }
+      slider.scrollLeft = scrollLeft - walk;
+    });
+    
+    var anchorCard = slider.querySelector('.ring-2');
+    if (anchorCard) {
+      setTimeout(function() {
+        var cardOffsetLeft = anchorCard.offsetLeft;
+        var sliderWidth = slider.clientWidth;
+        slider.scrollLeft = cardOffsetLeft - (sliderWidth / 2) + (anchorCard.clientWidth / 2);
+      }, 100);
+    }
+  });
+}
+</script>
+
+<script>
+var scActiveRouteId = "";
+var scActiveMonth = 8;
+var scSelectedDay = null;
+
+function openFullCalendarModal(routeId, month, initialDay) {
+  scActiveRouteId = routeId;
+  scActiveMonth = month;
+  scSelectedDay = initialDay;
+  
+  var r = A_ROUTES.find(function(x) { return x.id === routeId; });
+  if (!r) return;
+  
+  document.getElementById("scModalRouteTitle").textContent = (curLang === "ko") ? r.desc : r.id + " 專屬客製化巴士";
+  document.getElementById("scModalRouteCaption").textContent = r.caption;
+  document.getElementById("scModalRouteDesc").textContent = r.desc;
+  document.getElementById("scModalBasePrice").textContent = r.price + " (" + r.krw + "원)";
+  
+  switchFullCalendarMonth(month);
+  
+  document.getElementById("fullCalendarModal").classList.remove("hidden");
+}
+
+function closeFullCalendarModal() {
+  document.getElementById("fullCalendarModal").classList.add("hidden");
+}
+
+function switchFullCalendarMonth(month) {
+  scActiveMonth = month;
+  
+  var btnAug = document.getElementById("scBtnAug");
+  var btnSept = document.getElementById("scBtnSept");
+  
+  if (month === 8) {
+    btnAug.className = "flex-1 pb-3 text-center text-sm font-extrabold border-b-2 border-blue-600 text-blue-600";
+    btnSept.className = "flex-1 pb-3 text-center text-sm font-bold border-b-2 border-transparent text-gray-400 hover:text-slate-800";
+  } else {
+    btnAug.className = "flex-1 pb-3 text-center text-sm font-bold border-b-2 border-transparent text-gray-400 hover:text-slate-800";
+    btnSept.className = "flex-1 pb-3 text-center text-sm font-extrabold border-b-2 border-blue-600 text-blue-600";
+  }
+  
+  renderScGrid(month);
+}
+
+function renderScGrid(month) {
+  var grid = document.getElementById("scCalendarGrid");
+  grid.innerHTML = "";
+  
+  var year = 2026;
+  var firstDayIndex = new Date(year, month - 1, 1).getDay();
+  var daysCount = new Date(year, month, 0).getDate();
+  var today = new Date(2026, 6, 19); 
+  
+  for (var i = 0; i < firstDayIndex; i++) {
+    var emptyDiv = document.createElement("div");
+    emptyDiv.className = "aspect-square p-1";
+    grid.appendChild(emptyDiv);
+  }
+  
+  for (var d = 1; d <= daysCount; d++) {
+    var dt = new Date(year, month - 1, d);
+    var isPast = dt < today;
+    
+    var sData = getRouteSchedule(scActiveRouteId, month, d);
+    
+    var cell = document.createElement("div");
+    var dotColor = "bg-slate-300";
+    var borderColor = "border-gray-100";
+    var selectHighlight = "";
+    
+    if (sData.status === "confirmed") {
+      dotColor = "bg-[#12b25f]";
+      borderColor = "border-emerald-200 hover:border-emerald-400";
+    } else if (sData.status === "imminent") {
+      dotColor = "bg-[#f59e0b]";
+      borderColor = "border-amber-200 hover:border-amber-400";
+    } else {
+      borderColor = "border-slate-200 hover:border-slate-300";
+    }
+    
+    if (scSelectedDay === d && scActiveMonth === month) {
+      selectHighlight = "ring-2 ring-blue-600 bg-blue-50/50";
+    }
+    
+    cell.className = "aspect-square border " + borderColor + " rounded-xl p-1 flex flex-col justify-between cursor-pointer transition relative " + selectHighlight;
+    cell.dataset.day = d;
+    
+    cell.innerHTML = `
+      <div class="flex justify-between items-center w-full">
+        <span class="text-[9px] font-black scale-90 ${sData.status === 'confirmed' ? 'text-emerald-600' : sData.status === 'imminent' ? 'text-amber-600' : 'text-slate-500'}">${sData.joined}명</span>
+        <span class="text-xs font-bold text-slate-800">${d}</span>
+      </div>
+      <div class="text-center">
+        <span class="text-[11px] font-black text-[#1a1a2e] block">${sData.priceTwd}元</span>
+        <span class="text-[8px] text-[#3b4ef6] font-bold block scale-90">${sData.discountPercent > 0 ? sData.discountPercent + '% Off' : ''}</span>
+      </div>
+      <div class="flex items-center gap-1 self-start">
+        <span class="w-1.5 h-1.5 rounded-full ${dotColor}"></span>
+        <span class="text-[8px] font-black text-gray-400">
+          ${sData.status === 'confirmed' ? ((curLang === 'ko') ? '확정' : '成團') : sData.status === 'imminent' ? ((curLang === 'ko') ? '임박' : '將成') : ((curLang === 'ko') ? '모집' : '預約')}
+        </span>
+      </div>
+    `;
+    
+    if (isPast) {
+      cell.classList.add("opacity-30", "pointer-events-none");
+    } else {
+      (function(dayNum) {
+        cell.onclick = function() {
+          scSelectedDay = dayNum;
+          playTapSound();
+          renderScGrid(scActiveMonth);
+          updateScSummary();
+        };
+      })(d);
+    }
+    
+    grid.appendChild(cell);
+  }
+  
+  updateScSummary();
+}
+
+function updateScSummary() {
+  var summaryText = document.getElementById("scSelectedDateSummary");
+  var confirmBtn = document.getElementById("scConfirmBookingBtn");
+  
+  if (!scSelectedDay) {
+    summaryText.textContent = (curLang === "ko") ? "날짜를 골라주세요" : "請點擊上方日曆選擇日期";
+    confirmBtn.disabled = true;
+    return;
+  }
+  
+  var sData = getRouteSchedule(scActiveRouteId, scActiveMonth, scSelectedDay);
+  var statusLabel = sData.status === "confirmed" ? "출발 확정" : sData.status === "imminent" ? "출발 임박" : "모집중";
+  if (curLang === "tw") {
+    statusLabel = sData.status === "confirmed" ? "成團確定" : sData.status === "imminent" ? "即將成團" : "預約募集";
+  }
+  
+  var dynamicMsg = (sData.discountPercent > 0) ? ` (1/N 할인가 적용: ${sData.discountPercent}% OFF!)` : "";
+  
+  summaryText.innerHTML = `
+    <span class="text-indigo-600 font-extrabold">${scActiveMonth}월 ${scSelectedDay}일</span> 
+    <span class="text-xs bg-indigo-50 text-indigo-600 font-black px-2 py-0.5 rounded-md ml-2">${statusLabel}</span> 
+    <b class="text-[#3b4ef6] ml-2">${sData.priceTwd} TWD</b> <span class="text-[11px] text-gray-400 font-semibold">${dynamicMsg}</span>
+  `;
+  confirmBtn.disabled = false;
+}
+
+function bookSelectedScTour() {
+  var sData = getRouteSchedule(scActiveRouteId, scActiveMonth, scSelectedDay);
+  customToast(`🎉 [${scActiveRouteId}] ${sData.month}월 ${sData.day}일자 1/N 리무진 셔틀 공구 예약 완료! (예약가: ${sData.priceTwd} TWD)`, true);
+  closeFullCalendarModal();
+}
+</script>
+
+<script>
+function renderSelectShop() {
+  var shopContainer = document.getElementById("selectShopContainer");
+  var html = "";
+  ALL_PRODUCTS.forEach(function(p) {
+    html += `
+      <div class="flex items-center gap-3 p-2.5 hover:bg-[#fafbfe] rounded-xl transition border border-transparent hover:border-gray-100">
+        <div class="w-14 h-14 rounded-lg bg-gray-100 overflow-hidden flex-shrink-0 relative">
+          <span class="img-slot" data-key="${p.imgKey}"></span>
+        </div>
+        <div class="flex-grow min-w-0">
+          <h4 class="text-[10px] font-bold text-gray-400 truncate uppercase">${p.brand}</h4>
+          <p class="text-xs font-extrabold text-gray-900 truncate">${p.title}</p>
+          <div class="flex items-center gap-1.5 mt-0.5">
+            <span class="text-[10px] font-extrabold text-[#3b4ef6]">${p.rate} K-TaxBack</span>
+            <span class="text-[10px] font-semibold text-gray-400 line-through">₩${p.original.toLocaleString()}</span>
+          </div>
+        </div>
+        <button onclick="openTaxBackModal('${p.title}', ${p.original}, ${p.taxFree}, '${p.imgKey}'); playTapSound();" class="bg-[#3b4ef6] hover:bg-[#2c3ce0] text-white font-extrabold text-[10px] px-2.5 py-1.5 rounded-lg transition-all flex-shrink-0">
+          즉시환급
+        </button>
+      </div>
+    `;
+  });
+  shopContainer.innerHTML = html;
+  hydrateImages(shopContainer);
+}
+
+function resetAllFilters() {
+  st.am = {type: "all", region: "성수동", place: null};
+  st.pm = {type: "all", place: null};
+  st.date = {day: 15, month: 8, flex: 0};
+  
+  document.getElementById("amVal").textContent = "전체 오전 코스";
+  document.getElementById("pmVal").textContent = "오후 코스를 골라주세요";
+  document.getElementById("dateVal").textContent = "언제 떠날까요";
+  
+  updateBar();
+  renderFilteredTours(A_ROUTES);
+}
+
+function bookTour(routeId) {
+  playTapSound();
+  var rt = A_ROUTES.find(function(x) { return x.id === routeId; });
+  customToast("🎉 [" + rt.id + "] K-Gukrul(국룰) 버스 1/N 펀딩 완료! 탑승 정원 충족 시 카카오톡 알림을 보내드립니다.", true);
+}
+
+var activeTaxProduct = {};
+var currentPickupSelection = 'bus';
+
+function openTaxBackModal(title, original, taxFree, imgKey) {
+  activeTaxProduct = { title: title, original: original, taxFree: taxFree, imgKey: imgKey };
+  document.getElementById("modalItemTitle").textContent = title;
+  document.getElementById("modalOriginalPrice").textContent = "₩" + original.toLocaleString();
+  document.getElementById("modalTaxFreePrice").textContent = "₩" + taxFree.toLocaleString();
+  document.getElementById("modalItemImg").src = unsUrl(imgKey);
+  
+  setPickup('bus');
+  document.getElementById("taxBackModal").classList.remove("hidden");
+}
+
+function closeTaxBackModal() {
+  document.getElementById("taxBackModal").classList.add("hidden");
+}
+
+function setPickup(type) {
+  currentPickupSelection = type;
+  var busBtn = document.getElementById("pickupBus");
+  var airBtn = document.getElementById("pickupAirport");
+  
+  if (type === 'bus') {
+    busBtn.className = "border-2 border-blue-600 bg-blue-50 text-blue-600 font-extrabold text-xs p-3 rounded-xl flex flex-col items-center justify-center gap-1 transition-all";
+    airBtn.className = "border border-gray-100 bg-white hover:bg-gray-50 text-gray-600 font-bold text-xs p-3 rounded-xl flex flex-col items-center justify-center gap-1 transition-all";
+  } else {
+    busBtn.className = "border border-gray-100 bg-white hover:bg-gray-50 text-gray-600 font-bold text-xs p-3 rounded-xl flex flex-col items-center justify-center gap-1 transition-all";
+    airBtn.className = "border-2 border-blue-600 bg-blue-50 text-blue-600 font-extrabold text-xs p-3 rounded-xl flex flex-col items-center justify-center gap-1 transition-all";
+  }
+}
+
+function processTaxBackCheckout() {
+  var pickupText = currentPickupSelection === 'bus' ? "🚌 아원 K-Gukrul(국룰) 셔틀버스 트렁크" : "✈️ 출국 공항 인도장 카운터";
+  customToast("💳 K-TaxBack 승인 성공! 결제금액: ₩" + activeTaxProduct.taxFree.toLocaleString() + " / 수령: " + pickupText, true);
+  closeTaxBackModal();
+}
+
+window.onload = function() {
+  updateBar();
+  renderFilteredTours(A_ROUTES);
+  renderSelectShop();
+}
+</script>
+</body>
+</html>
