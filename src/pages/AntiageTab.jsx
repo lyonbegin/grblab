@@ -20,19 +20,15 @@ import { useState, useRef, useEffect } from 'react'
 
 const benefitModalCss = `
   #ticc-benefit-modal-overlay{position:fixed;inset:0;z-index:999999;background:transparent;pointer-events:none;display:flex;align-items:flex-start;justify-content:flex-end;padding:24px;box-sizing:border-box;}
-  #ticc-benefit-modal-wrapper{position:relative;width:100%;max-width:380px;max-height:70vh;pointer-events:auto;display:flex;flex-direction:column;border-radius:14px;overflow:hidden;background:#fff;box-shadow:0 12px 40px rgba(0,0,0,0.3);cursor:zoom-in;}
+  #ticc-benefit-modal-wrapper{position:relative;width:100%;max-width:760px;max-height:80vh;pointer-events:auto;display:flex;flex-direction:column;border-radius:14px;overflow:hidden;background:#fff;box-shadow:0 12px 40px rgba(0,0,0,0.3);}
   #ticc-benefit-modal-box{width:100%;flex:1 1 auto;min-height:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;}
   #ticc-benefit-modal-close{position:absolute;top:10px;right:10px;width:32px;height:32px;border-radius:50%;background:#c0102a;color:#fff;border:2px solid #fff;font-size:16px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:2147483647;box-shadow:0 2px 10px rgba(0,0,0,0.4);}
   #ticc-benefit-modal-close:hover{background:#9c0c22;}
   #ticc-benefit-modal-hide-today{display:block;width:100%;flex:0 0 auto;text-align:center;padding:10px;background:#f5f5f5;border:none;border-top:1px solid #e5e5e5;color:#555;font-size:12.5px;cursor:pointer;}
   #ticc-benefit-modal-hide-today:hover{background:#ececec;}
-  @media (min-width:769px){
-    #ticc-benefit-modal-overlay.ticc-expanded{background:rgba(0,0,0,0.6);pointer-events:auto;align-items:center;justify-content:center;}
-    #ticc-benefit-modal-wrapper.ticc-expanded{max-width:960px;width:100%;height:90vh;max-height:900px;cursor:default;}
-  }
   @media (max-width:768px){
     #ticc-benefit-modal-overlay{background:rgba(0,0,0,0.5);pointer-events:auto;align-items:center;justify-content:center;padding:20px;}
-    #ticc-benefit-modal-wrapper{max-width:none;width:100%;max-height:80vh;cursor:default;}
+    #ticc-benefit-modal-wrapper{max-width:none;width:100%;max-height:80vh;}
     #comp-mhfq2ejd{max-height:28px !important;}
   }
 `
@@ -43,15 +39,17 @@ function ScaledContent({ children, style }) {
   const innerRef = useRef(null)
   const [scale, setScale] = useState(1)
   const [naturalHeight, setNaturalHeight] = useState(0)
+  const [measured, setMeasured] = useState(false)
   const NATURAL_WIDTH = 980
 
   useEffect(() => {
     function updateScale() {
-      if (!outerRef.current || !innerRef.current) return
+      if (!outerRef.current) return
       const outerWidth = outerRef.current.offsetWidth
       const nextScale = outerWidth > 0 ? Math.min(1, outerWidth / NATURAL_WIDTH) : 1
       setScale(nextScale)
-      setNaturalHeight(innerRef.current.scrollHeight)
+      if (innerRef.current) setNaturalHeight(innerRef.current.scrollHeight)
+      setMeasured(true)
     }
     updateScale()
     let ro = null
@@ -66,14 +64,27 @@ function ScaledContent({ children, style }) {
     }
   }, [])
 
+  // 컨테이너가 원본 폭(980px) 이상이면, 축소 없이 원본 CSS 그대로 렌더링한다.
+  // 이렇게 해야 섹션 배경(전체 폭)과 콘텐츠(980px 중앙 정렬)가 원본 사이트처럼
+  // 자연스럽게 동작한다 - 배경까지 억지로 980px 캔버스에 가두지 않는다.
+  const needsShrink = measured && scale < 1
+
+  if (!needsShrink) {
+    return (
+      <div ref={outerRef} style={{ width: '100%', ...style }}>
+        <div ref={innerRef}>{children}</div>
+      </div>
+    )
+  }
+
   return (
     <div
       ref={outerRef}
-      style={{ height: naturalHeight ? naturalHeight * scale : 'auto', overflow: 'hidden', position: 'relative', width: '100%', ...style }}
+      style={{ height: naturalHeight ? naturalHeight * scale : 'auto', overflow: 'hidden', position: 'relative', width: '100%', display: 'flex', justifyContent: 'center', ...style }}
     >
       <div
         ref={innerRef}
-        style={{ width: 980, transform: `scale(${scale})`, transformOrigin: 'top left' }}
+        style={{ width: 980, flexShrink: 0, transform: `scale(${scale})`, transformOrigin: 'top center' }}
       >
         {children}
       </div>
@@ -93,9 +104,80 @@ function shouldShowBenefitModalInitially() {
   return true
 }
 
+
+function NavDebugPanel() {
+  const [info, setInfo] = useState('측정 중...')
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      const lines = []
+      const layers = document.querySelectorAll('.QED8q1')
+      lines.push('QED8q1 개수: ' + layers.length)
+      if (layers[0]) {
+        let anc = layers[0]
+        let depth = 0
+        while (anc && depth < 10) {
+          const r = anc.getBoundingClientRect()
+          lines.push('anc[' + depth + '] ' + (anc.id || anc.className || anc.tagName) + ' top=' + Math.round(r.top) + ' height=' + Math.round(r.height))
+          anc = anc.parentElement
+          depth++
+        }
+        lines.push('--- scrollY=' + window.scrollY + ' ---')
+        const r0 = layers[0].getBoundingClientRect()
+        const px = r0.left + 20
+        const py = r0.top + r0.height / 2
+        const topEl = (typeof document.elementFromPoint === 'function') ? document.elementFromPoint(px, py) : null
+        lines.push('elementFromPoint(' + Math.round(px) + ',' + Math.round(py) + ') = ' + (topEl ? (topEl.tagName + '.' + topEl.className) : 'null'))
+        const qcs = window.getComputedStyle(layers[0])
+        lines.push('QED8q1 z-index=' + qcs.zIndex + ' | parent(pinnedTopRight) z-index=' + window.getComputedStyle(layers[0].parentElement).zIndex)
+        const bg = document.getElementById('BACKGROUND_GROUP') || document.querySelector('.BACKGROUND_GROUP')
+        if (bg) {
+          const bgcs = window.getComputedStyle(bg)
+          const bgr = bg.getBoundingClientRect()
+          lines.push('BACKGROUND_GROUP: position=' + bgcs.position + ' z-index=' + bgcs.zIndex + ' rect=' + Math.round(bgr.width) + 'x' + Math.round(bgr.height) + ' at (' + Math.round(bgr.left) + ',' + Math.round(bgr.top) + ')')
+        }
+      }
+      layers.forEach((el, i) => {
+        const r = el.getBoundingClientRect()
+        const cs = window.getComputedStyle(el)
+        lines.push('#' + i + ' rect=' + Math.round(r.width) + 'x' + Math.round(r.height) + ' at (' + Math.round(r.left) + ',' + Math.round(r.top) + ') | display=' + cs.display + ' position=' + cs.position + ' visibility=' + cs.visibility + ' opacity=' + cs.opacity)
+        const nav = el.querySelector('nav')
+        if (nav) {
+          const nr = nav.getBoundingClientRect()
+          const ncs = window.getComputedStyle(nav)
+          lines.push('   nav rect=' + Math.round(nr.width) + 'x' + Math.round(nr.height) + ' at (' + Math.round(nr.left) + ',' + Math.round(nr.top) + ') | display=' + ncs.display + ' visibility=' + ncs.visibility)
+        } else {
+          lines.push('   nav 없음(querySelector 실패)')
+        }
+        const items = el.querySelectorAll('li.S4aRdK')
+        lines.push('   li.S4aRdK 개수=' + items.length)
+        if (items[0]) {
+          const ir = items[0].getBoundingClientRect()
+          const ics = window.getComputedStyle(items[0])
+          lines.push('   li[0] rect=' + Math.round(ir.width) + 'x' + Math.round(ir.height) + ' at (' + Math.round(ir.left) + ',' + Math.round(ir.top) + ') | display=' + ics.display + ' visibility=' + ics.visibility)
+        }
+      })
+      setInfo(lines.join('\n'))
+    }, 1500)
+    return () => clearTimeout(timer)
+  }, [])
+
+  return (
+    <pre
+      style={{
+        position: 'fixed', bottom: 0, left: 0, right: 0, maxHeight: '40vh',
+        overflow: 'auto', background: 'rgba(0,0,0,0.9)', color: '#0f0',
+        fontSize: 11, lineHeight: 1.5, padding: 10, zIndex: 2147483647,
+        whiteSpace: 'pre-wrap', wordBreak: 'break-all', margin: 0,
+      }}
+    >
+      {info}
+    </pre>
+  )
+}
+
 export default function AntiageTab() {
   const [showBenefitModal, setShowBenefitModal] = useState(shouldShowBenefitModalInitially)
-  const [popupExpanded, setPopupExpanded] = useState(false)
   const rootRef = useRef(null)
 
   useEffect(() => {
@@ -108,8 +190,7 @@ export default function AntiageTab() {
     }
   }, [showBenefitModal])
 
-  function handleHideToday(e) {
-    e.stopPropagation()
+  function handleHideToday() {
     try {
       const midnight = new Date()
       midnight.setHours(24, 0, 0, 0)
@@ -118,17 +199,19 @@ export default function AntiageTab() {
     setShowBenefitModal(false)
   }
 
-  function handleCloseModal(e) {
-    e.stopPropagation()
-    setShowBenefitModal(false)
-  }
-
-  function handleWrapperClick() {
-    if (!popupExpanded) setPopupExpanded(true)
-  }
-
   return (
     <div ref={rootRef}>
+      <nav className="ticc-mnav" aria-label="메인 메뉴">
+        <a className="ticc-brand" href="index.html">Tokyo International Choir Competition</a>
+        <a href="regulations.html">개최규정</a>
+        <a href="tickets.html">티켓</a>
+        <a href="choirs8.html">8회 참가팀</a>
+        <a href="choirs7.html">7회 참가팀</a>
+        <a href="results.html">심사결과</a>
+        <a href="wcc.html">WCC</a>
+        <a href="https://www.ticctokyo.icot.or.jp/" target="_blank" rel="noreferrer noopener">TICC공식사이트</a>
+      </nav>
+    <style dangerouslySetInnerHTML={{ __html: '.QED8q1{position:static !important;height:40px !important;margin-top:0 !important;width:100% !important;}' }} />
     <ScaledContent style={{ minHeight: '100vh' }}>
 <div>
   <style dangerouslySetInnerHTML={{__html: ":root{--sf-img-8: url(\"/images/img-0001.jpg\");--sf-img-45: url(\"/images/img-0002.jpg\");--sf-img-47: url(\"/images/img-0003.jpg\");--sf-img-7: url(\"/images/img-0004.jpg\")}" }} />
@@ -164,13 +247,33 @@ export default function AntiageTab() {
   <style data-fbcssmodules="css:fb.css.base css:fb.css.dialog css:fb.css.iframewidget" dangerouslySetInnerHTML={{__html: ".fb_reset{background:none;border:0px;border-spacing:0;color:#000;cursor:auto;direction:ltr;font-family:lucida grande,tahoma,verdana,arial,\"hiragino kaku gothic pro\",meiryo,\"ms pgothic\",sans-serif;font-size:11px;font-style:normal;font-variant:normal;font-weight:400;letter-spacing:normal;line-height:1;margin:0;overflow:visible;padding:0;text-align:left;text-decoration:none;text-indent:0;text-shadow:none;text-transform:none;visibility:visible;white-space:normal;word-spacing:normal}@keyframes fb_transform{0%{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}.fb_dialog_close_icon:hover{background:var(--sf-img-7) no-repeat scroll 0-15px transparent}.fb_dialog_close_icon:active{background:var(--sf-img-7) no-repeat scroll 0-30px transparent}@keyframes rotateSpinner{0%{transform:rotate(0)}to{transform:rotate(360deg)}}.fb_iframe_widget{display:inline-block;position:relative}.fb_iframe_widget span{display:inline-block;position:relative;text-align:justify}.fb_iframe_widget iframe{position:absolute}" }} />
   <style dangerouslySetInnerHTML={{__html: ".light-btn[data-v-2b23e28f]:hover{background:#e0f4ff;border-color:#8acfff}.primary-btn[data-v-2b23e28f]:hover{background:rgb(64.2695652174,168.3043478261,246.3304347826);color:#fff;text-decoration:none}@keyframes shake-2b23e28f{10%,90%{transform:translate3d(-1px,0,0)}20%,80%{transform:translate3d(2px,0,0)}30%,50%,70%{transform:translate3d(-4px,0,0)}40%,60%{transform:translate3d(4px,0,0)}}@keyframes pulse-2b23e28f{0%{opacity:.7}50%{opacity:.4}100%{opacity:.7}}@keyframes fade-up-2b23e28f{0%{transform:translate3d(0,10px,0);opacity:0}100%{transform:translate3d(0,0,0);opacity:1}}@keyframes fade-in-2b23e28f{0%{opacity:0}100%{opacity:1}}@keyframes spin-2b23e28f{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}@keyframes bounceIn-2b23e28f{0%,20%,40%,60%,80%,100%{-webkit-transition-timing-function:cubic-bezier(0.215,0.61,0.355,1);transition-timing-function:cubic-bezier(0.215,0.61,0.355,1)}0%{opacity:1;-webkit-transform:scale3d(0.8,0.8,0.8);transform:scale3d(0.8,0.8,0.8)}20%{-webkit-transform:scale3d(1.1,1.1,1.1);transform:scale3d(1.1,1.1,1.1)}40%{-webkit-transform:scale3d(0.9,0.9,0.9);transform:scale3d(0.9,0.9,0.9)}60%{opacity:1;-webkit-transform:scale3d(1.03,1.03,1.03);transform:scale3d(1.03,1.03,1.03)}80%{-webkit-transform:scale3d(0.97,0.97,0.97);transform:scale3d(0.97,0.97,0.97)}100%{opacity:1;-webkit-transform:scale3d(1,1,1);transform:scale3d(1,1,1)}}@keyframes dots-2b23e28f{0%,20%{color:rgba(0,0,0,0);text-shadow:.25em 0 0 rgba(0,0,0,0),.5em 0 0 rgba(0,0,0,0)}40%{color:#8492a6;text-shadow:.25em 0 0 rgba(0,0,0,0),.5em 0 0 rgba(0,0,0,0)}60%{text-shadow:.25em 0 0#8492a6,.5em 0 0 rgba(0,0,0,0)}80%,100%{text-shadow:.25em 0 0#8492a6,.5em 0 0#8492a6}}@keyframes recording-2b23e28f{0%{box-shadow:0px 0px 5px 0px rgba(173,0,0,.3)}65%{box-shadow:0px 0px 5px 5px rgba(173,0,0,.3)}90%{box-shadow:0px 0px 5px 5px rgba(173,0,0,0)}}.container_selected_area[data-v-2b23e28f]{visibility:hidden;padding:0;position:fixed;top:0;left:0;right:0;bottom:0;z-index:2147483647}.area[data-v-2b23e28f]{position:absolute;z-index:2147483647;pointer-events:none;border:1px solid #1e83ff;background:rgba(30,131,255,.1);box-sizing:border-box}" }} />
   <style dangerouslySetInnerHTML={{__html: ".sf-hidden{display:none!important}" }} />
-  <style id="ticc-nav-fix" dangerouslySetInnerHTML={{__html: "\n#comp-iqimi3rl{--fnt:normal normal normal 13px/1.4em avenir-lt-w01_85-heavy1475544,'Noto Sans KR',sans-serif;}\n#comp-iqimi3rlitemsContainer>li .hAdMV6{padding:0 2px;}\n#comp-iqimi3rlitemsContainer>li .bNEwT7{padding:0 6px;}\n#comp-iqimi3rlitemsContainer>li{width:auto!important;}\n#comp-iqimi3rlitemsContainer>li.ticc-current .bNEwT7{text-decoration:underline;text-underline-offset:5px;}\n" }} />
+  <style id="ticc-nav-fix" dangerouslySetInnerHTML={{__html: `
+/* 원본 Wix 드롭다운 메뉴 + 원본 헤더(제목 바)를 모두 숨기고 아래 독립 바로 통합 */
+#pinnedTopRight{display:none !important;}
+#SITE_HEADER{display:none !important;}
+
+.ticc-mnav{position:sticky;top:0;z-index:9999;width:100%;box-sizing:border-box;
+  background:#dbb89a;display:flex;flex-wrap:wrap;align-items:center;
+  gap:2px 4px;padding:0 14px;
+  font-family:avenir-lt-w01_85-heavy1475544,'Noto Sans KR',sans-serif;}
+.ticc-mnav .ticc-brand{margin-right:auto;font-size:19px;font-weight:700;
+  text-decoration:underline;text-underline-offset:4px;padding:0 12px 0 0;color:#fff;}
+.ticc-mnav .ticc-brand:hover{color:#fff;background:transparent;opacity:.85;}
+.ticc-mnav a{display:flex;align-items:center;height:52px;padding:0 12px;
+  color:#3a2f28;text-decoration:none;font-size:14px;white-space:nowrap;
+  transition:color .2s,background .2s;}
+.ticc-mnav a:not(.ticc-brand):hover{color:#8a1a1a;background:rgba(255,255,255,0.18);}
+@media (max-width:600px){
+  .ticc-mnav{padding:0 8px;}
+  .ticc-mnav .ticc-brand{font-size:15px;flex-basis:100%;height:auto;padding:8px 0 2px;}
+  .ticc-mnav a{height:40px;padding:0 8px;font-size:13px;}
+}
+` }} />
   <style id="mobile-responsive-style" dangerouslySetInnerHTML={{__html: "\n@media screen and (max-width:980px){\n  html,body{overflow-x:hidden!important}\n  body{transform-origin:top left}\n}\n" }} />
   <div className="fb_reset" id="fb-root" style={{display: 'none'}} />
   <svg data-dom-store style={{display: 'none'}}><defs id="dom-store-defs" /></svg>
   <div contentEditable="false" id="SITE_CONTAINER"><style className="sf-hidden" id="STYLE_OVERRIDES_ID" dangerouslySetInnerHTML={{__html: "#comp-m2ouwo5c1{visibility:hidden!important}" }} /><div className="main_MF" contentEditable="false" id="main_MF"><div aria-label="페이지 상단" className="qe3oTb ignore-focus SCROLL_TO_TOP" contentEditable="false" id="SCROLL_TO_TOP" role="region" tabIndex={-1}><span className="TvbeET sf-hidden">페이지 상단</span></div><button className="SKIP_TO_CONTENT_BTN BqYkvS has-custom-focus" contentEditable="false" id="SKIP_TO_CONTENT_BTN" tabIndex={0}>본문으로 건너뛰기</button><div className="backgroundGroup_c64er BACKGROUND_GROUP" contentEditable="false" id="BACKGROUND_GROUP"><div contentEditable="false" id="BACKGROUND_GROUP_TRANSITION_GROUP"><div className="pageBackground_c64er _7xVID" contentEditable="false" data-media-height-override-type data-media-position-override="false" id="pageBackground_c64er"><div className="QG9w8P" contentEditable="false" data-hook="bgLayers" data-motion-part="BG_LAYER pageBackground_c64er" id="bgLayers_pageBackground_c64er"><div className="LNYVZi ayCf9D" contentEditable="false" data-testid="colorUnderlay" /><div className="ROWgFb" contentEditable="false" data-motion-part="BG_MEDIA pageBackground_c64er" id="bgMedia_pageBackground_c64er" /></div></div></div></div><div className="site-root" contentEditable="false" id="site-root"><div className="mesh-layout masterPage css-editing-scope" contentEditable="false" id="masterPage"><div className="pinnedTopRight" contentEditable="false" id="pinnedTopRight"><div className="comp-iqimi3rl-pinned-layer QED8q1 topFixed_Extension" contentEditable="false" id="comp-iqimi3rl-pinned-layer" style_display="null" style_display_priority="null"><wix-dropdown-menu className="_rDrtI WYtmIs comp-iqimi3rl wixui-dropdown-menu hidden-during-prewarmup" contentEditable="false" data-dropalign="left" data-dropmode="dropDown" data-label-pad={0} data-menuborder-y={0} data-menubtn-border={0} data-num-items={10} data-ribbon-els={0} data-ribbon-extra={0} data-same-width-buttons="false" data-stretch-buttons-to-menu-width="true" dir="ltr" id="comp-iqimi3rl" style={{visibility: 'inherit', overflowX: 'visible'}} tabIndex={-1}><nav aria-label="사이트" className="MoL0eS" contentEditable="false" id="comp-iqimi3rlnavContainer"><ul className="ZSVuZl" contentEditable="false" data-marginallchildren="true" id="comp-iqimi3rlitemsContainer" style={{textAlign: 'left'}}><li id="ticcnav0" data-direction="ltr" data-listposition="left" data-state="menu false link" data-index={0} className="S4aRdK wixui-dropdown-menu__item jUeFYk" aria-hidden="false" style={{height: 38, position: 'relative', boxSizing: 'border-box', overflow: 'visible', visibility: 'inherit'}}><a data-testid="linkElement" href="regulations.html" target="_self" className="HNWIuH"><div className="hAdMV6"><div><p className="bNEwT7" style={{lineHeight: 38}}>개최규정</p></div></div></a></li><li id="ticcnav2" data-direction="ltr" data-listposition="center" data-state="menu false link" data-index={2} className="S4aRdK wixui-dropdown-menu__item jUeFYk" aria-hidden="false" style={{height: 38, position: 'relative', boxSizing: 'border-box', overflow: 'visible', visibility: 'inherit'}}><a data-testid="linkElement" href="tickets.html" target="_self" className="HNWIuH"><div className="hAdMV6"><div><p className="bNEwT7" style={{lineHeight: 38}}>티켓</p></div></div></a></li><li id="ticcnav3" data-direction="ltr" data-listposition="center" data-state="menu false link" data-index={3} className="S4aRdK wixui-dropdown-menu__item jUeFYk" aria-hidden="false" style={{height: 38, position: 'relative', boxSizing: 'border-box', overflow: 'visible', visibility: 'inherit'}}><a data-testid="linkElement" href="choirs8.html" target="_self" className="HNWIuH"><div className="hAdMV6"><div><p className="bNEwT7" style={{lineHeight: 38}}>8회 참가팀</p></div></div></a></li><li id="ticcnav4" data-direction="ltr" data-listposition="center" data-state="menu false link" data-index={4} className="S4aRdK wixui-dropdown-menu__item jUeFYk" aria-hidden="false" style={{height: 38, position: 'relative', boxSizing: 'border-box', overflow: 'visible', visibility: 'inherit'}}><a data-testid="linkElement" href="choirs7.html" target="_self" className="HNWIuH"><div className="hAdMV6"><div><p className="bNEwT7" style={{lineHeight: 38}}>7회 참가팀</p></div></div></a></li><li id="ticcnav5" data-direction="ltr" data-listposition="center" data-state="menu false link" data-index={5} className="S4aRdK wixui-dropdown-menu__item jUeFYk" aria-hidden="false" style={{height: 38, position: 'relative', boxSizing: 'border-box', overflow: 'visible', visibility: 'inherit'}}><a data-testid="linkElement" href="results.html" target="_self" className="HNWIuH"><div className="hAdMV6"><div><p className="bNEwT7" style={{lineHeight: 38}}>심사결과</p></div></div></a></li><li id="ticcnav6" data-direction="ltr" data-listposition="center" data-state="menu false link" data-index={6} className="S4aRdK wixui-dropdown-menu__item jUeFYk" aria-hidden="false" style={{height: 38, position: 'relative', boxSizing: 'border-box', overflow: 'visible', visibility: 'inherit'}}><a data-testid="linkElement" href="wcc.html" target="_self" className="HNWIuH"><div className="hAdMV6"><div><p className="bNEwT7" style={{lineHeight: 38}}>WCC</p></div></div></a></li><li id="ticcnav7" data-direction="ltr" data-listposition="right" data-state="menu false link" data-index={7} className="S4aRdK wixui-dropdown-menu__item jUeFYk" aria-hidden="false" style={{height: 38, position: 'relative', boxSizing: 'border-box', overflow: 'visible', visibility: 'inherit'}}><a data-testid="linkElement" href="https://www.ticctokyo.icot.or.jp/" target="_blank" className="HNWIuH"><div className="hAdMV6"><div><p className="bNEwT7" style={{lineHeight: 38}}>TICC공식사이트</p></div></div></a></li></ul><div className="T1i8CL sf-hidden" contentEditable="false" data-dropalign="left" data-dropdown-shown="false" id="comp-iqimi3rldropWrapper" style={{inset: '38px auto auto 237px'}} /><div id="comp-iqimi3rlnavContainer-hiddenA11ySubMenuIndication" style={{display: 'none'}}>Tab 키로 메뉴 항목을 이동할 수 있습니다.</div></nav></wix-dropdown-menu></div></div><header className="AF7cxG SITE_HEADER wixui-header topFixed_Extension" contentEditable="false" id="SITE_HEADER" style_display="null" style_display_priority="null" tabIndex={-1}><div className="i9vR1n" contentEditable="false"><div className="wyOFJu" contentEditable="false" /><div className="Kn28Ou" contentEditable="false"><div className="PHfJ6P" contentEditable="false" /></div></div><div className="wLiac3" contentEditable="false"><div className="Mjk8tS" contentEditable="false"><div contentEditable="false" data-mesh-id="SITE_HEADERinlineContent" data-testid="inline-content"><div contentEditable="false" data-mesh-id="SITE_HEADERinlineContent-gridContainer" data-testid="mesh-container-content"><div className="UwkEpO _v6ohL PO9MfV comp-ja4z797w wixui-rich-text" contentEditable="false" data-testid="richTextElement" id="comp-ja4z797w"><h5 className="font_5 wixui-rich-text__text" contentEditable="false" style={{fontSize: 22}}><span className="wixui-rich-text__text" style={{textDecoration: 'underline'}}><a className="wixui-rich-text__text" href="index.html" target="_self">Tokyo International Choir Competition</a></span></h5></div></div></div></div></div></header><main className="PAGES_CONTAINER" contentEditable="false" data-main-content="true" id="PAGES_CONTAINER" tabIndex={-1}><div className="Y3K28_ SITE_PAGES" contentEditable="false" id="SITE_PAGES"><div className="uvik8H" contentEditable="false" id="SITE_PAGES_TRANSITION_GROUP"><div className="i0StQr theme-vars c64er" contentEditable="false" id="c64er"><div className="pTvOx2 wixui-page" contentEditable="false" data-testid="page-bg" /><div className="JJb9Mt" contentEditable="false"><div className="Containerc64er wH18kY" contentEditable="false" id="Containerc64er"><div contentEditable="false" data-mesh-id="Containerc64erinlineContent" data-testid="inline-content"><div contentEditable="false" data-mesh-id="Containerc64erinlineContent-gridContainer" data-testid="mesh-container-content"><section className="Le88gL comp-m2h29toq wixui-section" contentEditable="false" data-block-level-container="ClassicSection" id="comp-m2h29toq" tabIndex={-1}><div className="QG9w8P" contentEditable="false" data-hook="bgLayers" data-motion-part="BG_LAYER comp-m2h29toq" id="bgLayers_comp-m2h29toq"><div className="LNYVZi ayCf9D" contentEditable="false" data-testid="colorUnderlay" /><div className="ROWgFb" contentEditable="false" data-motion-part="BG_MEDIA comp-m2h29toq" id="bgMedia_comp-m2h29toq" /></div><div contentEditable="false" data-mesh-id="comp-m2h29toqinlineContent" data-testid="inline-content"><div contentEditable="false" data-mesh-id="comp-m2h29toqinlineContent-gridContainer" data-testid="mesh-container-content"><div aria-label="슬라이드쇼" className="comp-m2h29tp4 cntGx6 L4bhCy ignore-focus wixui-slideshow" contentEditable="false" id="comp-m2h29tp4" role="region" tabIndex={-1}><button aria-label="이전" className="eranmg xhpcWu" contentEditable="false" data-testid="prevButton"><svg viewBox="0 0 21 41" xmlns="http://www.w3.org/2000/svg"><path d="M20.3 40.8 0 20.5 20.3.2l.7.7L1.3 20.5 21 40.1z" /></svg></button><button aria-label="다음" className="eranmg shCNlX" contentEditable="false" data-testid="nextButton"><svg viewBox="0 0 21 41" xmlns="http://www.w3.org/2000/svg"><path d="M20.3 40.8 0 20.5 20.3.2l.7.7L1.3 20.5 21 40.1z" /></svg></button><div aria-live="polite" className="LzcnsT" contentEditable="false" data-testid="slidesWrapper"><div className="comp-m2h29tp8 vSDtlj" contentEditable="false" id="comp-m2h29tp8"><div className="QG9w8P axfISv" contentEditable="false" data-hook="bgLayers" data-motion-part="BG_LAYER comp-m2h29tp8" id="bgLayers_comp-m2h29tp8"><div className="LNYVZi ayCf9D" contentEditable="false" data-testid="colorUnderlay" /><div className="ROWgFb" contentEditable="false" data-motion-part="BG_MEDIA comp-m2h29tp8" id="bgMedia_comp-m2h29tp8"><div className="Qh0lWW ayCf9D fO4mKs NgeJ4N bgImage" contentEditable="false" data-bg-effect-name data-has-ssr-src="true" data-image-info="{&quot;containerId&quot;:&quot;comp-m2h29tp8&quot;,&quot;alignType&quot;:&quot;center&quot;,&quot;displayMode&quot;:&quot;fill&quot;,&quot;targetWidth&quot;:1421,&quot;targetHeight&quot;:636,&quot;isLQIP&quot;:true,&quot;encoding&quot;:&quot;AVIF&quot;,&quot;imageData&quot;:{&quot;width&quot;:3601,&quot;height&quot;:2401,&quot;uri&quot;:&quot;ea999b_19f93e6e0d17450886b75cda2952d507~mv2.jpg&quot;,&quot;name&quot;:&quot;&quot;,&quot;displayMode&quot;:&quot;fill&quot;,&quot;hasAnimation&quot;:false}}" data-motion-part="BG_IMG comp-m2h29tp8" id="img_comp-m2h29tp8"><img alt="0052_original.jpg" contentEditable="false" data-ssr-src-done="true" fetchpriority="high" height={636} src="/images/img-0007.jpg" style={{width: '100%', height: '100%', objectFit: 'cover', objectPosition: '50% 50%'}} width={1421} /></div></div></div><div className="thDjwm" contentEditable="false" /><div contentEditable="false" data-mesh-id="comp-m2h29tp8inlineContent" data-testid="inline-content"><div contentEditable="false" data-mesh-id="comp-m2h29tp8inlineContent-gridContainer" data-testid="mesh-container-content"><div className="N8MGzv _v6ohL PO9MfV comp-m2h29tpg1 wixui-rich-text" contentEditable="false" data-testid="richTextElement" id="comp-m2h29tpg1"><h3 className="font_3 wixui-rich-text__text" contentEditable="false" style={{fontSize: 40, lineHeight: 'normal', textAlign: 'center'}}><span className="wixui-rich-text__text" style={{fontSize: 40}}><span className="wixui-rich-text__text" style={{fontWeight: 'bold'}}><span className="wixui-rich-text__text" style={{fontFamily: 'georgia,palatino,book antiqua,palatino linotype,serif'}}><span className="wixui-rich-text__text" style={{letterSpacing: 'normal'}}>The 8th Tokyo International Choir Competition<br className="wixui-rich-text__text" />제8회 도쿄국제합창콩쿠르</span></span></span></span><br className="wixui-rich-text__text" />
-                                              &nbsp;</h3></div><div className="N8MGzv _v6ohL PO9MfV comp-m2h29tpj1 wixui-rich-text" contentEditable="false" data-testid="richTextElement" id="comp-m2h29tpj1"><h1 className="font_0 wixui-rich-text__text" contentEditable="false" style={{fontSize: 40, lineHeight: 'normal', textAlign: 'center'}}><span className="wixui-rich-text__text" style={{fontSize: 40}}><span className="wixui-rich-text__text" style={{fontFamily: 'georgia,palatino,book antiqua,palatino linotype,serif'}}><span className="wixui-rich-text__text" style={{letterSpacing: 'normal'}}>2026년 7월 24~26일<br className="wixui-rich-text__text" />
-                                                    다이이치세이메이홀</span></span></span></h1></div><div contentEditable="false" data-mesh-id="comp-m2h29tp8inlineContent-wedge-3" /></div></div></div></div></div></div></div></section><section className="Le88gL comp-m2h29tpr5 wixui-section" contentEditable="false" data-block-level-container="ClassicSection" id="comp-m2h29tpr5" tabIndex={-1}><div className="QG9w8P" contentEditable="false" data-hook="bgLayers" data-motion-part="BG_LAYER comp-m2h29tpr5" id="bgLayers_comp-m2h29tpr5"><div className="LNYVZi ayCf9D" contentEditable="false" data-testid="colorUnderlay" /><div className="ROWgFb" contentEditable="false" data-motion-part="BG_MEDIA comp-m2h29tpr5" id="bgMedia_comp-m2h29tpr5" /></div><div contentEditable="false" data-mesh-id="comp-m2h29tpr5inlineContent" data-testid="inline-content"><div contentEditable="false" data-mesh-id="comp-m2h29tpr5inlineContent-gridContainer" data-testid="mesh-container-content"><div className="chBh7 comp-m2h29tpt" contentEditable="false" id="comp-m2h29tpt"><iframe className="UkML6" title="Lumifish Timeline" aria-label="Lumifish Timeline" scrolling="no" allowFullScreen allowTransparency="true" allowvr="true" frameBorder={0} allow="clipboard-write;autoplay;camera;microphone;geolocation;vr" contentEditable="false" sandbox="allow-popups allow-top-navigation-by-user-activation" srcDoc="<!DOCTYPE html> <html><meta charset=utf-8>
+                                              &nbsp;</h3></div><div className="N8MGzv _v6ohL PO9MfV comp-m2h29tpj1 wixui-rich-text" contentEditable="false" data-testid="richTextElement" id="comp-m2h29tpj1"><h1 className="font_0 wixui-rich-text__text" contentEditable="false" style={{fontSize: 40, lineHeight: 'normal', textAlign: 'center'}}><span className="wixui-rich-text__text" style={{fontSize: 40}}><span className="wixui-rich-text__text" style={{fontFamily: 'georgia,palatino,book antiqua,palatino linotype,serif'}}><span className="wixui-rich-text__text" style={{letterSpacing: 'normal'}}>다이이치세이메이홀</span></span></span></h1></div><div contentEditable="false" data-mesh-id="comp-m2h29tp8inlineContent-wedge-3" /></div></div></div></div></div></div></div></section><section className="Le88gL comp-m2h29tpr5 wixui-section" contentEditable="false" data-block-level-container="ClassicSection" id="comp-m2h29tpr5" tabIndex={-1}><div className="QG9w8P" contentEditable="false" data-hook="bgLayers" data-motion-part="BG_LAYER comp-m2h29tpr5" id="bgLayers_comp-m2h29tpr5"><div className="LNYVZi ayCf9D" contentEditable="false" data-testid="colorUnderlay" /><div className="ROWgFb" contentEditable="false" data-motion-part="BG_MEDIA comp-m2h29tpr5" id="bgMedia_comp-m2h29tpr5" /></div><div contentEditable="false" data-mesh-id="comp-m2h29tpr5inlineContent" data-testid="inline-content"><div contentEditable="false" data-mesh-id="comp-m2h29tpr5inlineContent-gridContainer" data-testid="mesh-container-content"><div className="chBh7 comp-m2h29tpt" contentEditable="false" id="comp-m2h29tpt"><iframe className="UkML6" title="Lumifish Timeline" aria-label="Lumifish Timeline" scrolling="no" allowFullScreen allowTransparency="true" allowvr="true" frameBorder={0} allow="clipboard-write;autoplay;camera;microphone;geolocation;vr" contentEditable="false" sandbox="allow-popups allow-top-navigation-by-user-activation" srcDoc="<!DOCTYPE html> <html><meta charset=utf-8>
 <style wix-style>h4{;}body,html{padding:0px;margin:0px}</style>
 <style wix-style>body,*,h4{font:normal normal normal 16px/1.4em avenir-lt-w01_35-light1475496,sans-serif;;}.timeline-content{background-color:rgba(249,245,185,1);border-color:rgba(240,158,154,1)}.timeline-spine{background-color:rgba(240,158,154,1);border-color:rgba(240,158,154,1)!important;color:rgba(240,158,154,1)!important}.event2201407 *{border-color:rgba(232,74,67,1)!important}.event2201407 h4{color:rgba(41,53,89,1)!important}.event2201407 .description,.event2201407 a{color:rgba(62,79,133,1)!important}.event2201406 *{border-color:rgba(232,74,67,1)!important}.event2201406 h4{color:rgba(41,53,89,1)!important}.event2201406 .description,.event2201406 a{color:rgba(62,79,133,1)!important}.event2201405 *{border-color:rgba(232,74,67,1)!important}.event2201405 h4{color:rgba(41,53,89,1)!important}.event2201405 .description,.event2201405 a{color:rgba(62,79,133,1)!important}.event2201404 *{border-color:rgba(232,74,67,1)!important}.event2201404 h4{color:rgba(41,53,89,1)!important}.event2201404 .description,.event2201404 a{color:rgba(62,79,133,1)!important}.event2201403 *{border-color:rgba(232,74,67,1)!important}.event2201403 h4{color:rgba(41,53,89,1)!important}.event2201403 .description,.event2201403 a{color:rgba(62,79,133,1)!important}</style>
 <meta name=viewport content=&quot;width=device-width, initial-scale=1, user-scalable=0&quot;>
@@ -401,18 +504,14 @@ export default function AntiageTab() {
     </ScaledContent>
 
       {showBenefitModal && (
-        <div id="ticc-benefit-modal-overlay" className={popupExpanded ? 'ticc-expanded' : ''}>
+        <div id="ticc-benefit-modal-overlay">
           <style dangerouslySetInnerHTML={{ __html: benefitModalCss }} />
-          <div
-            id="ticc-benefit-modal-wrapper"
-            className={popupExpanded ? 'ticc-expanded' : ''}
-            onClick={handleWrapperClick}
-          >
+          <div id="ticc-benefit-modal-wrapper">
             <button
               id="ticc-benefit-modal-close"
               type="button"
               aria-label="닫기"
-              onClick={handleCloseModal}
+              onClick={() => setShowBenefitModal(false)}
             >
               &#10005;
             </button>
