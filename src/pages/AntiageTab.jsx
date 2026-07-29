@@ -638,7 +638,7 @@ export default function AntiageTab() {
               ` }} />
               <div className="ticc-apply">
                 <div className="ta-hero">
-                  <span className="ta-eyebrow">참가 신청 · 접수 마감 2027. 8. 7</span>
+                  <span className="ta-eyebrow">참가 신청 · 접수 마감 2026. 8. 7</span>
                   <h2 className="ta-title">지금 신청하세요</h2>
                   <p className="ta-lead">무대에 서는 이들 모두에게</p>
                   <p className="ta-sub"><b>참가팀 전원 혜택</b> · 본선 진출 여부와 관계없이, 참가하는 모든 합창·중창단에 후원사 후원(물품·상품·지원금 등)이 제공됩니다.</p>
