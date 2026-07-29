@@ -217,7 +217,7 @@ export default function AntiageTab() {
   return (
     <div ref={rootRef}>
       <nav className="ticc-mnav" aria-label="메인 메뉴">
-        <a className="ticc-brand" href="index.html">Tokyo International<br className="ticc-brand-break" /> Choir Competition</a>
+        <a className="ticc-brand" href="https://www.ticctokyo.icot.or.jp/" target="_blank" rel="noreferrer noopener">Tokyo International<br className="ticc-brand-break" /> Choir Competition</a>
         <ul className="tmn">
           <li className="tmn-i">
             <span className="tmn-top" tabIndex={0}>日本語 ▾</span>
@@ -638,7 +638,7 @@ export default function AntiageTab() {
               ` }} />
               <div className="ticc-apply">
                 <div className="ta-hero">
-                  <span className="ta-eyebrow">참가 신청 · 접수 마감 2026. 8. 7</span>
+                  <span className="ta-eyebrow">참가 신청 · 접수 마감 2027. 8. 7</span>
                   <h2 className="ta-title">지금 신청하세요</h2>
                   <p className="ta-lead">무대에 서는 이들 모두에게</p>
                   <p className="ta-sub"><b>참가팀 전원 혜택</b> · 본선 진출 여부와 관계없이, 참가하는 모든 합창·중창단에 후원사 후원(물품·상품·지원금 등)이 제공됩니다.</p>
@@ -667,7 +667,7 @@ export default function AntiageTab() {
                   <section className="ta-block">
                     <h3>후원 음악회 개요</h3>
                     <ul className="ta-list">
-                      <li><b>일시</b> 2026. 9. 29 (화) 오후 2시</li>
+                      <li><b>일시</b> 2027. 9. 29 (화) 오후 2시</li>
                       <li><b>장소</b> 부산시민회관 대극장 (1,624석 규모)</li>
                       <li><b>지원</b> 입상 팀 도쿄 대회 참가비용(참가비·항공료·체류비 등) 전액 지원</li>
                     </ul>
