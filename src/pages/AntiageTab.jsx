@@ -217,7 +217,7 @@ export default function AntiageTab() {
   return (
     <div ref={rootRef}>
       <nav className="ticc-mnav" aria-label="메인 메뉴">
-        <a className="ticc-brand" href="https://www.ticctokyo.icot.or.jp">Tokyo International Choir Competition</a>
+        <a className="ticc-brand" href="index.html">Tokyo International<br className="ticc-brand-break" /> Choir Competition</a>
         <ul className="tmn">
           <li className="tmn-i">
             <span className="tmn-top" tabIndex={0}>日本語 ▾</span>
@@ -319,6 +319,7 @@ export default function AntiageTab() {
 .ticc-mnav .ticc-brand{margin-right:auto;font-size:19px;font-weight:700;
   text-decoration:underline;text-underline-offset:4px;padding:0 12px 0 0;color:#fff;white-space:nowrap;}
 .ticc-mnav .ticc-brand:hover{opacity:.85;}
+.ticc-mnav .ticc-brand-break{display:none;}
 
 .ticc-mnav ul.tmn{display:flex;flex-wrap:wrap;align-items:center;list-style:none;margin:0;padding:0;gap:0 2px;}
 .ticc-mnav .tmn-i{position:relative;}
@@ -337,12 +338,11 @@ export default function AntiageTab() {
 
 @media (max-width:640px){
   .ticc-mnav{padding:0 8px;}
-  .ticc-mnav .ticc-brand{flex-basis:100%;height:auto;padding:8px 0 2px;font-size:15px;}
-  .ticc-mnav ul.tmn{width:100%;}
-  .ticc-mnav .tmn-i{width:100%;}
+  .ticc-mnav .ticc-brand{flex-basis:100%;height:auto;padding:8px 0 6px;font-size:15px;white-space:normal;line-height:1.3;text-align:center;}
+  .ticc-mnav .ticc-brand-break{display:inline;}
+  .ticc-mnav ul.tmn{width:100%;justify-content:center;flex-wrap:wrap;}
+  .ticc-mnav .tmn-i{width:auto;}
   .ticc-mnav .tmn-top{height:42px;padding:0 8px;font-size:13px;}
-  .ticc-mnav .tmn-sub{position:static;box-shadow:none;border-radius:0;min-width:0;padding:0 0 6px 14px;background:transparent;}
-  .ticc-mnav .tmn-sub a{color:#3a2f28;padding:8px 10px;}
 }
 ` }} />
   <style id="mobile-responsive-style" dangerouslySetInnerHTML={{__html: "\n@media screen and (max-width:980px){\n  html,body{overflow-x:hidden!important}\n  body{transform-origin:top left}\n}\n" }} />
