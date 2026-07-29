@@ -217,7 +217,7 @@ export default function AntiageTab() {
   return (
     <div ref={rootRef}>
       <nav className="ticc-mnav" aria-label="메인 메뉴">
-        <a className="ticc-brand" href="index.html">Tokyo International Choir Competition</a>
+        <a className="ticc-brand" href="https://www.ticctokyo.icot.or.jp">Tokyo International Choir Competition</a>
         <ul className="tmn">
           <li className="tmn-i">
             <span className="tmn-top" tabIndex={0}>日本語 ▾</span>
