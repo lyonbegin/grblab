@@ -537,15 +537,16 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 /* ── 후원 음악회 팝업 (AntiageTab.jsx 기술 그대로 이식) ── */
 #ticc-benefit-modal-overlay{position:fixed;inset:0;z-index:999999;background:transparent;pointer-events:none;display:flex;align-items:flex-start;justify-content:flex-end;padding:24px;box-sizing:border-box;}
 #ticc-benefit-modal-wrapper{position:relative;width:100%;max-width:760px;max-height:80vh;pointer-events:auto;display:flex;flex-direction:column;border-radius:14px;overflow:hidden;background:#fff;box-shadow:0 12px 40px rgba(0,0,0,0.3);}
-#ticc-benefit-modal-box{width:100%;flex:1 1 auto;min-height:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;}
-#ticc-benefit-modal-box img{display:block;width:100%;height:auto;}
+#ticc-benefit-modal-box{width:100%;flex:1 1 auto;min-height:0;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+#ticc-benefit-modal-box img{display:block;width:auto;height:auto;max-width:100%;max-height:calc(80vh - 40px);object-fit:contain;}
 #ticc-benefit-modal-close{position:absolute;top:10px;right:10px;width:32px;height:32px;border-radius:50%;background:#1e3a8a;color:#fff;border:2px solid #fff;font-size:16px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:2147483647;box-shadow:0 2px 10px rgba(0,0,0,0.4);}
 #ticc-benefit-modal-close:hover{background:#16306e;}
 #ticc-benefit-modal-hide-today{display:block;width:100%;flex:0 0 auto;text-align:center;padding:10px;background:#f5f5f5;border:none;border-top:1px solid #e5e5e5;color:#555;font-size:12.5px;cursor:pointer;}
 #ticc-benefit-modal-hide-today:hover{background:#ececec;}
 @media (max-width:768px){
   #ticc-benefit-modal-overlay{background:rgba(0,0,0,0.5);pointer-events:auto;align-items:center;justify-content:center;padding:20px;}
-  #ticc-benefit-modal-wrapper{max-width:none;width:100%;max-height:80vh;}
+  #ticc-benefit-modal-wrapper{max-width:66.666vw;width:66.666vw;max-height:80vh;}
+  #ticc-benefit-modal-box img{max-height:calc(80vh - 40px);}
 }
 </style>
 </head>
