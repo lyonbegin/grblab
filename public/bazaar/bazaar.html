@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>나눔이음바자 | 나눔이음</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/gh/sun-typeface/SUIT@2/fonts/variable/woff2/SUIT-Variable.css" rel="stylesheet">
+<style>
+  @font-face{
+    font-family:'Jalnan';
+    src:url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.2/JalnanOTF00.woff') format('woff');
+    font-weight:normal;font-style:normal;font-display:swap;
+  }
+  :root{
+    --paper:#FBF7F7;--paper-2:#F6EFEE;--ink:#2B2430;--ink-soft:#6B5F68;--ink-faint:#A79AA0;
+    --red:#EE6F93;--red-dark:#C94F71;--thread:#45BC92;--thread-soft:#DEF6EC;
+    --yellow:#F6C640;--yellow-soft:#FFF3D2;--yellow-dark:#B5860E;
+    --line:#F0E1E6;--card:#FFFFFF;--gray:#8A7D85;
+    --r-lg:22px;--r-md:14px;--r-sm:10px;--wrap:1040px;
+    --sans:'SUIT Variable','SUIT',-apple-system,BlinkMacSystemFont,'Malgun Gothic',sans-serif;
+    --serif:'Jalnan','Gowun Batang','Nanum Myeongjo',serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:var(--sans);color:var(--ink);background:var(--paper);line-height:1.7;-webkit-font-smoothing:antialiased}
+  img{max-width:100%;display:block}
+  .lucide{width:1em;height:1em;display:inline-block;vertical-align:-0.15em;flex:none}
+  .wrap{max-width:var(--wrap);margin:0 auto;padding:0 24px}
+
+  .dnav{position:sticky;top:0;z-index:50;background:rgba(251,247,247,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+  .dnav-in{max-width:var(--wrap);margin:0 auto;padding:0 24px;height:58px;display:flex;align-items:center;gap:24px}
+  .dbrand{font-family:var(--serif);font-weight:700;font-size:18px;letter-spacing:-.02em;color:var(--ink);text-decoration:none}
+  .dbrand em{font-style:normal;color:var(--red)}
+  .dnav-links{display:flex;gap:20px;font-size:13.5px;color:var(--ink-soft)}
+  .dnav-links a{text-decoration:none;color:inherit}
+  .dnav-links a.on{color:var(--ink);font-weight:700}
+  .dwho{margin-left:auto;display:flex;align-items:center;gap:14px;font-size:13px;color:var(--ink-soft)}
+  .cart-ico{position:relative;display:flex;color:var(--ink);text-decoration:none}
+  .cart-ico svg{width:20px;height:20px}
+  .cart-ico .badge{
+    position:absolute;top:-7px;right:-8px;background:var(--red);color:#fff;font-size:10px;font-weight:700;
+    min-width:16px;height:16px;border-radius:100px;display:flex;align-items:center;justify-content:center;padding:0 3px;
+  }
+  .logout-btn{background:none;border:0;color:var(--ink-soft);font-size:12.5px;cursor:pointer;font-family:inherit;text-decoration:underline}
+  .dback{color:var(--ink-soft);text-decoration:none}
+  .dback:hover{color:var(--ink)}
+
+  .closed-note{background:var(--ink);color:#fff;text-align:center;font-size:12px;padding:7px}
+  .closed-note b{color:var(--yellow)}
+
+  .wallet{
+    display:grid;grid-template-columns:1.1fr 1.6fr;background:var(--card);
+    border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;margin:28px 0 30px;
+  }
+  @media(max-width:680px){.wallet{grid-template-columns:1fr}}
+  .wallet-main{background:var(--ink);color:#fff;padding:26px}
+  .wallet-main .fac-id{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+  .wallet-main .fac-id .fi-thumb{
+    width:64px;height:44px;border-radius:8px;overflow:hidden;flex:none;background:#3A3340;position:relative;
+  }
+  .wallet-main .fac-id .fi-thumb img{width:100%;height:100%;object-fit:cover}
+  .wallet-main .fac-id a.fi-link{
+    display:flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:#fff;
+    background:rgba(255,255,255,.14);padding:6px 12px;border-radius:100px;text-decoration:none;flex:none;
+  }
+  .wallet-main .fac-id a.fi-link svg{width:12px;height:12px}
+  .wallet-main .fac-id a.fi-link:hover{background:rgba(255,255,255,.24)}
+  .wallet-main .who{font-size:12.5px;color:#D8CFCF;margin-bottom:12px}
+  .wallet-main .who b{color:#fff;font-weight:700}
+  .wallet-main .amt{font-family:var(--serif);font-size:30px;letter-spacing:-.01em}
+  .wallet-main .amt small{font-size:13px;font-weight:400;margin-left:4px;color:#D8CFCF}
+  .wallet-main .cap{font-size:11.5px;color:#B7ACAC;margin-top:10px;line-height:1.6}
+  .wallet-log{padding:20px 24px}
+  .wallet-log .t{font-size:12px;font-weight:700;color:var(--ink-soft);margin-bottom:10px}
+  .wallet-log ul{list-style:none}
+  .wallet-log li{display:flex;justify-content:space-between;font-size:12.5px;padding:7px 0;border-bottom:1px dashed var(--line)}
+  .wallet-log li:last-child{border-bottom:none}
+  .wallet-log .src{color:var(--ink-soft)}
+  .wallet-log .plus{color:var(--thread);font-weight:700}
+  .wallet-log .minus{color:var(--red-dark);font-weight:700}
+  .wallet-log .mypage-link{display:block;margin-top:12px;font-size:12px;font-weight:700;color:var(--red-dark);text-decoration:none}
+
+  .sec-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:16px}
+  .sec-head h2{font-size:17px;font-weight:800}
+  .sec-head span{font-size:12px;color:var(--ink-faint)}
+
+  .search-sort{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+  .search-sort input{
+    flex:1;min-width:200px;border:1px solid var(--line);border-radius:100px;padding:11px 16px;
+    font-family:inherit;font-size:13.5px;color:var(--ink);background:var(--card);outline:none;
+  }
+  .search-sort input:focus{border-color:var(--thread)}
+  .search-sort select{
+    border:1px solid var(--line);border-radius:100px;padding:11px 16px;font-family:inherit;
+    font-size:13px;color:var(--ink-soft);background:var(--card);outline:none;cursor:pointer;
+  }
+  .filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+  .fchip{padding:8px 15px;border-radius:100px;font-size:12.5px;font-weight:600;border:1px solid var(--line);background:var(--card);color:var(--ink-soft);cursor:pointer;font-family:inherit}
+  .fchip[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .fchip .n{color:var(--ink-faint);font-weight:500;margin-left:2px}
+  .fchip[aria-pressed="true"] .n{color:#D8CFCF}
+
+  /* ── 카테고리 메가메뉴 (쿠팡 스타일) ── */
+  .cat-bar{display:flex;align-items:center;gap:14px;margin-bottom:18px;position:relative}
+  .cat-menu-wrap{position:relative}
+  .cat-btn{
+    display:flex;align-items:center;gap:8px;background:var(--ink);color:#fff;border:0;
+    padding:11px 18px;border-radius:var(--r-sm);font-size:13.5px;font-weight:700;cursor:pointer;font-family:inherit;
+  }
+  .cat-btn svg{width:16px;height:16px}
+  .mega-menu{
+    display:none;position:absolute;top:calc(100% + 6px);left:0;z-index:40;
+    background:var(--card);border:1px solid var(--line);border-radius:var(--r-md);
+    box-shadow:0 20px 40px -20px rgba(43,36,48,.35);overflow:hidden;
+  }
+  .mega-menu.open{display:flex}
+  .mega-col{width:190px;max-height:420px;overflow-y:auto;padding:8px 0}
+  .mega-col + .mega-col{border-left:1px solid var(--line)}
+  .mega-row{
+    display:flex;align-items:center;justify-content:space-between;gap:6px;padding:9px 16px;
+    font-size:13px;color:var(--ink-soft);cursor:pointer;background:none;border:0;width:100%;text-align:left;font-family:inherit;
+  }
+  .mega-row:hover, .mega-row.active{background:var(--paper-2);color:var(--ink);font-weight:700}
+  .mega-row .cnt{font-size:11px;color:var(--ink-faint);font-weight:500}
+  .mega-row .arr{color:var(--ink-faint);font-size:11px}
+
+  .cat-crumb{font-size:12.5px;color:var(--ink-soft)}
+  .cat-crumb b{color:var(--ink)}
+  .cat-crumb .clear{margin-left:8px;color:var(--red-dark);font-weight:700;cursor:pointer;text-decoration:underline}
+
+  .cat-download{
+    margin-left:auto;display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;
+    color:var(--ink-soft);text-decoration:none;padding:8px 12px;border:1px solid var(--line);border-radius:100px;
+  }
+  .cat-download:hover{border-color:var(--thread);color:var(--ink)}
+  .cat-download svg{width:13px;height:13px}
+
+  .pagination{display:flex;align-items:center;justify-content:center;gap:6px;margin:26px 0 44px}
+  .pagination button{
+    min-width:34px;height:34px;padding:0 10px;border-radius:8px;border:1px solid var(--line);
+    background:var(--card);color:var(--ink-soft);font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;
+  }
+  .pagination button[aria-current="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .pagination button:disabled{opacity:.35;cursor:not-allowed}
+  .pagination .pg-info{font-size:12px;color:var(--ink-faint);margin:0 6px}
+
+  .goods-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:16px}
+  @media(max-width:820px){.goods-grid{grid-template-columns:repeat(2,1fr)}}
+  .gcard{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;display:flex;flex-direction:column;text-decoration:none;color:inherit;transition:transform .15s,border-color .15s}
+  .gcard:hover{transform:translateY(-2px);border-color:var(--thread)}
+  .gcard .thumb{aspect-ratio:1/1;position:relative;background:var(--paper-2)}
+  .gcard .thumb img{width:100%;height:100%;object-fit:cover}
+  .gcard .thumb .ph{
+    position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:6px;color:var(--ink-faint);font-size:11px;
+  }
+  .gcard .thumb .ph svg{width:26px;height:26px}
+  .gcard .body{padding:14px 14px 16px;display:flex;flex-direction:column;gap:6px;flex:1}
+  .ptag{align-self:flex-start;font-size:10.5px;font-weight:700;padding:3px 9px;border-radius:100px}
+  .ptag.general{background:var(--thread-soft);color:#1F5344}
+  .ptag.donate{background:var(--yellow-soft);color:var(--yellow-dark)}
+  .gcard .name{font-size:13px;font-weight:700;letter-spacing:-.01em;line-height:1.4;min-height:36px}
+  .gcard .seller{font-size:11px;color:var(--ink-faint)}
+  .gcard .price{font-size:14px;font-weight:800;margin-top:auto}
+  .gbtn{margin-top:9px;text-align:center;padding:9px;border-radius:100px;font-size:12.5px;font-weight:700}
+  .gbtn.general{background:var(--ink);color:#fff}
+  .gbtn.donate{background:var(--yellow-dark);color:#fff}
+  .gbtn.soldout{background:var(--paper-2);color:var(--ink-faint)}
+  .stock-tag{font-size:10.5px;color:var(--ink-faint)}
+  .rating-tag{font-size:10.5px;color:var(--yellow-dark);font-weight:700}
+  .rating-tag span{color:var(--ink-faint);font-weight:500;margin-left:2px}
+  .stock-tag.low{color:var(--red-dark);font-weight:700}
+  .soldout-badge{
+    position:absolute;inset:0;background:rgba(43,36,48,.55);color:#fff;font-size:13px;font-weight:800;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .cart-add{
+    margin-top:6px;width:100%;padding:8px;border-radius:100px;font-size:12px;font-weight:700;
+    background:var(--card);border:1px solid var(--ink);color:var(--ink);cursor:pointer;font-family:inherit;
+  }
+  .cart-add:hover{background:var(--paper-2)}
+  .cart-add:disabled{opacity:.4;cursor:not-allowed}
+
+  /* ── 결연 복지시설 예시 (포탈 리소스 재사용) ── */
+  .fac-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:8px 0 10px}
+  @media(max-width:820px){.fac-strip{grid-template-columns:repeat(2,1fr)}}
+  .fac-card{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--line);border-radius:var(--r-md);padding:10px;text-decoration:none;color:inherit}
+  .fac-card img{width:52px;height:52px;border-radius:var(--r-sm);object-fit:cover;flex:none;background:var(--line)}
+  .fac-card .t{font-size:12px;line-height:1.4}
+  .fac-card .t b{display:block;font-size:13px;color:var(--ink)}
+  .fac-card .t span{color:var(--ink-faint)}
+
+  .cta-box{
+    text-align:center;background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);
+    padding:30px 24px;margin:36px 0 60px;
+  }
+  .cta-box h3{font-family:var(--serif);font-size:18px;font-weight:700;margin-bottom:8px}
+  .cta-box p{font-size:13px;color:var(--ink-soft);margin-bottom:18px}
+  .cta-btn{display:inline-block;background:var(--thread);color:#fff;padding:13px 28px;border-radius:100px;font-size:14px;font-weight:700;text-decoration:none}
+
+  footer{background:var(--ink);color:var(--ink-faint);padding:30px 24px;font-size:12.5px;text-align:center}
+  footer a{color:var(--ink-faint);text-decoration:none;margin:0 10px}
+</style>
+</head>
+<body>
+
+<nav class="dnav">
+  <div class="dnav-in">
+    <a href="index.html" class="dbrand">나눔<em>이음</em>바자</a>
+    <div class="dnav-links">
+      <a href="#" class="on">전체 상품</a><a href="#">기부 물품</a><a href="bazaar-mypage.html">마이페이지</a>
+    </div>
+    <div class="dwho">
+      <span id="whoName">대구보육원님</span>
+      <a href="cart.html" class="cart-ico" aria-label="장바구니">
+        <svg class="lucide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
+        <span class="badge" id="cartBadge" style="display:none">0</span>
+      </a>
+      <button type="button" class="logout-btn" id="logoutBtn">로그아웃</button>
+      <a href="../nanumieum_portal.html" class="dback"><svg class="lucide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg> 포털</a>
+    </div>
+  </div>
+</nav>
+<div class="closed-note">나눔이음바자는 <b>결연 등록 복지시설만</b> 로그인해 이용할 수 있는 폐쇄몰입니다</div>
+
+<div class="wrap">
+
+  <div class="wallet">
+    <div class="wallet-main">
+      <div class="fac-id">
+        <span class="fi-thumb"><img id="facThumb" src="" alt="대구보육원"></span>
+        <a class="fi-link" id="facYtLink" href="#" target="_blank" rel="noopener">
+          <svg class="lucide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17"/><path d="m10 15 5-3-5-3z"/></svg>
+          결연 영상 보기
+        </a>
+      </div>
+      <div class="who">협의체 회원 복지시설 · <b id="whoNameB">대구보육원</b> 님</div>
+      <div class="amt"><span id="balanceAmt">354,000</span><small>원 사용 가능</small></div>
+      <div class="cap">결연 채널을 통해 모인 후원금이 전환된 잔액입니다.<br>나눔이음바자 물품 구매에만 사용할 수 있습니다.</div>
+    </div>
+    <div class="wallet-log">
+      <div class="t">최근 적립·구매 내역</div>
+      <ul id="ledgerList">
+        <li><span class="src">08.05 · 결연 채널 「이기운 아코디언」 후원금 적립</span><span class="plus">+32,000</span></li>
+        <li><span class="src">08.02 · 아동 간식 스낵 모음 구매</span><span class="minus">-7,510</span></li>
+        <li><span class="src">07.28 · 결연 채널 「이기운 아코디언」 후원금 적립</span><span class="plus">+58,000</span></li>
+      </ul>
+      <a href="bazaar-mypage.html" class="mypage-link">전체 내역 보기 →</a>
+    </div>
+  </div>
+
+  <div class="sec-head">
+    <h2>나눔이음바자 상품</h2>
+    <span>일반 상품은 잔액 차감 · 기부 물품은 무료 신청</span>
+  </div>
+
+  <div class="search-sort">
+    <input type="text" id="prodSearch" placeholder="상품명으로 검색">
+    <select id="prodSort">
+      <option value="new">최신순</option>
+      <option value="low">가격 낮은순</option>
+      <option value="high">가격 높은순</option>
+    </select>
+  </div>
+
+  <div class="cat-bar">
+    <div class="cat-menu-wrap">
+      <button type="button" class="cat-btn" id="catBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/></svg>
+        카테고리
+      </button>
+      <div class="mega-menu" id="megaMenu">
+        <div class="mega-col mega-major" id="megaMajor"></div>
+        <div class="mega-col mega-mid" id="megaMid"></div>
+        <div class="mega-col mega-minor" id="megaMinor"></div>
+      </div>
+    </div>
+    <div class="cat-crumb" id="catCrumb">전체 상품</div>
+    <a href="#" class="cat-download" id="catDownload">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      카테고리 JSON 다운로드
+    </a>
+  </div>
+
+  <div class="goods-grid" id="grid"></div>
+  <div class="pagination" id="pagination"></div>
+
+  <div class="sec-head" style="margin-top:44px">
+    <h2>결연 복지시설 예시</h2>
+    <span>이 복지시설들이 나눔이음바자를 이용합니다</span>
+  </div>
+  <div class="fac-strip" id="facStrip"></div>
+
+  <div class="cta-box">
+    <h3>판매자이신가요?</h3>
+    <p>나눔이음바자에 상품을 등록하면 전국 결연 복지시설이라는 새로운 판매처를 만납니다.</p>
+    <a href="../apply-seller.html" class="cta-btn">물품판매자 신청하기</a>
+  </div>
+
+</div>
+
+<footer>
+  나눔이음 사회복지시설 협의체 · 지역 복지시설과 크리에이터를 잇는 나눔 프로젝트 · 문의 look@nanumieum.example
+</footer>
+
+<script>
+  function fmt(n){ return n.toLocaleString('ko-KR'); }
+
+  /* ── 공용 상태 헬퍼: 로그인 시설·잔액·장바구니·원장 (localStorage) ── */
+  const DEFAULT_FACILITY = {n:'대구보육원', t:'아동양육시설/보육원', c:'이기운 아코디언', v:'MwkipVs8cS4'};
+  function getFacility(){
+    try{ const raw = localStorage.getItem('nb_facility'); if(raw) return JSON.parse(raw); }catch(e){}
+    return DEFAULT_FACILITY;
+  }
+  function getBalance(fac){
+    const key = 'nb_balance_'+fac.n;
+    if(localStorage.getItem(key)===null) localStorage.setItem(key, '354000');
+    return parseInt(localStorage.getItem(key),10);
+  }
+  function setBalance(fac, val){ localStorage.setItem('nb_balance_'+fac.n, String(val)); }
+  function getLedger(fac){
+    const key = 'nb_ledger_'+fac.n;
+    const raw = localStorage.getItem(key);
+    if(raw) return JSON.parse(raw);
+    const seed = [
+      {d:'08.05', src:`결연 채널 「${fac.c}」 후원금 적립`, amt:32000},
+      {d:'08.02', src:'아동 간식 스낵 모음 구매', amt:-7510},
+      {d:'07.28', src:`결연 채널 「${fac.c}」 후원금 적립`, amt:58000},
+    ];
+    localStorage.setItem(key, JSON.stringify(seed));
+    return seed;
+  }
+  function addLedger(fac, entry){
+    const key = 'nb_ledger_'+fac.n;
+    const list = getLedger(fac);
+    list.unshift(entry);
+    localStorage.setItem(key, JSON.stringify(list));
+  }
+  function getCart(){ return JSON.parse(localStorage.getItem('nb_cart')||'[]'); }
+  function setCart(c){ localStorage.setItem('nb_cart', JSON.stringify(c)); }
+  function addToCart(id, qty){
+    const cart = getCart();
+    const row = cart.find(r=>r.id===id);
+    if(row) row.qty += qty; else cart.push({id, qty});
+    setCart(cart);
+  }
+  function cartCount(){ return getCart().reduce((s,r)=>s+r.qty, 0); }
+  function updateCartBadge(){
+    const n = cartCount();
+    const badge = document.getElementById('cartBadge');
+    if(!badge) return;
+    badge.textContent = n;
+    badge.style.display = n>0 ? 'flex' : 'none';
+  }
+
+  const facility = getFacility();
+  document.querySelectorAll('#whoName').forEach(el=>el.textContent = facility.n+'님');
+  document.querySelectorAll('#whoNameB').forEach(el=>el.textContent = facility.n);
+  const logoutBtn = document.getElementById('logoutBtn');
+  if(logoutBtn) logoutBtn.addEventListener('click', ()=>{
+    localStorage.removeItem('nb_facility');
+    location.href = 'login.html';
+  });
+  updateCartBadge();
+
+  document.getElementById('facThumb').src = `https://i.ytimg.com/vi/${facility.v}/mqdefault.jpg`;
+  document.getElementById('facThumb').alt = facility.n;
+  document.getElementById('facYtLink').href = `https://www.youtube.com/watch?v=${facility.v}`;
+  document.getElementById('balanceAmt').textContent = fmt(getBalance(facility));
+
+  const ledgerListEl = document.getElementById('ledgerList');
+  const ledger = getLedger(facility).slice(0,3);
+  ledgerListEl.innerHTML = ledger.map(l=>`
+    <li><span class="src">${l.d} · ${l.src}</span><span class="${l.amt>=0?'plus':'minus'}">${l.amt>=0?'+':''}${l.amt.toLocaleString('ko-KR')}</span></li>`).join('');
+
+  /* ── 상품 데이터: JSON에서 fetch로 로드 ── */
+  let PRODUCTS = [];
+
+  const IMG_PLACEHOLDER = `<div class="ph"><svg class="lucide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-5-5L5 21"/></svg><span>상품 사진 준비중</span></div>`;
+
+  function card(p){
+    const soldout = p.stock <= 0;
+    const priceHtml = p.type==='donate'
+      ? `무료 신청${p.limit?` · ${p.limit}`:''}`
+      : `${fmt(p.price)}원`;
+    const btnHtml = soldout ? '품절' : (p.type==='donate' ? '무료로 신청하기' : '잔액으로 구매');
+    const stockHtml = soldout
+      ? ''
+      : `<span class="stock-tag ${p.stock<=3?'low':''}">${p.type==='donate' ? `잔여 ${p.stock}개` : `재고 ${p.stock}개`}</span>`;
+    const ratingHtml = (p.rating!=null && p.reviewCount!=null)
+      ? `<span class="rating-tag">★ ${p.rating} <span>(${p.reviewCount.toLocaleString('ko-KR')})</span></span>`
+      : '';
+    return `<div class="gcard-wrap">
+      <a class="gcard" href="bazaar-item.html?id=${p.id}">
+        <div class="thumb">
+          <img src="${p.image}" alt="${p.name}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+          ${IMG_PLACEHOLDER}
+          ${soldout ? '<div class="soldout-badge">품절</div>' : ''}
+        </div>
+        <div class="body">
+          <span class="ptag ${p.type}">${p.type==='donate'?'기부 물품':'일반 상품'}</span>
+          <div class="name">${p.name}</div>
+          <span class="seller">${p.seller}</span>
+          ${ratingHtml}
+          ${stockHtml}
+          <div class="price">${priceHtml}</div>
+          <div class="gbtn ${soldout?'soldout':p.type}">${btnHtml}</div>
+        </div>
+      </a>
+      <button type="button" class="cart-add" data-id="${p.id}" ${soldout?'disabled':''}>${soldout?'품절':'장바구니 담기'}</button>
+    </div>`;
+  }
+
+  const grid = document.getElementById('grid');
+  const pagination = document.getElementById('pagination');
+  const prodSearch = document.getElementById('prodSearch');
+  const prodSort = document.getElementById('prodSort');
+  const catBtn = document.getElementById('catBtn');
+  const megaMenu = document.getElementById('megaMenu');
+  const megaMajorEl = document.getElementById('megaMajor');
+  const megaMidEl = document.getElementById('megaMid');
+  const megaMinorEl = document.getElementById('megaMinor');
+  const catCrumb = document.getElementById('catCrumb');
+  const catDownload = document.getElementById('catDownload');
+  const API_BASE = 'https://backend-production-6b41.up.railway.app';
+  const PAGE_SIZE = 24;
+
+  let currentPage = 1;
+  let searchTimer = null;
+  let CATEGORY_TREE = [];
+  let activeMajor = '', activeMid = '', activeMinor = '';
+  let hoverMajor = '', hoverMid = '';
+
+  function sortParam(){
+    if(prodSort.value==='low') return 'low';
+    if(prodSort.value==='high') return 'high';
+    return '';
+  }
+
+  async function render(){
+    const params = new URLSearchParams({
+      page: currentPage,
+      limit: PAGE_SIZE,
+      q: prodSearch.value.trim(),
+      sort: sortParam(),
+    });
+    if(activeMajor) params.set('major', activeMajor);
+    if(activeMid) params.set('mid', activeMid);
+    if(activeMinor) params.set('minor', activeMinor);
+
+    const res = await fetch(`${API_BASE}/api/products?${params.toString()}`);
+    const data = await res.json();
+    PRODUCTS = data.items;
+
+    grid.innerHTML = PRODUCTS.length
+      ? PRODUCTS.map(card).join('')
+      : '<p style="grid-column:1/-1;color:var(--ink-faint);font-size:13px;padding:20px 0">검색 결과가 없습니다.</p>';
+
+    grid.querySelectorAll('.cart-add').forEach(btn=>{
+      btn.addEventListener('click', (e)=>{
+        e.preventDefault();
+        const p = PRODUCTS.find(x=>x.id===btn.dataset.id);
+        addToCart(p.id, 1);
+        btn.textContent = '장바구니에 담김';
+        setTimeout(()=>{ btn.textContent = '장바구니 담기'; }, 1200);
+        updateCartBadge();
+      });
+    });
+
+    renderPagination(data.page, data.totalPages, data.total);
+  }
+
+  function renderPagination(page, totalPages, total){
+    if(totalPages<=1){ pagination.innerHTML = ''; return; }
+    const windowStart = Math.max(1, page-2);
+    const windowEnd = Math.min(totalPages, windowStart+4);
+    let html = `<button type="button" data-p="${page-1}" ${page<=1?'disabled':''}>이전</button>`;
+    for(let i=windowStart;i<=windowEnd;i++){
+      html += `<button type="button" data-p="${i}" aria-current="${i===page}">${i}</button>`;
+    }
+    html += `<button type="button" data-p="${page+1}" ${page>=totalPages?'disabled':''}>다음</button>`;
+    html += `<span class="pg-info">총 ${total.toLocaleString('ko-KR')}개</span>`;
+    pagination.innerHTML = html;
+
+    pagination.querySelectorAll('button[data-p]').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        currentPage = parseInt(btn.dataset.p, 10);
+        render();
+        grid.scrollIntoView({behavior:'smooth', block:'start'});
+      });
+    });
+  }
+
+  /* ── 카테고리 메가메뉴 (대분류→중분류→소분류) ── */
+  function renderMegaMajor(){
+    megaMajorEl.innerHTML = CATEGORY_TREE.map(m=>`
+      <button type="button" class="mega-row" data-major="${m.major}">
+        <span>${m.major}</span><span class="cnt">${m.count}</span>
+      </button>`).join('');
+  }
+
+  function renderMegaMid(major){
+    const node = CATEGORY_TREE.find(m=>m.major===major);
+    megaMidEl.innerHTML = node ? node.mids.map(mi=>`
+      <button type="button" class="mega-row" data-mid="${mi.mid}">
+        <span>${mi.mid}</span><span class="cnt">${mi.count}</span>
+      </button>`).join('') : '';
+  }
+
+  function renderMegaMinor(major, mid){
+    const node = CATEGORY_TREE.find(m=>m.major===major);
+    const midNode = node ? node.mids.find(mi=>mi.mid===mid) : null;
+    megaMinorEl.innerHTML = midNode ? midNode.minors.map(mn=>`
+      <button type="button" class="mega-row" data-minor="${mn.name}">
+        <span>${mn.name}</span><span class="cnt">${mn.count}</span>
+      </button>`).join('') : '';
+  }
+
+  function updateCrumb(){
+    if(!activeMajor){ catCrumb.innerHTML = '전체 상품'; return; }
+    const parts = [activeMajor, activeMid, activeMinor].filter(Boolean);
+    catCrumb.innerHTML = `<b>${parts.join(' > ')}</b><span class="clear" id="crumbClear">전체보기</span>`;
+    document.getElementById('crumbClear').addEventListener('click', ()=>{
+      activeMajor = activeMid = activeMinor = '';
+      currentPage = 1;
+      updateCrumb();
+      render();
+    });
+  }
+
+  function selectCategory(major, mid, minor){
+    activeMajor = major || '';
+    activeMid = mid || '';
+    activeMinor = minor || '';
+    currentPage = 1;
+    updateCrumb();
+    render();
+    megaMenu.classList.remove('open');
+  }
+
+  megaMajorEl.addEventListener('mouseover', (e)=>{
+    const btn = e.target.closest('.mega-row');
+    if(!btn) return;
+    hoverMajor = btn.dataset.major;
+    megaMajorEl.querySelectorAll('.mega-row').forEach(b=>b.classList.toggle('active', b===btn));
+    renderMegaMid(hoverMajor);
+    megaMinorEl.innerHTML = '';
+  });
+  megaMajorEl.addEventListener('click', (e)=>{
+    const btn = e.target.closest('.mega-row');
+    if(!btn) return;
+    selectCategory(btn.dataset.major, '', '');
+  });
+  megaMidEl.addEventListener('mouseover', (e)=>{
+    const btn = e.target.closest('.mega-row');
+    if(!btn) return;
+    hoverMid = btn.dataset.mid;
+    megaMidEl.querySelectorAll('.mega-row').forEach(b=>b.classList.toggle('active', b===btn));
+    renderMegaMinor(hoverMajor, hoverMid);
+  });
+  megaMidEl.addEventListener('click', (e)=>{
+    const btn = e.target.closest('.mega-row');
+    if(!btn) return;
+    selectCategory(hoverMajor, btn.dataset.mid, '');
+  });
+  megaMinorEl.addEventListener('click', (e)=>{
+    const btn = e.target.closest('.mega-row');
+    if(!btn) return;
+    selectCategory(hoverMajor, hoverMid, btn.dataset.minor);
+  });
+
+  catBtn.addEventListener('click', ()=>{
+    megaMenu.classList.toggle('open');
+  });
+  document.addEventListener('click', (e)=>{
+    if(!e.target.closest('.cat-menu-wrap')) megaMenu.classList.remove('open');
+  });
+
+  async function loadCategoryTree(){
+    const res = await fetch(`${API_BASE}/api/categories/tree`);
+    CATEGORY_TREE = await res.json();
+    renderMegaMajor();
+  }
+
+  catDownload.addEventListener('click', (e)=>{
+    e.preventDefault();
+    const blob = new Blob([JSON.stringify(CATEGORY_TREE, null, 2)], {type:'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'nanumieumbaza-categories.json';
+    a.click();
+    URL.revokeObjectURL(url);
+  });
+
+  prodSearch.addEventListener('input', ()=>{
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(()=>{ currentPage = 1; render(); }, 300);
+  });
+  prodSort.addEventListener('change', ()=>{ currentPage = 1; render(); });
+
+  loadCategoryTree();
+  render();
+
+  /* ── 결연 복지시설 예시 (make-link.html의 FACILITIES 재사용 + 유튜브 썸네일 링크) ── */
+  const FACILITIES_SAMPLE = [
+    {n:"대구보육원",c:"이기운 아코디언",v:"MwkipVs8cS4"},
+    {n:"경동원(수원)",c:"개천에서 용재난다",v:"Y1LqqbS6HI4"},
+    {n:"포천노인복지관",c:"이원발TV",v:"DIkOLCpu_nM"},
+    {n:"청운보육원",c:"방충망대장",v:"YMjajawG-4g"},
+  ];
+  document.getElementById('facStrip').innerHTML = FACILITIES_SAMPLE.map(f=>`
+    <a class="fac-card" href="../nanumieum_portal.html">
+      <img src="https://i.ytimg.com/vi/${f.v}/mqdefault.jpg" alt="${f.n}">
+      <span class="t"><b>${f.n}</b><span>${f.c} 결연</span></span>
+    </a>`).join('');
+</script>
+
+</body>
+</html>

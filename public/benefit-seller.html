@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>물품판매자 혜택보기 | 나눔이음</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/gh/sun-typeface/SUIT@2/fonts/variable/woff2/SUIT-Variable.css" rel="stylesheet">
+<style>
+  @font-face{
+    font-family:'Jalnan';
+    src:url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.2/JalnanOTF00.woff') format('woff');
+    font-weight:normal;font-style:normal;font-display:swap;
+  }
+  :root{
+    --paper:#FBF7F7;--paper-2:#F6EFEE;--ink:#2B2430;--ink-soft:#6B5F68;--ink-faint:#A79AA0;
+    --red:#EE6F93;--red-dark:#C94F71;--thread:#45BC92;--thread-soft:#DEF6EC;
+    --yellow:#F6C640;--yellow-soft:#FFF3D2;--yellow-dark:#B5860E;
+    --line:#F0E1E6;--card:#FFFFFF;--gray:#8A7D85;
+    --r-lg:22px;--r-md:14px;--r-sm:10px;--wrap:760px;
+    --sans:'SUIT Variable','SUIT',-apple-system,BlinkMacSystemFont,'Malgun Gothic',sans-serif;
+    --serif:'Jalnan','Gowun Batang','Nanum Myeongjo',serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:var(--sans);color:var(--ink);background:var(--paper);line-height:1.7;-webkit-font-smoothing:antialiased}
+  img{max-width:100%;display:block}
+  .lucide{width:1em;height:1em;display:inline-block;vertical-align:-0.15em;flex:none}
+  .wrap{max-width:var(--wrap);margin:0 auto;padding:0 24px}
+
+  .dnav{position:sticky;top:0;z-index:50;background:rgba(251,247,247,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+  .dnav-in{max-width:1040px;margin:0 auto;padding:0 24px;height:58px;display:flex;align-items:center;justify-content:space-between}
+  .dbrand{font-family:var(--serif);font-weight:700;font-size:18px;letter-spacing:-.02em;color:var(--ink);text-decoration:none}
+  .dbrand em{font-style:normal;color:var(--red)}
+  .dback{font-size:13.5px;color:var(--ink-soft);text-decoration:none}
+  .dback:hover{color:var(--ink)}
+
+  .banner{
+    background:linear-gradient(135deg,var(--yellow-soft) 0%,var(--paper-2) 55%,var(--paper-2) 100%);
+    position:relative;overflow:hidden;padding:52px 0 46px;
+  }
+  .banner .inner{max-width:1040px;margin:0 auto;width:100%;padding:0 24px;position:relative;z-index:2}
+  .banner .eyebrow{
+    display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:var(--yellow-dark);
+    background:#fff;padding:7px 16px;border-radius:100px;margin-bottom:16px;
+  }
+  .banner .eyebrow::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--yellow)}
+  .banner h1{
+    font-family:var(--serif);font-size:clamp(22px,3.4vw,32px);font-weight:700;line-height:1.5;
+    color:var(--ink);letter-spacing:-.02em;margin-bottom:10px;
+  }
+  .banner p{font-size:14.5px;color:var(--ink-soft);max-width:520px}
+  .banner .heart{position:absolute;opacity:.8;pointer-events:none}
+
+  .section{padding:40px 0 10px}
+  .sec-head{border-bottom:2px solid var(--ink);padding-bottom:14px;margin-bottom:8px}
+  .sec-head h2{font-size:20px;font-weight:800}
+
+  .benefit-list{display:flex;flex-direction:column;gap:14px;margin:22px 0}
+  .brow{
+    display:grid;grid-template-columns:56px 1fr;gap:16px;background:var(--card);
+    border:1px solid var(--line);border-radius:var(--r-lg);padding:20px 22px;
+  }
+  .brow .bnum{
+    width:40px;height:40px;border-radius:50%;background:var(--yellow-soft);color:var(--yellow-dark);
+    display:grid;place-items:center;font-weight:800;font-size:16px;
+  }
+  .brow h3{font-size:16px;font-weight:700;margin-bottom:6px;letter-spacing:-.01em}
+  .brow p{font-size:13.5px;color:var(--ink-soft);line-height:1.7}
+
+  /* ── brow 안 미니 시각자료 ── */
+  .b-visual{margin-top:14px}
+  .reach-stat{display:flex;gap:10px;flex-wrap:wrap}
+
+  /* ── 나눔이음바자 화면 예시 이미지 ── */
+  .bazaar-shot{margin-top:16px}
+  .bazaar-shot .lab{font-size:13px;color:var(--ink-soft);margin-bottom:10px}
+  .bazaar-shot img{
+    width:100%;border-radius:var(--r-md);border:1px solid var(--line);
+    box-shadow:0 18px 40px -28px rgba(70,40,18,.35);
+  }
+  .reach-stat .rs{
+    background:var(--paper-2);border-radius:var(--r-sm);padding:12px 16px;text-align:center;flex:1;min-width:90px;
+  }
+  .reach-stat .rs b{display:block;font-family:var(--serif);font-size:19px;color:var(--yellow-dark)}
+  .reach-stat .rs span{font-size:11px;color:var(--ink-soft)}
+
+  .compare2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .compare2 .c2{
+    border-radius:var(--r-sm);padding:12px 14px;font-size:12px;line-height:1.6;
+  }
+  .compare2 .c2.bad{background:var(--paper-2);color:var(--ink-soft)}
+  .compare2 .c2.good{background:var(--thread-soft);color:#1F5344}
+  .compare2 .c2 b{display:block;font-size:12.5px;margin-bottom:4px}
+
+  .flow3{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .flow3 .f3{
+    display:flex;align-items:center;gap:6px;background:var(--paper-2);border-radius:100px;
+    padding:9px 14px;font-size:12px;font-weight:600;color:var(--ink-soft);
+  }
+  .flow3 .f3.win{background:var(--yellow-soft);color:var(--yellow-dark)}
+  .flow3 .arr{color:var(--ink-faint);font-size:14px}
+
+  /* ── 나눔이음바자 미리보기 목업 ── */
+  .bazaar-preview{margin-top:14px}
+  .bazaar-preview > p.lab{font-size:13.5px;color:var(--ink-soft);margin-bottom:14px}
+  .bz-frame{
+    background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);
+    padding:18px;box-shadow:0 18px 40px -28px rgba(70,40,18,.35);
+  }
+  .bz-head{
+    display:flex;justify-content:space-between;align-items:center;
+    padding-bottom:12px;margin-bottom:14px;border-bottom:1px solid var(--line);
+  }
+  .bz-head b{font-size:13.5px}
+  .bz-head span{font-size:11.5px;color:var(--thread);font-weight:700}
+  .bz-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+  @media(max-width:640px){.bz-grid{grid-template-columns:repeat(2,1fr)}}
+  .bz-item{border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden;position:relative}
+  .bz-item .bz-ico{
+    aspect-ratio:1/1;display:grid;place-items:center;font-size:26px;background:var(--paper-2);
+  }
+  .bz-item .bz-tag{
+    position:absolute;top:6px;left:6px;font-size:9.5px;font-weight:700;
+    padding:2px 7px;border-radius:100px;background:var(--yellow);color:#5C4108;
+  }
+  .bz-item.donate .bz-tag{background:var(--thread);color:#fff}
+  .bz-item .bz-body{padding:8px 9px 10px}
+  .bz-item .bz-body b{display:block;font-size:11.5px;font-weight:700;margin-bottom:2px}
+  .bz-item .bz-body span{font-size:11px;color:var(--ink-soft)}
+
+  .duel2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:26px 0}
+  @media(max-width:600px){.duel2{grid-template-columns:1fr}}
+  .duel2 .dcard{
+    background:var(--card);border:2px solid var(--line);border-radius:var(--r-lg);padding:22px 22px 20px;
+  }
+  .duel2 .dcard.win{border-color:var(--yellow)}
+  .duel2 .dcard b{display:block;font-size:15.5px;font-weight:700;margin-bottom:8px}
+  .duel2 .dcard p{font-size:13px;color:var(--ink-soft);line-height:1.7;margin-bottom:12px}
+  .duel2 .dtag{
+    display:inline-block;font-size:12px;font-weight:700;padding:5px 12px;border-radius:100px;
+    background:var(--paper-2);color:var(--ink-soft);
+  }
+  .duel2 .dcard.win .dtag{background:var(--yellow-soft);color:var(--yellow-dark)}
+
+  .highlight{
+    background:var(--thread-soft);border:1px solid #C7E9DC;border-radius:var(--r-md);
+    padding:18px 20px;margin:28px 0;
+  }
+  .highlight b{display:block;font-size:15px;color:#1F5344;margin-bottom:5px}
+  .highlight span{font-size:13.5px;color:#1F5344;line-height:1.7}
+
+  .cta-box{
+    text-align:center;background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);
+    padding:36px 24px;margin:36px 0 60px;
+  }
+  .cta-box h3{font-family:var(--serif);font-size:20px;font-weight:700;margin-bottom:10px;letter-spacing:-.01em}
+  .cta-box p{font-size:13.5px;color:var(--ink-soft);margin-bottom:22px}
+  .cta-btn{
+    display:inline-block;background:var(--yellow-dark);color:#fff;padding:15px 34px;border-radius:100px;
+    font-size:15px;font-weight:700;text-decoration:none;transition:background .15s;
+  }
+  .cta-btn:hover{background:#96700B}
+
+  footer{background:var(--ink);color:var(--ink-faint);padding:30px 24px;font-size:12.5px;text-align:center}
+  footer a{color:var(--ink-faint);text-decoration:none;margin:0 10px}
+  footer a:hover{color:#fff}
+</style>
+</head>
+<body>
+
+<nav class="dnav">
+  <div class="dnav-in">
+    <a href="nanumieum_portal.html" class="dbrand">나눔<em>이음</em></a>
+    <a href="nanumieum_portal.html" class="dback"><svg class="lucide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg> 포털로 돌아가기</a>
+  </div>
+</nav>
+
+<section class="banner">
+  <svg class="heart" style="top:20%;left:6%;width:24px" viewBox="0 0 24 24" fill="var(--yellow-dark)"><path d="M12 21s-7.5-4.6-10.2-9.1C.2 9.1 1 5.6 4.2 4.4c2-.8 4.1 0 5.3 1.7l2.5 3.5 2.5-3.5c1.2-1.7 3.3-2.5 5.3-1.7 3.2 1.2 4 4.7 2.4 7.5C19.5 16.4 12 21 12 21z"/></svg>
+  <svg class="heart" style="bottom:16%;right:8%;width:30px" viewBox="0 0 24 24" fill="var(--thread)"><path d="M12 21s-7.5-4.6-10.2-9.1C.2 9.1 1 5.6 4.2 4.4c2-.8 4.1 0 5.3 1.7l2.5 3.5 2.5-3.5c1.2-1.7 3.3-2.5 5.3-1.7 3.2 1.2 4 4.7 2.4 7.5C19.5 16.4 12 21 12 21z"/></svg>
+  <div class="inner">
+    <p class="eyebrow">물품판매자 혜택보기</p>
+    <h1>전국 복지시설이라는<br>새로운 판매처를 만나세요</h1>
+    <p>나눔이음바자에 물품을 등록하면 판매도, 기부도 한 곳에서 할 수 있습니다.</p>
+  </div>
+</section>
+
+<div class="wrap">
+  <div class="section">
+    <div class="sec-head"><h2>나눔이음바자 판매자가 받는 혜택</h2></div>
+
+    <div class="benefit-list">
+      <div class="brow">
+        <div class="bnum">1</div>
+        <div>
+          <h3>새로운 판매처 확보</h3>
+          <p>협의체 회원 복지시설들이 기부금으로 직접 구매하는 전용 장터입니다.
+             기존에 닿지 않던 전국 복지시설이라는 새로운 고객층이 열립니다.</p>
+          <div class="b-visual reach-stat">
+            <div class="rs"><b>26곳+</b><span>결연 복지시설</span></div>
+            <div class="rs"><b>347개+</b><span>결연 채널</span></div>
+            <div class="rs"><b>5개</b><span>복지시설 유형</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="brow">
+        <div class="bnum">2</div>
+        <div>
+          <h3>기부 물품 100% 손금처리</h3>
+          <p>판매 대신 기부로 등록한 물품은 지정된 절차에 따라 100% 손금(필요경비)
+             처리가 가능합니다. 재고를 나눔으로 전환하면서 세제 혜택도 챙길 수 있습니다.</p>
+          <div class="b-visual compare2">
+            <div class="c2 bad"><b>재고로 남기면</b>보관비 발생, 시간이 지날수록 가치 하락</div>
+            <div class="c2 good"><b>기부로 등록하면</b>필요한 곳에 전달 + 100% 손금처리</div>
+          </div>
+        </div>
+      </div>
+      <div class="brow">
+        <div class="bnum">3</div>
+        <div>
+          <h3>판매와 기부를 한 화면에서</h3>
+          <p>물품 등록 시 "판매"와 "기부" 중 선택할 수 있어, 같은 상품을 팔면서
+             일부는 기부로 함께 등록할 수 있습니다.</p>
+
+          <div class="b-visual duel2">
+            <div class="dcard">
+              <b>판매 등록</b>
+              <p>복지시설이 기부금 잔액으로 구매하는 일반 상품으로 등록합니다.</p>
+              <span class="dtag">정상 대금 정산</span>
+            </div>
+            <div class="dcard win">
+              <b>기부 등록</b>
+              <p>대가 없이 복지시설에 제공하는 기부 물품으로 등록합니다.</p>
+              <span class="dtag">100% 손금처리 대상</span>
+            </div>
+          </div>
+
+          <div class="b-visual bazaar-shot">
+            <p class="lab">나눔이음바자 화면 미리보기</p>
+            <img src="images/bazaar-example.jpg" alt="나눔이음바자 화면 미리보기 — 등록한 판매 상품과 기부 물품이 함께 노출됩니다">
+            <p class="lab" style="margin-top:14px">
+              같은 등록 화면에서 "판매"와 "기부" 중 골라 등록하면, 복지시설에는 각각
+              다른 표시로 노출됩니다.
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="brow">
+        <div class="bnum">4</div>
+        <div>
+          <h3>안전한 정산</h3>
+          <p>복지시설의 수령 확인 이후 정산되는 방식으로, 배송 후 대금을 못 받는
+             걱정 없이 거래할 수 있습니다.</p>
+          <div class="b-visual flow3">
+            <span class="f3"><svg class="lucide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z"/><path d="M12 22V12"/><polyline points="3.29 7 12 12 20.71 7"/><path d="m7.5 4.27 9 5.15"/></svg> 배송</span>
+            <span class="arr"><svg class="lucide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
+            <span class="f3"><svg class="lucide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg> 복지시설 수령 확인</span>
+            <span class="arr"><svg class="lucide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
+            <span class="f3 win"><svg class="lucide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg> 대금 정산</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cta-box">
+      <h3>지금 판매자로 등록해보세요</h3>
+      <a href="apply-seller.html" class="cta-btn">물품판매자 신청하기</a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p>나눔이음 사회복지시설 협의체 · 지역 복지시설과 크리에이터를 잇는 나눔 프로젝트 · 문의 look@nanumieum.example</p>
+  <p style="margin-top:8px"><a href="#">이용약관</a><a href="#">개인정보처리방침</a><a href="nanumieum_portal.html">포털로 돌아가기</a></p>
+</footer>
+
+</body>
+</html>

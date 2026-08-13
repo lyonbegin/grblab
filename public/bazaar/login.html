@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>로그인 | 나눔이음바자</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/gh/sun-typeface/SUIT@2/fonts/variable/woff2/SUIT-Variable.css" rel="stylesheet">
+<style>
+  @font-face{
+    font-family:'Jalnan';
+    src:url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.2/JalnanOTF00.woff') format('woff');
+    font-weight:normal;font-style:normal;font-display:swap;
+  }
+  :root{
+    --paper:#FBF7F7;--paper-2:#F6EFEE;--ink:#2B2430;--ink-soft:#6B5F68;--ink-faint:#A79AA0;
+    --red:#EE6F93;--red-dark:#C94F71;--thread:#45BC92;--thread-soft:#DEF6EC;
+    --line:#F0E1E6;--card:#FFFFFF;--r-lg:22px;--r-md:14px;--r-sm:10px;--wrap:560px;
+    --sans:'SUIT Variable','SUIT',-apple-system,BlinkMacSystemFont,'Malgun Gothic',sans-serif;
+    --serif:'Jalnan','Gowun Batang','Nanum Myeongjo',serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:var(--sans);color:var(--ink);background:var(--paper);line-height:1.7;-webkit-font-smoothing:antialiased}
+  .lucide{width:1em;height:1em;display:inline-block;vertical-align:-0.15em;flex:none}
+  .wrap{max-width:var(--wrap);margin:0 auto;padding:0 24px}
+
+  .dnav{position:sticky;top:0;z-index:50;background:rgba(251,247,247,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+  .dnav-in{max-width:1040px;margin:0 auto;padding:0 24px;height:58px;display:flex;align-items:center;justify-content:space-between}
+  .dbrand{font-family:var(--serif);font-weight:700;font-size:18px;letter-spacing:-.02em;color:var(--ink);text-decoration:none}
+  .dbrand em{font-style:normal;color:var(--red)}
+  .dback{font-size:13.5px;color:var(--ink-soft);text-decoration:none}
+
+  .head{padding:44px 0 8px;text-align:center}
+  .head .tag{
+    display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:#1F5344;
+    background:var(--thread-soft);padding:7px 16px;border-radius:100px;margin-bottom:16px;
+  }
+  .head h1{font-family:var(--serif);font-size:22px;font-weight:700;letter-spacing:-.01em;margin-bottom:8px}
+  .head p{font-size:13.5px;color:var(--ink-soft)}
+
+  .note{
+    background:var(--card);border:1px solid var(--line);border-radius:var(--r-md);
+    padding:14px 16px;margin:24px 0;font-size:12.5px;color:var(--ink-soft);line-height:1.8;
+  }
+
+  .fac-search{
+    width:100%;border:1px solid var(--line);border-radius:100px;padding:12px 18px;
+    font-family:inherit;font-size:14px;color:var(--ink);background:var(--card);outline:none;
+    margin-bottom:16px;
+  }
+  .fac-search:focus{border-color:var(--thread)}
+
+  .fac-list{display:flex;flex-direction:column;gap:8px;margin-bottom:50px;max-height:420px;overflow-y:auto}
+  .fac-row{
+    display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);
+    border-radius:var(--r-md);padding:11px 14px;cursor:pointer;text-align:left;font-family:inherit;width:100%;
+    transition:border-color .15s;
+  }
+  .fac-row:hover{border-color:var(--thread)}
+  .fac-row .ft{width:52px;height:36px;border-radius:6px;overflow:hidden;flex:none;background:var(--paper-2)}
+  .fac-row .ft img{width:100%;height:100%;object-fit:cover}
+  .fac-row .fn{flex:1;min-width:0}
+  .fac-row .fn b{display:block;font-size:13.5px;font-weight:700}
+  .fac-row .fn span{font-size:11px;color:var(--ink-faint)}
+  .fac-row .arr{flex:none;color:var(--ink-faint)}
+
+  footer{background:var(--ink);color:var(--ink-faint);padding:30px 24px;font-size:12.5px;text-align:center}
+</style>
+</head>
+<body>
+
+<nav class="dnav">
+  <div class="dnav-in">
+    <a href="index.html" class="dbrand">나눔<em>이음</em>바자</a>
+    <a href="index.html" class="dback">← 나눔이음바자 홈</a>
+  </div>
+</nav>
+
+<div class="wrap">
+  <div class="head">
+    <span class="tag">복지시설 로그인</span>
+    <h1>결연 복지시설로 로그인</h1>
+    <p>협의체에 등록된 복지시설만 나눔이음바자를 이용할 수 있습니다.</p>
+  </div>
+
+  <div class="note">
+    실제 서비스에서는 계정(아이디·비밀번호)으로 로그인하지만, 이 화면은 시안이라
+    아래 목록에서 복지시설을 선택하면 그 시설로 로그인됩니다.
+  </div>
+
+  <input type="text" id="facSearch" class="fac-search" placeholder="복지시설명으로 검색">
+  <div class="fac-list" id="facList"></div>
+</div>
+
+<footer>
+  나눔이음 사회복지시설 협의체 · 지역 복지시설과 크리에이터를 잇는 나눔 프로젝트 · 문의 look@nanumieum.example
+</footer>
+
+<script>
+  const FACILITIES = [{n:"경동원(수원)",t:"영유아 보육시설",c:"개천에서 용재난다",v:"Y1LqqbS6HI4"},{n:"조은나무지역아동센터",t:"지역아동센터",c:"조은",v:"7M_rAFgX1b8"},{n:"남양주시지역아동센터",t:"지역아동센터",c:"복지학교",v:"-0NXL48xMEU"},{n:"동산지역아동센터",t:"지역아동센터",c:"봄앤이야기",v:"ME789zEGBNI"},{n:"반월지역아동센터",t:"지역아동센터",c:"고경률",v:"2ClgWV1CTdU"},{n:"삼전지역아동센터",t:"지역아동센터",c:"CCMHUB Official",v:"iGZD_6LKMEo"},{n:"대구보육원",t:"아동양육시설/보육원",c:"이기운 아코디언",v:"MwkipVs8cS4"},{n:"명륜보육원",t:"아동양육시설/보육원",c:"도다미즘",v:"hJaaLZeldXA"},{n:"실로암보육원",t:"아동양육시설/보육원",c:"욕쟁이빵실이이모",v:"2O1L8lsptPk"},{n:"인천보육원",t:"아동양육시설/보육원",c:"HAUS 에어컨 이야기",v:"CVYNujaRCJ0"},{n:"청운보육원",t:"아동양육시설/보육원",c:"방충망대장",v:"YMjajawG-4g"},{n:"성보재활원",t:"장애인복지",c:"성보재활원",v:"7YvmiKC4Bts"},{n:"경상북도시각장애인복지관",t:"장애인복지",c:"시각장애인 TV 김일근이 사는 세상",v:"ROjz-BTOKfE"},{n:"광명장애인복지관",t:"장애인복지",c:"클린인피니티",v:"axjax0Njf48"},{n:"광양장애인복지관",t:"장애인복지",c:"광양장복 TV",v:"U1snwPmZLJQ"},{n:"광주서구장애인복지관",t:"장애인복지",c:"문은주(무지개사랑)",v:"marZcjF7NIQ"},{n:"포천노인복지관",t:"노인복지",c:"이원발TV",v:"DIkOLCpu_nM"},{n:"미추홀노인복지관",t:"노인복지",c:"김윤서심리운동발달센터",v:"CfcclUJn-TE"},{n:"부평노인복지관",t:"노인복지",c:"가체짱tv",v:"tRKffaEo9xY"},{n:"용강노인복지관",t:"노인복지",c:"고운향기",v:"g7rDuvtF6rU"},{n:"화성시서부노인복지관",t:"노인복지",c:"바우새미TV(심 문보)",v:"AXgK9K417Rg"},{n:"그라테스요양원",t:"노인복지",c:"폴라리스색소폰 클럽",v:"G05yOjElS4Y"},{n:"금천노인종합복지관",t:"기타복지시설",c:"화이트샌즈",v:"VvmfWicHkMk"},{n:"마포복지관",t:"기타복지시설",c:"탁이랜드 takiland",v:"3iCYf9VYbSc"},{n:"무더위쉼터",t:"기타복지시설",c:"KTV  다큐",v:"Aaqd4FC6nps"},{n:"비대면복지관",t:"기타복지시설",c:"할머니의 리포트 Grandma Report",v:"KgDLy82_kSM"}];
+
+  const list = document.getElementById('facList');
+  const search = document.getElementById('facSearch');
+
+  function render(){
+    const q = search.value.trim().toLowerCase();
+    const filtered = FACILITIES.filter(f => !q || f.n.toLowerCase().includes(q));
+    list.innerHTML = filtered.map(f => `
+      <button type="button" class="fac-row" data-n="${f.n}">
+        <span class="ft"><img src="https://i.ytimg.com/vi/${f.v}/mqdefault.jpg" alt=""></span>
+        <span class="fn"><b>${f.n}</b><span>${f.t} · ${f.c} 결연</span></span>
+        <span class="arr"><svg class="lucide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></span>
+      </button>`).join('');
+
+    list.querySelectorAll('.fac-row').forEach(row=>{
+      row.addEventListener('click', ()=>{
+        const name = row.dataset.n;
+        const fac = FACILITIES.find(f=>f.n===name);
+        localStorage.setItem('nb_facility', JSON.stringify(fac));
+        if(!localStorage.getItem('nb_balance_'+name)){
+          localStorage.setItem('nb_balance_'+name, '354000');
+        }
+        location.href = 'bazaar.html';
+      });
+    });
+  }
+  search.addEventListener('input', render);
+  render();
+</script>
+</body>
+</html>

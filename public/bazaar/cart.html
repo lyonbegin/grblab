@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>장바구니 | 나눔이음바자</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/gh/sun-typeface/SUIT@2/fonts/variable/woff2/SUIT-Variable.css" rel="stylesheet">
+<style>
+  @font-face{
+    font-family:'Jalnan';
+    src:url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.2/JalnanOTF00.woff') format('woff');
+    font-weight:normal;font-style:normal;font-display:swap;
+  }
+  :root{
+    --paper:#FBF7F7;--paper-2:#F6EFEE;--ink:#2B2430;--ink-soft:#6B5F68;--ink-faint:#A79AA0;
+    --red:#EE6F93;--red-dark:#C94F71;--thread:#45BC92;--thread-soft:#DEF6EC;
+    --yellow-dark:#B5860E;--yellow-soft:#FFF3D2;
+    --line:#F0E1E6;--card:#FFFFFF;--r-lg:22px;--r-md:14px;--r-sm:10px;--wrap:820px;
+    --sans:'SUIT Variable','SUIT',-apple-system,BlinkMacSystemFont,'Malgun Gothic',sans-serif;
+    --serif:'Jalnan','Gowun Batang','Nanum Myeongjo',serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:var(--sans);color:var(--ink);background:var(--paper);line-height:1.7;-webkit-font-smoothing:antialiased}
+  .lucide{width:1em;height:1em;display:inline-block;vertical-align:-0.15em;flex:none}
+  .wrap{max-width:var(--wrap);margin:0 auto;padding:0 24px}
+
+  .dnav{position:sticky;top:0;z-index:50;background:rgba(251,247,247,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+  .dnav-in{max-width:var(--wrap);margin:0 auto;padding:0 24px;height:58px;display:flex;align-items:center;justify-content:space-between}
+  .dbrand{font-family:var(--serif);font-weight:700;font-size:18px;letter-spacing:-.02em;color:var(--ink);text-decoration:none}
+  .dbrand em{font-style:normal;color:var(--red)}
+  .dback{font-size:13.5px;color:var(--ink-soft);text-decoration:none;display:flex;align-items:center;gap:5px}
+
+  h1{font-family:var(--serif);font-size:21px;font-weight:700;margin:30px 0 20px;letter-spacing:-.01em}
+
+  .empty{
+    text-align:center;padding:60px 20px;color:var(--ink-faint);font-size:13.5px;
+  }
+  .empty a{color:var(--thread);font-weight:700;text-decoration:none}
+
+  .citem{
+    display:grid;grid-template-columns:64px 1fr auto auto auto;gap:14px;align-items:center;
+    background:var(--card);border:1px solid var(--line);border-radius:var(--r-md);padding:14px 16px;margin-bottom:10px;
+  }
+  @media(max-width:560px){.citem{grid-template-columns:48px 1fr;grid-template-areas:"img name" "img qty" "img price";row-gap:4px}}
+  .citem .cimg{width:64px;height:64px;border-radius:8px;background:var(--paper-2);display:grid;place-items:center;color:var(--ink-faint)}
+  .citem .cimg svg{width:22px;height:22px}
+  .citem .cname{font-size:13.5px;font-weight:700}
+  .citem .ctag{font-size:11px;color:var(--ink-faint);margin-top:2px}
+  .qty-ctrl{display:flex;align-items:center;border:1px solid var(--line);border-radius:100px;overflow:hidden}
+  .qty-ctrl button{width:28px;height:28px;border:0;background:var(--card);font-size:14px;cursor:pointer;color:var(--ink)}
+  .qty-ctrl span{width:30px;text-align:center;font-size:13px;font-weight:700}
+  .citem .cprice{font-size:14px;font-weight:800;text-align:right;min-width:80px}
+  .citem .cremove{background:none;border:0;color:var(--ink-faint);cursor:pointer;padding:4px}
+  .citem .cremove svg{width:17px;height:17px}
+
+  .summary{
+    background:var(--ink);color:#fff;border-radius:var(--r-lg);padding:24px;margin:26px 0 40px;
+  }
+  .summary .row{display:flex;justify-content:space-between;font-size:13.5px;color:#D8CFCF;padding:6px 0}
+  .summary .row.total{border-top:1px solid rgba(255,255,255,.15);margin-top:8px;padding-top:14px;font-size:16px;color:#fff;font-weight:800}
+  .summary .balance-note{font-size:12px;color:#D8CFCF;margin-top:6px}
+  .summary .balance-note.warn{color:#FFB4C6;font-weight:700}
+  .checkout-btn{
+    display:block;width:100%;margin-top:16px;padding:15px;border:0;border-radius:var(--r-sm);
+    background:var(--thread);color:#fff;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;
+    text-align:center;text-decoration:none;
+  }
+  .checkout-btn:disabled{background:#5A5158;cursor:not-allowed}
+
+  footer{background:var(--ink);color:var(--ink-faint);padding:30px 24px;font-size:12.5px;text-align:center}
+</style>
+</head>
+<body>
+
+<nav class="dnav">
+  <div class="dnav-in">
+    <a href="index.html" class="dbrand">나눔<em>이음</em>바자</a>
+    <a href="bazaar.html" class="dback"><svg class="lucide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg> 상품 목록으로</a>
+  </div>
+</nav>
+
+<div class="wrap">
+  <h1>장바구니</h1>
+  <div id="cartBody"></div>
+</div>
+
+<footer>
+  나눔이음 사회복지시설 협의체 · 지역 복지시설과 크리에이터를 잇는 나눔 프로젝트 · 문의 look@nanumieum.example
+</footer>
+
+<script>
+  function fmt(n){ return n.toLocaleString('ko-KR'); }
+  const DEFAULT_FACILITY = {n:'대구보육원', t:'아동양육시설/보육원', c:'이기운 아코디언', v:'MwkipVs8cS4'};
+  function getFacility(){
+    try{ const raw = localStorage.getItem('nb_facility'); if(raw) return JSON.parse(raw); }catch(e){}
+    return DEFAULT_FACILITY;
+  }
+  function getBalance(fac){
+    const key = 'nb_balance_'+fac.n;
+    if(localStorage.getItem(key)===null) localStorage.setItem(key, '354000');
+    return parseInt(localStorage.getItem(key),10);
+  }
+  function getCart(){ return JSON.parse(localStorage.getItem('nb_cart')||'[]'); }
+  function setCart(c){ localStorage.setItem('nb_cart', JSON.stringify(c)); }
+
+  let PRODUCTS = [];
+
+  const facility = getFacility();
+  const balance = getBalance(facility);
+  const body = document.getElementById('cartBody');
+
+  function render(){
+    const cart = getCart().map(row => ({...row, p: PRODUCTS.find(x=>x.id===row.id)})).filter(r=>r.p);
+    if(!cart.length){
+      body.innerHTML = `<div class="empty">장바구니가 비어 있습니다.<br><a href="bazaar.html">상품 보러 가기 →</a></div>`;
+      return;
+    }
+    const itemsHtml = cart.map(r => `
+      <div class="citem" data-id="${r.id}">
+        <div class="cimg"><svg class="lucide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-5-5L5 21"/></svg></div>
+        <div>
+          <div class="cname">${r.p.name}</div>
+          <div class="ctag">${r.p.type==='donate' ? '기부 물품 · 무료' : r.p.seller}</div>
+        </div>
+        <div class="qty-ctrl">
+          <button type="button" class="qminus">−</button>
+          <span>${r.qty}</span>
+          <button type="button" class="qplus">+</button>
+        </div>
+        <div class="cprice">${r.p.type==='donate' ? '무료' : fmt(r.p.price*r.qty)+'원'}</div>
+        <button type="button" class="cremove" aria-label="삭제">
+          <svg class="lucide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+        </button>
+      </div>`).join('');
+
+    const total = cart.reduce((s,r)=> s + (r.p.type==='donate' ? 0 : r.p.price*r.qty), 0);
+    const insufficient = total > balance;
+
+    body.innerHTML = itemsHtml + `
+      <div class="summary">
+        <div class="row"><span>사용 가능 잔액</span><span>${fmt(balance)}원</span></div>
+        <div class="row total"><span>결제 금액</span><span>${fmt(total)}원</span></div>
+        ${insufficient ? `<div class="balance-note warn">잔액이 부족합니다. ${fmt(total-balance)}원이 더 필요합니다.</div>` : `<div class="balance-note">결제 후 남는 잔액 ${fmt(balance-total)}원</div>`}
+        <a href="${insufficient?'#':'checkout.html'}" class="checkout-btn" id="checkoutBtn" ${insufficient?'aria-disabled="true"':''}>
+          ${insufficient ? '잔액 부족' : '배송지 입력하고 주문하기'}
+        </a>
+      </div>`;
+
+    body.querySelectorAll('.citem').forEach(el=>{
+      const id = el.dataset.id;
+      el.querySelector('.qplus').addEventListener('click', ()=>{
+        const cart = getCart();
+        const row = cart.find(r=>r.id===id);
+        row.qty++;
+        setCart(cart);
+        render();
+      });
+      el.querySelector('.qminus').addEventListener('click', ()=>{
+        let cart = getCart();
+        const row = cart.find(r=>r.id===id);
+        row.qty--;
+        if(row.qty<=0) cart = cart.filter(r=>r.id!==id);
+        setCart(cart);
+        render();
+      });
+      el.querySelector('.cremove').addEventListener('click', ()=>{
+        const cart = getCart().filter(r=>r.id!==id);
+        setCart(cart);
+        render();
+      });
+    });
+
+    if(insufficient){
+      const btn = document.getElementById('checkoutBtn');
+      btn.addEventListener('click', (e)=>{ e.preventDefault(); });
+    }
+  }
+  async function init(){
+    const res = await fetch('https://backend-production-6b41.up.railway.app/api/products?limit=1000');
+    ({ items: PRODUCTS } = await res.json());
+    render();
+  }
+  init();
+</script>
+</body>
+</html>

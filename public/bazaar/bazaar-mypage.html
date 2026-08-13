@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>마이페이지 | 나눔이음바자</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/gh/sun-typeface/SUIT@2/fonts/variable/woff2/SUIT-Variable.css" rel="stylesheet">
+<style>
+  @font-face{
+    font-family:'Jalnan';
+    src:url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.2/JalnanOTF00.woff') format('woff');
+    font-weight:normal;font-style:normal;font-display:swap;
+  }
+  :root{
+    --paper:#FBF7F7;--paper-2:#F6EFEE;--ink:#2B2430;--ink-soft:#6B5F68;--ink-faint:#A79AA0;
+    --red:#EE6F93;--red-dark:#C94F71;--thread:#45BC92;--thread-soft:#DEF6EC;
+    --yellow:#F6C640;--yellow-soft:#FFF3D2;--yellow-dark:#B5860E;
+    --line:#F0E1E6;--card:#FFFFFF;--gray:#8A7D85;
+    --r-lg:22px;--r-md:14px;--r-sm:10px;--wrap:820px;
+    --sans:'SUIT Variable','SUIT',-apple-system,BlinkMacSystemFont,'Malgun Gothic',sans-serif;
+    --serif:'Jalnan','Gowun Batang','Nanum Myeongjo',serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:var(--sans);color:var(--ink);background:var(--paper);line-height:1.7;-webkit-font-smoothing:antialiased}
+  img{max-width:100%;display:block}
+  .lucide{width:1em;height:1em;display:inline-block;vertical-align:-0.15em;flex:none}
+  .wrap{max-width:var(--wrap);margin:0 auto;padding:0 24px}
+
+  .dnav{position:sticky;top:0;z-index:50;background:rgba(251,247,247,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+  .dnav-in{max-width:var(--wrap);margin:0 auto;padding:0 24px;height:58px;display:flex;align-items:center;justify-content:space-between}
+  .dbrand{font-family:var(--serif);font-weight:700;font-size:18px;letter-spacing:-.02em;color:var(--ink);text-decoration:none}
+  .dbrand em{font-style:normal;color:var(--red)}
+  .dback{font-size:13.5px;color:var(--ink-soft);text-decoration:none}
+  .dback:hover{color:var(--ink)}
+
+  .wallet{
+    background:var(--ink);color:#fff;border-radius:var(--r-lg);padding:26px;margin:28px 0 30px;
+  }
+  .wallet .who{font-size:12.5px;color:#D8CFCF;margin-bottom:12px}
+  .wallet .who b{color:#fff;font-weight:700}
+  .wallet .amt{font-family:var(--serif);font-size:30px;letter-spacing:-.01em}
+  .wallet .amt small{font-size:13px;font-weight:400;margin-left:4px;color:#D8CFCF}
+
+  /* ── 복지시설 소개 ── */
+  .fac-intro{margin:28px 0 0}
+  .fac-intro .fi-media{aspect-ratio:16/9;border-radius:var(--r-lg);overflow:hidden;position:relative;background:var(--paper-2)}
+  .fac-intro .fi-media img{width:100%;height:100%;object-fit:cover}
+  .fac-intro .fi-yt{
+    position:absolute;right:12px;bottom:12px;display:flex;align-items:center;gap:6px;
+    background:rgba(0,0,0,.65);color:#fff;font-size:12px;font-weight:700;padding:8px 14px;border-radius:100px;
+    text-decoration:none;
+  }
+  .fac-intro .fi-yt svg{width:14px;height:14px}
+  .fac-intro .fi-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin:18px 0 6px;flex-wrap:wrap}
+  .fac-intro .fi-head h1{font-family:var(--serif);font-size:23px;font-weight:700;letter-spacing:-.01em}
+  .fac-intro .fi-stats{display:flex;gap:10px;flex-wrap:wrap}
+  .fac-intro .fi-stat{
+    background:var(--paper-2);border-radius:var(--r-sm);padding:8px 14px;text-align:center;min-width:70px;
+  }
+  .fac-intro .fi-stat b{display:block;font-size:15px;font-weight:800;color:var(--thread)}
+  .fac-intro .fi-stat span{font-size:10.5px;color:var(--ink-soft)}
+  .fac-intro .fi-slogan{
+    font-family:var(--serif);font-size:15px;color:var(--red-dark);margin:10px 0 14px;letter-spacing:-.01em;
+  }
+  .fac-intro .fi-body{font-size:13.5px;color:var(--ink-soft);line-height:1.9;margin-bottom:8px}
+  .fac-intro .fi-body p{margin-bottom:12px}
+
+  .fac-channel{
+    display:flex;align-items:center;gap:12px;background:var(--thread-soft);border-radius:var(--r-md);
+    padding:14px 16px;margin:18px 0 6px;
+  }
+  .fac-channel .fc-ico{
+    width:38px;height:38px;border-radius:50%;background:#fff;color:#1F5344;flex:none;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .fac-channel .fc-text{flex:1;min-width:0;font-size:12.5px;color:#1F5344}
+  .fac-channel .fc-text b{display:block;font-size:14px;color:var(--ink);font-weight:700}
+  .fac-channel a.fc-link{
+    flex:none;font-size:12px;font-weight:700;color:#fff;background:var(--thread);
+    padding:8px 14px;border-radius:100px;text-decoration:none;
+  }
+
+  /* ── 기부 현황 통계 ── */
+  .give-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:22px 0}
+  @media(max-width:600px){.give-stats{grid-template-columns:repeat(2,1fr)}}
+  .give-stats .gs{
+    background:var(--card);border:1px solid var(--line);border-radius:var(--r-md);
+    padding:16px 14px;text-align:center;
+  }
+  .give-stats .gs b{display:block;font-family:var(--serif);font-size:19px;color:var(--red-dark);letter-spacing:-.01em}
+  .give-stats .gs span{font-size:11px;color:var(--ink-soft)}
+
+  /* ── 포인트로 기부하기 CTA ── */
+  .give-cta{
+    background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);
+    padding:26px;margin:8px 0 30px;
+  }
+  .give-cta .gc-head{max-width:640px;margin-bottom:18px}
+  .give-cta .gc-head .tag{
+    display:block;font-size:12.5px;letter-spacing:.06em;color:var(--thread);font-weight:700;margin-bottom:8px;
+  }
+  .give-cta .gc-head b{
+    display:block;font-family:var(--serif);font-weight:700;letter-spacing:-.02em;
+    font-size:clamp(17px,2.2vw,20px);line-height:1.4;margin-bottom:8px;
+  }
+  .give-cta .gc-head span{font-size:12.5px;color:var(--ink-soft);line-height:1.8}
+
+  .give-cta .point-opts{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0}
+  @media(max-width:520px){.give-cta .point-opts{grid-template-columns:1fr}}
+  .give-cta .point-opt{
+    position:relative;text-align:left;background:var(--card);border:2px solid var(--line);
+    border-radius:var(--r-md);padding:14px 16px;cursor:pointer;font-family:inherit;
+    transition:border-color .15s,transform .15s;
+  }
+  .give-cta .point-opt:hover{transform:translateY(-2px)}
+  .give-cta .point-opt[aria-pressed="true"]{border-color:var(--red)}
+  .give-cta .point-opt b{display:block;font-size:14px;font-weight:700;margin-bottom:4px}
+  .give-cta .point-opt p{font-size:11.5px;color:var(--ink-soft);line-height:1.6}
+
+  .give-cta .ptype-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+  .give-cta .ptype{
+    border:1px solid var(--line);color:var(--ink-soft);background:var(--card);
+    padding:8px 15px;border-radius:100px;font-size:13px;font-weight:600;cursor:pointer;
+    font-family:inherit;transition:all .15s;
+  }
+  .give-cta .ptype:hover{border-color:var(--thread)}
+  .give-cta .ptype[aria-pressed="true"]{background:var(--thread);border-color:var(--thread);color:#fff}
+
+  .give-cta .provider-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:9px;margin-bottom:8px}
+  .give-cta .ptile{
+    position:relative;background:#fff;border:2px solid var(--line);border-radius:var(--r-sm);
+    display:flex;align-items:center;justify-content:center;padding:12px 8px;cursor:pointer;
+    min-height:52px;transition:border-color .15s,transform .15s;
+  }
+  .give-cta .ptile:hover{transform:translateY(-2px)}
+  .give-cta .ptile[aria-pressed="true"]{border-color:var(--red);box-shadow:0 0 0 1px var(--red) inset}
+  .give-cta .ptile img{max-width:100%;max-height:28px;object-fit:contain}
+  .give-cta .ptile .check{
+    position:absolute;top:-7px;right:-7px;width:19px;height:19px;border-radius:50%;
+    background:var(--red);color:#fff;font-size:10px;display:none;align-items:center;justify-content:center;
+  }
+  .give-cta .ptile[aria-pressed="true"] .check{display:flex}
+  .give-cta .provider-picked{font-size:12.5px;color:var(--ink-soft);margin-bottom:18px}
+  .give-cta .provider-picked b{color:var(--ink)}
+
+  .give-cta .gc-bottom{
+    display:flex;align-items:center;gap:16px;flex-wrap:wrap;
+    padding-top:16px;border-top:1px dashed var(--line);
+  }
+  .give-cta button.gc-btn{
+    flex:none;display:inline-flex;align-items:center;gap:7px;background:var(--thread);color:#fff;
+    padding:13px 24px;border-radius:100px;font-size:14px;font-weight:700;text-decoration:none;
+    border:0;cursor:pointer;font-family:inherit;transition:background .15s;
+  }
+  .give-cta button.gc-btn:hover{background:#2E9C79}
+  .give-cta button.gc-btn svg{width:16px;height:16px}
+  .give-cta .gc-note{font-size:12px;color:var(--ink-faint);line-height:1.7}
+
+  .sec-head{display:flex;align-items:baseline;justify-content:space-between;border-bottom:2px solid var(--ink);padding-bottom:12px;margin:34px 0 16px}
+  .sec-head h2{font-size:16px;font-weight:800}
+
+  .log-list{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);padding:6px 20px;margin-bottom:8px}
+  .log-list li{display:flex;justify-content:space-between;font-size:13px;padding:12px 0;border-bottom:1px dashed var(--line);list-style:none}
+  .log-list li:last-child{border-bottom:none}
+  .log-list .src{color:var(--ink-soft)}
+  .log-list .plus{color:var(--thread);font-weight:700}
+  .log-list .minus{color:var(--red-dark);font-weight:700}
+
+  .order-list{display:flex;flex-direction:column;gap:10px;margin-bottom:20px}
+  .order{
+    display:flex;align-items:center;gap:14px;background:var(--card);border:1px solid var(--line);
+    border-radius:var(--r-md);padding:14px 16px;
+  }
+  .order .oimg{width:52px;height:52px;border-radius:var(--r-sm);background:var(--paper-2);flex:none;display:grid;place-items:center;color:var(--ink-faint)}
+  .order .oimg svg{width:20px;height:20px}
+  .order .otext{flex:1;min-width:0}
+  .order .otext b{display:block;font-size:13.5px;font-weight:700}
+  .order .otext span{font-size:11.5px;color:var(--ink-faint)}
+  .ostatus{flex:none;font-size:11px;font-weight:700;padding:5px 11px;border-radius:100px}
+  .ostatus.wait{background:var(--yellow-soft);color:var(--yellow-dark)}
+  .ostatus.sent{background:var(--thread-soft);color:#1F5344}
+  .ostatus.done{background:var(--paper-2);color:var(--ink-soft)}
+  .confirm-btn{border:0;cursor:pointer;font-family:inherit}
+  .confirm-btn:hover{filter:brightness(.95)}
+
+  .modal{
+    display:none;position:fixed;inset:0;background:rgba(43,36,48,.5);z-index:100;
+    align-items:center;justify-content:center;padding:20px;
+  }
+  .modal-box{background:var(--card);border-radius:var(--r-lg);padding:26px;max-width:400px;width:100%}
+  .modal-box h3{font-family:var(--serif);font-size:16.5px;margin-bottom:8px}
+  .modal-box p{font-size:12.5px;color:var(--ink-soft);margin-bottom:16px;line-height:1.7}
+  .modal-box input[type="file"]{
+    width:100%;border:1px dashed var(--line);border-radius:var(--r-sm);padding:20px;font-size:12.5px;color:var(--ink-soft);
+  }
+  .modal-btns{display:flex;gap:8px;margin-top:18px}
+  .modal-btns button{
+    flex:1;padding:12px;border-radius:var(--r-sm);font-size:13.5px;font-weight:700;cursor:pointer;font-family:inherit;border:0;
+  }
+  .modal-btns .m-cancel{background:var(--paper-2);color:var(--ink-soft)}
+  .modal-btns .m-submit{background:var(--thread);color:#fff}
+  .modal-btns .m-submit:disabled{background:var(--line);color:var(--ink-faint);cursor:not-allowed}
+
+  footer{background:var(--ink);color:var(--ink-faint);padding:30px 24px;font-size:12.5px;text-align:center;margin-top:50px}
+</style>
+</head>
+<body>
+
+<nav class="dnav">
+  <div class="dnav-in">
+    <a href="index.html" class="dbrand">나눔<em>이음</em>바자</a>
+    <a href="bazaar.html" class="dback" id="navBack"><svg class="lucide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg> 상품 목록으로</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <div class="fac-intro" id="facIntro">
+    <div class="fi-media">
+      <img id="fiImg" src="" alt="">
+      <a class="fi-yt" id="fiYt" href="#" target="_blank" rel="noopener">
+        <svg class="lucide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17"/><path d="m10 15 5-3-5-3z"/></svg>
+        결연 영상 보기
+      </a>
+    </div>
+    <div class="fi-head">
+      <h1 id="fiName">-</h1>
+      <div class="fi-stats">
+        <div class="fi-stat"><b id="fiPeople">-</b><span>이용 인원</span></div>
+        <div class="fi-stat"><b id="fiType">-</b><span>복지시설 유형</span></div>
+      </div>
+    </div>
+    <p class="fi-slogan" id="fiSlogan">-</p>
+    <div class="fi-body" id="fiBody"></div>
+
+    <div class="fac-channel">
+      <span class="fc-ico"><svg class="lucide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17"/><path d="m10 15 5-3-5-3z"/></svg></span>
+      <span class="fc-text"><span id="fcLabel">결연 채널</span><b id="fcName">-</b></span>
+      <a class="fc-link" id="fcLink" href="#" target="_blank" rel="noopener">채널 보기</a>
+    </div>
+
+    <div class="give-stats">
+      <div class="gs"><b id="gsDonors">-</b><span>기부자 수</span></div>
+      <div class="gs"><b id="gsCount">-</b><span>누적 기부 건수</span></div>
+      <div class="gs"><b id="gsPoints">-</b><span>누적 기부 포인트</span></div>
+      <div class="gs"><b id="gsAmount">-</b><span>누적 기부액</span></div>
+    </div>
+
+    <div class="give-cta" id="giveCta">
+      <div class="gc-head">
+        <span class="tag">포인트 정기기부</span>
+        <b>사라질 포인트라면, 이어주세요</b>
+        <span id="gcDesc">카드에 있는 포인트는 시효가 지나면 그냥 사라집니다. 어차피 없어질 포인트라면,
+          나눔이음을 거쳐 소중한 곳에 쓰이게 해주세요. 후원금은 한 푼도 줄지 않고 복지시설로 갑니다.</span>
+      </div>
+
+      <div class="point-opts" id="pointOpts" role="group" aria-label="이어주기 방식 선택">
+        <button type="button" class="point-opt" id="optExpire" aria-pressed="true">
+          <b>소멸 예정 포인트만</b>
+          <p>어차피 사라질 포인트만, 사라지기 전에 자동으로 이어드려요</p>
+        </button>
+        <button type="button" class="point-opt" id="optRegular" aria-pressed="false">
+          <b>매달 정기적으로</b>
+          <p>매달 쌓이는 포인트를 꾸준히 이어드려요</p>
+        </button>
+      </div>
+
+      <div class="ptype-row" id="pointTypes" role="group" aria-label="포인트 종류 선택">
+        <button type="button" class="ptype" data-v="card" aria-pressed="true">카드 포인트</button>
+        <button type="button" class="ptype" data-v="telecom" aria-pressed="false">통신사 멤버십</button>
+        <button type="button" class="ptype" data-v="air" aria-pressed="false">항공마일리지</button>
+      </div>
+
+      <div class="provider-grid" id="providerGrid" role="group" aria-label="발급사 선택"></div>
+      <p class="provider-picked">선택하신 발급사: <b id="providerPicked">-</b></p>
+      <p class="provider-picked" id="gcTarget" style="margin-top:-10px"></p>
+
+      <div class="gc-bottom">
+        <button type="button" class="gc-btn" id="gcBtn">
+          <svg class="lucide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v6c0 1.66 3.13 3 7 3s7-1.34 7-3V6"/><path d="M5 12v6c0 1.66 3.13 3 7 3s7-1.34 7-3v-6"/></svg>
+          포인트 이어주기 시작하기
+        </button>
+        <span class="gc-note">언제든 해지할 수 있습니다. 포인트는 100% 복지시설로 전달됩니다.</span>
+      </div>
+    </div>
+  </div>
+
+  <div id="ownerOnly">
+
+  <div class="wallet">
+    <div class="who">협의체 회원 복지시설 · <b id="ownWhoName">대구보육원</b> 님</div>
+    <div class="amt"><span id="ownBalance">354,000</span><small>원 사용 가능</small></div>
+  </div>
+
+  <div class="sec-head"><h2>최근 적립·구매 내역</h2></div>
+  <ul class="log-list" id="ledgerListFull"></ul>
+
+  <div class="sec-head"><h2>구매·신청 내역</h2></div>
+  <div class="order-list" id="orderList"></div>
+
+  </div>
+
+</div>
+
+<div class="modal" id="receiptModal">
+  <div class="modal-box">
+    <h3>수령확인 사진 등록</h3>
+    <p>받으신 물품 사진을 올려주시면 수령확인이 완료됩니다.</p>
+    <input type="file" id="receiptFile" accept="image/*">
+    <div id="receiptPreviewWrap"></div>
+    <input type="hidden" id="receiptIdx" value="">
+    <div class="modal-btns">
+      <button type="button" class="m-cancel" id="receiptCancel">취소</button>
+      <button type="button" class="m-submit" id="receiptSubmit" disabled>수령확인 완료</button>
+    </div>
+  </div>
+</div>
+
+<footer>
+  나눔이음 사회복지시설 협의체 · 지역 복지시설과 크리에이터를 잇는 나눔 프로젝트 · 문의 look@nanumieum.example
+</footer>
+
+<script>
+  /* ── 복지시설 소개: URL 파라미터로 공개 열람(다른 복지시설) / 본인 계정 구분 ── */
+  const qs = new URLSearchParams(location.search);
+  const paramFacility = qs.get('facility');
+  const isPublicView = !!paramFacility;
+
+  function getLoggedInFacility(){
+    try{ const raw = localStorage.getItem('nb_facility'); if(raw) return JSON.parse(raw); }catch(e){}
+    return {n:'대구보육원', t:'아동양육시설/보육원', c:'이기운 아코디언', v:'MwkipVs8cS4'};
+  }
+  const OWNER = getLoggedInFacility();
+  const viewing = isPublicView
+    ? {n:paramFacility, t:qs.get('ftype')||'', c:qs.get('channel')||'', v:qs.get('vid')||OWNER.v}
+    : OWNER;
+
+  // 복지시설 유형별 일반 설명 · 슬로건 · 소개 본문 템플릿 (임시로 작성한 안내 문구, 실제 내용으로 교체 예정)
+  const TYPE_INFO = {
+    '지역아동센터': {
+      desc: '방과 후 돌봄이 필요한 지역사회 아동에게 보호와 교육, 놀이를 제공하며 지역사회와 아동을 잇는 복지시설',
+      slogan: '아이들의 방과 후가 안전하고 즐거운 시간이 되도록',
+      people: 32,
+    },
+    '아동양육시설/보육원': {
+      desc: '보호자의 돌봄을 받기 어려운 아동들이 함께 지내며 성장하는 복지시설',
+      slogan: '아이들이 마음 편히 자랄 수 있는 울타리가 되겠습니다',
+      people: 45,
+    },
+    '영유아 보육시설': {
+      desc: '보호가 필요한 영유아를 돌보며 건강한 성장을 지원하는 복지시설',
+      slogan: '작은 아이들의 하루하루를 정성껏 채워갑니다',
+      people: 28,
+    },
+    '장애인복지': {
+      desc: '장애인의 자립과 사회참여를 돕고, 일상에 필요한 서비스를 제공하는 복지시설',
+      slogan: '누구나 자기답게 살아갈 수 있는 하루를 위해',
+      people: 60,
+    },
+    '노인복지': {
+      desc: '어르신들의 건강하고 활기찬 노후를 지원하는 지역 복지시설',
+      slogan: '어르신의 오늘이 편안하고 존중받는 시간이 되도록',
+      people: 85,
+    },
+    '기타복지시설': {
+      desc: '지역주민의 다양한 복지 수요를 반영해 종합적인 서비스를 제공하는 복지시설',
+      slogan: '가까운 이웃의 어려움에 먼저 손을 내밉니다',
+      people: 50,
+    },
+  };
+  const info = TYPE_INFO[viewing.t] || TYPE_INFO['기타복지시설'];
+
+  document.getElementById('fiImg').src = `https://i.ytimg.com/vi/${viewing.v}/hqdefault.jpg`;
+  document.getElementById('fiImg').alt = viewing.n;
+  document.getElementById('fiYt').href = `https://www.youtube.com/watch?v=${viewing.v}`;
+  document.getElementById('fiName').textContent = viewing.n;
+  document.getElementById('fiPeople').textContent = info.people + '명';
+  document.getElementById('fiType').textContent = viewing.t || '-';
+  document.getElementById('fiSlogan').textContent = `“ ${info.slogan} ”`;
+  document.getElementById('fiBody').innerHTML = `
+    <p>${info.desc}입니다.</p>
+    <p>${viewing.n}은(는) 협의체와 결연을 맺고, 지역 안에서 필요한 도움을 이웃과 나누고 있습니다.
+       나눔이음바자를 통해 전해지는 물품 하나하나가 이곳의 하루에 보탬이 됩니다.
+       ※ 위 소개 문구는 복지시설 정보 등록 전 임시로 채운 안내용 텍스트입니다.</p>`;
+
+  document.getElementById('fcLabel').textContent = '결연 채널';
+  document.getElementById('fcName').textContent = viewing.c || '-';
+  document.getElementById('fcLink').href = `https://www.youtube.com/watch?v=${viewing.v}`;
+
+  /* ── 기부 현황 통계 (시설명 기반 시드 값 — 실제 집계 연동 전 임시 데이터) ── */
+  /* ── 한글 받침 유무에 따른 조사 선택("로"/"으로") — 끝의 비한글 문자는 건너뜀 ── */
+  function josaRo(word){
+    if(!word) return '로';
+    let i = word.length - 1;
+    while(i >= 0){
+      const code = word.charCodeAt(i) - 0xAC00;
+      if(code >= 0 && code <= 11171){
+        const jong = code % 28;
+        return (jong === 0 || jong === 8) ? '로' : '으로';
+      }
+      i--;
+    }
+    return '로';
+  }
+
+  function seedNum(str, min, max){
+    let h = 0;
+    for(const c of str) h = (h*31 + c.charCodeAt(0)) >>> 0;
+    return min + (h % (max-min));
+  }
+  const donors = seedNum(viewing.n+'d', 8, 140);
+  const giveCount = donors + seedNum(viewing.n+'c', 0, Math.round(donors*0.6));
+  const avgGift = seedNum(viewing.n+'a', 14000, 42000);
+  const totalAmt = giveCount * avgGift;
+
+  document.getElementById('gsDonors').textContent = donors.toLocaleString('ko-KR') + '명';
+  document.getElementById('gsCount').textContent = giveCount.toLocaleString('ko-KR') + '건';
+  document.getElementById('gsPoints').textContent = totalAmt.toLocaleString('ko-KR') + 'P';
+  document.getElementById('gsAmount').textContent = totalAmt.toLocaleString('ko-KR') + '원';
+
+  /* ── 포인트로 기부하기: 방식·종류·발급사 선택 (실제 로고 이미지 사용) ──
+     이 화면에서 이미 결연 채널·복지시설이 정해져 있으므로, 선택 완료 시
+     point-donate.html을 거치지 않고 바로 회원정보 입력(donate-step2.html)으로 이동한다. */
+  document.getElementById('gcTarget').innerHTML =
+    `「${viewing.c}」 채널을 통한 포인트는 <b>${viewing.n}</b>${josaRo(viewing.n)} 곧장 전달됩니다.`;
+
+  const optExpire  = document.getElementById('optExpire');
+  const optRegular = document.getElementById('optRegular');
+  const typeButtons = document.querySelectorAll('#pointTypes .ptype');
+  const provGrid = document.getElementById('providerGrid');
+  const provPicked = document.getElementById('providerPicked');
+  const gcBtn = document.getElementById('gcBtn');
+
+  const LOGO_DIR = '../logos/';
+  const PROVIDERS = {
+    card: [
+      {name:'신한카드',   img:'card_shinhan.png'},
+      {name:'KB국민카드', img:'card_kb.png'},
+      {name:'삼성카드',   img:'card_samsung.png'},
+      {name:'롯데카드',   img:'card_lotte.png'},
+      {name:'우리카드',   img:'card_woori.png'},
+      {name:'하나카드',   img:'card_hana.png'},
+      {name:'현대카드',   img:'card_hyundai.png'},
+      {name:'NH농협카드', img:'card_nh.png'},
+      {name:'비씨카드',   img:'card_bc.png'},
+    ],
+    telecom: [
+      {name:'SKT 멤버십',   img:'telecom_skt.png'},
+      {name:'KT 멤버십',    img:'telecom_kt.png'},
+      {name:'LG U+ 멤버십', img:'telecom_lgu.png'},
+    ],
+    air: [
+      {name:'대한항공 스카이패스',   img:'air_ke.png'},
+      {name:'아시아나 항공마일리지', img:'air_oz.png'},
+    ],
+  };
+
+  let pointFreq = 'expire';
+  let pointType = 'card';
+  let selectedProvider = null;
+
+  function renderProviders(type){
+    const list = PROVIDERS[type] || [];
+    provGrid.innerHTML = list.map((p,i)=>`
+      <button type="button" class="ptile" data-name="${p.name}" aria-pressed="${i===0}">
+        <span class="check"><svg class="lucide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><img src="${LOGO_DIR}${p.img}" alt="${p.name}">
+      </button>`).join('');
+    selectedProvider = list[0]?.name || null;
+    provPicked.textContent = selectedProvider || '-';
+    provGrid.querySelectorAll('.ptile').forEach(t=>{
+      t.addEventListener('click', ()=>{
+        provGrid.querySelectorAll('.ptile').forEach(x=>x.setAttribute('aria-pressed','false'));
+        t.setAttribute('aria-pressed','true');
+        selectedProvider = t.dataset.name;
+        provPicked.textContent = selectedProvider;
+      });
+    });
+  }
+  [optExpire, optRegular].forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      optExpire.setAttribute('aria-pressed', String(btn===optExpire));
+      optRegular.setAttribute('aria-pressed', String(btn===optRegular));
+      pointFreq = (btn===optExpire) ? 'expire' : 'regular';
+    });
+  });
+  typeButtons.forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      typeButtons.forEach(b=>b.setAttribute('aria-pressed', String(b===btn)));
+      pointType = btn.dataset.v;
+      renderProviders(pointType);
+    });
+  });
+  renderProviders('card');
+
+  gcBtn.addEventListener('click', ()=>{
+    const params = new URLSearchParams({
+      method: 'point',
+      freq: pointFreq,
+      ptype: pointType,
+      provider: selectedProvider || '',
+      facility: viewing.n,
+      ftype: viewing.t,
+      link: `${viewing.n}-bazaar`,
+      return: 'bazaar',
+    });
+    location.href = `../donate-step2.html?${params.toString()}`;
+  });
+
+  // 공개 열람(다른 복지시설) 시에는 잔액·구매내역 등 개인 정보 영역을 숨긴다
+  if(isPublicView){
+    document.getElementById('ownerOnly').style.display = 'none';
+    document.getElementById('navBack').setAttribute('href', 'index.html');
+    document.getElementById('navBack').innerHTML =
+      '<svg class="lucide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg> 참여 복지시설 목록으로';
+    document.title = `${viewing.n} 소개 | 나눔이음바자`;
+  } else {
+    // 본인 계정으로 자기 마이페이지에 들어온 경우: 자신에게 포인트를 기부하는 건 의미가 없으므로 숨김
+    document.getElementById('giveCta').style.display = 'none';
+    document.title = '마이페이지 | 나눔이음바자';
+  }
+
+  /* ── 본인 계정 데이터(잔액·원장·주문내역) — localStorage 연동 ── */
+  function fmt(n){ return n.toLocaleString('ko-KR'); }
+  function getBalance(fac){
+    const key = 'nb_balance_'+fac.n;
+    if(localStorage.getItem(key)===null) localStorage.setItem(key, '354000');
+    return parseInt(localStorage.getItem(key),10);
+  }
+  function getLedger(fac){
+    const key = 'nb_ledger_'+fac.n;
+    const raw = localStorage.getItem(key);
+    if(raw) return JSON.parse(raw);
+    const seed = [
+      {d:'08.05', src:`결연 채널 「${fac.c}」 후원금 적립`, amt:32000},
+      {d:'08.02', src:'아동 간식 스낵 모음 구매', amt:-7510},
+      {d:'07.28', src:`결연 채널 「${fac.c}」 후원금 적립`, amt:58000},
+      {d:'07.20', src:'기초 위생용품 세트 구매', amt:-32000},
+    ];
+    localStorage.setItem(key, JSON.stringify(seed));
+    return seed;
+  }
+  function getOrders(fac){
+    const key = 'nb_orders_'+fac.n;
+    const raw = localStorage.getItem(key);
+    if(raw) return JSON.parse(raw);
+    const seed = [
+      {name:'아동 간식 스낵 모음 84g x 5개', date:'2026.08.02', status:'wait'},
+      {name:'기초 위생용품 세트', date:'2026.07.20', status:'sent'},
+      {name:'아동 도서 30권 세트 (기부)', date:'2026.07.05', status:'done'},
+    ];
+    localStorage.setItem(key, JSON.stringify(seed));
+    return seed;
+  }
+  function setOrders(fac, list){ localStorage.setItem('nb_orders_'+fac.n, JSON.stringify(list)); }
+
+  if(!isPublicView){
+    document.getElementById('ownWhoName').textContent = OWNER.n;
+    document.getElementById('ownBalance').textContent = fmt(getBalance(OWNER));
+
+    const ledger = getLedger(OWNER);
+    document.getElementById('ledgerListFull').innerHTML = ledger.map(l => `
+      <li><span class="src">${l.d} · ${l.src}</span><span class="${l.amt>=0?'plus':'minus'}">${l.amt>=0?'+':''}${fmt(l.amt)}</span></li>`).join('');
+  }
+
+  const STATUS_LABEL = {wait:'수령확인 대기', sent:'발송완료', done:'수령확인 완료'};
+  const PKG_ICON = '<svg class="lucide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z"/><path d="M12 22V12"/><polyline points="3.29 7 12 12 20.71 7"/></svg>';
+  const CHECK_ICON = '<svg class="lucide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
+
+  function renderOrders(){
+    const orders = getOrders(OWNER);
+    document.getElementById('orderList').innerHTML = orders.map((o,i) => `
+      <div class="order">
+        <div class="oimg">${PKG_ICON}</div>
+        <div class="otext"><b>${o.name}</b><span>${o.date}</span></div>
+        ${o.status==='sent' && !isPublicView
+          ? `<button type="button" class="ostatus sent confirm-btn" data-i="${i}">${STATUS_LABEL[o.status]} · 수령확인</button>`
+          : `<span class="ostatus ${o.status}">${STATUS_LABEL[o.status]}</span>`}
+      </div>`).join('');
+
+    document.querySelectorAll('.confirm-btn').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        document.getElementById('receiptIdx').value = btn.dataset.i;
+        document.getElementById('receiptModal').style.display = 'flex';
+      });
+    });
+  }
+  if(!isPublicView) renderOrders();
+
+  /* ── 수령확인: 사진 업로드 후 상태를 '수령확인 완료'로 변경 ── */
+  const receiptFile = document.getElementById('receiptFile');
+  const receiptPreviewWrap = document.getElementById('receiptPreviewWrap');
+  if(receiptFile){
+    receiptFile.addEventListener('change', ()=>{
+      const f = receiptFile.files[0];
+      if(!f) return;
+      const url = URL.createObjectURL(f);
+      receiptPreviewWrap.innerHTML = `<img src="${url}" alt="수령 사진" style="width:100%;border-radius:10px;margin-top:10px">`;
+      document.getElementById('receiptSubmit').disabled = false;
+    });
+  }
+  const receiptSubmitBtn = document.getElementById('receiptSubmit');
+  if(receiptSubmitBtn){
+    receiptSubmitBtn.addEventListener('click', ()=>{
+      const idx = parseInt(document.getElementById('receiptIdx').value, 10);
+      const orders = getOrders(OWNER);
+      orders[idx].status = 'done';
+      setOrders(OWNER, orders);
+      document.getElementById('receiptModal').style.display = 'none';
+      receiptPreviewWrap.innerHTML = '';
+      receiptFile.value = '';
+      receiptSubmitBtn.disabled = true;
+      renderOrders();
+    });
+  }
+  const receiptCancel = document.getElementById('receiptCancel');
+  if(receiptCancel){
+    receiptCancel.addEventListener('click', ()=>{
+      document.getElementById('receiptModal').style.display = 'none';
+    });
+  }
+</script>
+
+</body>
+</html>

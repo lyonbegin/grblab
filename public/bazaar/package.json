@@ -1,0 +1,12 @@
+{
+  "name": "nanumieumbaza-api",
+  "version": "1.0.0",
+  "description": "나눔이음바자 상품 API 서버",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.3.0"
+  }
+}

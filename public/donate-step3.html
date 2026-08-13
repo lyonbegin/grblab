@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>납입정보 입력 | 나눔이음</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/gh/sun-typeface/SUIT@2/fonts/variable/woff2/SUIT-Variable.css" rel="stylesheet">
+<style>
+  @font-face{
+    font-family:'Jalnan';
+    src:url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.2/JalnanOTF00.woff') format('woff');
+    font-weight:normal;font-style:normal;font-display:swap;
+  }
+  :root{
+    --paper:#FBF7F7;--paper-2:#F6EFEE;--ink:#2B2430;--ink-soft:#6B5F68;--ink-faint:#A79AA0;
+    --red:#EE6F93;--red-dark:#C94F71;--thread:#45BC92;--thread-soft:#DEF6EC;
+    --yellow:#F6C640;--yellow-soft:#FFF3D2;--yellow-dark:#B5860E;
+    --line:#F0E1E6;--card:#FFFFFF;--field:#F0E1E6;--gray:#8A7D85;--brown:#C94F71;
+    --r-lg:22px;--r-md:14px;--r-sm:10px;--wrap:1040px;
+    --sans:'SUIT Variable','SUIT',-apple-system,BlinkMacSystemFont,'Malgun Gothic',sans-serif;
+    --serif:'Jalnan','Gowun Batang','Nanum Myeongjo',serif;
+  }
+    *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:var(--sans);color:var(--ink);background:var(--paper);line-height:1.7;-webkit-font-smoothing:antialiased}
+  img{max-width:100%;display:block}
+  .lucide{width:1em;height:1em;display:inline-block;vertical-align:-0.15em;flex:none}
+  .wrap{max-width:var(--wrap);margin:0 auto;padding:0 24px}
+
+  .banner{
+    background:linear-gradient(135deg,var(--paper-2) 0%,var(--thread-soft) 55%,var(--paper-2) 100%);
+    position:relative;overflow:hidden;padding:52px 0 46px;
+  }
+  .banner .inner{max-width:var(--wrap);margin:0 auto;width:100%;padding:0 24px;position:relative;z-index:2}
+  .banner .eyebrow{
+    display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:var(--red-dark);
+    background:#fff;padding:7px 16px;border-radius:100px;margin-bottom:16px;
+  }
+  .banner .eyebrow::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--red)}
+  .banner h1{
+    font-family:var(--serif);font-size:clamp(22px,3.4vw,32px);font-weight:700;line-height:1.5;
+    color:var(--ink);letter-spacing:-.02em;
+  }
+  .banner .heart{position:absolute;opacity:.8;pointer-events:none}
+
+  .steps{display:flex;justify-content:center;gap:0;margin:44px auto 10px;max-width:680px}
+  .step{flex:1;text-align:center;position:relative}
+  .step .num{
+    width:34px;height:34px;border-radius:50%;background:var(--card);border:2px solid var(--line);
+    color:var(--ink-faint);font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center;
+    margin:0 auto 12px;position:relative;z-index:2;
+  }
+  .step .dot{display:none}
+  .step.on .num{background:var(--red);border-color:var(--red);color:#fff}
+  .step .bar{position:absolute;top:17px;left:50%;width:100%;height:2px;background:var(--line);z-index:1}
+  .step:last-child .bar{display:none}
+  .step .lbl{margin-top:2px;font-size:13.5px;color:var(--ink-soft);font-weight:500}
+  .step.on .lbl{color:var(--ink);font-weight:700}
+
+  .section{padding:40px 0 10px}
+  .sec-head{font-size:21px;font-weight:800;border-bottom:2px solid var(--ink);padding-bottom:14px;margin-bottom:8px}
+  .row{display:flex;align-items:flex-start;gap:20px;padding:26px 4px;border-bottom:1px solid var(--line)}
+  .row .key{min-width:150px;font-size:16px;font-weight:600;padding-top:14px}
+  .row .key b{color:var(--red-dark)}
+
+  /* method tabs */
+  .tabs{display:flex;gap:14px;flex:1;flex-wrap:wrap}
+  .tab{flex:1;min-width:150px;border:1px solid var(--field);border-radius:var(--r-sm);padding:20px 14px;text-align:center;
+    cursor:pointer;font-size:16px;font-weight:700;color:var(--ink-soft);background:var(--paper-2);transition:.15s}
+  .tab.sel{background:#fff;color:var(--red);border-color:var(--red);box-shadow:0 0 0 1px var(--red) inset}
+  .tab .npay{color:#03c75a;font-weight:800}
+
+  .pane{flex:1;min-width:0}
+  /* 안내 박스 */
+  .notice{background:var(--paper-2);border-radius:var(--r-md);padding:22px 26px;font-size:13.5px;color:var(--ink-soft);line-height:1.9}
+  .notice h4{font-size:14px;font-weight:700;color:var(--ink-soft);margin-bottom:8px}
+  .notice ul{list-style:none;margin:0;padding:0}
+  .notice li{position:relative;padding-left:14px;margin-bottom:4px}
+  .notice li::before{content:"·";position:absolute;left:2px;font-weight:700}
+  .notice .gap{height:10px}
+
+  .fields{flex:1;display:flex;flex-direction:column;gap:14px}
+  .fline{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+  .fline label.k{min-width:96px;font-size:15px;color:var(--ink-soft);font-weight:600}
+  select,input[type=text]{border:1px solid var(--field);border-radius:var(--r-sm);padding:14px 16px;font-size:15px;font-family:inherit;outline:none;background:#fff;color:var(--ink)}
+  input::placeholder{color:var(--ink-faint)}
+  .grow{flex:1;min-width:140px}
+
+  .opts{display:flex;gap:48px;align-items:center}
+  .opt{display:flex;align-items:center;gap:10px;font-size:16px;cursor:pointer}
+  .opt input{width:20px;height:20px;accent-color:var(--red)}
+  .chk{display:flex;align-items:center;gap:10px;font-size:15px;cursor:pointer}
+  .chk input{width:20px;height:20px;accent-color:var(--red)}
+
+  .name-line{display:flex;gap:14px;align-items:center;flex:1;flex-wrap:wrap}
+  .name-line .ownername{flex:1;min-width:160px;display:flex;border:1px solid var(--field);border-radius:var(--r-sm);overflow:hidden}
+  .name-line .ownername input{border:0;flex:1}
+  .name-line .ownername select{border:0;border-left:1px solid var(--field);min-width:120px;background:#fff}
+  .tel{display:flex;gap:10px;flex:1;align-items:center;flex-wrap:wrap}
+  .tel select{min-width:110px}.tel .num-in{flex:1;min-width:160px}
+
+  .agree{flex:1;display:flex;flex-direction:column;gap:12px}
+  .agree .all{font-weight:700}
+  .agree-item{display:flex;align-items:center;justify-content:space-between;background:var(--paper-2);border-radius:var(--r-sm);padding:14px 18px}
+  .agree-item em{color:var(--red-dark);font-style:normal;font-size:13px;margin-left:4px}
+  .agree-item a{color:var(--gray);font-size:13px;text-decoration:underline}
+
+  .summary{background:var(--paper-2);border-radius:10px;padding:24px 28px;margin-top:34px}
+  .summary .li{display:flex;justify-content:space-between;font-size:15px;color:var(--ink-soft);padding:6px 0}
+  .summary .li.tot{border-top:1px dashed var(--line);margin-top:8px;padding-top:14px;font-size:18px;font-weight:800;color:var(--ink)}
+  .summary .li.tot b{color:var(--brown)}
+
+  .bottombar{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--line);box-shadow:0 -4px 18px rgba(0,0,0,.06);z-index:20}
+  .bwrap{max-width:1040px;margin:0 auto;padding:18px 24px;display:flex;align-items:center;gap:16px}
+  .sumbox{flex:1;background:var(--paper-2);border-radius:var(--r-md);padding:18px;text-align:center;font-size:16px;font-weight:700;color:var(--ink)}
+  .sumbox .heart{color:var(--red);margin-right:6px}
+  .prev{background:var(--ink-soft);color:#fff;border:0;border-radius:var(--r-sm);padding:18px 34px;font-size:16px;font-weight:700;cursor:pointer;font-family:inherit}
+  .done{background:var(--red);color:#fff;border:0;border-radius:var(--r-sm);padding:18px 44px;font-size:16px;font-weight:700;cursor:pointer;font-family:inherit}
+  .done:hover{background:var(--red-dark)}
+
+  @media (max-width:720px){
+    
+    .row{flex-direction:column;gap:12px}.row .key{min-width:0;padding-top:0}
+    .bwrap{flex-wrap:wrap}.sumbox{order:-1;width:100%;flex:none}
+    .steps .lbl{font-size:12px}
+  }
+
+  /* ── 상단 내비 ── */
+  .dnav{position:sticky;top:0;z-index:50;background:rgba(251,247,247,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+  .dnav-in{max-width:var(--wrap);margin:0 auto;padding:0 24px;height:58px;display:flex;align-items:center;justify-content:space-between}
+  .dbrand{font-family:var(--serif);font-weight:700;font-size:18px;letter-spacing:-.02em;color:var(--ink);text-decoration:none}
+  .dbrand em{font-style:normal;color:var(--red)}
+  .dback{font-size:13.5px;color:var(--ink-soft);text-decoration:none}
+  .dback:hover{color:var(--ink)}
+
+</style>
+</head>
+<body>
+<nav class="dnav">
+  <div class="dnav-in">
+    <a href="nanumieum_portal.html" class="dbrand">나눔<em>이음</em></a>
+    <a href="nanumieum_portal.html" class="dback"><svg class="lucide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg> 포털로 돌아가기</a>
+  </div>
+</nav>
+
+  <section class="banner">
+    <svg class="heart" style="top:18%;left:6%;width:26px" viewBox="0 0 24 24" fill="var(--red)"><path d="M12 21s-7.5-4.6-10.2-9.1C.2 9.1 1 5.6 4.2 4.4c2-.8 4.1 0 5.3 1.7l2.5 3.5 2.5-3.5c1.2-1.7 3.3-2.5 5.3-1.7 3.2 1.2 4 4.7 2.4 7.5C19.5 16.4 12 21 12 21z"/></svg>
+    <svg class="heart" style="bottom:14%;right:8%;width:34px" viewBox="0 0 24 24" fill="var(--thread)"><path d="M12 21s-7.5-4.6-10.2-9.1C.2 9.1 1 5.6 4.2 4.4c2-.8 4.1 0 5.3 1.7l2.5 3.5 2.5-3.5c1.2-1.7 3.3-2.5 5.3-1.7 3.2 1.2 4 4.7 2.4 7.5C19.5 16.4 12 21 12 21z"/></svg>
+    <div class="inner">
+      <p class="eyebrow">나눔이음 후원하기</p>
+      <h1>작은 손길이 이어져,<br>결연 복지시설에 닿습니다</h1>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <div class="steps">
+      <div class="step"><div class="num">01</div><div class="dot"></div><div class="bar"></div><div class="lbl">후원사업 선택</div></div>
+      <div class="step"><div class="num">02</div><div class="dot"></div><div class="bar"></div><div class="lbl">후원회원정보</div></div>
+      <div class="step on"><div class="num">03</div><div class="dot"></div><div class="lbl">납입정보 입력 및 후원완료</div></div>
+    </div>
+
+    <div class="section">
+      <div class="sec-head">후원금 납입 방법</div>
+
+      <!-- 포인트 모드: 선택 정보 요약 -->
+      <div class="row" id="pointSummaryRow" style="display:none">
+        <span class="key">이어주기 정보</span>
+        <div class="pane">
+          <div class="notice">
+            <h4>[포인트 이어주기 안내]</h4>
+            <ul id="pointSummaryList"></ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- 카드 포인트: 카드번호 입력 -->
+      <div class="row" id="pointCardFields" style="display:none">
+        <span class="key">카드정보 <b>*</b></span>
+        <div class="fields">
+          <div class="fline">
+            <label class="k">카드번호</label>
+            <input type="text" class="grow pc-num" maxlength="4" placeholder="0000">
+            <input type="text" class="grow pc-num" maxlength="4" placeholder="0000">
+            <input type="text" class="grow pc-num" maxlength="4" placeholder="0000">
+            <input type="text" class="grow pc-num" maxlength="4" placeholder="0000">
+          </div>
+        </div>
+      </div>
+
+      <!-- 통신사 멤버십: 휴대폰번호 입력 -->
+      <div class="row" id="pointTelecomFields" style="display:none">
+        <span class="key">휴대폰번호 <b>*</b></span>
+        <div class="fields">
+          <div class="fline">
+            <label class="k">가입번호</label>
+            <select class="grow" style="max-width:110px" id="pt-tel-first">
+              <option>010</option><option>011</option><option>016</option><option>017</option>
+            </select>
+            <input type="text" class="grow" maxlength="4" placeholder="0000" id="pt-tel-mid">
+            <input type="text" class="grow" maxlength="4" placeholder="0000" id="pt-tel-last">
+          </div>
+        </div>
+      </div>
+
+      <!-- 항공마일리지: 회원번호 입력 -->
+      <div class="row" id="pointAirFields" style="display:none">
+        <span class="key">마일리지 회원번호 <b>*</b></span>
+        <div class="fields">
+          <div class="fline">
+            <label class="k">회원번호</label>
+            <input type="text" class="grow" placeholder="회원번호를 입력해 주세요" id="pt-air-num">
+          </div>
+        </div>
+      </div>
+
+      <!-- 현금 모드: 납입방법 탭 -->
+      <div class="row" id="cashMethodRow">
+        <span class="key">납입방법 <b>*</b></span>
+        <div class="tabs" id="tabs">
+          <div class="tab" data-m="card">신용카드</div>
+          <div class="tab sel" data-m="auto">자동이체</div>
+          <div class="tab" data-m="npay"><span class="npay">N</span> Pay</div>
+        </div>
+      </div>
+
+      <!-- 안내박스: 자동이체 -->
+      <div class="row pane-row" id="autoNotice">
+        <span class="key"></span>
+        <div class="pane">
+          <div class="notice">
+            <h4>[자동이체 안내사항]</h4>
+            <ul>
+              <li>자동이체 선택 시 ‘출금동의 증빙자료’ 제출 과정이 진행되며, 제출 완료 시 후원신청이 완료됩니다.</li>
+              <li>당월 후원금은 후원신청일에 따라 출금일이 달라집니다. 익월부터 선택해주신 출금일에 (은행영업일 기준) 자동으로 후원금이 이체됩니다.</li>
+              <div class="gap"></div>
+              <li>지정하신 출금일에 후원금이 출금되지 않은 경우 당월 내에 재출금이 진행될 수 있습니다.</li>
+              <li>재출금일 : 20일 또는 25일</li>
+              <div class="gap"></div>
+              <li>보내주신 후원금은 결연 복지시설의 아동·이용자를 위한 프로그램비에 우선 사용되며, 투명한 집행을 위해 사용 내역을 정기적으로 보고드립니다.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- 신용카드 입력 -->
+      <div class="row" id="cardFields" style="display:none">
+        <span class="key">카드정보 <b>*</b></span>
+        <div class="fields">
+          <div class="fline">
+            <label class="k">카드사</label>
+            <select class="grow"><option value="">카드사를 선택하세요</option>
+              <option>비씨</option><option>국민</option><option>신한</option><option>삼성</option>
+              <option>현대</option><option>롯데</option><option>하나</option><option>우리</option><option>NH농협</option></select>
+          </div>
+          <div class="fline">
+            <label class="k">카드번호</label>
+            <input type="text" class="grow" maxlength="4" placeholder="0000">
+            <input type="text" class="grow" maxlength="4" placeholder="0000">
+            <input type="text" class="grow" maxlength="4" placeholder="0000">
+            <input type="text" class="grow" maxlength="4" placeholder="0000">
+          </div>
+          <div class="fline">
+            <label class="k">유효기간</label>
+            <input type="text" class="grow" maxlength="2" placeholder="MM" style="max-width:120px"><span>/</span>
+            <input type="text" class="grow" maxlength="2" placeholder="YY" style="max-width:120px">
+          </div>
+        </div>
+      </div>
+
+      <!-- N Pay 안내 -->
+      <div class="row" id="npayNotice" style="display:none">
+        <span class="key"></span>
+        <div class="pane">
+          <div class="notice">
+            <h4>[네이버페이 안내사항]</h4>
+            <ul>
+              <li>당월 후원금은 후원신청일에 따라 출금일이 달라집니다. 익월부터 선택해주신 출금일에 (영업일 기준) 자동으로 후원금이 결제됩니다.</li>
+              <li>재출금일 안내</li>
+              <div style="padding-left:14px">지정일이 1일인 경우 : 매월 10일<br>지정일이 10일인 경우 : 매월 25일</div>
+              <div class="gap"></div>
+              <li>네이버페이는 네이버ID로 별도 앱 설치 없이 신용카드 또는 은행계좌 정보를 등록하여 네이버페이 비밀번호로 결제할 수 있는 간편결제 서비스입니다.</li>
+              <li>결제 가능한 신용카드 : 신한, 삼성, 현대, BC, 국민, 하나, 롯데, NH농협, 씨티, 카카오뱅크</li>
+              <li>결제 가능한 은행 : NH농협, 국민, 신한, 우리, 기업, SC제일, 부산, 경남, 수협, 우체국, 미래에셋대우, 광주, 대구, 전북, 새마을금고, 제주은행, 신협, 하나은행, 케이뱅크, 카카오뱅크, 삼성증권</li>
+              <div class="gap"></div>
+              <li>보내주신 후원금은 결연 복지시설의 아동·이용자를 위한 프로그램비에 우선 사용되며, 투명한 집행을 위해 사용 내역을 정기적으로 보고드립니다.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="row" id="npayDay" style="display:none">
+        <span class="key">네이버페이 출금일 <b>*</b></span>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="npayDay" checked> 1일</label>
+          <label class="opt"><input type="radio" name="npayDay"> 10일</label>
+        </div>
+      </div>
+
+      <!-- 자동이체: 예금주 정보 -->
+      <div id="autoFields">
+        <div class="row">
+          <span class="key">구분 <b>*</b></span>
+          <div class="opts">
+            <label class="opt"><input type="radio" name="acctType" checked> 개인</label>
+            <label class="opt"><input type="radio" name="acctType"> 법인</label>
+          </div>
+        </div>
+
+        <div class="row">
+          <span class="key">예금주명 <b>*</b></span>
+          <div class="name-line">
+            <div class="ownername">
+              <input type="text" id="ownerName" placeholder="예금주명">
+              <select><option value="">관계</option><option>본인</option><option>부모</option><option>배우자</option><option>자녀</option><option>기타</option></select>
+            </div>
+            <label class="chk"><input type="checkbox" id="sameAsDonor" onchange="sameDonor(this)"> 후원자와 같음</label>
+          </div>
+        </div>
+
+        <div class="row">
+          <span class="key">예금주 생년월일 <b>*</b></span>
+          <input type="text" class="grow" maxlength="6" placeholder="주민번호 앞 6자리" style="max-width:280px">
+        </div>
+
+        <div class="row">
+          <span class="key">예금주 연락처 <b>*</b></span>
+          <div class="tel">
+            <select><option>010</option><option>011</option><option>016</option><option>017</option><option>019</option></select>
+            <input type="text" class="num-in" placeholder="-">
+          </div>
+        </div>
+
+        <div class="row">
+          <span class="key">은행 <b>*</b></span>
+          <select class="grow" style="max-width:280px"><option value="">선택</option>
+            <option>KB국민은행</option><option>신한은행</option><option>우리은행</option><option>하나은행</option>
+            <option>NH농협은행</option><option>IBK기업은행</option><option>부산은행</option><option>경남은행</option>
+            <option>카카오뱅크</option><option>토스뱅크</option></select>
+        </div>
+
+        <div class="row">
+          <span class="key">계좌번호 <b>*</b></span>
+          <input type="text" class="grow" placeholder="‘-’ 없이 숫자만 입력" style="max-width:340px">
+        </div>
+      </div>
+
+      <!-- 약관 -->
+      <div class="row" id="agreeRow">
+        <span class="key">결제 동의 <b>*</b></span>
+        <div class="agree">
+          <label class="chk all"><input type="checkbox" id="agreeAll" onchange="toggleAll(this)"> <span id="agreeAllLabel">출금이체 및 개인정보 제공에 모두 동의합니다.</span></label>
+          <div class="agree-item"><label class="chk"><input type="checkbox" class="agItem"> <span id="agreeItem1Label">출금이체(자동이체) 동의</span> <em>(필수)</em></label><a href="#">상세보기</a></div>
+          <div class="agree-item"><label class="chk"><input type="checkbox" class="agItem"> 개인정보 제3자 제공 동의 <em>(필수)</em></label><a href="#">상세보기</a></div>
+        </div>
+      </div>
+
+      <div class="summary">
+        <div class="li"><span>후원사업</span><span id="summaryFacility">결연 복지시설 정기 후원</span></div>
+        <div class="li" id="summaryMethodRow"><span>후원방식</span><span id="summaryMethod">정기후원 (매월 자동이체)</span></div>
+        <div class="li tot" id="summaryTotRow"><span>매월 후원금액</span><span><b id="sumInline">0</b> 원</span></div>
+      </div>
+    </div>
+  </div>
+
+  <footer style="background:#fff;border-top:1px solid var(--line);padding:36px 24px 24px;color:var(--ink-faint);font-size:12.5px;line-height:1.9">
+    <div style="max-width:1040px;margin:0 auto;display:flex;flex-wrap:wrap;gap:24px;justify-content:space-between">
+      <div>
+        <p>나눔이음 사회복지시설 협의체</p>
+        <p>지역 복지시설과 크리에이터를 잇는 나눔 프로젝트 | 문의 look@nanumieum.example</p>
+        <p>Copyright © 나눔이음. All rights reserved.</p>
+      </div>
+      <div>
+        <a href="nanumieum_portal.html" style="color:var(--ink-soft);text-decoration:none;margin-right:14px">캠페인</a>
+        <a href="#" style="color:var(--ink-faint);text-decoration:none;margin-right:14px">이용약관</a>
+        <a href="#" style="color:var(--ink-soft);font-weight:700;text-decoration:none;margin-right:14px">개인정보처리방침</a>
+        <a href="#" style="color:var(--ink-faint);text-decoration:none">후원·제휴문의</a>
+      </div>
+    </div>
+  </footer>
+
+  <div class="bottombar">
+    <div class="bwrap">
+      <div class="sumbox" id="sumbox"><span class="heart"><svg class="lucide" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M2 9.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5"/></svg></span>총 후원금액 월 <span id="sumAmt">0</span>원</div>
+      <button class="prev" onclick="history.length>1?history.back():location.href='donate-step2.html';">이전단계</button>
+      <button class="done" id="doneBtn">후원 신청하기</button>
+    </div>
+  </div>
+
+<script>
+  const params = new URLSearchParams(location.search);
+  const method = params.get('method') || 'cash';
+  const amount = parseInt(params.get('amount'),10) || 0;
+  const freq = params.get('freq') || '';
+  const ptype = params.get('ptype') || '';
+  const provider = decodeURIComponent(params.get('provider') || '');
+  const facility = params.get('facility') || '결연 복지시설';
+  const ftype = params.get('ftype') || '';
+  const fmt = n => n.toLocaleString('ko-KR');
+
+  document.getElementById('summaryFacility').textContent =
+    facility + (ftype ? ` (${ftype})` : '') + ' 정기 후원';
+
+  const PTYPE_LABEL = {card:'카드 포인트', telecom:'통신사 멤버십', air:'항공마일리지'};
+  const FREQ_LABEL = {expire:'소멸 예정 포인트만 자동 이어주기', regular:'매달 정기적으로 이어주기'};
+
+  const tabs=document.getElementById('tabs');
+  const blocks = {
+    card: ['cardFields','agreeRow'],
+    auto: ['autoNotice','autoFields','agreeRow'],
+    npay: ['npayNotice','npayDay']
+  };
+  const allIds = ['cardFields','autoNotice','autoFields','npayNotice','npayDay','agreeRow'];
+  function showMethod(m){
+    allIds.forEach(id=>{ const el=document.getElementById(id); if(el) el.style.display='none'; });
+    blocks[m].forEach(id=>{
+      const el=document.getElementById(id); if(el) el.style.display = (id==='autoFields')?'block':'flex';
+    });
+  }
+
+  if(method === 'point'){
+    // ── 포인트 모드: 결제수단 탭·안내문·계좌입력 전부 숨기고 요약만 표시 ──
+    ['cashMethodRow','autoNotice','cardFields','npayNotice','npayDay','autoFields']
+      .forEach(id=>{ const el=document.getElementById(id); if(el) el.style.display='none'; });
+    document.getElementById('pointSummaryRow').style.display = 'flex';
+    document.getElementById('pointSummaryList').innerHTML = `
+      <li>결연 복지시설 : ${facility}${ftype ? ' ('+ftype+')' : ''}</li>
+      <li>이어주기 방식 : ${FREQ_LABEL[freq]||''}</li>
+      <li>포인트 종류 : ${PTYPE_LABEL[ptype]||''} (${provider})</li>
+      <li>매달 자동으로 확인해, 사라지기 전에 ${facility}에 이어드립니다.</li>
+      <li>귀하의 포인트는 100% 복지시설로 전달되며, 이 채널의 활동비는 별도로 지급됩니다.</li>`;
+
+    // ptype에 맞는 입력 필드만 노출
+    const PT_FIELD_ROW = {card:'pointCardFields', telecom:'pointTelecomFields', air:'pointAirFields'};
+    const targetRow = PT_FIELD_ROW[ptype];
+    if(targetRow){ document.getElementById(targetRow).style.display = 'flex'; }
+
+    document.getElementById('agreeRow').style.display = 'flex';
+    document.getElementById('agreeAllLabel').textContent = '포인트 이어주기 및 개인정보 제공에 모두 동의합니다.';
+    document.getElementById('agreeItem1Label').textContent = '포인트 자동 이어주기 동의';
+
+    document.getElementById('summaryMethod').textContent = `${PTYPE_LABEL[ptype]||''} · ${provider}`;
+    document.getElementById('summaryTotRow').innerHTML =
+      `<span>이어주기 방식</span><span><b>${FREQ_LABEL[freq]||''}</b></span>`;
+    document.getElementById('sumbox').innerHTML =
+      `<span class="heart"><svg class="lucide" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M2 9.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5"/></svg></span>${facility} · ${provider} · ${FREQ_LABEL[freq]||''}`;
+  } else {
+    // ── 현금 모드: 기존 결제수단 탭 로직 ──
+    document.getElementById('sumbox').innerHTML =
+      `<span class="heart"><svg class="lucide" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M2 9.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5"/></svg></span>${facility} 정기 후원 월 <span id="sumAmt">${fmt(amount)}</span>원`;
+    document.getElementById('sumInline').textContent = fmt(amount);
+    tabs.querySelectorAll('.tab').forEach(t=>{
+      t.addEventListener('click',()=>{
+        tabs.querySelectorAll('.tab').forEach(x=>x.classList.remove('sel'));
+        t.classList.add('sel');
+        showMethod(t.dataset.m);
+      });
+    });
+    showMethod('auto'); // 기본: 자동이체
+  }
+
+  function sameDonor(box){
+    document.getElementById('ownerName').value = box.checked ? '정재훈' : '';
+  }
+  function toggleAll(box){ document.querySelectorAll('.agItem').forEach(c=>c.checked=box.checked); }
+  document.addEventListener('change',e=>{
+    if(e.target.classList.contains('agItem')){
+      document.getElementById('agreeAll').checked=[...document.querySelectorAll('.agItem')].every(c=>c.checked);
+    }
+  });
+  function pointInputSummary(){
+    if(ptype === 'card'){
+      const nums = [...document.querySelectorAll('.pc-num')].map(i=>i.value.trim());
+      if(nums.some(n=>n.length!==4)) return null;
+      return `카드번호 끝자리 ****-****-****-${nums[3]}`;
+    }
+    if(ptype === 'telecom'){
+      const first = document.getElementById('pt-tel-first').value;
+      const mid = document.getElementById('pt-tel-mid').value.trim();
+      const last = document.getElementById('pt-tel-last').value.trim();
+      if(mid.length!==4 || last.length!==4) return null;
+      return `휴대폰 ${first}-${mid}-${last}`;
+    }
+    if(ptype === 'air'){
+      const num = document.getElementById('pt-air-num').value.trim();
+      if(!num) return null;
+      return `회원번호 ${num}`;
+    }
+    return '';
+  }
+
+  document.getElementById('doneBtn').addEventListener('click',()=>{
+    const needAgree = document.getElementById('agreeRow').style.display !== 'none';
+    if(needAgree && ![...document.querySelectorAll('.agItem')].every(c=>c.checked)){ alert('필수 약관에 동의해 주세요.'); return; }
+
+    let pointInfo = '';
+    if(method === 'point'){
+      pointInfo = pointInputSummary();
+      if(pointInfo === null){
+        const FIELD_NAME = {card:'카드번호', telecom:'휴대폰번호', air:'마일리지 회원번호'};
+        alert(`${FIELD_NAME[ptype]||'정보'}를 정확히 입력해 주세요.`);
+        return;
+      }
+    }
+
+    if(method === 'point'){
+      alert(`포인트 이어주기 신청이 완료되었습니다.\n${provider}(${pointInfo})의 ${FREQ_LABEL[freq]||''}가 ${facility}에 전달됩니다.\n참여해 주셔서 감사합니다.`);
+    } else {
+      alert(`후원 신청이 완료되었습니다. ${facility}에 매월 ${fmt(amount)}원이 정기 후원됩니다.\n참여해 주셔서 감사합니다.`);
+    }
+    location.href='nanumieum_portal.html';
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>나눔이음 링크 만들어보기 | 나눔이음</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/gh/sun-typeface/SUIT@2/fonts/variable/woff2/SUIT-Variable.css" rel="stylesheet">
+<style>
+  @font-face{
+    font-family:'Jalnan';
+    src:url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.2/JalnanOTF00.woff') format('woff');
+    font-weight:normal;font-style:normal;font-display:swap;
+  }
+  :root{
+    --paper:#FBF7F7;--paper-2:#F6EFEE;--ink:#2B2430;--ink-soft:#6B5F68;--ink-faint:#A79AA0;
+    --red:#EE6F93;--red-dark:#C94F71;--thread:#45BC92;--thread-soft:#DEF6EC;
+    --yellow:#F6C640;--yellow-soft:#FFF3D2;--yellow-dark:#B5860E;
+    --line:#F0E1E6;--card:#FFFFFF;--field:#F0E1E6;--gray:#8A7D85;--brown:#C94F71;
+    --r-lg:22px;--r-md:14px;--r-sm:10px;--wrap:1040px;
+    --sans:'SUIT Variable','SUIT',-apple-system,BlinkMacSystemFont,'Malgun Gothic',sans-serif;
+    --serif:'Jalnan','Gowun Batang','Nanum Myeongjo',serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:var(--sans);color:var(--ink);background:var(--paper);line-height:1.7;-webkit-font-smoothing:antialiased}
+  img{max-width:100%;display:block}
+  .lucide{width:1em;height:1em;display:inline-block;vertical-align:-0.15em;flex:none}
+  .wrap{max-width:var(--wrap);margin:0 auto;padding:0 24px}
+
+  .dnav{position:sticky;top:0;z-index:50;background:rgba(251,247,247,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+  .dnav-in{max-width:var(--wrap);margin:0 auto;padding:0 24px;height:58px;display:flex;align-items:center;justify-content:space-between}
+  .dbrand{font-family:var(--serif);font-weight:700;font-size:18px;letter-spacing:-.02em;color:var(--ink);text-decoration:none}
+  .dbrand em{font-style:normal;color:var(--red)}
+  .dback{font-size:13.5px;color:var(--ink-soft);text-decoration:none}
+  .dback:hover{color:var(--ink)}
+
+  .banner{
+    background:linear-gradient(135deg,var(--paper-2) 0%,var(--thread-soft) 55%,var(--paper-2) 100%);
+    position:relative;overflow:hidden;padding:52px 0 46px;
+  }
+  .banner .inner{max-width:var(--wrap);margin:0 auto;width:100%;padding:0 24px;position:relative;z-index:2}
+  .banner .eyebrow{
+    display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:var(--red-dark);
+    background:#fff;padding:7px 16px;border-radius:100px;margin-bottom:16px;
+  }
+  .banner .eyebrow::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--red)}
+  .banner h1{
+    font-family:var(--serif);font-size:clamp(22px,3.4vw,32px);font-weight:700;line-height:1.5;
+    color:var(--ink);letter-spacing:-.02em;margin-bottom:10px;
+  }
+  .banner p{font-size:14.5px;color:var(--ink-soft);max-width:520px}
+  .banner .heart{position:absolute;opacity:.8;pointer-events:none}
+
+  .steps{display:flex;justify-content:center;gap:0;margin:44px auto 10px;max-width:560px}
+  .step{flex:1;text-align:center;position:relative}
+  .step .num{
+    width:34px;height:34px;border-radius:50%;background:var(--card);border:2px solid var(--line);
+    color:var(--ink-faint);font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center;
+    margin:0 auto 12px;position:relative;z-index:2;
+  }
+  .step.on .num{background:var(--red);border-color:var(--red);color:#fff}
+  .step .bar{position:absolute;top:17px;left:50%;width:100%;height:2px;background:var(--line);z-index:1}
+  .step:last-child .bar{display:none}
+  .step .lbl{margin-top:2px;font-size:13.5px;color:var(--ink-soft);font-weight:500}
+  .step.on .lbl{color:var(--ink);font-weight:700}
+
+  .section{padding:30px 0 10px}
+  .sec-head{display:flex;align-items:baseline;gap:12px;border-bottom:2px solid var(--ink);padding-bottom:14px;margin-bottom:6px}
+  .sec-head h2{font-size:21px;font-weight:800}
+  .sec-head span{font-size:14px;color:var(--gray)}
+
+  /* ── 1단계: 채널 URL 입력 ── */
+  .url-field{padding:22px 4px 8px}
+  .url-field input{
+    width:100%;border:2px solid var(--line);border-radius:var(--r-sm);padding:16px 18px;
+    font-family:inherit;font-size:15px;color:var(--ink);background:var(--card);outline:none;transition:border-color .15s;
+  }
+  .url-field input:focus{border-color:var(--red)}
+  .url-field .hint{font-size:12.5px;color:var(--ink-faint);margin-top:8px}
+  .url-field .warn{font-size:12.5px;color:var(--red-dark);margin-top:8px;display:none}
+  .url-field.invalid input{border-color:var(--red-dark)}
+  .url-field.invalid .warn{display:block}
+
+  /* ── 시설 선택 (기존 기부하기 시설선택 그대로 재사용) ── */
+  .facility-tools{padding:20px 4px 0}
+  .facility-search{
+    width:100%;border:1px solid var(--line);border-radius:100px;padding:12px 18px;
+    font-family:inherit;font-size:14px;color:var(--ink);background:var(--card);outline:none;
+    margin-bottom:12px;transition:border-color .15s;
+  }
+  .facility-search:focus{border-color:var(--red)}
+  .facility-filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:4px}
+  .ffilter{
+    border:1px solid var(--line);background:var(--card);color:var(--ink-soft);
+    padding:7px 15px;border-radius:100px;font-size:13px;font-weight:600;cursor:pointer;
+    font-family:inherit;transition:all .15s;
+  }
+  .ffilter[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+  .facility-count{font-size:12.5px;color:var(--ink-faint);padding:14px 4px 10px}
+  .facility-empty{padding:24px 4px;color:var(--ink-faint);font-size:13.5px}
+
+  /* ── 링크 생성창: 지금 고른 시설을 그대로 보여주는 실시간 미리보기 ── */
+  .link-preview{
+    display:none;align-items:center;gap:14px;background:var(--thread-soft);
+    border-radius:var(--r-md);padding:14px 16px;margin:10px 4px 20px;
+  }
+  .link-preview.show{display:flex}
+  .link-preview img{width:64px;height:36px;border-radius:var(--r-sm);object-fit:cover;flex:none;background:var(--line)}
+  .link-preview .lp-text{font-size:12.5px;color:#1F5344;line-height:1.4}
+  .link-preview .lp-text b{display:block;font-size:14px;color:var(--ink);margin-bottom:2px}
+  .facility-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;padding:6px 4px 26px}
+  .fcard-pick{
+    text-align:left;background:var(--card);border:2px solid var(--line);border-radius:var(--r-md);
+    padding:16px 18px;cursor:pointer;font-family:inherit;transition:border-color .15s,transform .15s;
+  }
+  .fcard-pick:hover{transform:translateY(-2px)}
+  .fcard-pick[aria-pressed="true"]{border-color:var(--red)}
+  .fcard-pick b{display:block;font-size:15px;font-weight:700;margin-bottom:4px;letter-spacing:-.01em}
+  .fcard-pick span{font-size:12.5px;color:var(--ink-soft)}
+  .fcard-pick .badge{
+    display:inline-block;margin-top:8px;font-size:11px;font-weight:700;color:var(--red-dark);
+    background:var(--paper-2);padding:3px 9px;border-radius:100px;
+  }
+
+  .next{display:block;width:100%;max-width:560px;margin:34px auto 24px;background:var(--red);color:#fff;
+    border:0;padding:20px;font-size:18px;font-weight:700;border-radius:var(--r-sm);cursor:pointer;transition:.15s;font-family:inherit}
+  .next:hover{background:var(--red-dark)}
+  .next:disabled{background:var(--line);color:var(--ink-faint);cursor:not-allowed}
+
+  /* ── 결과 박스 ── */
+  .result{
+    display:none;max-width:560px;margin:0 auto 70px;background:var(--card);border:2px solid var(--thread);
+    border-radius:var(--r-lg);padding:26px 24px;text-align:center;
+  }
+  .result.show{display:block}
+  .result .tag{
+    display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;color:#1F5344;
+    background:var(--thread-soft);padding:6px 14px;border-radius:100px;margin-bottom:14px;
+  }
+  .result h3{font-family:var(--serif);font-size:18px;font-weight:700;margin-bottom:16px}
+  .result-link{
+    display:flex;align-items:center;gap:8px;background:var(--paper-2);border:1px solid var(--line);
+    border-radius:100px;padding:6px 6px 6px 18px;margin-bottom:14px;
+  }
+  .result-link input{
+    flex:1;border:0;background:none;font-family:inherit;font-size:13px;color:var(--ink-soft);outline:none;
+  }
+  .copy-btn{
+    flex:none;background:var(--ink);color:#fff;border:0;padding:10px 18px;border-radius:100px;
+    font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;
+  }
+  .copy-btn.copied{background:var(--thread)}
+  .result .preview-link{font-size:13px;font-weight:700;color:var(--red-dark);text-decoration:none}
+  .result .target-line{font-size:12.5px;color:#1F5344;background:var(--thread-soft);padding:10px 14px;border-radius:var(--r-sm);margin-bottom:14px}
+  .result .target-line b{color:var(--ink)}
+  .result .cap{font-size:11.5px;color:var(--ink-faint);margin-top:16px;line-height:1.6}
+
+  footer{background:var(--ink);color:var(--ink-faint);padding:30px 24px;font-size:12.5px;text-align:center}
+  footer a{color:var(--ink-faint);text-decoration:none;margin:0 10px}
+  footer a:hover{color:#fff}
+</style>
+</head>
+<body>
+
+<nav class="dnav">
+  <div class="dnav-in">
+    <a href="nanumieum_portal.html" class="dbrand">나눔<em>이음</em></a>
+    <a href="benefit-influencer.html" class="dback"><svg class="lucide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg> 인플루언서 혜택으로 돌아가기</a>
+  </div>
+</nav>
+
+<section class="banner">
+  <svg class="heart" style="top:18%;left:6%;width:26px" viewBox="0 0 24 24" fill="var(--red)"><path d="M12 21s-7.5-4.6-10.2-9.1C.2 9.1 1 5.6 4.2 4.4c2-.8 4.1 0 5.3 1.7l2.5 3.5 2.5-3.5c1.2-1.7 3.3-2.5 5.3-1.7 3.2 1.2 4 4.7 2.4 7.5C19.5 16.4 12 21 12 21z"/></svg>
+  <svg class="heart" style="bottom:14%;right:8%;width:34px" viewBox="0 0 24 24" fill="var(--thread)"><path d="M12 21s-7.5-4.6-10.2-9.1C.2 9.1 1 5.6 4.2 4.4c2-.8 4.1 0 5.3 1.7l2.5 3.5 2.5-3.5c1.2-1.7 3.3-2.5 5.3-1.7 3.2 1.2 4 4.7 2.4 7.5C19.5 16.4 12 21 12 21z"/></svg>
+  <div class="inner">
+    <p class="eyebrow">나눔이음 링크 만들어보기</p>
+    <h1>채널과 복지시설을 이으면,<br>결연 링크가 만들어집니다</h1>
+    <p>내 유튜브 채널 URL과 결연할 복지시설을 고르면, 영상 더보기란에 붙여넣을 나눔이음 링크가 만들어집니다.</p>
+  </div>
+</section>
+
+<div class="wrap">
+
+  <div class="steps">
+    <div class="step on"><div class="num">01</div><div class="bar"></div><div class="lbl">채널 URL 입력</div></div>
+    <div class="step" id="step2Dot"><div class="num">02</div><div class="bar"></div><div class="lbl">복지시설 선택</div></div>
+    <div class="step" id="step3Dot"><div class="num">03</div><div class="lbl">링크 생성</div></div>
+  </div>
+
+  <div class="section">
+    <div class="sec-head"><h2>1. 유튜브 채널 URL</h2><span>결연에 사용할 채널 주소를 입력해 주세요.</span></div>
+    <div class="url-field" id="urlField">
+      <input type="text" id="channelUrl" placeholder="https://www.youtube.com/@내채널">
+      <p class="hint">예: https://www.youtube.com/@nanumieum</p>
+      <p class="warn">유튜브 채널 URL 형식으로 입력해 주세요. (youtube.com 포함)</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="sec-head"><h2>2. 결연할 복지시설 선택</h2><span>결연 링크를 이어줄 시설을 골라주세요.</span></div>
+
+    <div class="facility-tools">
+      <input type="text" id="facilitySearch" class="facility-search" placeholder="복지시설명으로 검색 (예: 지역아동센터, 노인복지관, 보육원)">
+      <div class="facility-filters" id="facilityFilters" role="group" aria-label="복지시설 유형 필터">
+        <button type="button" class="ffilter" data-t="all" aria-pressed="true">전체</button>
+      </div>
+    </div>
+
+    <p class="facility-count"><b id="facilityCount">0</b>곳 중에서 골라주세요</p>
+    <div class="facility-grid" id="facilityGrid" role="group" aria-label="결연 복지시설 선택"></div>
+    <p class="facility-empty" id="facilityEmpty" style="display:none">검색 결과가 없습니다. 다른 검색어를 입력해 보세요.</p>
+
+    <div class="link-preview" id="linkPreview">
+      <img id="lpThumb" src="" alt="">
+      <div class="lp-text"><b id="lpName">-</b>이 복지시설로 나눔이음 링크를 만듭니다</div>
+    </div>
+  </div>
+
+  <button class="next" id="makeBtn" disabled>나눔이음 링크 만들기</button>
+
+  <div class="result" id="result">
+    <span class="tag"><svg class="lucide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> 링크가 만들어졌습니다</span>
+    <h3 id="resultTitle">나눔이음 링크</h3>
+    <div class="result-link">
+      <input type="text" id="resultUrl" readonly>
+      <button class="copy-btn" id="copyBtn">복사하기</button>
+    </div>
+    <p class="target-line">지금 이 링크는 <b id="resultFacility">-</b> 기부페이지로 연결됩니다.</p>
+    <a class="preview-link" id="previewLink" href="#" target="_blank" rel="noopener">이 링크를 누르면 어떤 화면이 나오는지 미리 보기 →</a>
+    <p class="cap">이 링크를 영상 더보기란에 붙여두면, 시청자가 눌렀을 때 포인트 기부 페이지로 바로 연결됩니다.</p>
+  </div>
+
+</div>
+
+<footer>
+  나눔이음 사회복지시설 협의체 · 지역 복지시설과 크리에이터를 잇는 나눔 프로젝트 · 문의 look@nanumieum.example
+</footer>
+
+<script>
+  /* ── 결연 시설 선택 (기부하기 페이지와 동일한 데이터·로직 재사용) ── */
+  const FACILITIES = [{n:"경동원(수원)",t:"영유아 보육시설",c:"개천에서 용재난다",v:"Y1LqqbS6HI4"},{n:"조은나무지역아동센터",t:"지역아동센터",c:"조은",v:"7M_rAFgX1b8"},{n:"남양주시지역아동센터",t:"지역아동센터",c:"복지학교",v:"-0NXL48xMEU"},{n:"동산지역아동센터",t:"지역아동센터",c:"봄앤이야기",v:"ME789zEGBNI"},{n:"반월지역아동센터",t:"지역아동센터",c:"고경률",v:"2ClgWV1CTdU"},{n:"삼전지역아동센터",t:"지역아동센터",c:"CCMHUB Official",v:"iGZD_6LKMEo"},{n:"대구보육원",t:"아동양육시설/보육원",c:"이기운 아코디언",v:"MwkipVs8cS4"},{n:"명륜보육원",t:"아동양육시설/보육원",c:"도다미즘",v:"hJaaLZeldXA"},{n:"실로암보육원",t:"아동양육시설/보육원",c:"욕쟁이빵실이이모",v:"2O1L8lsptPk"},{n:"인천보육원",t:"아동양육시설/보육원",c:"HAUS 에어컨 이야기",v:"CVYNujaRCJ0"},{n:"청운보육원",t:"아동양육시설/보육원",c:"방충망대장",v:"YMjajawG-4g"},{n:"성보재활원",t:"장애인복지",c:"성보재활원",v:"7YvmiKC4Bts"},{n:"경상북도시각장애인복지관",t:"장애인복지",c:"시각장애인 TV 김일근이 사는 세상",v:"ROjz-BTOKfE"},{n:"광명장애인복지관",t:"장애인복지",c:"클린인피니티",v:"axjax0Njf48"},{n:"광양장애인복지관",t:"장애인복지",c:"광양장복 TV",v:"U1snwPmZLJQ"},{n:"광주서구장애인복지관",t:"장애인복지",c:"문은주(무지개사랑)",v:"marZcjF7NIQ"},{n:"포천노인복지관",t:"노인복지",c:"이원발TV",v:"DIkOLCpu_nM"},{n:"미추홀노인복지관",t:"노인복지",c:"김윤서심리운동발달센터",v:"CfcclUJn-TE"},{n:"부평노인복지관",t:"노인복지",c:"가체짱tv",v:"tRKffaEo9xY"},{n:"용강노인복지관",t:"노인복지",c:"고운향기",v:"g7rDuvtF6rU"},{n:"화성시서부노인복지관",t:"노인복지",c:"바우새미TV(심 문보)",v:"AXgK9K417Rg"},{n:"그라테스요양원",t:"노인복지",c:"폴라리스색소폰 클럽",v:"G05yOjElS4Y"},{n:"금천노인종합복지관",t:"기타복지시설",c:"화이트샌즈",v:"VvmfWicHkMk"},{n:"마포복지관",t:"기타복지시설",c:"탁이랜드 takiland",v:"3iCYf9VYbSc"},{n:"무더위쉼터",t:"기타복지시설",c:"KTV  다큐",v:"Aaqd4FC6nps"},{n:"비대면복지관",t:"기타복지시설",c:"할머니의 리포트 Grandma Report",v:"KgDLy82_kSM"}];
+
+  const facilityGrid = document.getElementById('facilityGrid');
+  const facilitySearch = document.getElementById('facilitySearch');
+  const facilityFilters = document.getElementById('facilityFilters');
+  const facilityCount = document.getElementById('facilityCount');
+  const facilityEmpty = document.getElementById('facilityEmpty');
+
+  let facilityName = '';
+  let facilityType = '';
+  let activeTypeFilter = 'all';
+
+  const uniqueTypes = [...new Set(FACILITIES.map(f=>f.t))];
+  uniqueTypes.forEach(t=>{
+    const b = document.createElement('button');
+    b.type='button'; b.className='ffilter'; b.dataset.t=t; b.setAttribute('aria-pressed','false');
+    b.textContent = t;
+    facilityFilters.appendChild(b);
+  });
+
+  function showLinkPreview(item){
+    document.getElementById('lpThumb').src = `https://i.ytimg.com/vi/${item.v}/mqdefault.jpg`;
+    document.getElementById('lpName').textContent = item.n;
+    document.getElementById('linkPreview').classList.add('show');
+  }
+
+  function renderFacilities(){
+    const q = facilitySearch.value.trim().toLowerCase();
+    const list = FACILITIES.filter(f=>{
+      const matchType = activeTypeFilter==='all' || f.t===activeTypeFilter;
+      const matchQ = !q || f.n.toLowerCase().includes(q) || f.t.toLowerCase().includes(q);
+      return matchType && matchQ;
+    });
+    facilityCount.textContent = list.length;
+    facilityEmpty.style.display = list.length ? 'none' : 'block';
+    facilityGrid.innerHTML = list.map(f=>`
+      <button type="button" class="fcard-pick" data-name="${f.n}" data-type="${f.t}" data-vid="${f.v}" data-ch="${f.c}"
+        aria-pressed="${f.n===facilityName}">
+        <b>${f.n}</b><span>${f.t}</span>
+        <span class="badge">${f.c} 결연</span>
+      </button>`).join('');
+
+    facilityGrid.querySelectorAll('.fcard-pick').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        facilityGrid.querySelectorAll('.fcard-pick').forEach(b=>b.setAttribute('aria-pressed','false'));
+        btn.setAttribute('aria-pressed','true');
+        facilityName = btn.dataset.name;
+        facilityType = btn.dataset.type;
+        showLinkPreview({v:btn.dataset.vid, n:btn.dataset.name});
+        checkReady();
+        if(result.classList.contains('show')) generateLink();
+      });
+    });
+  }
+
+  facilitySearch.addEventListener('input', renderFacilities);
+  facilityFilters.addEventListener('click', (e)=>{
+    const btn = e.target.closest('.ffilter');
+    if(!btn) return;
+    facilityFilters.querySelectorAll('.ffilter').forEach(b=>b.setAttribute('aria-pressed','false'));
+    btn.setAttribute('aria-pressed','true');
+    activeTypeFilter = btn.dataset.t;
+    renderFacilities();
+  });
+
+  renderFacilities();
+
+  /* ── 채널 URL 입력 ── */
+  const channelUrl = document.getElementById('channelUrl');
+  const urlField = document.getElementById('urlField');
+  const step2Dot = document.getElementById('step2Dot');
+  const step3Dot = document.getElementById('step3Dot');
+  const makeBtn = document.getElementById('makeBtn');
+
+  function isValidChannelUrl(v){
+    return /youtube\.com\/(@|channel\/|c\/|user\/)/i.test(v.trim());
+  }
+
+  function checkReady(){
+    const urlOk = isValidChannelUrl(channelUrl.value);
+    urlField.classList.toggle('invalid', channelUrl.value.trim().length>0 && !urlOk);
+    step2Dot.classList.toggle('on', urlOk);
+    const ready = urlOk && !!facilityName;
+    step3Dot.classList.toggle('on', ready);
+    makeBtn.disabled = !ready;
+  }
+  channelUrl.addEventListener('input', ()=>{
+    checkReady();
+    if(result.classList.contains('show') && isValidChannelUrl(channelUrl.value)) generateLink();
+  });
+
+  /* ── 링크 생성 ── */
+  const result = document.getElementById('result');
+  const resultUrl = document.getElementById('resultUrl');
+  const previewLink = document.getElementById('previewLink');
+  const copyBtn = document.getElementById('copyBtn');
+
+  function slugify(text){
+    return text.replace(/[()]/g,'').replace(/\s+/g,'-');
+  }
+
+  function extractChannelHandle(url){
+    const u = url.trim();
+    let m = u.match(/youtube\.com\/@([^/?&\s]+)/i);
+    if(m) return m[1];
+    m = u.match(/youtube\.com\/(?:channel|c|user)\/([^/?&\s]+)/i);
+    if(m) return slugify(m[1]);
+    return 'channel';
+  }
+
+  let currentCode = null;
+
+  function generateLink(){
+    if(currentCode === null) currentCode = Math.random().toString(36).slice(2,8);
+    const handle = extractChannelHandle(channelUrl.value);
+    const slug = `${handle}-${currentCode}`;
+
+    // 실제로 클릭했을 때 이동할 포인트 기부 페이지 — 채널·시설 정보를 링크 자체에 담는다.
+    // (실제 서비스라면 이 slug를 서버가 채널·시설 정보로 변환해 짧은 주소로 제공하겠지만,
+    //  지금은 백엔드가 없는 정적 사이트이므로 파라미터를 링크에 직접 담아 그대로 작동하게 한다.)
+    const params = new URLSearchParams({
+      facility: facilityName,
+      ftype: facilityType,
+      channel: channelUrl.value.trim(),
+      link: slug
+    });
+    const generated = `${location.origin}${location.pathname.replace(/make-link\.html$/, '')}point-donate.html?${params.toString()}`;
+
+    resultUrl.value = generated;
+    document.getElementById('resultFacility').textContent = facilityName;
+    previewLink.href = generated;
+  }
+
+  makeBtn.addEventListener('click', ()=>{
+    if(makeBtn.disabled) return;
+    generateLink();
+    result.classList.add('show');
+    result.scrollIntoView({behavior:'smooth', block:'center'});
+  });
+
+  copyBtn.addEventListener('click', async ()=>{
+    try{
+      await navigator.clipboard.writeText(resultUrl.value);
+      copyBtn.textContent = '복사됨';
+      copyBtn.classList.add('copied');
+      setTimeout(()=>{ copyBtn.textContent='복사하기'; copyBtn.classList.remove('copied'); }, 1600);
+    }catch(e){
+      resultUrl.select();
+    }
+  });
+</script>
+
+</body>
+</html>

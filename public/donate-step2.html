@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>후원회원정보 | 나눔이음</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/gh/sun-typeface/SUIT@2/fonts/variable/woff2/SUIT-Variable.css" rel="stylesheet">
+<style>
+  @font-face{
+    font-family:'Jalnan';
+    src:url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.2/JalnanOTF00.woff') format('woff');
+    font-weight:normal;font-style:normal;font-display:swap;
+  }
+  :root{
+    --paper:#FBF7F7;--paper-2:#F6EFEE;--ink:#2B2430;--ink-soft:#6B5F68;--ink-faint:#A79AA0;
+    --red:#EE6F93;--red-dark:#C94F71;--thread:#45BC92;--thread-soft:#DEF6EC;
+    --yellow:#F6C640;--yellow-soft:#FFF3D2;--yellow-dark:#B5860E;
+    --line:#F0E1E6;--card:#FFFFFF;--field:#F0E1E6;--gray:#8A7D85;--brown:#C94F71;
+    --r-lg:22px;--r-md:14px;--r-sm:10px;--wrap:1040px;
+    --sans:'SUIT Variable','SUIT',-apple-system,BlinkMacSystemFont,'Malgun Gothic',sans-serif;
+    --serif:'Jalnan','Gowun Batang','Nanum Myeongjo',serif;
+  }
+    *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:var(--sans);color:var(--ink);background:var(--paper);line-height:1.7;-webkit-font-smoothing:antialiased}
+  img{max-width:100%;display:block}
+  .lucide{width:1em;height:1em;display:inline-block;vertical-align:-0.15em;flex:none}
+  .wrap{max-width:var(--wrap);margin:0 auto;padding:0 24px}
+
+  /* banner */
+  .banner{
+    background:linear-gradient(135deg,var(--paper-2) 0%,var(--thread-soft) 55%,var(--paper-2) 100%);
+    position:relative;overflow:hidden;padding:52px 0 46px;
+  }
+  .banner .inner{max-width:var(--wrap);margin:0 auto;width:100%;padding:0 24px;position:relative;z-index:2}
+  .banner .eyebrow{
+    display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:var(--red-dark);
+    background:#fff;padding:7px 16px;border-radius:100px;margin-bottom:16px;
+  }
+  .banner .eyebrow::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--red)}
+  .banner h1{
+    font-family:var(--serif);font-size:clamp(22px,3.4vw,32px);font-weight:700;line-height:1.5;
+    color:var(--ink);letter-spacing:-.02em;
+  }
+  .banner .heart{position:absolute;opacity:.8;pointer-events:none}
+
+  /* steps */
+  .steps{display:flex;justify-content:center;gap:0;margin:44px auto 10px;max-width:680px}
+  .step{flex:1;text-align:center;position:relative}
+  .step .num{
+    width:34px;height:34px;border-radius:50%;background:var(--card);border:2px solid var(--line);
+    color:var(--ink-faint);font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center;
+    margin:0 auto 12px;position:relative;z-index:2;
+  }
+  .step .dot{display:none}
+  .step.on .num{background:var(--red);border-color:var(--red);color:#fff}
+  .step .bar{position:absolute;top:17px;left:50%;width:100%;height:2px;background:var(--line);z-index:1}
+  .step:last-child .bar{display:none}
+  .step .lbl{margin-top:2px;font-size:13.5px;color:var(--ink-soft);font-weight:500}
+  .step.on .lbl{color:var(--ink);font-weight:700}
+
+  /* form */
+  .section{padding:40px 0 10px}
+  .sec-head{font-size:21px;font-weight:800;border-bottom:2px solid var(--ink);padding-bottom:14px;margin-bottom:8px}
+  .row{display:flex;align-items:center;gap:20px;padding:26px 4px;border-bottom:1px solid var(--line)}
+  .row .key{min-width:150px;font-size:16px;font-weight:600}
+  .row .key b{color:var(--red-dark);font-weight:700}
+  .opts{display:flex;gap:48px;align-items:center}
+  .opt{display:flex;align-items:center;gap:10px;font-size:16px;cursor:pointer}
+  .opt input{width:20px;height:20px;accent-color:var(--red)}
+  .chk{display:flex;align-items:center;gap:10px;font-size:16px;cursor:pointer}
+  .chk input{width:20px;height:20px;accent-color:var(--red)}
+  input[type=text],input[type=number]{border:1px solid var(--field);border-radius:var(--r-sm);padding:14px 16px;font-size:15px;font-family:inherit;outline:none;color:var(--ink)}
+  input::placeholder{color:var(--ink-faint)}
+  .grow{flex:1}
+  .name-in{flex:1}
+  .dob{display:flex;align-items:center;border:1px solid var(--field);border-radius:var(--r-sm);flex:1;overflow:hidden}
+  .dob input{border:0;flex:1;text-align:center}
+  .dob span{color:var(--ink-faint)}
+  .tel{display:flex;gap:10px;flex:1;align-items:stretch}
+  .tel select{border:1px solid var(--field);border-radius:var(--r-sm);padding:0 14px;font-size:15px;font-family:inherit;background:#fff;min-width:120px}
+  .tel .num-in{flex:1}
+  .tel .verify{background:var(--brown);color:#fff;border:0;border-radius:var(--r-sm);padding:0 24px;font-size:15px;font-weight:600;cursor:pointer;white-space:nowrap}
+
+  /* extra section */
+  .key small{display:block;font-size:13px;color:var(--gray);font-weight:400;margin-top:4px}
+  .email{display:flex;align-items:center;gap:10px;flex:1}
+  .email .at{color:var(--ink-faint)}
+  .email .dom{flex:1}
+  .email select{border:1px solid var(--field);border-radius:var(--r-sm);padding:0 14px;font-size:15px;font-family:inherit;background:#fff;min-width:130px}
+  .addr-row{align-items:flex-start}
+  .addr{flex:1;display:flex;flex-direction:column;gap:12px}
+  .addr-top{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  .addr .zip{width:180px;background:var(--paper-2)}
+  .zipbtn{border:1px solid var(--field);background:#fff;border-radius:var(--r-sm);padding:13px 22px;font-size:15px;font-weight:600;cursor:pointer;font-family:inherit}
+  .addr-help{font-size:13px;color:var(--gray);line-height:1.5}
+  .addr .addr1,.addr .addr2{width:100%}
+  .recv-row{align-items:flex-start}
+  .recv{flex:1}
+  .recv .opts{gap:40px;margin-bottom:14px}
+  .recv-note{font-size:13px;color:var(--gray);line-height:1.7}
+  .wrapopts{flex-wrap:wrap;gap:28px}
+  .agree-row{align-items:flex-start}
+  .agree{flex:1;display:flex;flex-direction:column;gap:12px}
+  .agree .all{font-weight:700}
+  .agree-item{display:flex;align-items:center;justify-content:space-between;background:var(--paper-2);border-radius:var(--r-sm);padding:14px 18px}
+  .agree-item em{color:var(--red-dark);font-style:normal;font-size:13px;margin-left:4px}
+  .agree-item a{color:var(--gray);font-size:13px;text-decoration:underline}
+
+  /* sticky bottom bar */
+  .bottombar{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--line);box-shadow:0 -4px 18px rgba(0,0,0,.06);z-index:20}
+  .bottombar .bwrap{max-width:1040px;margin:0 auto;padding:18px 24px;display:flex;align-items:center;gap:16px}
+  .sumbox{flex:1;background:var(--paper-2);border-radius:var(--r-md);padding:18px;text-align:center;font-size:16px;font-weight:700;color:var(--ink)}
+  .sumbox .heart{color:var(--red);margin-right:6px}
+  .bottombar .prev{background:var(--ink-soft);color:#fff;border:0;border-radius:var(--r-sm);padding:18px 34px;font-size:16px;font-weight:700;cursor:pointer;font-family:inherit}
+  .bottombar .next{background:var(--red);color:#fff;border:0;border-radius:var(--r-sm);padding:18px 40px;font-size:16px;font-weight:700;cursor:pointer;font-family:inherit}
+  .bottombar .next:hover{background:var(--red-dark)}
+
+  @media (max-width:720px){
+    .steps .lbl{font-size:11.5px}
+    .row{flex-direction:column;align-items:flex-start;gap:12px}
+    .row .key{min-width:0}
+    .opts{gap:24px}
+    .bottombar .bwrap{flex-wrap:wrap}.sumbox{order:-1;width:100%;flex:none}
+    .steps .lbl{font-size:12px}
+  }
+
+  /* ── 상단 내비 ── */
+  .dnav{position:sticky;top:0;z-index:50;background:rgba(251,247,247,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+  .dnav-in{max-width:var(--wrap);margin:0 auto;padding:0 24px;height:58px;display:flex;align-items:center;justify-content:space-between}
+  .dbrand{font-family:var(--serif);font-weight:700;font-size:18px;letter-spacing:-.02em;color:var(--ink);text-decoration:none}
+  .dbrand em{font-style:normal;color:var(--red)}
+  .dback{font-size:13.5px;color:var(--ink-soft);text-decoration:none}
+  .dback:hover{color:var(--ink)}
+
+</style>
+</head>
+<body>
+<nav class="dnav">
+  <div class="dnav-in">
+    <a href="nanumieum_portal.html" class="dbrand">나눔<em>이음</em></a>
+    <a href="nanumieum_portal.html" class="dback"><svg class="lucide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg> 포털로 돌아가기</a>
+  </div>
+</nav>
+
+  <!-- BANNER -->
+  <section class="banner">
+    <svg class="heart" style="top:18%;left:6%;width:26px" viewBox="0 0 24 24" fill="var(--red)"><path d="M12 21s-7.5-4.6-10.2-9.1C.2 9.1 1 5.6 4.2 4.4c2-.8 4.1 0 5.3 1.7l2.5 3.5 2.5-3.5c1.2-1.7 3.3-2.5 5.3-1.7 3.2 1.2 4 4.7 2.4 7.5C19.5 16.4 12 21 12 21z"/></svg>
+    <svg class="heart" style="bottom:14%;right:8%;width:34px" viewBox="0 0 24 24" fill="var(--thread)"><path d="M12 21s-7.5-4.6-10.2-9.1C.2 9.1 1 5.6 4.2 4.4c2-.8 4.1 0 5.3 1.7l2.5 3.5 2.5-3.5c1.2-1.7 3.3-2.5 5.3-1.7 3.2 1.2 4 4.7 2.4 7.5C19.5 16.4 12 21 12 21z"/></svg>
+    <div class="inner">
+      <p class="eyebrow">나눔이음 후원하기</p>
+      <h1>작은 손길이 이어져,<br>결연 복지시설에 닿습니다</h1>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <!-- STEPS -->
+    <div class="steps">
+      <div class="step"><div class="num">01</div><div class="dot"></div><div class="bar"></div><div class="lbl">후원사업 선택</div></div>
+      <div class="step on"><div class="num">02</div><div class="dot"></div><div class="bar"></div><div class="lbl">후원회원정보</div></div>
+      <div class="step"><div class="num">03</div><div class="dot"></div><div class="lbl">납입정보 입력 및 후원완료</div></div>
+    </div>
+
+    <!-- FORM -->
+    <div class="section">
+      <div class="sec-head">후원회원 여부 확인</div>
+
+      <div class="row">
+        <span class="key">회원구분 <b>*</b></span>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="mtype" checked> 개인</label>
+          <label class="opt"><input type="radio" name="mtype"> 기업</label>
+          <label class="opt"><input type="radio" name="mtype"> 단체</label>
+        </div>
+      </div>
+
+      <div class="row">
+        <span class="key">후원회원명 <b>*</b></span>
+        <input type="text" class="name-in" placeholder="이름을 입력해주세요.">
+      </div>
+
+      <div class="row">
+        <span class="key">기부금 영수증</span>
+        <label class="chk"><input type="checkbox"> 발급 신청</label>
+      </div>
+
+      <div class="row">
+        <span class="key">생년월일 <b>*</b></span>
+        <div class="dob">
+          <input type="number" placeholder="YYYY"><span>/</span>
+          <input type="number" placeholder="MM"><span>/</span>
+          <input type="number" placeholder="DD">
+        </div>
+      </div>
+
+      <div class="row">
+        <span class="key">성별 <b>*</b></span>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="sex"> 남</label>
+          <label class="opt"><input type="radio" name="sex"> 여</label>
+        </div>
+      </div>
+
+      <div class="row">
+        <span class="key">연락처 <b>*</b></span>
+        <div class="tel">
+          <select><option>010</option><option>011</option><option>016</option><option>017</option><option>019</option></select>
+          <input type="text" class="num-in" placeholder="-">
+          <button class="verify" onclick="showExtra()">회원확인하기</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 추가 정보 입력 (회원이 아닌 경우) -->
+    <div class="section" id="extra" style="display:none">
+      <div class="sec-head">추가 정보 입력</div>
+
+      <div class="row">
+        <span class="key">이메일 <b>*</b></span>
+        <div class="email">
+          <input type="text" class="grow" placeholder="이메일 아이디">
+          <span class="at">@</span>
+          <input type="text" class="dom" placeholder="직접입력" id="domInput">
+          <select id="domSel" onchange="onDom()">
+            <option value="">직접입력</option>
+            <option>naver.com</option><option>gmail.com</option><option>daum.net</option>
+            <option>hanmail.net</option><option>nate.com</option><option>kakao.com</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row addr-row">
+        <span class="key">주소 <b>*</b></span>
+        <div class="addr">
+          <div class="addr-top">
+            <input type="text" class="zip" placeholder="우편번호" readonly>
+            <button class="zipbtn" onclick="alert('우편번호 찾기 창을 엽니다.')">우편번호 찾기</button>
+            <span class="addr-help">회원님의 주소가 보이지 않는 경우,<br>주소를 갱신해주세요.</span>
+          </div>
+          <input type="text" class="addr1" placeholder="기본주소">
+          <input type="text" class="addr2" placeholder="상세주소">
+        </div>
+      </div>
+
+      <div class="row recv-row">
+        <span class="key">서비스 수신<small>정기 소식 및 행사 안내</small></span>
+        <div class="recv">
+          <div class="opts">
+            <label class="chk"><input type="checkbox" checked> 모바일</label>
+            <label class="chk"><input type="checkbox"> 이메일</label>
+            <label class="chk"><input type="checkbox"> 우편(가입/감사 서비스)</label>
+          </div>
+          <p class="recv-note">* 복지시설의 투명성을 위한 후원 관련 보고 및 감사 서비스는 수신 여부와 관계없이 발송될 수 있습니다.<br>* 정기 소식 및 사업 보고는 온라인 채널로 발송됩니다.</p>
+        </div>
+      </div>
+
+      <div class="row">
+        <span class="key">후원경로조사 <b>*</b></span>
+        <div class="opts wrapopts">
+          <label class="opt"><input type="radio" name="route"> 인터넷</label>
+          <label class="opt"><input type="radio" name="route"> 회원소개</label>
+          <label class="opt"><input type="radio" name="route"> TV, 라디오</label>
+          <label class="opt"><input type="radio" name="route"> 신문, 잡지</label>
+          <label class="opt"><input type="radio" name="route"> 안내자료</label>
+          <label class="opt"><input type="radio" name="route"> 기타</label>
+        </div>
+      </div>
+
+      <div class="row agree-row">
+        <span class="key">약관동의 <b>*</b></span>
+        <div class="agree">
+          <label class="chk all"><input type="checkbox" id="agreeAll" onchange="toggleAll(this)"> 이용약관, 개인정보 수집 및 이용에 모두 동의합니다.</label>
+          <div class="agree-item"><label class="chk"><input type="checkbox" class="agItem"> 이용약관 동의 <em>(필수)</em></label><a href="#">상세보기</a></div>
+          <div class="agree-item"><label class="chk"><input type="checkbox" class="agItem"> 개인정보 수집 및 이용 동의 <em>(필수)</em></label><a href="#">상세보기</a></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer style="background:#fff;border-top:1px solid var(--line);padding:36px 24px 24px;color:var(--ink-faint);font-size:12.5px;line-height:1.9">
+    <div style="max-width:1040px;margin:0 auto;display:flex;flex-wrap:wrap;gap:24px;justify-content:space-between">
+      <div>
+        <p>나눔이음 사회복지시설 협의체</p>
+        <p>지역 복지시설과 크리에이터를 잇는 나눔 프로젝트 | 문의 look@nanumieum.example</p>
+        <p>Copyright © 나눔이음. All rights reserved.</p>
+      </div>
+      <div>
+        <a href="nanumieum_portal.html" style="color:var(--ink-soft);text-decoration:none;margin-right:14px">캠페인</a>
+        <a href="#" style="color:var(--ink-faint);text-decoration:none;margin-right:14px">이용약관</a>
+        <a href="#" style="color:var(--ink-soft);font-weight:700;text-decoration:none;margin-right:14px">개인정보처리방침</a>
+        <a href="#" style="color:var(--ink-faint);text-decoration:none">후원·제휴문의</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- STICKY BAR -->
+  <div class="bottombar">
+    <div class="bwrap">
+      <div class="sumbox" id="sumbox"><span class="heart"><svg class="lucide" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M2 9.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5"/></svg></span><span id="facilityLabel">결연 복지시설</span> 정기 후원 월 <span id="sumAmt">0</span>원</div>
+      <button class="prev" onclick="history.length>1?history.back():location.href='donate.html';">이전단계</button>
+      <button class="next" id="nextBtn">다음단계</button>
+    </div>
+  </div>
+
+<script>
+  const params = new URLSearchParams(location.search);
+  const method = params.get('method') || 'cash';
+  const amount = parseInt(params.get('amount'),10) || 0;
+  const freq = params.get('freq') || '';
+  const ptype = params.get('ptype') || '';
+  const provider = params.get('provider') || '';
+  const facility = params.get('facility') || '결연 복지시설';
+  const ftype = params.get('ftype') || '';
+  const facilityQS = '&facility=' + encodeURIComponent(facility) + '&ftype=' + encodeURIComponent(ftype);
+
+  const PTYPE_LABEL = {card:'카드 포인트', telecom:'통신사 멤버십', air:'항공마일리지'};
+  const FREQ_LABEL = {expire:'소멸 예정 포인트', regular:'매달 정기'};
+
+  if(method === 'point'){
+    document.getElementById('sumbox').innerHTML =
+      `<span class="heart"><svg class="lucide" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M2 9.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5"/></svg></span>${facility} · ${decodeURIComponent(provider)} · ${FREQ_LABEL[freq]||''} 이어주기`;
+  } else {
+    document.getElementById('facilityLabel').textContent = facility;
+    document.getElementById('sumAmt').textContent = amount.toLocaleString('ko-KR');
+  }
+
+  document.getElementById('nextBtn').addEventListener('click',()=>{
+    if(method === 'point'){
+      location.href = 'donate-step3.html?method=point&freq=' + freq
+        + '&ptype=' + ptype + '&provider=' + encodeURIComponent(provider) + facilityQS;
+    } else {
+      location.href = 'donate-step3.html?method=cash&amount=' + amount + facilityQS;
+    }
+  });
+
+  function showExtra(){
+    const ex = document.getElementById('extra');
+    ex.style.display = 'block';
+    ex.scrollIntoView({behavior:'smooth',block:'start'});
+  }
+  function onDom(){
+    const sel = document.getElementById('domSel');
+    const inp = document.getElementById('domInput');
+    if(sel.value){ inp.value = sel.value; inp.readOnly = true; }
+    else { inp.value=''; inp.readOnly = false; inp.focus(); }
+  }
+  function toggleAll(box){
+    document.querySelectorAll('.agItem').forEach(c=>c.checked = box.checked);
+  }
+  document.addEventListener('change',e=>{
+    if(e.target.classList.contains('agItem')){
+      const all = [...document.querySelectorAll('.agItem')].every(c=>c.checked);
+      document.getElementById('agreeAll').checked = all;
+    }
+  });
+</script>
+</body>
+</html>

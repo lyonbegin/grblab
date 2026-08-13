@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>포인트 이어주기 | 나눔이음</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/gh/sun-typeface/SUIT@2/fonts/variable/woff2/SUIT-Variable.css" rel="stylesheet">
+<style>
+  @font-face{
+    font-family:'Jalnan';
+    src:url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.2/JalnanOTF00.woff') format('woff');
+    font-weight:normal;font-style:normal;font-display:swap;
+  }
+  :root{
+    --paper:#FBF7F7;--paper-2:#F6EFEE;--ink:#2B2430;--ink-soft:#6B5F68;--ink-faint:#A79AA0;
+    --red:#EE6F93;--red-dark:#C94F71;--thread:#45BC92;--thread-soft:#DEF6EC;
+    --yellow:#F6C640;--yellow-soft:#FFF3D2;--yellow-dark:#B5860E;
+    --line:#F0E1E6;--card:#FFFFFF;--gray:#8A7D85;
+    --r-lg:22px;--r-md:14px;--r-sm:10px;--wrap:760px;
+    --sans:'SUIT Variable','SUIT',-apple-system,BlinkMacSystemFont,'Malgun Gothic',sans-serif;
+    --serif:'Jalnan','Gowun Batang','Nanum Myeongjo',serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:var(--sans);color:var(--ink);background:var(--paper);line-height:1.7;-webkit-font-smoothing:antialiased}
+  img{max-width:100%;display:block}
+  .lucide{width:1em;height:1em;display:inline-block;vertical-align:-0.15em;flex:none}
+  .wrap{max-width:var(--wrap);margin:0 auto;padding:0 24px}
+
+  .dnav{position:sticky;top:0;z-index:50;background:rgba(251,247,247,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+  .dnav-in{max-width:var(--wrap);margin:0 auto;padding:0 24px;height:58px;display:flex;align-items:center;justify-content:space-between}
+  .dbrand{font-family:var(--serif);font-weight:700;font-size:18px;letter-spacing:-.02em;color:var(--ink);text-decoration:none}
+  .dbrand em{font-style:normal;color:var(--red)}
+  .dback{font-size:13.5px;color:var(--ink-soft);text-decoration:none;display:flex;align-items:center;gap:5px}
+  .dback:hover{color:var(--ink)}
+
+  .banner{
+    background:linear-gradient(135deg,var(--thread-soft) 0%,var(--paper-2) 55%,var(--paper-2) 100%);
+    position:relative;overflow:hidden;padding:44px 0 40px;
+  }
+  .banner .inner{max-width:var(--wrap);margin:0 auto;width:100%;padding:0 24px;position:relative;z-index:2}
+  .banner .eyebrow{
+    display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:var(--red-dark);
+    background:#fff;padding:7px 16px;border-radius:100px;margin-bottom:16px;
+  }
+  .banner .eyebrow::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--red)}
+  .banner h1{
+    font-family:var(--serif);font-size:clamp(20px,3vw,28px);font-weight:700;line-height:1.5;
+    color:var(--ink);letter-spacing:-.02em;margin-bottom:18px;
+  }
+  .banner .heart{position:absolute;opacity:.8;pointer-events:none}
+
+  /* ── 연결된 채널·시설 카드 ── */
+  .link-card{
+    background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);
+    padding:18px 20px;box-shadow:0 18px 40px -28px rgba(70,40,18,.35);
+  }
+  .link-card .lc-row{display:flex;align-items:center;gap:14px}
+  .lc-node{display:flex;align-items:center;gap:10px;flex:1;min-width:0}
+  .lc-ico{
+    width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+    flex:none;font-size:17px;
+  }
+  .lc-node.ch .lc-ico{background:var(--pink-soft,#FBDCE7);color:var(--red-dark)}
+  .lc-node.fac .lc-ico{background:var(--thread-soft);color:#1F5344}
+  .lc-node .lc-text{min-width:0}
+  .lc-node .lc-text .k{font-size:11px;color:var(--ink-faint)}
+  .lc-node .lc-text b, .lc-node .lc-text a{
+    display:block;font-size:14.5px;font-weight:700;color:var(--ink);
+    text-decoration:none;word-break:break-all;
+  }
+  .lc-node .lc-text a:hover{text-decoration:underline;color:var(--red-dark)}
+  .lc-arrow{flex:none;color:var(--ink-faint)}
+  .link-card .lc-cap{
+    margin-top:14px;padding-top:14px;border-top:1px dashed var(--line);
+    font-size:12.5px;color:var(--ink-soft);text-align:center;
+  }
+  .link-card .lc-cap b{color:var(--thread)}
+
+  /* ── 포인트 정기기부 (포탈 UI 그대로 재사용) ── */
+  .section{padding:34px 0 10px}
+  .point-block{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);padding:28px}
+  .point-head{max-width:640px;margin-bottom:20px}
+  .point-head .tag{
+    display:block;font-size:12.5px;letter-spacing:.06em;color:var(--thread);font-weight:700;margin-bottom:9px;
+  }
+  .point-head h3{
+    font-family:var(--serif);font-weight:700;letter-spacing:-.02em;
+    font-size:clamp(19px,2.4vw,24px);line-height:1.4;margin-bottom:9px;
+  }
+  .point-head p{font-size:13.5px;color:var(--ink-soft);line-height:1.8}
+
+  .point-opts{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:18px 0}
+  @media(max-width:520px){.point-opts{grid-template-columns:1fr}}
+  .point-opt{
+    position:relative;text-align:left;background:var(--card);border:2px solid var(--line);
+    border-radius:var(--r-lg);padding:16px 18px;cursor:pointer;font-family:inherit;
+    transition:border-color .15s,transform .15s;
+  }
+  .point-opt:hover{transform:translateY(-2px)}
+  .point-opt[aria-pressed="true"]{border-color:var(--red)}
+  .point-opt b{display:block;font-size:15px;font-weight:700;margin-bottom:5px}
+  .point-opt p{font-size:12.5px;color:var(--ink-soft);line-height:1.6}
+
+  .ptype-row{display:flex;flex-wrap:wrap;gap:9px;margin-bottom:16px}
+  .ptype{
+    border:1px solid var(--line);color:var(--ink-soft);background:var(--card);
+    padding:9px 16px;border-radius:100px;font-size:13.5px;font-weight:600;cursor:pointer;
+    font-family:inherit;transition:all .15s;
+  }
+  .ptype:hover{border-color:var(--thread)}
+  .ptype[aria-pressed="true"]{background:var(--thread);border-color:var(--thread);color:#fff}
+
+  .provider-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;margin-bottom:8px}
+  .ptile{
+    position:relative;background:#fff;border:2px solid var(--line);border-radius:var(--r-md);
+    display:flex;align-items:center;justify-content:center;padding:14px 10px;cursor:pointer;
+    min-height:60px;transition:border-color .15s,transform .15s;
+  }
+  .ptile:hover{transform:translateY(-2px)}
+  .ptile[aria-pressed="true"]{border-color:var(--red);box-shadow:0 0 0 1px var(--red) inset}
+  .ptile img{max-width:100%;max-height:34px;object-fit:contain}
+  .ptile .check{
+    position:absolute;top:-8px;right:-8px;width:22px;height:22px;border-radius:50%;
+    background:var(--red);color:#fff;font-size:12px;display:none;align-items:center;justify-content:center;
+  }
+  .ptile[aria-pressed="true"] .check{display:flex}
+  .provider-picked{font-size:13px;color:var(--ink-soft);margin-bottom:20px}
+  .provider-picked b{color:var(--ink)}
+
+  .point-cta{
+    display:flex;align-items:center;gap:16px;flex-wrap:wrap;
+    padding-top:18px;border-top:1px dashed var(--line);
+  }
+  .point-cta .btn{
+    display:inline-block;background:var(--ink);color:#fff;padding:14px 28px;border-radius:100px;
+    font-size:15px;font-weight:700;text-decoration:none;border:0;cursor:pointer;font-family:inherit;
+    transition:background .15s;
+  }
+  .point-cta .btn:hover{background:#000}
+  .point-cta .note{font-size:12.5px;color:var(--ink-faint);line-height:1.7}
+
+  footer{background:var(--ink);color:var(--ink-faint);padding:30px 24px;font-size:12.5px;text-align:center;margin-top:40px}
+  footer a{color:var(--ink-faint);text-decoration:none;margin:0 10px}
+  footer a:hover{color:#fff}
+</style>
+</head>
+<body>
+
+<nav class="dnav">
+  <div class="dnav-in">
+    <a href="nanumieum_portal.html" class="dbrand">나눔<em>이음</em></a>
+    <a href="nanumieum_portal.html" class="dback">← 포털로 돌아가기</a>
+  </div>
+</nav>
+
+<section class="banner">
+  <svg class="heart" style="top:16%;left:6%;width:22px" viewBox="0 0 24 24" fill="var(--red)"><path d="M12 21s-7.5-4.6-10.2-9.1C.2 9.1 1 5.6 4.2 4.4c2-.8 4.1 0 5.3 1.7l2.5 3.5 2.5-3.5c1.2-1.7 3.3-2.5 5.3-1.7 3.2 1.2 4 4.7 2.4 7.5C19.5 16.4 12 21 12 21z"/></svg>
+  <svg class="heart" style="bottom:12%;right:7%;width:28px" viewBox="0 0 24 24" fill="var(--thread)"><path d="M12 21s-7.5-4.6-10.2-9.1C.2 9.1 1 5.6 4.2 4.4c2-.8 4.1 0 5.3 1.7l2.5 3.5 2.5-3.5c1.2-1.7 3.3-2.5 5.3-1.7 3.2 1.2 4 4.7 2.4 7.5C19.5 16.4 12 21 12 21z"/></svg>
+  <div class="inner">
+    <p class="eyebrow">나눔이음 링크</p>
+    <h1>이 채널을 통한 포인트가,<br>결연 복지시설로 곧장 이어집니다</h1>
+
+    <div class="link-card">
+      <div class="lc-row">
+        <div class="lc-node ch">
+          <span class="lc-ico">
+            <svg class="lucide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px">
+              <path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17"/>
+              <path d="m10 15 5-3-5-3z"/>
+            </svg>
+          </span>
+          <span class="lc-text"><span class="k">결연 채널</span><a id="lcChannel" href="#" target="_blank" rel="noopener">불러오는 중</a></span>
+        </div>
+        <span class="lc-arrow">
+          <svg class="lucide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </span>
+        <div class="lc-node fac">
+          <span class="lc-ico">
+            <svg class="lucide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px">
+              <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+            </svg>
+          </span>
+          <span class="lc-text"><span class="k">결연 복지시설</span><b id="lcFacility">불러오는 중</b></span>
+        </div>
+      </div>
+      <p class="lc-cap">아래에서 이어주실 포인트를 선택하시면 <b id="lcCapFacility">이 복지시설</b>에 바로 전달됩니다</p>
+    </div>
+  </div>
+</section>
+
+<div class="wrap">
+  <div class="section">
+    <div class="point-block">
+      <div class="point-head">
+        <span class="tag">포인트 정기기부</span>
+        <h3>사라질 포인트라면, 이어주세요</h3>
+        <p>카드에 있는 포인트는 시효가 지나면 그냥 사라집니다. 어차피 없어질 포인트라면,
+           나눔이음을 거쳐 소중한 곳에 쓰이게 해주세요. 후원금은 한 푼도 줄지 않고
+           복지시설로 갑니다.</p>
+      </div>
+
+      <div class="point-opts" id="pointOpts" role="group" aria-label="이어주기 방식 선택">
+        <button type="button" class="point-opt" id="optExpire" aria-pressed="true">
+          <b>소멸 예정 포인트만</b>
+          <p>어차피 사라질 포인트만, 사라지기 전에 자동으로 이어드려요</p>
+        </button>
+        <button type="button" class="point-opt" id="optRegular" aria-pressed="false">
+          <b>매달 정기적으로</b>
+          <p>매달 쌓이는 포인트를 꾸준히 이어드려요</p>
+        </button>
+      </div>
+
+      <div class="ptype-row" id="pointTypes" role="group" aria-label="포인트 종류 선택">
+        <button type="button" class="ptype" data-v="card" aria-pressed="true">카드 포인트</button>
+        <button type="button" class="ptype" data-v="telecom" aria-pressed="false">통신사 멤버십</button>
+        <button type="button" class="ptype" data-v="air" aria-pressed="false">항공마일리지</button>
+      </div>
+
+      <div class="provider-grid" id="providerGrid" role="group" aria-label="발급사 선택"></div>
+      <p class="provider-picked">선택하신 발급사: <b id="providerPicked">-</b></p>
+
+      <div class="point-cta">
+        <button type="button" id="pointCta" class="btn">포인트 이어주기 시작하기</button>
+        <span class="note">언제든 해지할 수 있습니다. 포인트는 100% 복지시설로 전달됩니다.</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p>나눔이음 사회복지시설 협의체 · 지역 복지시설과 크리에이터를 잇는 나눔 프로젝트 · 문의 look@nanumieum.example</p>
+  <p style="margin-top:8px"><a href="#">이용약관</a><a href="#">개인정보처리방침</a><a href="nanumieum_portal.html">포털로 돌아가기</a></p>
+</footer>
+
+<script>
+  /* ── 링크 파라미터로 연결된 채널·시설 표시 ── */
+  const qs = new URLSearchParams(location.search);
+  const facility = qs.get('facility') || '결연 복지시설';
+  const ftype = qs.get('ftype') || '';
+  const channelUrl = qs.get('channel') || '';
+  const channelName = qs.get('channelName') || '';
+  const linkSlug = qs.get('link') || '';
+
+  const lcChannel = document.getElementById('lcChannel');
+  lcChannel.textContent = channelName || channelUrl || '결연 채널 정보 없음';
+  if(channelUrl){ lcChannel.href = channelUrl; } else { lcChannel.removeAttribute('href'); }
+  document.getElementById('lcFacility').textContent = facility + (ftype ? ` (${ftype})` : '');
+  document.getElementById('lcCapFacility').textContent = facility;
+
+  /* ── 포인트 방식·종류·발급사 선택 (실제 로고 이미지 사용) ── */
+  const optExpire  = document.getElementById('optExpire');
+  const optRegular = document.getElementById('optRegular');
+  const typeButtons = document.querySelectorAll('#pointTypes .ptype');
+  const grid = document.getElementById('providerGrid');
+  const picked = document.getElementById('providerPicked');
+  const cta = document.getElementById('pointCta');
+
+  const LOGO_DIR = 'logos/';
+  const PROVIDERS = {
+    card: [
+      {name:'신한카드',   img:'card_shinhan.png'},
+      {name:'KB국민카드', img:'card_kb.png'},
+      {name:'삼성카드',   img:'card_samsung.png'},
+      {name:'롯데카드',   img:'card_lotte.png'},
+      {name:'우리카드',   img:'card_woori.png'},
+      {name:'하나카드',   img:'card_hana.png'},
+      {name:'현대카드',   img:'card_hyundai.png'},
+      {name:'NH농협카드', img:'card_nh.png'},
+      {name:'비씨카드',   img:'card_bc.png'},
+    ],
+    telecom: [
+      {name:'SKT 멤버십',   img:'telecom_skt.png'},
+      {name:'KT 멤버십',    img:'telecom_kt.png'},
+      {name:'LG U+ 멤버십', img:'telecom_lgu.png'},
+    ],
+    air: [
+      {name:'대한항공 스카이패스',   img:'air_ke.png'},
+      {name:'아시아나 항공마일리지', img:'air_oz.png'},
+    ],
+  };
+
+  let pointFreq = 'expire';
+  let pointType = 'card';
+  let selectedProvider = null;
+
+  function renderProviders(type){
+    const list = PROVIDERS[type] || [];
+    grid.innerHTML = list.map((p,i)=>`
+      <button type="button" class="ptile" data-name="${p.name}" aria-pressed="${i===0}">
+        <span class="check"><svg class="lucide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><img src="${LOGO_DIR}${p.img}" alt="${p.name}">
+      </button>`).join('');
+    selectedProvider = list[0]?.name || null;
+    picked.textContent = selectedProvider || '-';
+    grid.querySelectorAll('.ptile').forEach(t=>{
+      t.addEventListener('click', ()=>{
+        grid.querySelectorAll('.ptile').forEach(x=>x.setAttribute('aria-pressed','false'));
+        t.setAttribute('aria-pressed','true');
+        selectedProvider = t.dataset.name;
+        picked.textContent = selectedProvider;
+      });
+    });
+  }
+
+  [optExpire, optRegular].forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      optExpire.setAttribute('aria-pressed', String(btn===optExpire));
+      optRegular.setAttribute('aria-pressed', String(btn===optRegular));
+      pointFreq = (btn===optExpire) ? 'expire' : 'regular';
+    });
+  });
+  typeButtons.forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      typeButtons.forEach(b=>b.setAttribute('aria-pressed', String(b===btn)));
+      pointType = btn.dataset.v;
+      renderProviders(pointType);
+    });
+  });
+
+  renderProviders('card'); // 기본값
+
+  /* ── 시작하기: 시설 선택 단계 없이 바로 2단계(회원정보)로 이동 ── */
+  cta.addEventListener('click', ()=>{
+    const params = new URLSearchParams({
+      method: 'point',
+      freq: pointFreq,
+      ptype: pointType,
+      provider: selectedProvider || '',
+      facility: facility,
+      ftype: ftype,
+      link: linkSlug,
+    });
+    location.href = 'donate-step2.html?' + params.toString();
+  });
+</script>
+</body>
+</html>

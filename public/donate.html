@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>후원하기 | 나눔이음</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/gh/sun-typeface/SUIT@2/fonts/variable/woff2/SUIT-Variable.css" rel="stylesheet">
+<style>
+  @font-face{
+    font-family:'Jalnan';
+    src:url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.2/JalnanOTF00.woff') format('woff');
+    font-weight:normal;font-style:normal;font-display:swap;
+  }
+  :root{
+    --paper:#FBF7F7;--paper-2:#F6EFEE;--ink:#2B2430;--ink-soft:#6B5F68;--ink-faint:#A79AA0;
+    --red:#EE6F93;--red-dark:#C94F71;--thread:#45BC92;--thread-soft:#DEF6EC;
+    --yellow:#F6C640;--yellow-soft:#FFF3D2;--yellow-dark:#B5860E;
+    --line:#F0E1E6;--card:#FFFFFF;--field:#F0E1E6;--gray:#8A7D85;--brown:#C94F71;
+    --r-lg:22px;--r-md:14px;--r-sm:10px;--wrap:1040px;
+    --sans:'SUIT Variable','SUIT',-apple-system,BlinkMacSystemFont,'Malgun Gothic',sans-serif;
+    --serif:'Jalnan','Gowun Batang','Nanum Myeongjo',serif;
+  }
+    *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:var(--sans);color:var(--ink);background:var(--paper);line-height:1.7;-webkit-font-smoothing:antialiased}
+  img{max-width:100%;display:block}
+  .lucide{width:1em;height:1em;display:inline-block;vertical-align:-0.15em;flex:none}
+  .wrap{max-width:var(--wrap);margin:0 auto;padding:0 24px}
+
+  /* ===== banner ===== */
+  .banner{
+    background:linear-gradient(135deg,var(--paper-2) 0%,var(--thread-soft) 55%,var(--paper-2) 100%);
+    position:relative;overflow:hidden;padding:52px 0 46px;
+  }
+  .banner .inner{max-width:var(--wrap);margin:0 auto;width:100%;padding:0 24px;position:relative;z-index:2}
+  .banner .eyebrow{
+    display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:var(--red-dark);
+    background:#fff;padding:7px 16px;border-radius:100px;margin-bottom:16px;
+  }
+  .banner .eyebrow::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--red)}
+  .banner h1{
+    font-family:var(--serif);font-size:clamp(22px,3.4vw,32px);font-weight:700;line-height:1.5;
+    color:var(--ink);letter-spacing:-.02em;
+  }
+  .banner .heart{position:absolute;opacity:.8;pointer-events:none}
+
+  /* ===== steps ===== */
+  .steps{display:flex;justify-content:center;gap:0;margin:44px auto 10px;max-width:680px}
+  .step{flex:1;text-align:center;position:relative}
+  .step .num{
+    width:34px;height:34px;border-radius:50%;background:var(--card);border:2px solid var(--line);
+    color:var(--ink-faint);font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center;
+    margin:0 auto 12px;position:relative;z-index:2;
+  }
+  .step .dot{display:none}
+  .step.on .num{background:var(--red);border-color:var(--red);color:#fff}
+  .step .bar{position:absolute;top:17px;left:50%;width:100%;height:2px;background:var(--line);z-index:1}
+  .step:last-child .bar{display:none}
+  .step .lbl{margin-top:2px;font-size:13.5px;color:var(--ink-soft);font-weight:500}
+  .step.on .lbl{color:var(--ink);font-weight:700}
+
+  /* ===== select section ===== */
+  .section{padding:30px 0 10px}
+  .sec-head{display:flex;align-items:baseline;gap:12px;border-bottom:2px solid var(--ink);padding-bottom:14px;margin-bottom:6px}
+  .sec-head h2{font-size:21px;font-weight:800}
+  .sec-head span{font-size:14px;color:var(--gray)}
+
+  .cause{display:flex;align-items:center;gap:12px;padding:24px 4px;border-bottom:1px solid var(--line)}
+
+  /* ── 결연 시설 선택 ── */
+  .facility-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;padding:22px 4px 26px}
+  .fcard-pick{
+    text-align:left;background:var(--card);border:2px solid var(--line);border-radius:var(--r-md);
+    padding:16px 18px;cursor:pointer;font-family:inherit;transition:border-color .15s,transform .15s;
+  }
+  .fcard-pick:hover{transform:translateY(-2px)}
+  .fcard-pick[aria-pressed="true"]{border-color:var(--red)}
+  .fcard-pick b{display:block;font-size:15px;font-weight:700;margin-bottom:4px;letter-spacing:-.01em}
+  .fcard-pick span{font-size:12.5px;color:var(--ink-soft)}
+  .fcard-pick .badge{
+    display:inline-block;margin-top:8px;font-size:11px;font-weight:700;color:var(--red-dark);
+    background:var(--paper-2);padding:3px 9px;border-radius:100px;
+  }
+
+  /* ── 시설 검색·필터 ── */
+  .facility-tools{padding:20px 4px 0}
+  .facility-search{
+    width:100%;border:1px solid var(--line);border-radius:100px;padding:12px 18px;
+    font-family:inherit;font-size:14px;color:var(--ink);background:var(--card);outline:none;
+    margin-bottom:12px;transition:border-color .15s;
+  }
+  .facility-search:focus{border-color:var(--red)}
+  .facility-filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:4px}
+  .ffilter{
+    border:1px solid var(--line);background:var(--card);color:var(--ink-soft);
+    padding:7px 15px;border-radius:100px;font-size:13px;font-weight:600;cursor:pointer;
+    font-family:inherit;transition:all .15s;
+  }
+  .ffilter[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+  .facility-count{font-size:12.5px;color:var(--ink-faint);padding:14px 4px 10px}
+  .facility-empty{padding:24px 4px;color:var(--ink-faint);font-size:13.5px}
+
+  /* ── 연결된 채널 (검색창 바로 아래, 스크롤 없이 보이게) ── */
+  .linked-channel{
+    display:none;align-items:center;gap:14px;background:var(--thread-soft);
+    border-radius:var(--r-md);padding:12px 14px;margin:0 4px 18px;
+  }
+  .linked-channel.show{display:flex}
+  .linked-channel img{width:64px;height:36px;border-radius:var(--r-sm);object-fit:cover;flex:none;background:var(--line)}
+  .linked-channel .lc-text{font-size:12.5px;color:#1F5344;line-height:1.4}
+  .linked-channel .lc-text b{display:block;font-size:14px;color:var(--ink);margin-bottom:2px}
+  .linked-channel a{
+    margin-left:auto;font-size:12.5px;font-weight:700;color:#fff;white-space:nowrap;flex:none;
+    background:var(--thread);padding:8px 14px;border-radius:100px;
+  }
+
+  /* ── 후원 방식(현금/포인트) 안내 ── */
+  .method-badge{
+    display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:700;
+    background:var(--thread-soft);color:#1F5344;padding:8px 16px;border-radius:100px;margin:4px 4px 18px;
+  }
+
+  /* ── 포인트 방식·종류 선택 ── */
+  .point-opts{display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:4px 4px 20px}
+  @media(max-width:600px){.point-opts{grid-template-columns:1fr}}
+  .point-opt{
+    position:relative;text-align:left;background:var(--card);border:2px solid var(--line);
+    border-radius:var(--r-lg);padding:18px 20px;cursor:pointer;font-family:inherit;
+    transition:border-color .15s,transform .15s;
+  }
+  .point-opt:hover{transform:translateY(-2px)}
+  .point-opt[aria-pressed="true"]{border-color:var(--red)}
+  .point-opt b{display:block;font-size:15.5px;font-weight:700;margin-bottom:5px}
+  .point-opt p{font-size:12.5px;color:var(--ink-soft);line-height:1.6}
+
+  .ptype-row{display:flex;flex-wrap:wrap;gap:9px;padding:4px 4px 18px}
+  .ptype{
+    border:1px solid var(--line);color:var(--ink-soft);background:var(--card);
+    padding:9px 16px;border-radius:100px;font-size:13.5px;font-weight:600;cursor:pointer;
+    font-family:inherit;transition:all .15s;
+  }
+  .ptype:hover{border-color:var(--thread)}
+  .ptype[aria-pressed="true"]{background:var(--thread);border-color:var(--thread);color:#fff}
+
+  .provider-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(128px,1fr));gap:10px;padding:4px 4px 8px}
+  .ptile{
+    position:relative;background:#fff;border:2px solid var(--line);border-radius:var(--r-md);
+    display:flex;align-items:center;justify-content:center;padding:14px 10px;cursor:pointer;
+    min-height:64px;transition:border-color .15s,transform .15s;
+  }
+  .ptile:hover{transform:translateY(-2px)}
+  .ptile[aria-pressed="true"]{border-color:var(--red);box-shadow:0 0 0 1px var(--red) inset}
+  .ptile img{max-width:100%;max-height:38px;object-fit:contain}
+  .ptile .check{
+    position:absolute;top:-8px;right:-8px;width:22px;height:22px;border-radius:50%;
+    background:var(--red);color:#fff;font-size:12px;display:none;align-items:center;justify-content:center;
+  }
+  .ptile[aria-pressed="true"] .check{display:flex}
+  .provider-picked{font-size:13px;color:var(--ink-soft);padding:4px 4px 4px}
+  .provider-picked b{color:var(--ink)}
+
+  .point-summary{
+    background:var(--card);border:1px solid var(--line);border-radius:var(--r-md);
+    padding:18px 20px;margin:14px 4px 4px;
+  }
+  .point-summary .row{display:flex;justify-content:space-between;padding:8px 0;font-size:14px;border-bottom:1px dashed var(--line)}
+  .point-summary .row:last-child{border-bottom:none}
+  .point-summary .row span:first-child{color:var(--ink-soft)}
+  .point-summary .row span:last-child{font-weight:700;color:var(--ink)}
+  .point-summary .row img{height:22px;object-fit:contain;vertical-align:middle;margin-left:8px}
+  .cause input{width:20px;height:20px;accent-color:var(--red)}
+  .cause label{font-size:17px;font-weight:600;cursor:pointer}
+
+  .amount{display:flex;align-items:center;gap:16px;padding:24px 4px;flex-wrap:wrap}
+
+
+  .amount .key{font-size:15px;color:var(--ink-soft);min-width:64px}
+  .amt-group{display:flex;border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden}
+  .amt-group button{border:0;background:var(--paper-2);padding:14px 22px;font-size:15px;font-weight:600;color:var(--ink-soft);cursor:pointer;border-right:1px solid var(--line);transition:.15s}
+  .amt-group button:last-child{border-right:0}
+  .amt-group button.sel{background:var(--red);color:#fff}
+  .direct{display:flex;align-items:center;border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden}
+  .direct input{border:0;padding:14px 14px;width:120px;font-size:15px;outline:none;text-align:right}
+  .direct span{padding:0 14px;color:var(--ink-soft);font-size:15px;background:var(--paper-2);align-self:stretch;display:flex;align-items:center}
+  .amount .sub{margin-left:auto;font-size:18px;font-weight:800}
+
+  .total{display:flex;justify-content:flex-end;align-items:center;gap:20px;padding:30px 4px;border-top:1px solid var(--line);margin-top:6px}
+  .total .t1{font-size:16px;color:var(--ink-soft);font-weight:600}
+  .total .t2{font-size:26px;font-weight:800;color:var(--brown)}
+
+  .next{display:block;width:100%;max-width:560px;margin:40px auto 70px;background:var(--red);color:#fff;
+    border:0;padding:20px;font-size:18px;font-weight:700;border-radius:var(--r-sm);cursor:pointer;transition:.15s;font-family:inherit}
+  .next:hover{background:var(--red-dark)}
+
+  /* ===== footer note ===== */
+  .fnote{background:var(--thread-soft);text-align:center;padding:48px 24px;color:var(--ink-soft)}
+  .fnote b{display:block;font-size:17px;color:var(--ink);margin-bottom:14px}
+  .fnote p{font-size:14px;color:var(--ink-soft);line-height:1.9}
+
+  footer{background:var(--ink);color:var(--ink-faint);padding:30px 24px;font-size:12.5px;text-align:center}
+  footer a{color:var(--ink-faint);text-decoration:none;margin:0 10px}
+  footer a:hover{color:#fff}
+
+  @media (max-width:720px){
+    .sec-head{flex-direction:column;align-items:flex-start;gap:4px}
+    .amount{gap:10px}
+    .amount .sub{margin-left:0;width:100%;text-align:right}
+    .steps .lbl{font-size:11.5px}
+    .amt-group{width:100%}
+    .amt-group button{flex:1;padding:14px 8px;font-size:13.5px}
+  }
+
+  /* ── 상단 내비 ── */
+  .dnav{position:sticky;top:0;z-index:50;background:rgba(251,247,247,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+  .dnav-in{max-width:var(--wrap);margin:0 auto;padding:0 24px;height:58px;display:flex;align-items:center;justify-content:space-between}
+  .dbrand{font-family:var(--serif);font-weight:700;font-size:18px;letter-spacing:-.02em;color:var(--ink);text-decoration:none}
+  .dbrand em{font-style:normal;color:var(--red)}
+  .dback{font-size:13.5px;color:var(--ink-soft);text-decoration:none}
+  .dback:hover{color:var(--ink)}
+
+</style>
+</head>
+<body>
+<nav class="dnav">
+  <div class="dnav-in">
+    <a href="nanumieum_portal.html" class="dbrand">나눔<em>이음</em></a>
+    <a href="nanumieum_portal.html" class="dback"><svg class="lucide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg> 포털로 돌아가기</a>
+  </div>
+</nav>
+
+  <!-- BANNER -->
+  <section class="banner">
+    <svg class="heart" style="top:18%;left:6%;width:26px" viewBox="0 0 24 24" fill="var(--red)"><path d="M12 21s-7.5-4.6-10.2-9.1C.2 9.1 1 5.6 4.2 4.4c2-.8 4.1 0 5.3 1.7l2.5 3.5 2.5-3.5c1.2-1.7 3.3-2.5 5.3-1.7 3.2 1.2 4 4.7 2.4 7.5C19.5 16.4 12 21 12 21z"/></svg>
+    <svg class="heart" style="bottom:14%;right:8%;width:34px" viewBox="0 0 24 24" fill="var(--thread)"><path d="M12 21s-7.5-4.6-10.2-9.1C.2 9.1 1 5.6 4.2 4.4c2-.8 4.1 0 5.3 1.7l2.5 3.5 2.5-3.5c1.2-1.7 3.3-2.5 5.3-1.7 3.2 1.2 4 4.7 2.4 7.5C19.5 16.4 12 21 12 21z"/></svg>
+    <div class="inner">
+      <p class="eyebrow">나눔이음 후원하기</p>
+      <h1>작은 손길이 이어져,<br>결연 복지시설에 닿습니다</h1>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <!-- STEPS -->
+    <div class="steps">
+      <div class="step on"><div class="num">01</div><div class="dot"></div><div class="bar"></div><div class="lbl">후원사업 선택</div></div>
+      <div class="step"><div class="num">02</div><div class="dot"></div><div class="bar"></div><div class="lbl">후원회원정보</div></div>
+      <div class="step"><div class="num">03</div><div class="dot"></div><div class="lbl">납입정보 입력 및 후원완료</div></div>
+    </div>
+
+    <!-- SELECT -->
+    <div class="section">
+      <div class="sec-head"><h2 id="facilityHeading">결연 복지시설 선택</h2><span id="facilitySub">후원하실 결연 복지시설을 먼저 골라주세요.</span></div>
+
+      <div class="facility-tools">
+        <input type="text" id="facilitySearch" class="facility-search" placeholder="복지시설명으로 검색 (예: 지역아동센터, 노인복지관, 보육원)">
+        <div class="facility-filters" id="facilityFilters" role="group" aria-label="복지시설 유형 필터">
+          <button type="button" class="ffilter" data-t="all" aria-pressed="true">전체</button>
+        </div>
+      </div>
+
+      <div class="linked-channel" id="linkedChannel">
+        <img id="lcThumb" src="" alt="">
+        <div class="lc-text"><b id="lcChannel">-</b>이 복지시설과 이어진 결연 채널입니다</div>
+        <a id="lcLink" href="#" target="_blank" rel="noopener">영상 보기 <svg class="lucide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a>
+      </div>
+
+      <p class="facility-count"><b id="facilityCount">0</b>곳 중에서 골라주세요</p>
+      <div class="facility-grid" id="facilityGrid" role="group" aria-label="결연 복지시설 선택"></div>
+      <p class="facility-empty" id="facilityEmpty" style="display:none">검색 결과가 없습니다. 다른 검색어를 입력해 보세요.</p>
+    </div>
+
+    <!-- 현금 후원 (기본) -->
+    <div class="section" id="cashSection">
+      <div class="sec-head"><h2>후원 방식</h2><span>원하시는 금액을 입력해 주세요.</span></div>
+
+      <div class="amount">
+        <span class="key">금액선택</span>
+        <div class="amt-group" id="amtGroup">
+          <button data-v="20000">2만원</button>
+          <button data-v="30000" class="sel">3만원</button>
+          <button data-v="50000">5만원</button>
+          <button data-v="100000">10만원</button>
+        </div>
+        <div class="direct">
+          <input type="number" id="direct" placeholder="금액 직접 입력" min="0">
+          <span>만원</span>
+        </div>
+        <span class="sub">총 <b id="subTotal">30,000</b>원</span>
+      </div>
+
+      <div class="total">
+        <span class="t1">총 후원금액</span>
+        <span class="t2"><span id="grandTotal">30,000</span> 원</span>
+      </div>
+    </div>
+
+    <!-- 포인트 이어주기 요약 (포탈에서 이미 선택한 값을 그대로 표시) -->
+    <div class="section" id="pointSection" style="display:none">
+      <span class="method-badge">⏳ 포인트로 이어주기</span>
+      <div class="point-summary" id="pointSummary"></div>
+    </div>
+
+    <button class="next" id="nextBtn">다음단계</button>
+  </div>
+
+  <!-- NOTE -->
+  <section class="fnote">
+    <b>정기적으로 후원하시는 후원회원이 되시면, 기부금 세액공제를 받으실 수 있습니다.</b>
+    <p>세액공제율은 지정기부금 기준 소득금액의 30%,<br>법정기부금은 소득금액의 100% 한도 내에서 15% 공제가 적용됩니다.<br>(1,000만원을 초과하는 경우 30% 공제)</p>
+  </section>
+
+  <footer>
+    <p>나눔이음 사회복지시설 협의체 · 지역 복지시설과 크리에이터를 잇는 나눔 프로젝트 · 문의 look@nanumieum.example</p>
+    <p style="margin-top:8px"><a href="#">이용약관</a><a href="#">개인정보처리방침</a><a href="nanumieum_portal.html">캠페인으로 돌아가기</a></p>
+  </footer>
+
+<script>
+  const fmt = n => n.toLocaleString('ko-KR');
+  const qs = new URLSearchParams(location.search);
+  const method = qs.get('method') === 'point' ? 'point' : 'cash';
+
+  /* ── 결연 시설 선택 (실제 결연 사례 26곳 · 검색·필터) ── */
+  const FACILITIES = [{n:"경동원(수원)",t:"영유아 보육시설",c:"개천에서 용재난다",v:"Y1LqqbS6HI4"},{n:"조은나무지역아동센터",t:"지역아동센터",c:"조은",v:"7M_rAFgX1b8"},{n:"남양주시지역아동센터",t:"지역아동센터",c:"복지학교",v:"-0NXL48xMEU"},{n:"동산지역아동센터",t:"지역아동센터",c:"봄앤이야기",v:"ME789zEGBNI"},{n:"반월지역아동센터",t:"지역아동센터",c:"고경률",v:"2ClgWV1CTdU"},{n:"삼전지역아동센터",t:"지역아동센터",c:"CCMHUB Official",v:"iGZD_6LKMEo"},{n:"대구보육원",t:"아동양육시설/보육원",c:"이기운 아코디언",v:"MwkipVs8cS4"},{n:"명륜보육원",t:"아동양육시설/보육원",c:"도다미즘",v:"hJaaLZeldXA"},{n:"실로암보육원",t:"아동양육시설/보육원",c:"욕쟁이빵실이이모",v:"2O1L8lsptPk"},{n:"인천보육원",t:"아동양육시설/보육원",c:"HAUS 에어컨 이야기",v:"CVYNujaRCJ0"},{n:"청운보육원",t:"아동양육시설/보육원",c:"방충망대장",v:"YMjajawG-4g"},{n:"성보재활원",t:"장애인복지",c:"성보재활원",v:"7YvmiKC4Bts"},{n:"경상북도시각장애인복지관",t:"장애인복지",c:"시각장애인 TV 김일근이 사는 세상",v:"ROjz-BTOKfE"},{n:"광명장애인복지관",t:"장애인복지",c:"클린인피니티",v:"axjax0Njf48"},{n:"광양장애인복지관",t:"장애인복지",c:"광양장복 TV",v:"U1snwPmZLJQ"},{n:"광주서구장애인복지관",t:"장애인복지",c:"문은주(무지개사랑)",v:"marZcjF7NIQ"},{n:"포천노인복지관",t:"노인복지",c:"이원발TV",v:"DIkOLCpu_nM"},{n:"미추홀노인복지관",t:"노인복지",c:"김윤서심리운동발달센터",v:"CfcclUJn-TE"},{n:"부평노인복지관",t:"노인복지",c:"가체짱tv",v:"tRKffaEo9xY"},{n:"용강노인복지관",t:"노인복지",c:"고운향기",v:"g7rDuvtF6rU"},{n:"화성시서부노인복지관",t:"노인복지",c:"바우새미TV(심 문보)",v:"AXgK9K417Rg"},{n:"그라테스요양원",t:"노인복지",c:"폴라리스색소폰 클럽",v:"G05yOjElS4Y"},{n:"금천노인종합복지관",t:"기타복지시설",c:"화이트샌즈",v:"VvmfWicHkMk"},{n:"마포복지관",t:"기타복지시설",c:"탁이랜드 takiland",v:"3iCYf9VYbSc"},{n:"무더위쉼터",t:"기타복지시설",c:"KTV  다큐",v:"Aaqd4FC6nps"},{n:"비대면복지관",t:"기타복지시설",c:"할머니의 리포트 Grandma Report",v:"KgDLy82_kSM"}];
+
+  const facilityGrid = document.getElementById('facilityGrid');
+  const facilitySearch = document.getElementById('facilitySearch');
+  const facilityFilters = document.getElementById('facilityFilters');
+  const facilityCount = document.getElementById('facilityCount');
+  const facilityEmpty = document.getElementById('facilityEmpty');
+  const linkedChannel = document.getElementById('linkedChannel');
+
+  let facilityName = FACILITIES[0].n;
+  let facilityType = FACILITIES[0].t;
+  let activeTypeFilter = 'all';
+
+  // 유형 필터 칩 동적 생성 (실제 데이터에 존재하는 유형만)
+  const uniqueTypes = [...new Set(FACILITIES.map(f=>f.t))];
+  uniqueTypes.forEach(t=>{
+    const b = document.createElement('button');
+    b.type='button'; b.className='ffilter'; b.dataset.t=t; b.setAttribute('aria-pressed','false');
+    b.textContent = t;
+    facilityFilters.appendChild(b);
+  });
+
+  function showLinkedChannel(item){
+    document.getElementById('lcThumb').src = `https://i.ytimg.com/vi/${item.v}/mqdefault.jpg`;
+    document.getElementById('lcChannel').textContent = item.c;
+    document.getElementById('lcLink').href = `https://www.youtube.com/watch?v=${item.v}`;
+    linkedChannel.classList.add('show');
+  }
+
+  function renderFacilities(){
+    const q = facilitySearch.value.trim().toLowerCase();
+    const list = FACILITIES.filter(f=>{
+      const matchType = activeTypeFilter==='all' || f.t===activeTypeFilter;
+      const matchQ = !q || f.n.toLowerCase().includes(q) || f.t.toLowerCase().includes(q);
+      return matchType && matchQ;
+    });
+    facilityCount.textContent = list.length;
+    facilityEmpty.style.display = list.length ? 'none' : 'block';
+    facilityGrid.innerHTML = list.map((f,i)=>`
+      <button type="button" class="fcard-pick" data-name="${f.n}" data-type="${f.t}" data-vid="${f.v}" data-ch="${f.c}"
+        aria-pressed="${f.n===facilityName}">
+        <b>${f.n}</b><span>${f.t}</span>
+        <span class="badge">${f.c} 결연</span>
+      </button>`).join('');
+
+    facilityGrid.querySelectorAll('.fcard-pick').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        facilityGrid.querySelectorAll('.fcard-pick').forEach(b=>b.setAttribute('aria-pressed','false'));
+        btn.setAttribute('aria-pressed','true');
+        facilityName = btn.dataset.name;
+        facilityType = btn.dataset.type;
+        showLinkedChannel({v:btn.dataset.vid, c:btn.dataset.ch});
+      });
+    });
+
+    // 현재 선택된 시설이 필터링 결과에 남아있으면 연결채널 유지, 없으면 목록 첫 항목으로 대체
+    if(list.length && !list.some(f=>f.n===facilityName)){
+      facilityName = list[0].n; facilityType = list[0].t;
+    }
+    const picked = list.find(f=>f.n===facilityName);
+    if(picked) showLinkedChannel(picked);
+  }
+
+  facilitySearch.addEventListener('input', renderFacilities);
+  facilityFilters.addEventListener('click', (e)=>{
+    const btn = e.target.closest('.ffilter');
+    if(!btn) return;
+    facilityFilters.querySelectorAll('.ffilter').forEach(b=>b.setAttribute('aria-pressed','false'));
+    btn.setAttribute('aria-pressed','true');
+    activeTypeFilter = btn.dataset.t;
+    renderFacilities();
+  });
+
+  renderFacilities();
+
+  /* ── 현금 후원 UI ── */
+  const group = document.getElementById('amtGroup');
+  const direct = document.getElementById('direct');
+  let amount = 30000;
+  function renderCash(){
+    document.getElementById('subTotal').textContent = fmt(amount);
+    document.getElementById('grandTotal').textContent = fmt(amount);
+  }
+  group.querySelectorAll('button').forEach(b=>{
+    b.addEventListener('click',()=>{
+      group.querySelectorAll('button').forEach(x=>x.classList.remove('sel'));
+      b.classList.add('sel');
+      direct.value='';
+      amount = parseInt(b.dataset.v,10);
+      renderCash();
+    });
+  });
+  direct.addEventListener('input',()=>{
+    group.querySelectorAll('button').forEach(x=>x.classList.remove('sel'));
+    const man = parseInt(direct.value,10);
+    amount = isNaN(man) ? 0 : man*10000;
+    renderCash();
+  });
+  renderCash();
+
+  /* ── 포인트 이어주기: 포탈에서 이미 선택된 값을 받아 요약만 표시 ── */
+  const LOGO_DIR = 'logos/';
+  const PROVIDER_IMG = {
+    '신한카드':'card_shinhan.png', 'KB국민카드':'card_kb.png', '삼성카드':'card_samsung.png',
+    '롯데카드':'card_lotte.png', '우리카드':'card_woori.png', '하나카드':'card_hana.png',
+    '현대카드':'card_hyundai.png', 'NH농협카드':'card_nh.png', '비씨카드':'card_bc.png',
+    'SKT 멤버십':'telecom_skt.png', 'KT 멤버십':'telecom_kt.png', 'LG U+ 멤버십':'telecom_lgu.png',
+    '대한항공 스카이패스':'air_ke.png', '아시아나 항공마일리지':'air_oz.png',
+  };
+  const PTYPE_LABEL = {card:'카드 포인트', telecom:'통신사 멤버십', air:'항공마일리지'};
+  const FREQ_LABEL = {expire:'소멸 예정 포인트만 자동 이어주기', regular:'매달 정기적으로 이어주기'};
+
+  const pointFreq = qs.get('freq') || 'expire';
+  const pointType = qs.get('ptype') || 'card';
+  const selectedProvider = decodeURIComponent(qs.get('provider') || '');
+
+  /* ── 방식에 따라 화면 전환 ── */
+  if(method === 'point'){
+    document.getElementById('cashSection').style.display = 'none';
+    document.getElementById('pointSection').style.display = 'block';
+    document.getElementById('facilityHeading').textContent = '결연 복지시설 선택하기';
+    document.getElementById('facilitySub').textContent = '이어주실 포인트는 정해졌습니다. 전할 결연 복지시설만 골라주세요.';
+
+    const img = PROVIDER_IMG[selectedProvider];
+    document.getElementById('pointSummary').innerHTML = `
+      <div class="row"><span>이어주기 방식</span><span>${FREQ_LABEL[pointFreq]||''}</span></div>
+      <div class="row"><span>포인트 종류</span><span>${PTYPE_LABEL[pointType]||''}</span></div>
+      <div class="row"><span>발급사</span><span>${selectedProvider}${img?`<img src="${LOGO_DIR}${img}" alt="${selectedProvider}">`:''}</span></div>`;
+  }
+
+  /* ── 다음단계 ── */
+  document.getElementById('nextBtn').addEventListener('click', ()=>{
+    const facilityQS = '&facility=' + encodeURIComponent(facilityName) + '&ftype=' + encodeURIComponent(facilityType);
+    if(method === 'point'){
+      location.href = 'donate-step2.html?method=point&freq=' + pointFreq
+        + '&ptype=' + pointType + '&provider=' + encodeURIComponent(selectedProvider) + facilityQS;
+    } else {
+      location.href = 'donate-step2.html?method=cash&amount=' + amount + facilityQS;
+    }
+  });
+</script>
+</body>
+</html>

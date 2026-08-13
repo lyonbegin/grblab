@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="nanumieumbaza.db" readonly="0" foreign_keys="1" case_sensitive_like="0" temp_store="0" wal_autocheckpoint="1000" synchronous="2"/><attached/><window><main_tabs open="structure browser pragmas query" current="1"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="100"/><column_width id="3" width="3556"/><column_width id="4" width="0"/><expanded_item id="0" parent="1"/><expanded_item id="1" parent="1"/><expanded_item id="2" parent="1"/><expanded_item id="3" parent="1"/></tab_structure><tab_browse><table title="products" custom_title="0" dock_id="1" table="4,8:mainproducts"/><dock_state state="000000ff00000000fd00000001000000020000023c0000020efc0100000001fb000000160064006f0063006b00420072006f007700730065003101000000000000023c0000017300ffffff0000023c0000000000000004000000040000000800000008fc00000000"/><default_encoding codec=""/><browse_table_settings><table schema="main" name="categories" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_" freeze_columns="0"><sort/><column_widths><column index="1" value="20"/><column index="2" value="40"/><column index="3" value="72"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="products" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_" freeze_columns="0"><sort/><column_widths><column index="1" value="39"/><column index="2" value="127"/><column index="3" value="93"/><column index="4" value="96"/><column index="5" value="300"/><column index="6" value="46"/><column index="7" value="41"/><column index="8" value="84"/><column index="9" value="300"/><column index="10" value="300"/><column index="11" value="39"/><column index="12" value="62"/><column index="13" value="40"/><column index="14" value="156"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table></browse_table_settings></tab_browse><tab_sql><sql name="SQL 1*">-- 나눔이음바자 상품 DB 스키마 (SQLite)
+-- 실행: sqlite3 nanumieumbaza.db &lt; schema.sql
+
+PRAGMA foreign_keys = ON;
+
+CREATE TABLE IF NOT EXISTS categories (
+  id          INTEGER PRIMARY KEY AUTOINCREMENT,
+  name        TEXT NOT NULL UNIQUE,      -- 예: &quot;3분짜장&quot;
+  source_file TEXT                        -- 원본 html 파일명
+);
+
+CREATE TABLE IF NOT EXISTS products (
+  id                  INTEGER PRIMARY KEY AUTOINCREMENT,
+  coupang_product_id  TEXT NOT NULL,      -- coupang.com/vp/products/{이 값}
+  item_id             TEXT,
+  vendor_item_id      TEXT,
+  name                TEXT NOT NULL,
+  price               INTEGER NOT NULL,
+  rating              REAL,
+  review_count        INTEGER,
+  image_path          TEXT,               -- 웹에서 바로 쓰는 상대경로 (쿠팡 상품 리스트/... 접두어 포함)
+  product_url         TEXT,
+  seller              TEXT DEFAULT '쿠팡',
+  type                TEXT DEFAULT 'general',   -- general | donate
+  stock               INTEGER DEFAULT 999,
+  scraped_at          TEXT DEFAULT (datetime('now')),
+  UNIQUE(coupang_product_id, vendor_item_id)
+);
+
+-- 상품 ↔ 카테고리 다대다 (같은 상품이 여러 검색어 파일에 겹쳐 등장하는 경우 대응)
+CREATE TABLE IF NOT EXISTS product_categories (
+  product_id  INTEGER NOT NULL,
+  category_id INTEGER NOT NULL,
+  position    INTEGER,           -- 그 카테고리 파일 안에서의 노출 순서
+  PRIMARY KEY (product_id, category_id),
+  FOREIGN KEY (product_id)  REFERENCES products(id)   ON DELETE CASCADE,
+  FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE CASCADE
+);
+
+CREATE INDEX IF NOT EXISTS idx_products_coupang_id ON products(coupang_product_id);
+CREATE INDEX IF NOT EXISTS idx_pc_category ON product_categories(category_id);
+CREATE INDEX IF NOT EXISTS idx_pc_product ON product_categories(product_id);</sql><current_tab id="0"/></tab_sql></sqlb_project>

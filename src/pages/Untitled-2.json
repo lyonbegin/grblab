@@ -1,0 +1,342 @@
+{
+    "data": {
+        "domesticHotelRates": {
+            "nHotelId": "N1195044",
+            "xbuId": "11583199",
+            "totalCount": 331,
+            "rates": [
+                {
+                    "id": "8shNIB_p3e",
+                    "roomId": "",
+                    "roomName": "클래식 룸 - 무료 Wi-Fi",
+                    "ota": {
+                        "code": "CTE",
+                        "npay": "npay",
+                        "isOfficialSite": false,
+                        "__typename": "OTA"
+                    },
+                    "nlog": {
+                        "impression": {
+                            "cssSelector": "hotel_imp",
+                            "content": {
+                                "rank": 1,
+                                "cid": null,
+                                "area": "RATES",
+                                "hotel": {
+                                    "category": "rates",
+                                    "query": "11583199",
+                                    "sessionId": "",
+                                    "impId": "LMddKsQQnb",
+                                    "checkIn": "2026-08-16",
+                                    "checkOut": "2026-08-17",
+                                    "includeTax": true,
+                                    "rate": 638567,
+                                    "otaCode": "CTE",
+                                    "otaId": "82365",
+                                    "url": "https://hapi-ko-kr.kayakaffiliates.com/in?cluster=4&a=kan_141222_418147&p=&cc=kr&mc=KRW&lc=KO&url=%2Fbook%2Fhotel%3Fcode%3D0ACEFoxrxY.mrPgp9aEf0huRI61aBXW-nii2qEk8ywW.45389.82365.MTc4Njg1MjgwMDAwMF4xNzg2OTM5MjAwMDAwXjFeMl4%3D%26h%3D48f12423e878%26sub%3D0%26_pt_%3D1&utid=ZmZiYTU2MTMtMjk4OS00NmYwLTlhYWQtOGFiZGEwNDczZDFj&cookieOverrides=e0r-vV17CTyHTY65FOuSfsY9e5TEjc2J1fBnHBsbyNMdvcHjIqzoeDwqkisFYNhrCsC1XXSXPtJtYSzIdNAqaqK8Dz4VLmga--RDaAkbjNj2J65Hi0663kxTvJr7f9QM_HglOfQnEFq3iIk29r7hx9YHh8fYqfwdmJgmBqNMoI8&providerParams=isnaver%3D1&splash=false",
+                                    "userGrade": 0,
+                                    "hasFlightCoupon": false,
+                                    "promotionId": null,
+                                    "promotionBenefitRate": 31927,
+                                    "hotelId": "N1195044",
+                                    "xbuId": "11583199",
+                                    "roomName": "클래식 룸 - 무료 Wi-Fi"
+                                }
+                            },
+                            "__typename": "NlogImpression"
+                        },
+                        "click": {
+                            "eventName": "hotel-click",
+                            "content": {
+                                "click_rank": 1,
+                                "click_cid": null,
+                                "click_area": "RATES",
+                                "hotel": {
+                                    "category": "rates",
+                                    "query": "11583199",
+                                    "sessionId": "",
+                                    "impId": "LMddKsQQnb",
+                                    "checkIn": "2026-08-16",
+                                    "checkOut": "2026-08-17",
+                                    "includeTax": true,
+                                    "rate": 638567,
+                                    "otaCode": "CTE",
+                                    "otaId": "82365",
+                                    "url": "https://hapi-ko-kr.kayakaffiliates.com/in?cluster=4&a=kan_141222_418147&p=&cc=kr&mc=KRW&lc=KO&url=%2Fbook%2Fhotel%3Fcode%3D0ACEFoxrxY.mrPgp9aEf0huRI61aBXW-nii2qEk8ywW.45389.82365.MTc4Njg1MjgwMDAwMF4xNzg2OTM5MjAwMDAwXjFeMl4%3D%26h%3D48f12423e878%26sub%3D0%26_pt_%3D1&utid=ZmZiYTU2MTMtMjk4OS00NmYwLTlhYWQtOGFiZGEwNDczZDFj&cookieOverrides=e0r-vV17CTyHTY65FOuSfsY9e5TEjc2J1fBnHBsbyNMdvcHjIqzoeDwqkisFYNhrCsC1XXSXPtJtYSzIdNAqaqK8Dz4VLmga--RDaAkbjNj2J65Hi0663kxTvJr7f9QM_HglOfQnEFq3iIk29r7hx9YHh8fYqfwdmJgmBqNMoI8&providerParams=isnaver%3D2&splash=false",
+                                    "userGrade": 0,
+                                    "hasFlightCoupon": false,
+                                    "promotionId": null,
+                                    "promotionBenefitRate": 31927,
+                                    "hotelId": "N1195044",
+                                    "xbuId": "11583199",
+                                    "roomName": "클래식 룸 - 무료 Wi-Fi"
+                                }
+                            },
+                            "__typename": "NlogClick"
+                        },
+                        "__typename": "NlogRate"
+                    },
+                    "productFeatures": {
+                        "isNpayPoint": true,
+                        "isLast": false,
+                        "isPayLater": false,
+                        "isFreeCancel": false,
+                        "isSecretDeal": false,
+                        "freeCancelDeadline": null,
+                        "roomUsageType": "stay",
+                        "checkInTime": "15:00",
+                        "checkOutTime": "11:00",
+                        "stayHour": -1,
+                        "isAllInclusive": false,
+                        "isFreeEarlyCheckIn": false,
+                        "isFreeLateCheckOut": false,
+                        "isFreeRoomUpgrade": false,
+                        "welcomeDrink": false,
+                        "freeGift": false,
+                        "isNaverBenefit": false,
+                        "freeBreakfast": false,
+                        "freeDinner": false,
+                        "__typename": "ProductFeatures"
+                    },
+                    "roomFeatures": {
+                        "roomType": [
+                            "클래식"
+                        ],
+                        "viewType": [],
+                        "optionType": [],
+                        "bedType": [],
+                        "__typename": "RoomFeatures"
+                    },
+                    "rate": {
+                        "userRate": "638567",
+                        "discounts": {
+                            "krFestival": null,
+                            "travelClub": null,
+                            "coupons": null,
+                            "__typename": "Discounts"
+                        },
+                        "bookUrl": "LkKpoctS3Gl7Fzs95B-uKAshOjnyKuYVCyGJTiLMvBKLfbLVThuD9OrYl3A3xd_8SpSsfMuMI46jrfYeHtLLDDw7MXCL7hn9FADQYfI4-zaUh6M7NQzQO0H0xAghE6gbecnJy2esPH4F3QpWum4cr7fEvKsEWgKa2qSasEumDtWZYE6N1AI285kvOMEqvKmXkYgUrAfM_g38jjaT5DNbmnP-iYtzVs85vI4TGQSew0nTVaINxxAc2aTnyF_S7WhO9ohmc2t5jIPsuzNWCPyJW6ZJ1xAuS8089c1YGtF4_XW5bk8spuJvVh-Ojtw6O736UqvqXcjExuJCMscmsJ_vsy05y0sDH8SUKXviNeBKTPUg82C9bTtGnIZRoxUFyazOA2pxKweRuAju10BiTkTSlM1_gKHl_tIX2pPj7WRtI1vkSWOK-OH-U7eJkXIci8aiexT1ErM7mTaETCHBHuI_n1MylIQLIWYf2kO6or-Yt9iS7zoGNE3qmqp1nCNcIag9bDkGfPdNVOFnQyYOaNrUlQjO0akmKx2vgnGbUE2RpVW2azxY5Xp91yfXV_Mzr9zOpJVyRC4-7kgjVYmZtegw91lu9TYaA4n11jpzdwwMuUTwRRgnH0KyLSMo-Z0QoDhcwUuAq1_-kEhMEw9WfeOB0CROYEoJPDg-rd2CDi1S35_qCzV3R54BgW_bHHgB3osjSfAHLe4iSV4ykDMG639-_GpHMxzICNVeKybOKUb16x1cD3q6GIANrXXu7ggcKVoRIpqPDPU0KcPDSN5a46zsDl7rcKAULJV3Yokl0-6EVQuu3I_VZVHqCXyxvZ0K1Ms8w9RigYUu4a6D4F6_eklpAD9ztAOgkjFvQ59occn7WmajFNidFuf_oeklV4bSXLQRMSd3dAzErXCRKxW_Ddk8u_L4lEn9L38WGeHjwUFP-x9A7nbB9MseXciff4qYXH_2n3xwJsJMnTfrRLjd0XAAskFqL_sPLWonSyM0LG9Ma_Q=",
+                        "localRate": null,
+                        "original": "638567",
+                        "promotionBookUrl": "-iG90KfXhkFx6syk0e2f8ETe0BU2A21vYTF8cyy2hH6LJLtZXZHocBcuzI56Pw3HTLKYH7mmV6kfGrtQI_ojWr4U6AXuRds_LFh-CsobJwFL8XaAgRLY9qV87TbJ0HQPF4LGE65kCicALD5Vvg_uTLgWUotTjp1qLjfWq_jtQ-D9CR0CSUfYH7P-J1KfJ7X7oS0BDj9vbcJtY7He4AySgoDx07u2l_HoKpZlaN2Zj4ydNr8jUG3s7EPBP7ZAhWwbpgu4zhux-uMNzFzMH4ZgZYoRyHkfhj_0z8LQNb058vcTqTsbSo4sMMm4tWaHmPWMt_gS4nUmH9vEm-hn9Kfyd6tbIsFoTLL9OaPVqCcw174WS3eieWR4y3IuN3vVOreL_8A2NKWu-eCMuxcPcIrwA-uVwhhmQqSyJsFl5FxU6Yp4HFHqGkfFWd8Ea11Vo8oTwxdja4CObhjFrLR_SLvkEd301FcsnIze5rOO6rd0lVYXoNcY1qyGAolXj_wkAYTNdQptsh5SGC99hZ3HOK4O-KWJlWnmFx0QDbbc5OSpYqGWSvq0sHRI9iH9sykb1ebBtAxinr3_aIupPAQQRfBOYSbnX7dCDuqbXFCu7SXv0MJfRr-fSrT9oxkbcn4y1sq31O06W19_QNDdmkIgUNC3kP2DW9AXYTRnSCTTBl652S4uDEjVHZmD_RzvGqKGUSG0fFYXccuLYQlgbVE_eRYj667EFqdVC-xxZq5COauxbsrGI1GczjVuuoZCIWpKMLhEe6UiuNvxVhaYhSyaImRwVKgDcvR44MSdV0J2vWKb7IhbaC58q-bkx-lXp7ULnA6VimzrjyJafuJyUTqWu4oVR_ECfBzRyYvM7sHgpMIHCWox7yMxagGZb8ddwehIOkDrnTPq2dGu_Ca60cKk4myJYbGAKt6a2WEMBhMO2N4coaDyntT_RLmKImI3SmqTmAITW5e1X94Jtpxlp2c3xBQ0YNz5sYf9l1YpI_Ekuzirrho5N_Qd4_QAsd7hvxWEzuCdMtf9oNhbvwVQr2NVBhwCYA==",
+                        "rewards": {
+                            "details": [
+                                {
+                                    "type": "npayDefault",
+                                    "title": "기본 적립 최대",
+                                    "amount": 6385,
+                                    "percent": 1,
+                                    "url": null,
+                                    "__typename": "RewardDetail"
+                                },
+                                {
+                                    "type": "promotion",
+                                    "title": "이벤트 적립",
+                                    "amount": 25542,
+                                    "percent": 4,
+                                    "url": "https://travel.naver.co.kr/ctrip202607",
+                                    "__typename": "RewardDetail"
+                                }
+                            ],
+                            "total": "31927",
+                            "__typename": "Rewards"
+                        },
+                        "__typename": "RateDetail"
+                    },
+                    "promotionEventLabels": [
+                        {
+                            "eventKey": "withFlight-2026-05",
+                            "label": {
+                                "type": "withFlight",
+                                "text": "항공+호텔 둘 다 예약하면 5% 추가적립",
+                                "displayLevel": "rate",
+                                "__typename": "PromotionEventLabelMeta"
+                            },
+                            "action": {
+                                "type": "link",
+                                "linkUrl": {
+                                    "mo": "https://travel-event.naver.com/promotion/flightplushotel",
+                                    "pc": "https://travel-event.naver.com/promotion/flightplushotel",
+                                    "__typename": "PromotionEventLink"
+                                },
+                                "linkText": "자세히 보기",
+                                "promoCode": null,
+                                "popupTitle": null,
+                                "popupBody": null,
+                                "popupBodyEmphasis": null,
+                                "popupLinkUrl": null,
+                                "popupLinkText": null,
+                                "popupBookingUrl": null,
+                                "popupBookingText": null,
+                                "__typename": "PromotionEventAction"
+                            },
+                            "__typename": "PromotionEventLabel"
+                        }
+                    ],
+                    "__typename": "SingleRateItem"
+                },
+                {
+                    "id": "bB1ixUNhaj",
+                    "roomId": "359637042",
+                    "roomName": "클래식룸 (킹베드 1개, 장애인 친화형)",
+                    "ota": {
+                        "code": "NAGD",
+                        "npay": "npay",
+                        "isOfficialSite": false,
+                        "__typename": "OTA"
+                    },
+                    "nlog": {
+                        "impression": {
+                            "cssSelector": "hotel_imp",
+                            "content": {
+                                "rank": 2,
+                                "cid": null,
+                                "area": "RATES",
+                                "hotel": {
+                                    "category": "rates",
+                                    "query": "11583199",
+                                    "sessionId": "",
+                                    "impId": "L5YfNQgrDe",
+                                    "checkIn": "2026-08-16",
+                                    "checkOut": "2026-08-17",
+                                    "includeTax": true,
+                                    "rate": 653400,
+                                    "otaCode": "NAGD",
+                                    "otaId": "149130",
+                                    "url": "https://www.agoda.com/ko-kr/partnersmw/partnersearch.aspx?cid=1891504&hid=149130&currency=KRW&checkin=2026-08-16&checkout=2026-08-17&NumberofAdults=2&NumberofChildren=0&Rooms=1&mcid=27800&masterRoomId=359637042&mpt=KzI2cmY4ZHYzOENLckxGNjFyM00yWFZGMTA0RS9QOGhJbWdCTlp3QWhKNzNKVmF1N0IxUDJqOTljSzM2amtpb052NjV2amw5S0I1alBnPT0&TotalPrice=653400&TotalTax=113400&TotalFee=0&TotalSurcharge=0&mcur=KRW&isnaver=1",
+                                    "userGrade": 0,
+                                    "hasFlightCoupon": false,
+                                    "promotionId": null,
+                                    "promotionBenefitRate": 6534,
+                                    "hotelId": "N1195044",
+                                    "xbuId": "11583199",
+                                    "roomName": "클래식룸 (킹베드 1개, 장애인 친화형)"
+                                }
+                            },
+                            "__typename": "NlogImpression"
+                        },
+                        "click": {
+                            "eventName": "hotel-click",
+                            "content": {
+                                "click_rank": 2,
+                                "click_cid": null,
+                                "click_area": "RATES",
+                                "hotel": {
+                                    "category": "rates",
+                                    "query": "11583199",
+                                    "sessionId": "",
+                                    "impId": "L5YfNQgrDe",
+                                    "checkIn": "2026-08-16",
+                                    "checkOut": "2026-08-17",
+                                    "includeTax": true,
+                                    "rate": 653400,
+                                    "otaCode": "NAGD",
+                                    "otaId": "149130",
+                                    "url": "https://www.agoda.com/ko-kr/partnersmw/partnersearch.aspx?cid=1891504&hid=149130&currency=KRW&checkin=2026-08-16&checkout=2026-08-17&NumberofAdults=2&NumberofChildren=0&Rooms=1&mcid=27800&masterRoomId=359637042&mpt=KzI2cmY4ZHYzOENLckxGNjFyM00yWFZGMTA0RS9QOGhJbWdCTlp3QWhKNzNKVmF1N0IxUDJqOTljSzM2amtpb052NjV2amw5S0I1alBnPT0&TotalPrice=653400&TotalTax=113400&TotalFee=0&TotalSurcharge=0&mcur=KRW&isnaver=1",
+                                    "userGrade": 0,
+                                    "hasFlightCoupon": false,
+                                    "promotionId": null,
+                                    "promotionBenefitRate": 6534,
+                                    "hotelId": "N1195044",
+                                    "xbuId": "11583199",
+                                    "roomName": "클래식룸 (킹베드 1개, 장애인 친화형)"
+                                }
+                            },
+                            "__typename": "NlogClick"
+                        },
+                        "__typename": "NlogRate"
+                    },
+                    "productFeatures": {
+                        "isNpayPoint": true,
+                        "isLast": false,
+                        "isPayLater": false,
+                        "isFreeCancel": false,
+                        "isSecretDeal": false,
+                        "freeCancelDeadline": null,
+                        "roomUsageType": "stay",
+                        "checkInTime": "",
+                        "checkOutTime": "",
+                        "stayHour": -1,
+                        "isAllInclusive": false,
+                        "isFreeEarlyCheckIn": false,
+                        "isFreeLateCheckOut": false,
+                        "isFreeRoomUpgrade": false,
+                        "welcomeDrink": false,
+                        "freeGift": false,
+                        "isNaverBenefit": false,
+                        "freeBreakfast": false,
+                        "freeDinner": false,
+                        "__typename": "ProductFeatures"
+                    },
+                    "roomFeatures": {
+                        "roomType": [
+                            "클래식"
+                        ],
+                        "viewType": [],
+                        "optionType": [],
+                        "bedType": [
+                            "킹베드"
+                        ],
+                        "__typename": "RoomFeatures"
+                    },
+                    "rate": {
+                        "userRate": "653400",
+                        "discounts": {
+                            "krFestival": null,
+                            "travelClub": null,
+                            "coupons": null,
+                            "__typename": "Discounts"
+                        },
+                        "bookUrl": "b_HyOMFaSRpgePdf7SEYNPYAyS-PuWjNJPd2CBVe5r-bZjcwJBKwU0c2LC-0_--_PGTVOvpG1OKUDIDJbElpbZfoW6xc9VKxkj8q2NpRDCdCYg3FXWpQVlEQbDj_faOV0xrP1gv6IoXV5QvzG3nVmlInMOZobEy6BKvB_6PatlOEr0O32mqgIyFE3lPR-UsBsQsJdWPnP_P4pkm16FgzUnUaO4jyAT-YDJtlGRUU_sEsM4BzbDceIU_LJOrosFVZrFqPOLUakcZG8mn12axVN5c6j_jyhHEvVCkCtpEdvK3r04BXMUZAjmQcMkS5PnMkXEMzNF0VRp6OiNnB1FmD8VQ7dFPAGHTSwLaI7n3BoTe8glrXpsxr2Lf4hu37ZS4GS8mUIvBy_qYDcjUYOmXYZ7sd8aNkARt-RmPCLVFxH3qRNZbXFxEKFDsdIShDMjf7O5ieoYTuyb70A4ayy9sX0e3-cyrMDXfHE0AkeeJ8M-lOjhDu5ME0oSiEsgCe-0noRuT4LC4n170FvQwN7Xjgb35NFy9SjbXwUUWRYIOleDXob1F7lV_zP73fht5LDVJj2hEWeOYX2Xfrp-vFp7ljJJl7xx3XpiSkgm1y-Ye3u2v8ZFl227img0a0z8AEp4uSYpUr7bAAKe9iJk4xidGSx1BE5PyWDFdj1v36rjbL1P234qSx9ZFQGiyjH6HjkVYYGyNA-2xHjIko1U4h7r_VkauPn2XC3M9SD8qGl-qPmpTRetsZ97IFgb-LUpgm5jcpt-o2OkoUe5929xtEADJZwW8MxqYzXI_SozDrx0J1mjw=",
+                        "localRate": null,
+                        "original": "653399",
+                        "promotionBookUrl": "",
+                        "rewards": {
+                            "details": [
+                                {
+                                    "type": "npayDefault",
+                                    "title": "기본 적립 최대",
+                                    "amount": 6534,
+                                    "percent": 1,
+                                    "url": null,
+                                    "__typename": "RewardDetail"
+                                }
+                            ],
+                            "total": "6534",
+                            "__typename": "Rewards"
+                        },
+                        "__typename": "RateDetail"
+                    },
+                    "promotionEventLabels": [
+                        {
+                            "eventKey": "withFlight-2026-05",
+                            "label": {
+                                "type": "withFlight",
+                                "text": "항공+호텔 둘 다 예약하면 5% 추가적립",
+                                "displayLevel": "rate",
+                                "__typename": "PromotionEventLabelMeta"
+                            },
+                            "action": {
+                                "type": "link",
+                                "linkUrl": {
+                                    "mo": "https://travel-event.naver.com/promotion/flightplushotel",
+                                    "pc": "https://travel-event.naver.com/promotion/flightplushotel",
+                                    "__typename": "PromotionEventLink"
+                                },
+                                "linkText": "자세히 보기",
+                                "promoCode": null,
+                                "popupTitle": null,
+                                "popupBody": null,
+                                "popupBodyEmphasis": null,
+                                "popupLinkUrl": null,
+                                "popupLinkText": null,
+                                "popupBookingUrl": null,
+                                "popupBookingText": null,
+                                "__typename": "PromotionEventAction"
+                            },
+                            "__typename": "PromotionEventLabel"
+                        }
+                    ],
+                    "__typename": "SingleRateItem"
+                },
+                
