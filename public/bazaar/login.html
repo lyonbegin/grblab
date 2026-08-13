@@ -17,13 +17,12 @@
   :root{
     --paper:#FBF7F7;--paper-2:#F6EFEE;--ink:#2B2430;--ink-soft:#6B5F68;--ink-faint:#A79AA0;
     --red:#EE6F93;--red-dark:#C94F71;--thread:#45BC92;--thread-soft:#DEF6EC;
-    --line:#F0E1E6;--card:#FFFFFF;--r-lg:22px;--r-md:14px;--r-sm:10px;--wrap:560px;
+    --line:#F0E1E6;--card:#FFFFFF;--r-lg:22px;--r-md:14px;--r-sm:10px;--wrap:420px;
     --sans:'SUIT Variable','SUIT',-apple-system,BlinkMacSystemFont,'Malgun Gothic',sans-serif;
     --serif:'Jalnan','Gowun Batang','Nanum Myeongjo',serif;
   }
   *{margin:0;padding:0;box-sizing:border-box}
   body{font-family:var(--sans);color:var(--ink);background:var(--paper);line-height:1.7;-webkit-font-smoothing:antialiased}
-  .lucide{width:1em;height:1em;display:inline-block;vertical-align:-0.15em;flex:none}
   .wrap{max-width:var(--wrap);margin:0 auto;padding:0 24px}
 
   .dnav{position:sticky;top:0;z-index:50;background:rgba(251,247,247,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
@@ -40,33 +39,29 @@
   .head h1{font-family:var(--serif);font-size:22px;font-weight:700;letter-spacing:-.01em;margin-bottom:8px}
   .head p{font-size:13.5px;color:var(--ink-soft)}
 
-  .note{
-    background:var(--card);border:1px solid var(--line);border-radius:var(--r-md);
-    padding:14px 16px;margin:24px 0;font-size:12.5px;color:var(--ink-soft);line-height:1.8;
+  .field{margin:22px 0}
+  .field label{display:block;font-size:13.5px;font-weight:700;margin-bottom:8px}
+  .field input{
+    width:100%;border:1px solid var(--line);border-radius:var(--r-sm);
+    padding:13px 15px;font-family:inherit;font-size:14.5px;color:var(--ink);
+    background:var(--card);outline:none;transition:border-color .15s;
   }
+  .field input:focus{border-color:var(--thread)}
+  .field.has-error input{border-color:#C0392B}
+  .field-error{color:#C0392B;font-size:12.5px;margin-top:6px;display:none}
+  .field.has-error .field-error{display:block}
 
-  .fac-search{
-    width:100%;border:1px solid var(--line);border-radius:100px;padding:12px 18px;
-    font-family:inherit;font-size:14px;color:var(--ink);background:var(--card);outline:none;
-    margin-bottom:16px;
+  .submit{
+    display:block;width:100%;background:var(--thread);color:#fff;border:0;
+    padding:14px;font-size:15.5px;font-weight:700;border-radius:var(--r-sm);
+    cursor:pointer;font-family:inherit;transition:background .15s;margin-top:6px;
   }
-  .fac-search:focus{border-color:var(--thread)}
+  .submit:hover{background:#2E9C79}
+  .submit:disabled{opacity:.6;cursor:default}
 
-  .fac-list{display:flex;flex-direction:column;gap:8px;margin-bottom:50px;max-height:420px;overflow-y:auto}
-  .fac-row{
-    display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);
-    border-radius:var(--r-md);padding:11px 14px;cursor:pointer;text-align:left;font-family:inherit;width:100%;
-    transition:border-color .15s;
-  }
-  .fac-row:hover{border-color:var(--thread)}
-  .fac-row .ft{width:52px;height:36px;border-radius:6px;overflow:hidden;flex:none;background:var(--paper-2)}
-  .fac-row .ft img{width:100%;height:100%;object-fit:cover}
-  .fac-row .fn{flex:1;min-width:0}
-  .fac-row .fn b{display:block;font-size:13.5px;font-weight:700}
-  .fac-row .fn span{font-size:11px;color:var(--ink-faint)}
-  .fac-row .arr{flex:none;color:var(--ink-faint)}
+  .form-error{color:#C0392B;font-size:13px;text-align:center;margin-top:14px;display:none}
 
-  footer{background:var(--ink);color:var(--ink-faint);padding:30px 24px;font-size:12.5px;text-align:center}
+  footer{background:var(--ink);color:var(--ink-faint);padding:30px 24px;font-size:12.5px;text-align:center;margin-top:60px}
 </style>
 </head>
 <body>
@@ -85,13 +80,25 @@
     <p>협의체에 등록된 복지시설만 나눔이음바자를 이용할 수 있습니다.</p>
   </div>
 
-  <div class="note">
-    실제 서비스에서는 계정(아이디·비밀번호)으로 로그인하지만, 이 화면은 시안이라
-    아래 목록에서 복지시설을 선택하면 그 시설로 로그인됩니다.
-  </div>
+  <form id="loginForm">
+    <button type="button" class="submit test-login" id="testLoginBtn" style="background:var(--ink-faint);margin-bottom:18px">
+      나눔이음지역아동센터 테스트 시설로 로그인하기
+    </button>
 
-  <input type="text" id="facSearch" class="fac-search" placeholder="복지시설명으로 검색">
-  <div class="fac-list" id="facList"></div>
+    <div class="field" id="field-username">
+      <label for="username">아이디</label>
+      <input type="text" id="username" name="username" autocomplete="username" required>
+      <span class="field-error">아이디를 입력해 주세요.</span>
+    </div>
+    <div class="field" id="field-password">
+      <label for="password">비밀번호</label>
+      <input type="password" id="password" name="password" autocomplete="current-password" required>
+      <span class="field-error">비밀번호를 입력해 주세요.</span>
+    </div>
+
+    <button type="submit" class="submit" id="submitBtn">로그인</button>
+    <p id="formError" class="form-error"></p>
+  </form>
 </div>
 
 <footer>
@@ -99,35 +106,71 @@
 </footer>
 
 <script>
-  const FACILITIES = [{n:"경동원(수원)",t:"영유아 보육시설",c:"개천에서 용재난다",v:"Y1LqqbS6HI4"},{n:"조은나무지역아동센터",t:"지역아동센터",c:"조은",v:"7M_rAFgX1b8"},{n:"남양주시지역아동센터",t:"지역아동센터",c:"복지학교",v:"-0NXL48xMEU"},{n:"동산지역아동센터",t:"지역아동센터",c:"봄앤이야기",v:"ME789zEGBNI"},{n:"반월지역아동센터",t:"지역아동센터",c:"고경률",v:"2ClgWV1CTdU"},{n:"삼전지역아동센터",t:"지역아동센터",c:"CCMHUB Official",v:"iGZD_6LKMEo"},{n:"대구보육원",t:"아동양육시설/보육원",c:"이기운 아코디언",v:"MwkipVs8cS4"},{n:"명륜보육원",t:"아동양육시설/보육원",c:"도다미즘",v:"hJaaLZeldXA"},{n:"실로암보육원",t:"아동양육시설/보육원",c:"욕쟁이빵실이이모",v:"2O1L8lsptPk"},{n:"인천보육원",t:"아동양육시설/보육원",c:"HAUS 에어컨 이야기",v:"CVYNujaRCJ0"},{n:"청운보육원",t:"아동양육시설/보육원",c:"방충망대장",v:"YMjajawG-4g"},{n:"성보재활원",t:"장애인복지",c:"성보재활원",v:"7YvmiKC4Bts"},{n:"경상북도시각장애인복지관",t:"장애인복지",c:"시각장애인 TV 김일근이 사는 세상",v:"ROjz-BTOKfE"},{n:"광명장애인복지관",t:"장애인복지",c:"클린인피니티",v:"axjax0Njf48"},{n:"광양장애인복지관",t:"장애인복지",c:"광양장복 TV",v:"U1snwPmZLJQ"},{n:"광주서구장애인복지관",t:"장애인복지",c:"문은주(무지개사랑)",v:"marZcjF7NIQ"},{n:"포천노인복지관",t:"노인복지",c:"이원발TV",v:"DIkOLCpu_nM"},{n:"미추홀노인복지관",t:"노인복지",c:"김윤서심리운동발달센터",v:"CfcclUJn-TE"},{n:"부평노인복지관",t:"노인복지",c:"가체짱tv",v:"tRKffaEo9xY"},{n:"용강노인복지관",t:"노인복지",c:"고운향기",v:"g7rDuvtF6rU"},{n:"화성시서부노인복지관",t:"노인복지",c:"바우새미TV(심 문보)",v:"AXgK9K417Rg"},{n:"그라테스요양원",t:"노인복지",c:"폴라리스색소폰 클럽",v:"G05yOjElS4Y"},{n:"금천노인종합복지관",t:"기타복지시설",c:"화이트샌즈",v:"VvmfWicHkMk"},{n:"마포복지관",t:"기타복지시설",c:"탁이랜드 takiland",v:"3iCYf9VYbSc"},{n:"무더위쉼터",t:"기타복지시설",c:"KTV  다큐",v:"Aaqd4FC6nps"},{n:"비대면복지관",t:"기타복지시설",c:"할머니의 리포트 Grandma Report",v:"KgDLy82_kSM"}];
+  // FastAPI 백엔드 로그인 API 주소 (실제 배포 도메인으로 바꿔주세요)
+  const API_BASE = 'https://backend-production-6b41.up.railway.app';
 
-  const list = document.getElementById('facList');
-  const search = document.getElementById('facSearch');
+  const form = document.getElementById('loginForm');
+  const submitBtn = document.getElementById('submitBtn');
+  const formError = document.getElementById('formError');
+  const testLoginBtn = document.getElementById('testLoginBtn');
 
-  function render(){
-    const q = search.value.trim().toLowerCase();
-    const filtered = FACILITIES.filter(f => !q || f.n.toLowerCase().includes(q));
-    list.innerHTML = filtered.map(f => `
-      <button type="button" class="fac-row" data-n="${f.n}">
-        <span class="ft"><img src="https://i.ytimg.com/vi/${f.v}/mqdefault.jpg" alt=""></span>
-        <span class="fn"><b>${f.n}</b><span>${f.t} · ${f.c} 결연</span></span>
-        <span class="arr"><svg class="lucide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></span>
-      </button>`).join('');
+  async function doLogin(username, password, triggerBtn) {
+    formError.style.display = 'none';
+    document.querySelectorAll('.field.has-error').forEach(f => f.classList.remove('has-error'));
 
-    list.querySelectorAll('.fac-row').forEach(row=>{
-      row.addEventListener('click', ()=>{
-        const name = row.dataset.n;
-        const fac = FACILITIES.find(f=>f.n===name);
-        localStorage.setItem('nb_facility', JSON.stringify(fac));
-        if(!localStorage.getItem('nb_balance_'+name)){
-          localStorage.setItem('nb_balance_'+name, '354000');
-        }
-        location.href = 'bazaar.html';
+    const originalText = triggerBtn.textContent;
+    triggerBtn.disabled = true;
+    triggerBtn.textContent = '로그인 중…';
+
+    try {
+      const res = await fetch(API_BASE + '/api/facility/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
       });
-    });
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        formError.textContent = err.detail || '아이디 또는 비밀번호가 올바르지 않습니다.';
+        formError.style.display = 'block';
+        triggerBtn.disabled = false;
+        triggerBtn.textContent = originalText;
+        return;
+      }
+
+      const facility = await res.json(); // { id, name, balance }
+      localStorage.setItem('nb_facility', JSON.stringify(facility));
+      location.href = 'bazaar.html';
+    } catch (err) {
+      formError.textContent = '서버에 연결할 수 없습니다. 잠시 후 다시 시도해 주세요.';
+      formError.style.display = 'block';
+      triggerBtn.disabled = false;
+      triggerBtn.textContent = originalText;
+    }
   }
-  search.addEventListener('input', render);
-  render();
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value;
+
+    let firstInvalid = null;
+    if (!username) firstInvalid = firstInvalid || 'username';
+    if (!password) firstInvalid = firstInvalid || 'password';
+    if (firstInvalid) {
+      document.getElementById('field-' + firstInvalid).classList.add('has-error');
+      return;
+    }
+
+    doLogin(username, password, submitBtn);
+  });
+
+  testLoginBtn.addEventListener('click', () => {
+    document.getElementById('username').value = 'test';
+    document.getElementById('password').value = 'test';
+    doLogin('test', 'test', testLoginBtn);
+  });
 </script>
 </body>
 </html>
