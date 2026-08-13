@@ -424,7 +424,7 @@ export default function AntiageTab() {
 </div>
     </ScaledContent>
 
-      {showBenefitModal && (
+     {false && showBenefitModal && (
         <div id="ticc-benefit-modal-overlay">
           <style dangerouslySetInnerHTML={{ __html: benefitModalCss }} />
           <div id="ticc-benefit-modal-wrapper">
