@@ -138,8 +138,19 @@
         return;
       }
 
-      const facility = await res.json(); // { id, name, balance }
-      localStorage.setItem('nb_facility', JSON.stringify(facility));
+      const facility = await res.json(); // { id, name, balance, ftype, channel, youtube_id }
+      // bazaar.html이 기대하는 형식(n, t, c, v)으로 변환해서 저장
+      const facForBazaar = {
+        id: facility.id,
+        n: facility.name,
+        t: facility.ftype || '',
+        c: facility.channel || '',
+        v: facility.youtube_id || '',
+        balance: facility.balance
+      };
+      localStorage.setItem('nb_facility', JSON.stringify(facForBazaar));
+      // 잔액도 bazaar.html이 쓰는 키(nb_balance_시설명)에 맞춰 저장
+      localStorage.setItem('nb_balance_' + facility.name, String(facility.balance));
       location.href = 'bazaar.html';
     } catch (err) {
       formError.textContent = '서버에 연결할 수 없습니다. 잠시 후 다시 시도해 주세요.';
