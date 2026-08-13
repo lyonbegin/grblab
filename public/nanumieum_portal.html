@@ -387,34 +387,6 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .step4 h4{font-size:15px;font-weight:700;margin-bottom:7px;letter-spacing:-.01em}
 .step4 p{font-size:13.3px;color:var(--ink-soft);line-height:1.68}
 
-.calc{
-  background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);
-  padding:30px 32px;display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:center;
-}
-@media(max-width:700px){.calc{grid-template-columns:1fr;padding:26px 22px}}
-.calc-in label{font-size:13px;color:var(--ink-soft);font-weight:600;display:block;margin-bottom:8px}
-.calc-in .field{
-  display:flex;align-items:center;background:var(--paper-2);border:1px solid var(--line);
-  border-radius:100px;padding:4px 6px 4px 20px;
-}
-.calc-in input{
-  flex:1;border:none;background:transparent;font-family:inherit;font-size:17px;font-weight:700;
-  color:var(--ink);padding:10px 0;min-width:0;
-}
-.calc-in input:focus{outline:none}
-.calc-in .unit{font-size:14px;color:var(--ink-faint);padding-right:10px}
-.calc-out{background:var(--paper-2);border-radius:var(--r-md);padding:20px 22px}
-.calc-out .lab{font-size:12.5px;color:var(--ink-soft);margin-bottom:6px}
-.calc-out b{
-  display:block;font-family:var(--serif);font-size:clamp(24px,3vw,30px);
-  color:var(--red-dark);letter-spacing:-.02em;margin-bottom:4px;
-}
-.calc-out span{font-size:12.5px;color:var(--ink-faint)}
-.calc-note{
-  grid-column:1/-1;font-size:12.5px;color:var(--ink-faint);line-height:1.7;
-  border-top:1px solid var(--line);padding-top:16px;margin-top:2px;
-}
-
 /* ═══ 포인트 이어주기 ═══ */
 .point-block{
   margin-top:34px;padding-top:34px;border-top:1px solid var(--line);
@@ -627,8 +599,8 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
     </a>
     <a href="benefit-seller.html" class="bt-card c-sel">
       <span class="bt-ico"><svg class="lucide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z"/><path d="M12 22V12"/><polyline points="3.29 7 12 12 20.71 7"/><path d="m7.5 4.27 9 5.15"/></svg></span>
-      <h3>물품판매자 혜택보기</h3>
-      <p>전국 복지시설이라는 새 판매처를 확보하고, 기부 물품은 100% 손금처리까지 받을 수 있습니다.</p>
+      <h3>나눔이음 물품기부자 혜택보기</h3>
+      <p>재고를 나눔이음에 기부하면 손금산입·필요경비 처리로 세금을 줄이고, 전국 결연 복지시설에 직접 닿습니다.</p>
       <span class="bt-more">자세히 보기 <svg class="lucide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
     </a>
   </div>
@@ -695,25 +667,6 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
         <h4>보답과 확인</h4>
         <p>복지시설이 활동 확인서를 전하고, 채널은 나눔이 어디로 갔는지 확인합니다.</p>
       </div>
-    </div>
-
-    <div class="calc">
-      <div class="calc-in">
-        <label for="calcAmt">후원 금액</label>
-        <div class="field">
-          <input type="text" inputmode="numeric" id="calcAmt" value="500,000">
-          <span class="unit">원</span>
-        </div>
-      </div>
-      <div class="calc-out">
-        <div class="lab">예상 세액공제액</div>
-        <b id="calcResult">75,000원</b>
-        <span id="calcNote">1천만 원 이하 구간 · 15% 적용</span>
-      </div>
-      <p class="calc-note">
-        공제에는 소득 대비 한도가 있습니다. 종합소득금액의 30%가 한도이며, 넘긴 금액도
-        사라지지 않고 10년간 이월됩니다. 정확한 적용은 세무 전문가 확인이 필요합니다.
-      </p>
     </div>
 
     <div class="point-block">
@@ -1192,36 +1145,6 @@ document.getElementById('reset').addEventListener('click',()=>{
   render();
 });
 
-
-/* ── 세액공제 계산기 ── */
-(function(){
-  const input = document.getElementById('calcAmt');
-  const result = document.getElementById('calcResult');
-  const note = document.getElementById('calcNote');
-  if(!input) return;
-
-  const CAP = 10000000; // 1천만원 구간 경계
-
-  function calc(){
-    const raw = Number(input.value.replace(/[^0-9]/g,'')) || 0;
-    let credit;
-    if(raw <= CAP){
-      credit = raw * 0.15;
-      note.textContent = '1천만 원 이하 구간 · 15% 적용';
-    } else {
-      credit = CAP * 0.15 + (raw - CAP) * 0.30;
-      note.textContent = '1천만 원 초과분에 30% 적용';
-    }
-    result.textContent = fmt(Math.round(credit)) + '원';
-  }
-
-  input.addEventListener('input', ()=>{
-    const raw = input.value.replace(/[^0-9]/g,'');
-    input.value = raw ? fmt(Number(raw)) : '';
-    calc();
-  });
-  calc();
-})();
 
 /* ── 포인트 이어주기: 방식·종류·발급사 선택 (실제 로고 이미지 사용) ── */
 (function(){

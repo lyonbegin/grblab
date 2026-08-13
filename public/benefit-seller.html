@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>물품판매자 혜택보기 | 나눔이음</title>
+<title>나눔이음 물품기부자 혜택보기 | 나눔이음</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&display=swap" rel="stylesheet">
@@ -19,7 +19,7 @@
     --red:#EE6F93;--red-dark:#C94F71;--thread:#45BC92;--thread-soft:#DEF6EC;
     --yellow:#F6C640;--yellow-soft:#FFF3D2;--yellow-dark:#B5860E;
     --line:#F0E1E6;--card:#FFFFFF;--gray:#8A7D85;
-    --r-lg:22px;--r-md:14px;--r-sm:10px;--wrap:760px;
+    --r-lg:22px;--r-md:14px;--r-sm:10px;--wrap:840px;
     --sans:'SUIT Variable','SUIT',-apple-system,BlinkMacSystemFont,'Malgun Gothic',sans-serif;
     --serif:'Jalnan','Gowun Batang','Nanum Myeongjo',serif;
   }
@@ -30,7 +30,7 @@
   .wrap{max-width:var(--wrap);margin:0 auto;padding:0 24px}
 
   .dnav{position:sticky;top:0;z-index:50;background:rgba(251,247,247,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
-  .dnav-in{max-width:1040px;margin:0 auto;padding:0 24px;height:58px;display:flex;align-items:center;justify-content:space-between}
+  .dnav-in{max-width:var(--wrap);margin:0 auto;padding:0 24px;height:58px;display:flex;align-items:center;justify-content:space-between}
   .dbrand{font-family:var(--serif);font-weight:700;font-size:18px;letter-spacing:-.02em;color:var(--ink);text-decoration:none}
   .dbrand em{font-style:normal;color:var(--red)}
   .dback{font-size:13.5px;color:var(--ink-soft);text-decoration:none}
@@ -38,130 +38,155 @@
 
   .banner{
     background:linear-gradient(135deg,var(--yellow-soft) 0%,var(--paper-2) 55%,var(--paper-2) 100%);
-    position:relative;overflow:hidden;padding:52px 0 46px;
+    position:relative;overflow:hidden;padding:52px 0 40px;
   }
-  .banner .inner{max-width:1040px;margin:0 auto;width:100%;padding:0 24px;position:relative;z-index:2}
+  .banner .inner{max-width:var(--wrap);margin:0 auto;width:100%;padding:0 24px;position:relative;z-index:2}
   .banner .eyebrow{
     display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:var(--yellow-dark);
     background:#fff;padding:7px 16px;border-radius:100px;margin-bottom:16px;
   }
   .banner .eyebrow::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--yellow)}
   .banner h1{
-    font-family:var(--serif);font-size:clamp(22px,3.4vw,32px);font-weight:700;line-height:1.5;
-    color:var(--ink);letter-spacing:-.02em;margin-bottom:10px;
+    font-family:var(--serif);font-size:clamp(24px,3.4vw,32px);font-weight:700;line-height:1.5;
+    color:var(--ink);letter-spacing:-.02em;margin-bottom:12px;max-width:600px;
   }
-  .banner p{font-size:14.5px;color:var(--ink-soft);max-width:520px}
+  .banner p{font-size:14.5px;color:var(--ink-soft);max-width:540px}
   .banner .heart{position:absolute;opacity:.8;pointer-events:none}
+  .banner .cta-row{display:flex;gap:10px;margin-top:22px;flex-wrap:wrap}
+  .btn{
+    display:inline-flex;align-items:center;gap:6px;padding:13px 26px;border-radius:100px;
+    font-size:14.5px;font-weight:700;text-decoration:none;border:0;cursor:pointer;font-family:inherit;
+    transition:transform .15s;
+  }
+  .btn:hover{transform:translateY(-2px)}
+  .btn-ink{background:var(--ink);color:#fff}
+  .btn-yd{background:var(--yellow-dark);color:#fff}
 
-  .section{padding:40px 0 10px}
-  .sec-head{border-bottom:2px solid var(--ink);padding-bottom:14px;margin-bottom:8px}
-  .sec-head h2{font-size:20px;font-weight:800}
+  .section{padding:46px 0 8px}
+  .sec-head{border-bottom:2px solid var(--ink);padding-bottom:14px;margin-bottom:22px}
+  .sec-head h2{font-size:21px;font-weight:800}
+  .sec-head span{font-size:13.5px;color:var(--gray);display:block;margin-top:4px}
+  .sec-eyebrow{font-size:12px;letter-spacing:.08em;color:var(--yellow-dark);font-weight:700;margin-bottom:6px}
 
-  .benefit-list{display:flex;flex-direction:column;gap:14px;margin:22px 0}
-  .brow{
-    display:grid;grid-template-columns:56px 1fr;gap:16px;background:var(--card);
-    border:1px solid var(--line);border-radius:var(--r-lg);padding:20px 22px;
-  }
-  .brow .bnum{
-    width:40px;height:40px;border-radius:50%;background:var(--yellow-soft);color:var(--yellow-dark);
-    display:grid;place-items:center;font-weight:800;font-size:16px;
-  }
-  .brow h3{font-size:16px;font-weight:700;margin-bottom:6px;letter-spacing:-.01em}
-  .brow p{font-size:13.5px;color:var(--ink-soft);line-height:1.7}
-
-  /* ── brow 안 미니 시각자료 ── */
-  .b-visual{margin-top:14px}
-  .reach-stat{display:flex;gap:10px;flex-wrap:wrap}
-
-  /* ── 나눔이음바자 화면 예시 이미지 ── */
-  .bazaar-shot{margin-top:16px}
-  .bazaar-shot .lab{font-size:13px;color:var(--ink-soft);margin-bottom:10px}
-  .bazaar-shot img{
-    width:100%;border-radius:var(--r-md);border:1px solid var(--line);
-    box-shadow:0 18px 40px -28px rgba(70,40,18,.35);
-  }
-  .reach-stat .rs{
-    background:var(--paper-2);border-radius:var(--r-sm);padding:12px 16px;text-align:center;flex:1;min-width:90px;
-  }
-  .reach-stat .rs b{display:block;font-family:var(--serif);font-size:19px;color:var(--yellow-dark)}
-  .reach-stat .rs span{font-size:11px;color:var(--ink-soft)}
-
-  .compare2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-  .compare2 .c2{
-    border-radius:var(--r-sm);padding:12px 14px;font-size:12px;line-height:1.6;
-  }
-  .compare2 .c2.bad{background:var(--paper-2);color:var(--ink-soft)}
-  .compare2 .c2.good{background:var(--thread-soft);color:#1F5344}
-  .compare2 .c2 b{display:block;font-size:12.5px;margin-bottom:4px}
-
-  .flow3{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-  .flow3 .f3{
-    display:flex;align-items:center;gap:6px;background:var(--paper-2);border-radius:100px;
-    padding:9px 14px;font-size:12px;font-weight:600;color:var(--ink-soft);
-  }
-  .flow3 .f3.win{background:var(--yellow-soft);color:var(--yellow-dark)}
-  .flow3 .arr{color:var(--ink-faint);font-size:14px}
-
-  /* ── 나눔이음바자 미리보기 목업 ── */
-  .bazaar-preview{margin-top:14px}
-  .bazaar-preview > p.lab{font-size:13.5px;color:var(--ink-soft);margin-bottom:14px}
-  .bz-frame{
-    background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);
-    padding:18px;box-shadow:0 18px 40px -28px rgba(70,40,18,.35);
-  }
-  .bz-head{
-    display:flex;justify-content:space-between;align-items:center;
-    padding-bottom:12px;margin-bottom:14px;border-bottom:1px solid var(--line);
-  }
-  .bz-head b{font-size:13.5px}
-  .bz-head span{font-size:11.5px;color:var(--thread);font-weight:700}
-  .bz-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
-  @media(max-width:640px){.bz-grid{grid-template-columns:repeat(2,1fr)}}
-  .bz-item{border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden;position:relative}
-  .bz-item .bz-ico{
-    aspect-ratio:1/1;display:grid;place-items:center;font-size:26px;background:var(--paper-2);
-  }
-  .bz-item .bz-tag{
-    position:absolute;top:6px;left:6px;font-size:9.5px;font-weight:700;
-    padding:2px 7px;border-radius:100px;background:var(--yellow);color:#5C4108;
-  }
-  .bz-item.donate .bz-tag{background:var(--thread);color:#fff}
-  .bz-item .bz-body{padding:8px 9px 10px}
-  .bz-item .bz-body b{display:block;font-size:11.5px;font-weight:700;margin-bottom:2px}
-  .bz-item .bz-body span{font-size:11px;color:var(--ink-soft)}
+  /* ── 참여 현황 통계 ── */
+  .stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:8px}
+  @media(max-width:700px){.stat-grid{grid-template-columns:repeat(2,1fr)}}
+  .stat-grid .sc{background:var(--card);border:1px solid var(--line);border-radius:var(--r-md);padding:18px 16px;text-align:center}
+  .stat-grid .sc b{display:block;font-family:var(--serif);font-size:22px;color:var(--yellow-dark)}
+  .stat-grid .sc span{font-size:11.5px;color:var(--ink-soft)}
 
   .duel2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:26px 0}
-  @media(max-width:600px){.duel2{grid-template-columns:1fr}}
-  .duel2 .dcard{
-    background:var(--card);border:2px solid var(--line);border-radius:var(--r-lg);padding:22px 22px 20px;
+  @media(max-width:640px){.duel2{grid-template-columns:1fr}}
+  .duel2 .dc{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);padding:24px}
+  .duel2 .dc .tag{
+    display:inline-block;font-size:11px;font-weight:700;padding:4px 11px;border-radius:100px;margin-bottom:12px;
   }
-  .duel2 .dcard.win{border-color:var(--yellow)}
-  .duel2 .dcard b{display:block;font-size:15.5px;font-weight:700;margin-bottom:8px}
-  .duel2 .dcard p{font-size:13px;color:var(--ink-soft);line-height:1.7;margin-bottom:12px}
-  .duel2 .dtag{
-    display:inline-block;font-size:12px;font-weight:700;padding:5px 12px;border-radius:100px;
-    background:var(--paper-2);color:var(--ink-soft);
-  }
-  .duel2 .dcard.win .dtag{background:var(--yellow-soft);color:var(--yellow-dark)}
+  .duel2 .dc.a .tag{background:var(--thread-soft);color:#1F5344}
+  .duel2 .dc.b .tag{background:var(--yellow-soft);color:var(--yellow-dark)}
+  .duel2 .dc h3{font-size:16px;font-weight:700;margin-bottom:8px;letter-spacing:-.01em}
+  .duel2 .dc p{font-size:13px;color:var(--ink-soft);line-height:1.7;margin-bottom:12px}
+  .duel2 .dc .big{font-family:var(--serif);font-size:22px;color:var(--ink)}
+  .duel2 .dc .big small{font-family:var(--sans);font-size:12px;color:var(--ink-faint);font-weight:400}
 
-  .highlight{
-    background:var(--thread-soft);border:1px solid #C7E9DC;border-radius:var(--r-md);
-    padding:18px 20px;margin:28px 0;
+  /* ── 계산기 ── */
+  .calc-box{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);padding:26px}
+  .calc-tabs{display:flex;gap:8px;margin-bottom:20px}
+  .calc-tab{
+    flex:1;border:1px solid var(--line);background:var(--paper-2);color:var(--ink-soft);
+    padding:11px;border-radius:var(--r-sm);font-size:13.5px;font-weight:700;cursor:pointer;font-family:inherit;
   }
-  .highlight b{display:block;font-size:15px;color:#1F5344;margin-bottom:5px}
-  .highlight span{font-size:13.5px;color:#1F5344;line-height:1.7}
+  .calc-tab[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .calc-field{margin-bottom:14px}
+  .calc-field label{display:block;font-size:12.5px;font-weight:700;color:var(--ink-soft);margin-bottom:6px}
+  .calc-field .in-row{display:flex;align-items:center;border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden}
+  .calc-field input{
+    flex:1;border:0;padding:12px 14px;font-family:inherit;font-size:14px;color:var(--ink);outline:none;text-align:right;
+  }
+  .calc-field .unit{padding:0 14px;font-size:13px;color:var(--ink-faint);background:var(--paper-2);align-self:stretch;display:flex;align-items:center}
+  .calc-result{background:var(--paper-2);border-radius:var(--r-md);padding:18px 20px;margin-top:8px}
+  .calc-result .r-row{display:flex;justify-content:space-between;font-size:13px;color:var(--ink-soft);padding:5px 0}
+  .calc-result .r-row b{color:var(--ink);font-weight:700}
+  .calc-result .r-total{
+    display:flex;justify-content:space-between;align-items:baseline;border-top:1px solid var(--line);
+    margin-top:8px;padding-top:12px;
+  }
+  .calc-result .r-total b{font-family:var(--serif);font-size:22px;color:var(--yellow-dark)}
+  .calc-note{font-size:11.5px;color:var(--ink-faint);margin-top:12px;line-height:1.7}
+  .calc-cond{margin-top:14px;font-size:12.5px}
+  .calc-cond summary{cursor:pointer;color:var(--ink-soft);font-weight:600}
+  .calc-cond ul{margin:10px 0 0 18px;color:var(--ink-soft);line-height:1.9}
+
+  /* ── 실제 사례 ── */
+  .story-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  @media(max-width:760px){.story-grid{grid-template-columns:1fr}}
+  .story-card{background:var(--card);border:1px solid var(--line);border-radius:var(--r-md);overflow:hidden;text-decoration:none;color:inherit}
+  .story-card .st-thumb{aspect-ratio:16/9;background:var(--paper-2)}
+  .story-card .st-thumb img{width:100%;height:100%;object-fit:cover}
+  .story-card .st-body{padding:14px 15px 16px}
+  .story-card .st-cat{font-size:10.5px;color:var(--yellow-dark);font-weight:700;margin-bottom:6px}
+  .story-card .st-name{font-size:13.5px;font-weight:700;line-height:1.5;margin-bottom:8px}
+  .story-card .st-chip{font-size:11px;color:var(--ink-soft)}
+
+  /* ── 프로세스 ── */
+  .flow4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+  @media(max-width:760px){.flow4{grid-template-columns:1fr 1fr}}
+  @media(max-width:480px){.flow4{grid-template-columns:1fr}}
+  .flow4 .fn{background:var(--card);border:1px solid var(--line);border-radius:var(--r-md);padding:18px 16px}
+  .flow4 .fn .fico{
+    width:36px;height:36px;border-radius:50%;background:var(--yellow-soft);color:var(--yellow-dark);
+    display:flex;align-items:center;justify-content:center;margin-bottom:12px;
+  }
+  .flow4 .fn b{display:block;font-size:14px;font-weight:700;margin-bottom:6px}
+  .flow4 .fn p{font-size:12px;color:var(--ink-soft);line-height:1.6}
+
+  /* ── 참여 대상 ── */
+  .who-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media(max-width:600px){.who-grid{grid-template-columns:1fr}}
+  .who-card{background:var(--card);border:1px solid var(--line);border-radius:var(--r-md);padding:20px}
+  .who-card b{display:block;font-size:14.5px;font-weight:700;margin-bottom:10px}
+  .who-card .chips{display:flex;flex-wrap:wrap;gap:6px}
+  .who-card .chips span{font-size:12px;background:var(--paper-2);color:var(--ink-soft);padding:6px 12px;border-radius:100px}
+
+  /* ── 지원 서비스 ── */
+  .sup-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+  @media(max-width:760px){.sup-grid{grid-template-columns:repeat(2,1fr)}}
+  .sup-grid .sup{background:var(--card);border:1px solid var(--line);border-radius:var(--r-md);padding:18px 16px}
+  .sup-grid .sup .sico{
+    width:34px;height:34px;border-radius:50%;background:var(--thread-soft);color:#1F5344;
+    display:flex;align-items:center;justify-content:center;margin-bottom:10px;
+  }
+  .sup-grid .sup b{display:block;font-size:13.5px;font-weight:700;margin-bottom:5px}
+  .sup-grid .sup p{font-size:11.5px;color:var(--ink-soft);line-height:1.6}
+
+  /* ── FAQ ── */
+  .faq-item{border-bottom:1px solid var(--line)}
+  .faq-item summary{
+    display:flex;align-items:center;gap:12px;padding:16px 4px;cursor:pointer;font-size:14px;font-weight:700;
+    list-style:none;
+  }
+  .faq-item summary::-webkit-details-marker{display:none}
+  .faq-item summary .qmark{
+    flex:none;width:26px;height:26px;border-radius:50%;background:var(--yellow-soft);color:var(--yellow-dark);
+    display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;
+  }
+  .faq-item summary .arr{margin-left:auto;color:var(--ink-faint);transition:transform .15s}
+  .faq-item[open] summary .arr{transform:rotate(180deg)}
+  .faq-item .faq-a{padding:0 4px 18px 42px;font-size:13px;color:var(--ink-soft);line-height:1.8}
+
+  /* ── 태그라인 ── */
+  .tagline{
+    text-align:center;padding:50px 24px;background:var(--ink);color:#fff;border-radius:var(--r-lg);margin:50px 0;
+  }
+  .tagline h2{font-family:var(--serif);font-size:22px;font-weight:700;letter-spacing:-.01em;margin-bottom:8px}
+  .tagline p{font-size:13.5px;color:rgba(255,255,255,.7)}
+  .tagline em{font-style:normal;color:var(--yellow)}
 
   .cta-box{
     text-align:center;background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);
-    padding:36px 24px;margin:36px 0 60px;
+    padding:36px 24px;margin:10px 0 60px;
   }
   .cta-box h3{font-family:var(--serif);font-size:20px;font-weight:700;margin-bottom:10px;letter-spacing:-.01em}
   .cta-box p{font-size:13.5px;color:var(--ink-soft);margin-bottom:22px}
-  .cta-btn{
-    display:inline-block;background:var(--yellow-dark);color:#fff;padding:15px 34px;border-radius:100px;
-    font-size:15px;font-weight:700;text-decoration:none;transition:background .15s;
-  }
-  .cta-btn:hover{background:#96700B}
 
   footer{background:var(--ink);color:var(--ink-faint);padding:30px 24px;font-size:12.5px;text-align:center}
   footer a{color:var(--ink-faint);text-decoration:none;margin:0 10px}
@@ -173,7 +198,7 @@
 <nav class="dnav">
   <div class="dnav-in">
     <a href="nanumieum_portal.html" class="dbrand">나눔<em>이음</em></a>
-    <a href="nanumieum_portal.html" class="dback"><svg class="lucide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg> 포털로 돌아가기</a>
+    <a href="nanumieum_portal.html" class="dback">← 포털로 돌아가기</a>
   </div>
 </nav>
 
@@ -181,94 +206,179 @@
   <svg class="heart" style="top:20%;left:6%;width:24px" viewBox="0 0 24 24" fill="var(--yellow-dark)"><path d="M12 21s-7.5-4.6-10.2-9.1C.2 9.1 1 5.6 4.2 4.4c2-.8 4.1 0 5.3 1.7l2.5 3.5 2.5-3.5c1.2-1.7 3.3-2.5 5.3-1.7 3.2 1.2 4 4.7 2.4 7.5C19.5 16.4 12 21 12 21z"/></svg>
   <svg class="heart" style="bottom:16%;right:8%;width:30px" viewBox="0 0 24 24" fill="var(--thread)"><path d="M12 21s-7.5-4.6-10.2-9.1C.2 9.1 1 5.6 4.2 4.4c2-.8 4.1 0 5.3 1.7l2.5 3.5 2.5-3.5c1.2-1.7 3.3-2.5 5.3-1.7 3.2 1.2 4 4.7 2.4 7.5C19.5 16.4 12 21 12 21z"/></svg>
   <div class="inner">
-    <p class="eyebrow">물품판매자 혜택보기</p>
-    <h1>전국 복지시설이라는<br>새로운 판매처를 만나세요</h1>
-    <p>나눔이음바자에 물품을 등록하면 판매도, 기부도 한 곳에서 할 수 있습니다.</p>
+    <p class="eyebrow">나눔이음 물품기부자 혜택보기</p>
+    <h1>재고도, 반품도 — 버리면 비용,<br>나눔이음에 등록하면 절세가 됩니다</h1>
+    <p>창고에 쌓인 재고, 유통기한이 임박한 물량, 단종된 제품. 나눔이음바자에 등록하면
+       손금산입·필요경비 처리로 세금을 줄이면서, 전국 결연 복지시설에 직접 닿는 기부가 됩니다.</p>
+    <div class="cta-row">
+      <a href="apply-seller.html" class="btn btn-yd">나눔이음 물품기부자 신청하기</a>
+    </div>
   </div>
 </section>
 
 <div class="wrap">
+
   <div class="section">
-    <div class="sec-head"><h2>나눔이음바자 판매자가 받는 혜택</h2></div>
+    <p class="sec-eyebrow">WHY DONATE</p>
+    <div class="sec-head"><h2>기부를 통해 재고를 경비로, 세금을 줄이세요</h2></div>
 
-    <div class="benefit-list">
-      <div class="brow">
-        <div class="bnum">1</div>
-        <div>
-          <h3>새로운 판매처 확보</h3>
-          <p>협의체 회원 복지시설들이 기부금으로 직접 구매하는 전용 장터입니다.
-             기존에 닿지 않던 전국 복지시설이라는 새로운 고객층이 열립니다.</p>
-          <div class="b-visual reach-stat">
-            <div class="rs"><b>26곳+</b><span>결연 복지시설</span></div>
-            <div class="rs"><b>347개+</b><span>결연 채널</span></div>
-            <div class="rs"><b>5개</b><span>복지시설 유형</span></div>
-          </div>
-        </div>
+    <div class="duel2">
+      <div class="dc a">
+        <span class="tag">개인사업자</span>
+        <h3>재고를 필요경비로</h3>
+        <p>종합소득세율 구간(6~45%)에 따라 필요경비로 산입됩니다. 팔리지 않는 재고를
+           그냥 안고 있는 대신, 나눔이음바자에 등록해 세금 부담을 줄일 수 있습니다.</p>
       </div>
-      <div class="brow">
-        <div class="bnum">2</div>
-        <div>
-          <h3>기부 물품 100% 손금처리</h3>
-          <p>판매 대신 기부로 등록한 물품은 지정된 절차에 따라 100% 손금(필요경비)
-             처리가 가능합니다. 재고를 나눔으로 전환하면서 세제 혜택도 챙길 수 있습니다.</p>
-          <div class="b-visual compare2">
-            <div class="c2 bad"><b>재고로 남기면</b>보관비 발생, 시간이 지날수록 가치 하락</div>
-            <div class="c2 good"><b>기부로 등록하면</b>필요한 곳에 전달 + 100% 손금처리</div>
-          </div>
-        </div>
+      <div class="dc b">
+        <span class="tag">법인사업자</span>
+        <h3>재고 손실을 세금에서 되찾다</h3>
+        <p>식품·생활필수품은 장부가액 <b>전액 손금산입</b> 특례가 적용됩니다(법인세법 시행령
+           §19-13의2). 폐기하면 폐기비만 나가지만, 나눔이음에 등록하면 그만큼 세금이 줄어듭니다.</p>
       </div>
-      <div class="brow">
-        <div class="bnum">3</div>
-        <div>
-          <h3>판매와 기부를 한 화면에서</h3>
-          <p>물품 등록 시 "판매"와 "기부" 중 선택할 수 있어, 같은 상품을 팔면서
-             일부는 기부로 함께 등록할 수 있습니다.</p>
-
-          <div class="b-visual duel2">
-            <div class="dcard">
-              <b>판매 등록</b>
-              <p>복지시설이 기부금 잔액으로 구매하는 일반 상품으로 등록합니다.</p>
-              <span class="dtag">정상 대금 정산</span>
-            </div>
-            <div class="dcard win">
-              <b>기부 등록</b>
-              <p>대가 없이 복지시설에 제공하는 기부 물품으로 등록합니다.</p>
-              <span class="dtag">100% 손금처리 대상</span>
-            </div>
-          </div>
-
-          <div class="b-visual bazaar-shot">
-            <p class="lab">나눔이음바자 화면 미리보기</p>
-            <img src="images/bazaar-example.jpg" alt="나눔이음바자 화면 미리보기 — 등록한 판매 상품과 기부 물품이 함께 노출됩니다">
-            <p class="lab" style="margin-top:14px">
-              같은 등록 화면에서 "판매"와 "기부" 중 골라 등록하면, 복지시설에는 각각
-              다른 표시로 노출됩니다.
-            </p>
-          </div>
-        </div>
-      </div>
-      <div class="brow">
-        <div class="bnum">4</div>
-        <div>
-          <h3>안전한 정산</h3>
-          <p>복지시설의 수령 확인 이후 정산되는 방식으로, 배송 후 대금을 못 받는
-             걱정 없이 거래할 수 있습니다.</p>
-          <div class="b-visual flow3">
-            <span class="f3"><svg class="lucide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z"/><path d="M12 22V12"/><polyline points="3.29 7 12 12 20.71 7"/><path d="m7.5 4.27 9 5.15"/></svg> 배송</span>
-            <span class="arr"><svg class="lucide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
-            <span class="f3"><svg class="lucide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg> 복지시설 수령 확인</span>
-            <span class="arr"><svg class="lucide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
-            <span class="f3 win"><svg class="lucide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg> 대금 정산</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="cta-box">
-      <h3>지금 판매자로 등록해보세요</h3>
-      <a href="apply-seller.html" class="cta-btn">물품판매자 신청하기</a>
     </div>
   </div>
+
+  <div class="section">
+    <p class="sec-eyebrow">CALCULATOR</p>
+    <div class="sec-head"><h2>기부가 얼마나 이득인지, 숫자로 확인하세요</h2></div>
+
+    <div class="calc-box">
+      <div class="calc-tabs" id="calcTabs" role="group" aria-label="사업자 구분">
+        <button type="button" class="calc-tab" data-t="corp" aria-pressed="true">법인사업자</button>
+        <button type="button" class="calc-tab" data-t="biz" aria-pressed="false">개인사업자</button>
+      </div>
+
+      <div class="calc-field">
+        <label for="calcAmount">나눔이음에 등록할 물품의 장부가액</label>
+        <div class="in-row">
+          <input type="text" id="calcAmount" inputmode="numeric" value="7,500,000">
+          <span class="unit">원</span>
+        </div>
+      </div>
+      <div class="calc-field">
+        <label id="rateLabel" for="calcRate">법인세율(과세표준 구간에 따라 9~24%)</label>
+        <div class="in-row">
+          <input type="text" id="calcRate" inputmode="numeric" value="19">
+          <span class="unit">%</span>
+        </div>
+      </div>
+
+      <div class="calc-result">
+        <div class="r-row"><span>손금·필요경비 처리로 줄어드는 세금</span><b id="rTax">-</b></div>
+        <div class="r-row"><span>안 내도 되는 폐기 비용(추정 5%)</span><b id="rWaste">-</b></div>
+        <div class="r-total"><span>총 이득(예상)</span><b id="rTotal">-</b></div>
+      </div>
+
+      <details class="calc-cond">
+        <summary>이 숫자, 다 받는 건가요? 조건 보기</summary>
+        <ul>
+          <li>공제·손금에는 소득 대비 한도가 있습니다. 개인사업자는 필요경비 산입 한도, 법인 일반기부금은 소득금액의 10%가 한도입니다.</li>
+          <li>한도를 넘긴 금액도 사라지지 않고 10년간 이월됩니다.</li>
+          <li>장부가액 전액 손금은 식품·생활필수품에만 적용됩니다. 그 밖의 품목은 일반기부금 한도 안에서 처리됩니다.</li>
+          <li>기부처(복지시설)가 지정기부금단체 자격을 갖췄을 때만 공제·손금산입에 쓸 수 있습니다.</li>
+        </ul>
+      </details>
+      <p class="calc-note">법인세법 제19조·시행령 제19조 13의2호, 소득세법 관련 조문 기준입니다. 실제 적용은 세무사 확인이 필요합니다.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <p class="sec-eyebrow">REAL STORIES</p>
+    <div class="sec-head"><h2>등록한 물품이 실제로 닿은 곳</h2></div>
+
+    <div class="story-grid" id="storyGrid"></div>
+  </div>
+
+  <div class="section">
+    <p class="sec-eyebrow">HOW IT WORKS</p>
+    <div class="sec-head"><h2>나눔이음 물품기부자가 되는 과정</h2></div>
+
+    <div class="flow4">
+      <div class="fn">
+        <span class="fico"><svg class="lucide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13"/><path d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"/></svg></span>
+        <b>물품 등록</b>
+        <p>품목·수량·가액·사진을 나눔이음바자에 기부 물품으로 등록합니다.</p>
+      </div>
+      <div class="fn">
+        <span class="fico"><svg class="lucide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg></span>
+        <b>복지시설이 신청</b>
+        <p>결연 복지시설이 필요한 물품을 잔액으로 구매하거나, 기부 물품을 무료로 신청합니다.</p>
+      </div>
+      <div class="fn">
+        <span class="fico"><svg class="lucide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z"/><path d="M12 22V12"/><polyline points="3.29 7 12 12 20.71 7"/></svg></span>
+        <b>배송</b>
+        <p>등록하신 방법대로 복지시설에 물품을 보내주시면 됩니다.</p>
+      </div>
+      <div class="fn">
+        <span class="fico"><svg class="lucide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></span>
+        <b>수령확인·영수증</b>
+        <p>복지시설의 수령확인 후 정산되고, 기부로 등록한 물품은 기부금영수증이 발급됩니다.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <p class="sec-eyebrow">WHO CAN JOIN</p>
+    <div class="sec-head"><h2>나눔이음 물품기부자는 개인사업자부터 법인까지</h2></div>
+
+    <div class="who-grid">
+      <div class="who-card">
+        <b>개인사업자</b>
+        <div class="chips"><span>소상공인·셀러</span><span>동네 매장</span><span>온라인 스토어 운영자</span></div>
+      </div>
+      <div class="who-card">
+        <b>법인사업자</b>
+        <div class="chips"><span>유통·물류사</span><span>제조사</span><span>식품·생필품 브랜드</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <p class="sec-eyebrow">SUPPORT</p>
+    <div class="sec-head"><h2>물품기부자님을 돕는 서비스</h2></div>
+
+    <div class="sup-grid">
+      <div class="sup">
+        <span class="sico"><svg class="lucide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></span>
+        <b>영수증 자동발급</b>
+        <p>수령확인 즉시 기부금영수증을 발급합니다.</p>
+      </div>
+      <div class="sup">
+        <span class="sico"><svg class="lucide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z"/></svg></span>
+        <b>물류비 외 수수료 0원</b>
+        <p>중간 수수료 없이, 물류비만 발생합니다.</p>
+      </div>
+      <div class="sup">
+        <span class="sico"><svg class="lucide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span>
+        <b>절세 안내</b>
+        <p>개인사업자·법인 맞춤 손금산입 방식을 안내합니다.</p>
+      </div>
+      <div class="sup">
+        <span class="sico"><svg class="lucide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18 17V9M13 17V5M8 17v-4"/></svg></span>
+        <b>실적 관리</b>
+        <p>누적 기부 실적과 영수증 이력을 한 곳에서 확인합니다.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="tagline">
+    <h2>나눔이음에서는 누구나 <em>물품기부자</em>가 될 수 있어요</h2>
+    <p>사업자 등록증 하나면, 오늘 바로 시작할 수 있습니다</p>
+  </div>
+
+  <div class="section">
+    <p class="sec-eyebrow">FAQ</p>
+    <div class="sec-head"><h2>자주 묻는 질문</h2></div>
+
+    <div id="faqList"></div>
+  </div>
+
+  <div class="cta-box">
+    <h3>지금 나눔이음 물품기부자로 등록해보세요</h3>
+    <p>온라인 신청서 작성 후, 담당자가 확인해 승인해드립니다.</p>
+    <a href="apply-seller.html" class="btn btn-yd">나눔이음 물품기부자 신청하기</a>
+  </div>
+
 </div>
 
 <footer>
@@ -276,5 +386,88 @@
   <p style="margin-top:8px"><a href="#">이용약관</a><a href="#">개인정보처리방침</a><a href="nanumieum_portal.html">포털로 돌아가기</a></p>
 </footer>
 
+<script>
+  /* ── 실제 결연 사례 (재사용) ── */
+  const STORIES = [
+    {n:'경동원(수원)', t:'영유아 보육시설', c:'개천에서 용재난다', v:'Y1LqqbS6HI4', chip:'장판 교체·기저귀 지원'},
+    {n:'대구보육원', t:'아동양육시설/보육원', c:'이기운 아코디언', v:'MwkipVs8cS4', chip:'물품 후원 방문'},
+    {n:'포천노인복지관', t:'노인복지', c:'이원발TV', v:'DIkOLCpu_nM', chip:'어르신 방문 봉사'},
+  ];
+  document.getElementById('storyGrid').innerHTML = STORIES.map(s => `
+    <a class="story-card" href="https://www.youtube.com/watch?v=${s.v}" target="_blank" rel="noopener">
+      <div class="st-thumb"><img src="https://i.ytimg.com/vi/${s.v}/hqdefault.jpg" alt="${s.n}"></div>
+      <div class="st-body">
+        <div class="st-cat">${s.t}</div>
+        <div class="st-name">${s.n}</div>
+        <div class="st-chip">${s.c} 결연 · ${s.chip}</div>
+      </div>
+    </a>`).join('');
+
+  /* ── 계산기 ── */
+  const calcTabs = document.getElementById('calcTabs');
+  const rateLabel = document.getElementById('rateLabel');
+  const calcAmount = document.getElementById('calcAmount');
+  const calcRate = document.getElementById('calcRate');
+  let calcType = 'corp';
+
+  const RATE_LABEL = {
+    corp: '법인세율(과세표준 구간에 따라 9~24%)',
+    biz: '종합소득세율(과세표준 구간에 따라 6~45%)',
+  };
+  const RATE_DEFAULT = { corp: '19', biz: '24' };
+
+  function fmt(n){ return n.toLocaleString('ko-KR'); }
+  function parseNum(v){ return parseInt(String(v).replace(/[^0-9]/g,''),10) || 0; }
+
+  function calc(){
+    const amount = parseNum(calcAmount.value);
+    const rate = parseNum(calcRate.value);
+    const tax = Math.round(amount * (rate/100));
+    const waste = Math.round(amount * 0.05);
+    const total = tax + waste;
+    document.getElementById('rTax').textContent = '-' + fmt(tax) + '원';
+    document.getElementById('rWaste').textContent = '-' + fmt(waste) + '원';
+    document.getElementById('rTotal').textContent = fmt(total) + '원';
+  }
+
+  calcTabs.addEventListener('click', (e)=>{
+    const btn = e.target.closest('.calc-tab');
+    if(!btn) return;
+    calcTabs.querySelectorAll('.calc-tab').forEach(b=>b.setAttribute('aria-pressed','false'));
+    btn.setAttribute('aria-pressed','true');
+    calcType = btn.dataset.t;
+    rateLabel.textContent = RATE_LABEL[calcType];
+    calcRate.value = RATE_DEFAULT[calcType];
+    calc();
+  });
+  calcAmount.addEventListener('input', ()=>{
+    const v = parseNum(calcAmount.value);
+    calcAmount.value = v ? fmt(v) : '';
+    calc();
+  });
+  calcRate.addEventListener('input', calc);
+  calc();
+
+  /* ── FAQ ── */
+  const FAQS = [
+    {q:'영수증은 등록한 물품 전부 다 발급되나요?',
+     a:'아닙니다. 물품 기부만 기부금으로 인정되며, 복지시설이 지정기부금단체 자격을 갖췄을 때만 발급됩니다. 나눔이음은 결연 복지시설의 자격을 미리 확인해 등록 단계에서 발급 가능 여부를 안내합니다.'},
+    {q:'가액은 누가 정하나요?',
+     a:'사업자는 장부가액 기준입니다. 임의로 부풀리면 문제가 되므로, 등록 시 근거자료를 함께 올리시면 절차가 빨라집니다.'},
+    {q:'법인과 개인사업자는 처리 방식이 같나요?',
+     a:'다릅니다. 법인은 손금산입(법인세율 9~24% 구간), 개인사업자는 필요경비 산입(종합소득세율 6~45% 구간)으로 처리되어 근거 조문과 세율이 다릅니다. 장부가액 전액 손금 특례는 식품·생활필수품에만 적용되고, 그 밖의 품목은 일반기부금 한도 안에서 처리됩니다.'},
+    {q:'기부액에 한도가 있나요? 넘으면 사라지나요?',
+     a:'소득 대비 한도가 있습니다. 다만 한도를 넘긴 금액도 사라지지 않고 다음 해부터 10년간 이월공제됩니다.'},
+    {q:'수수료가 있나요?',
+     a:'없습니다. 물류비 외 중간 수수료는 받지 않습니다.'},
+    {q:'등록하면 얼마나 걸리나요?',
+     a:'등록 즉시 결연 복지시설에 공개되고, 신청·승인 이후 배송해주시면 됩니다. 수령확인 즉시 정산 및 영수증이 발급됩니다.'},
+  ];
+  document.getElementById('faqList').innerHTML = FAQS.map((f,i) => `
+    <details class="faq-item">
+      <summary><span class="qmark">Q</span>${f.q}<span class="arr"><svg class="lucide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span></summary>
+      <p class="faq-a">${f.a}</p>
+    </details>`).join('');
+</script>
 </body>
 </html>
