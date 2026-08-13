@@ -87,6 +87,9 @@
     cursor:pointer;font-family:inherit;transition:background .15s;margin:8px 0 60px;
   }
   .submit:hover{background:#2E9C79}
+  .submit:disabled{opacity:.6;cursor:default}
+
+  .form-error{color:#C0392B;font-size:13px;text-align:center;margin:-10px 0 20px}
 
   footer{background:var(--ink);color:var(--ink-faint);padding:30px 24px;font-size:12.5px;text-align:center}
   footer a{color:var(--ink-faint);text-decoration:none;margin:0 10px}
@@ -126,17 +129,19 @@
     </div>
 
     <form id="channelForm">
+      <input type="hidden" name="sheet" value="channel">
+
       <div class="field">
         <label for="chName">채널명<em>*</em></label>
-        <input type="text" id="chName" placeholder="예: 개천에서 용재난다" required>
+        <input type="text" id="chName" name="chName" placeholder="예: 개천에서 용재난다" required>
       </div>
       <div class="field">
         <label for="chUrl">채널URL<em>*</em></label>
-        <input type="text" id="chUrl" placeholder="https://www.youtube.com/@채널명" required>
+        <input type="text" id="chUrl" name="chUrl" placeholder="https://www.youtube.com/@채널명" required>
       </div>
       <div class="field">
         <label for="chManager">담당자<em>*</em></label>
-        <input type="text" id="chManager" placeholder="담당자(운영자) 성함을 입력해 주세요" required>
+        <input type="text" id="chManager" name="chManager" placeholder="담당자(운영자) 성함을 입력해 주세요" required>
       </div>
       <div class="field">
         <label for="chTelMid">연락처<em>*</em></label>
@@ -147,13 +152,16 @@
           <span>-</span>
           <input type="text" id="chTelLast" maxlength="4" placeholder="0000" style="max-width:110px">
         </div>
+        <!-- 실제 전송되는 합쳐진 연락처 값 (구글시트 컬럼용) -->
+        <input type="hidden" id="chTel" name="chTel">
       </div>
       <div class="field">
         <label for="chEmail">이메일<em>*</em></label>
-        <input type="email" id="chEmail" placeholder="example@email.com" required>
+        <input type="email" id="chEmail" name="chEmail" placeholder="example@email.com" required>
       </div>
 
-      <button type="submit" class="submit">채널 신청하기</button>
+      <p id="formError" class="form-error" style="display:none">전송에 실패했습니다. 잠시 후 다시 시도해 주세요.</p>
+      <button type="submit" class="submit" id="submitBtn">채널 신청하기</button>
     </form>
   </div>
 </div>
@@ -164,21 +172,45 @@
 </footer>
 
 <script>
-  document.getElementById('channelForm').addEventListener('submit', (e)=>{
+  // Google Apps Script 웹앱 URL (Google Sheets 연동)
+  const GSHEET_URL = 'https://script.google.com/macros/s/AKfycbynRxzkKK0_bOz2yyZ1Y2kFRxA7KWRTTAN3YASPSAhd1Rw-ScE7YYBdlyacIBP9STeerA/exec';
+
+  const form = document.getElementById('channelForm');
+  const submitBtn = document.getElementById('submitBtn');
+  const formError = document.getElementById('formError');
+
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
+    formError.style.display = 'none';
+
     const chName = document.getElementById('chName').value.trim();
     const chUrl = document.getElementById('chUrl').value.trim();
     const chManager = document.getElementById('chManager').value.trim();
+    const telFirst = document.getElementById('chTelFirst').value;
     const telMid = document.getElementById('chTelMid').value.trim();
     const telLast = document.getElementById('chTelLast').value.trim();
     const chEmail = document.getElementById('chEmail').value.trim();
 
-    if(!chName || !chUrl || !chManager || telMid.length!==4 || telLast.length!==4 || !chEmail){
+    if (!chName || !chUrl || !chManager || telMid.length !== 4 || telLast.length !== 4 || !chEmail) {
       alert('필수 항목을 모두 정확히 입력해 주세요.');
       return;
     }
-    alert(`채널 신청이 접수되었습니다.\n${chName} 담당자 ${chManager}님, 영업일 기준 5일 내 연락드리겠습니다.\n감사합니다.`);
-    location.href = 'nanumieum_portal.html';
+
+    // 연락처 3칸을 하나로 합쳐서 hidden input에 채움 (시트에는 이 값이 저장됨)
+    document.getElementById('chTel').value = `${telFirst}-${telMid}-${telLast}`;
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = '전송 중…';
+
+    try {
+      await fetch(GSHEET_URL, { method: 'POST', mode: 'no-cors', body: new FormData(form) });
+      alert(`채널 신청이 접수되었습니다.\n${chName} 담당자 ${chManager}님, 영업일 기준 5일 내 연락드리겠습니다.\n감사합니다.`);
+      location.href = 'nanumieum_portal.html';
+    } catch (err) {
+      formError.style.display = 'block';
+      submitBtn.disabled = false;
+      submitBtn.textContent = '채널 신청하기';
+    }
   });
 </script>
 </body>
