@@ -70,7 +70,7 @@ export default function App() {
 <Route path="/inspection/:postId" element={<InspectionDetailPage />} />
 
 {/* <Route path="/partner" element={<PartnerPage />} /> */}
-<Route path="/pt" element={<GrbLabPage />} />
+<Route path="/app" element={<InputPage />} />
 {/* ✅ 기프트카드 교환 (담당자가 참여자 바코드를 스캔) */}
 <Route path="/admin/exchange" element={<AdminExchangePage />} />
 <Route path="/emergency"            element={<EmergencyListPage />} />
