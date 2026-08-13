@@ -545,8 +545,17 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .ticc-benefit-badge img{display:block;width:100%;height:auto;}
 #ticc-benefit-modal-close{position:absolute;top:10px;right:10px;width:32px;height:32px;border-radius:50%;background:#1e3a8a;color:#fff;border:2px solid #fff;font-size:16px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:2147483647;box-shadow:0 2px 10px rgba(0,0,0,0.4);}
 #ticc-benefit-modal-close:hover{background:#16306e;}
-#ticc-benefit-modal-hide-today{display:block;width:100%;flex:0 0 auto;text-align:center;padding:10px;background:#f5f5f5;border:none;border-top:1px solid #e5e5e5;color:#555;font-size:12.5px;cursor:pointer;}
-#ticc-benefit-modal-hide-today:hover{background:#ececec;}
+#ticc-benefit-modal-cta{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;flex:0 0 auto;padding:14px;background:#EE6F93;border:none;color:#fff;font-size:15px;font-weight:800;font-family:inherit;cursor:pointer;text-decoration:none;}
+#ticc-benefit-modal-cta:hover{background:#C94F71;}
+#ticc-confirm-overlay{position:fixed;inset:0;z-index:1000000;background:rgba(0,0,0,0.4);display:none;align-items:center;justify-content:center;padding:20px;box-sizing:border-box;}
+#ticc-confirm-box{background:#fff;border-radius:14px;padding:24px 22px;max-width:320px;width:100%;text-align:center;box-shadow:0 12px 40px rgba(0,0,0,0.3);}
+#ticc-confirm-box p{font-size:14px;color:#333;line-height:1.6;margin-bottom:18px;}
+#ticc-confirm-box .ticc-confirm-btns{display:flex;flex-direction:column;gap:8px;}
+#ticc-confirm-box button{border:none;border-radius:10px;padding:12px;font-size:14px;font-weight:700;font-family:inherit;cursor:pointer;}
+#ticc-confirm-close{background:#1e3a8a;color:#fff;}
+#ticc-confirm-close:hover{background:#16306e;}
+#ticc-confirm-hide{background:#f0f0f0;color:#555;}
+#ticc-confirm-hide:hover{background:#e2e2e2;}
 @media (max-width:768px){
   #ticc-benefit-modal-overlay{background:rgba(0,0,0,0.5);pointer-events:auto;align-items:center;justify-content:center;padding:20px;}
   #ticc-benefit-modal-wrapper{max-width:66.666vw;width:66.666vw;max-height:80vh;}
@@ -1315,7 +1324,17 @@ render();
         </a>
       </div>
     </div>
-    <button id="ticc-benefit-modal-hide-today" type="button">오늘 하루 보지 않기</button>
+    <a id="ticc-benefit-modal-cta" href="apply-concert.html">참석 신청하기 →</a>
+  </div>
+</div>
+
+<div id="ticc-confirm-overlay">
+  <div id="ticc-confirm-box">
+    <p>이 팝업을 오늘 하루 보지 않으시겠습니까?</p>
+    <div class="ticc-confirm-btns">
+      <button id="ticc-confirm-close" type="button">닫기</button>
+      <button id="ticc-confirm-hide" type="button">오늘 하루 보지 않기</button>
+    </div>
   </div>
 </div>
 
@@ -1324,7 +1343,9 @@ render();
   const TICC_HIDE_TODAY_KEY = 'ticc-benefit-modal-hide-until';
   const overlay = document.getElementById('ticc-benefit-modal-overlay');
   const closeBtn = document.getElementById('ticc-benefit-modal-close');
-  const hideTodayBtn = document.getElementById('ticc-benefit-modal-hide-today');
+  const confirmOverlay = document.getElementById('ticc-confirm-overlay');
+  const confirmHideBtn = document.getElementById('ticc-confirm-hide');
+  const confirmCloseBtn = document.getElementById('ticc-confirm-close');
 
   function shouldShowInitially(){
     try {
@@ -1340,13 +1361,19 @@ render();
   }
   function closeModal(){
     overlay.style.display = 'none';
+    confirmOverlay.style.display = 'none';
     document.body.style.overflow = '';
   }
 
   if (shouldShowInitially()) openModal();
 
-  closeBtn.addEventListener('click', closeModal);
-  hideTodayBtn.addEventListener('click', function(){
+  // X 버튼 클릭 → 바로 닫지 않고 확인창 표시
+  closeBtn.addEventListener('click', function(){
+    confirmOverlay.style.display = 'flex';
+  });
+
+  // "오늘 하루 보지 않기" → 저장 후 닫기
+  confirmHideBtn.addEventListener('click', function(){
     try {
       const midnight = new Date();
       midnight.setHours(24, 0, 0, 0);
@@ -1354,6 +1381,9 @@ render();
     } catch(e) {}
     closeModal();
   });
+
+  // "닫기" → 이번만 닫기 (다음 방문 시 다시 뜸)
+  confirmCloseBtn.addEventListener('click', closeModal);
 })();
 </script>
 </body>
