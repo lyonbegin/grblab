@@ -302,17 +302,16 @@
 </div>
 
 <footer>
-  나눔이음 사회복지시설 협의체 · 지역 복지시설과 크리에이터를 잇는 나눔 프로젝트 · 문의 look@nanumieum.example
+  나눔이음 사회복지시설 협의체 · 지역 복지시설과 크리에이터를 잇는 나눔 프로젝트 · 문의 info@grblab.co.kr
 </footer>
 
 <script>
   function fmt(n){ return n.toLocaleString('ko-KR'); }
 
   /* ── 공용 상태 헬퍼: 로그인 시설·잔액·장바구니·원장 (localStorage) ── */
-  const DEFAULT_FACILITY = {n:'대구보육원', t:'아동양육시설/보육원', c:'이기운 아코디언', v:'MwkipVs8cS4'};
   function getFacility(){
     try{ const raw = localStorage.getItem('nb_facility'); if(raw) return JSON.parse(raw); }catch(e){}
-    return DEFAULT_FACILITY;
+    return null;
   }
   function getBalance(fac){
     const key = 'nb_balance_'+fac.n;
@@ -356,7 +355,7 @@
   }
 
   const facility = getFacility();
-  if(!facility){ location.href = 'login.html'; }
+  if(!facility){ location.replace('login.html'); throw new Error('not logged in'); }
   document.querySelectorAll('#whoName').forEach(el=>el.textContent = facility.n+'님');
   document.querySelectorAll('#whoNameB').forEach(el=>el.textContent = facility.n);
   const logoutBtn = document.getElementById('logoutBtn');

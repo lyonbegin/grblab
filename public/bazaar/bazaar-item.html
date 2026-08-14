@@ -134,7 +134,7 @@
 </div>
 
 <footer>
-  나눔이음 사회복지시설 협의체 · 지역 복지시설과 크리에이터를 잇는 나눔 프로젝트 · 문의 look@nanumieum.example
+  나눔이음 사회복지시설 협의체 · 지역 복지시설과 크리에이터를 잇는 나눔 프로젝트 · 문의 info@grblab.co.kr
 </footer>
 
 <script>
@@ -147,7 +147,7 @@
     return null;
   }
   const FAC = getFacility();
-  if(!FAC){ location.href = 'login.html'; }
+  if(!FAC){ location.replace('login.html'); throw new Error('not logged in'); }
 
   async function init(){
     const res = await fetch(API_BASE + '/api/products?limit=1000');

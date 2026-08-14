@@ -320,7 +320,7 @@
 </div>
 
 <footer>
-  나눔이음 사회복지시설 협의체 · 지역 복지시설과 크리에이터를 잇는 나눔 프로젝트 · 문의 look@nanumieum.example
+  나눔이음 사회복지시설 협의체 · 지역 복지시설과 크리에이터를 잇는 나눔 프로젝트 · 문의 info@grblab.co.kr
 </footer>
 
 <script>
@@ -331,11 +331,13 @@
 
   function getLoggedInFacility(){
     try{ const raw = localStorage.getItem('nb_facility'); if(raw) return JSON.parse(raw); }catch(e){}
-    return {n:'대구보육원', t:'아동양육시설/보육원', c:'이기운 아코디언', v:'MwkipVs8cS4'};
+    return null;
   }
   const OWNER = getLoggedInFacility();
+  // 본인 마이페이지인데 로그인 안 돼 있으면 로그인 화면으로
+  if(!isPublicView && !OWNER){ location.replace('login.html'); throw new Error('not logged in'); }
   const viewing = isPublicView
-    ? {n:paramFacility, t:qs.get('ftype')||'', c:qs.get('channel')||'', v:qs.get('vid')||OWNER.v}
+    ? {n:paramFacility, t:qs.get('ftype')||'', c:qs.get('channel')||'', v:qs.get('vid')||(OWNER&&OWNER.v)||''}
     : OWNER;
 
   // 복지시설 유형별 일반 설명 · 슬로건 · 소개 본문 템플릿 (임시로 작성한 안내 문구, 실제 내용으로 교체 예정)
