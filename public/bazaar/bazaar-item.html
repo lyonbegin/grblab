@@ -138,10 +138,19 @@
 </footer>
 
 <script>
+  const API_BASE = 'https://backend-production-6b41.up.railway.app';
   function fmt(n){ return n.toLocaleString('ko-KR'); }
 
+  // 로그인 시설 확인 (없으면 로그인 페이지로)
+  function getFacility(){
+    try{ const raw = localStorage.getItem('nb_facility'); if(raw) return JSON.parse(raw); }catch(e){}
+    return null;
+  }
+  const FAC = getFacility();
+  if(!FAC){ location.href = 'login.html'; }
+
   async function init(){
-    const res = await fetch('https://backend-production-6b41.up.railway.app/api/products?limit=1000');
+    const res = await fetch(API_BASE + '/api/products?limit=1000');
     const { items: PRODUCTS } = await res.json();
 
     const qs = new URLSearchParams(location.search);
@@ -186,22 +195,57 @@
     const buyBtn = document.getElementById('buyBtn');
     buyBtn.classList.add(product.type);
     buyBtn.textContent = product.type==='donate' ? '무료로 신청하기' : '잔액으로 구매';
-    buyBtn.addEventListener('click', ()=>{
-      const msg = product.type==='donate'
-        ? `${product.name}을(를) 무료로 신청했습니다.`
-        : `${product.name} ${qty}개를 잔액으로 구매했습니다. (${fmt(product.price*qty)}원)`;
-      alert(msg + '\n마이페이지에서 진행 상태를 확인하세요.');
-      location.href = 'bazaar-mypage.html';
+
+    buyBtn.addEventListener('click', async ()=>{
+      if(buyBtn.disabled) return;
+      buyBtn.disabled = true;
+      const originalText = buyBtn.textContent;
+      buyBtn.textContent = '처리 중…';
+
+      try {
+        const res = await fetch(API_BASE + '/api/bazaar/purchase', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            facility_id: FAC.id,
+            product_id: product.id,
+            product_name: product.name,
+            qty: qty,
+            unit_price: product.price
+          })
+        });
+
+        if(!res.ok){
+          const err = await res.json().catch(()=>({}));
+          alert(err.detail || '구매에 실패했습니다.');
+          buyBtn.disabled = false;
+          buyBtn.textContent = originalText;
+          return;
+        }
+
+        const data = await res.json(); // { order_id, new_balance }
+        // 로컬 시설 잔액도 갱신 (bazaar.html 표시용)
+        FAC.balance = data.new_balance;
+        localStorage.setItem('nb_facility', JSON.stringify(FAC));
+        localStorage.setItem('nb_balance_' + FAC.n, String(data.new_balance));
+
+        location.href = 'bazaar-mypage.html';
+      } catch(e){
+        alert('서버에 연결할 수 없습니다. 잠시 후 다시 시도해 주세요.');
+        buyBtn.disabled = false;
+        buyBtn.textContent = originalText;
+      }
     });
   }
   init();
 
-  /* ── 이 물품을 구매하는 복지시설(로그인 시설) 정보 — 실제 유튜브 썸네일 사용 ── */
-  const BUYER_FACILITY = {n:'대구보육원', c:'이기운 아코디언', v:'MwkipVs8cS4'};
-  document.getElementById('bfThumb').src = `https://i.ytimg.com/vi/${BUYER_FACILITY.v}/mqdefault.jpg`;
-  document.getElementById('bfThumb').alt = BUYER_FACILITY.n;
-  document.getElementById('bfName').textContent = `${BUYER_FACILITY.n} · ${BUYER_FACILITY.c} 결연`;
-  document.getElementById('buyerFac').href = `https://www.youtube.com/watch?v=${BUYER_FACILITY.v}`;
+  /* ── 이 물품을 구매하는 복지시설 = 로그인한 시설 (하드코딩 제거) ── */
+  if(FAC){
+    document.getElementById('bfThumb').src = FAC.v ? `https://i.ytimg.com/vi/${FAC.v}/mqdefault.jpg` : '';
+    document.getElementById('bfThumb').alt = FAC.n;
+    document.getElementById('bfName').textContent = FAC.c ? `${FAC.n} · ${FAC.c} 결연` : FAC.n;
+    document.getElementById('buyerFac').href = FAC.v ? `https://www.youtube.com/watch?v=${FAC.v}` : '#';
+  }
 </script>
 
 </body>

@@ -356,6 +356,7 @@
   }
 
   const facility = getFacility();
+  if(!facility){ location.href = 'login.html'; }
   document.querySelectorAll('#whoName').forEach(el=>el.textContent = facility.n+'님');
   document.querySelectorAll('#whoNameB').forEach(el=>el.textContent = facility.n);
   const logoutBtn = document.getElementById('logoutBtn');
@@ -369,6 +370,18 @@
   document.getElementById('facThumb').alt = facility.n;
   document.getElementById('facYtLink').href = `https://www.youtube.com/watch?v=${facility.v}`;
   document.getElementById('balanceAmt').textContent = fmt(getBalance(facility));
+
+  // 서버에서 최신 잔액을 가져와 갱신 (구매 후 반영)
+  (async ()=>{
+    try{
+      const r = await fetch('https://backend-production-6b41.up.railway.app/api/bazaar/mypage/' + facility.id);
+      if(r.ok){
+        const d = await r.json();
+        localStorage.setItem('nb_balance_' + facility.n, String(d.balance));
+        document.getElementById('balanceAmt').textContent = fmt(d.balance);
+      }
+    }catch(e){}
+  })();
 
   const ledgerListEl = document.getElementById('ledgerList');
   const ledger = getLedger(facility).slice(0,3);
@@ -385,7 +398,7 @@
     const priceHtml = p.type==='donate'
       ? `무료 신청${p.limit?` · ${p.limit}`:''}`
       : `${fmt(p.price)}원`;
-    const btnHtml = soldout ? '품절' : (p.type==='donate' ? '무료로 신청하기' : '잔액으로 구매');
+    const btnHtml = soldout ? '품절' : (p.type==='donate' ? '무료로 신청하기' : '구매');
     const stockHtml = soldout
       ? ''
       : `<span class="stock-tag ${p.stock<=3?'low':''}">${p.type==='donate' ? `잔여 ${p.stock}개` : `재고 ${p.stock}개`}</span>`;

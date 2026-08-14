@@ -522,74 +522,65 @@
     document.title = '마이페이지 | 나눔이음바자';
   }
 
-  /* ── 본인 계정 데이터(잔액·원장·주문내역) — localStorage 연동 ── */
+  /* ── 본인 계정 데이터(잔액·원장·주문내역) — 서버 API 연동 ── */
+  const API_BASE = 'https://backend-production-6b41.up.railway.app';
   function fmt(n){ return n.toLocaleString('ko-KR'); }
-  function getBalance(fac){
-    const key = 'nb_balance_'+fac.n;
-    if(localStorage.getItem(key)===null) localStorage.setItem(key, '354000');
-    return parseInt(localStorage.getItem(key),10);
-  }
-  function getLedger(fac){
-    const key = 'nb_ledger_'+fac.n;
-    const raw = localStorage.getItem(key);
-    if(raw) return JSON.parse(raw);
-    const seed = [
-      {d:'08.05', src:`결연 채널 「${fac.c}」 후원금 적립`, amt:32000},
-      {d:'08.02', src:'아동 간식 스낵 모음 구매', amt:-7510},
-      {d:'07.28', src:`결연 채널 「${fac.c}」 후원금 적립`, amt:58000},
-      {d:'07.20', src:'기초 위생용품 세트 구매', amt:-32000},
-    ];
-    localStorage.setItem(key, JSON.stringify(seed));
-    return seed;
-  }
-  function getOrders(fac){
-    const key = 'nb_orders_'+fac.n;
-    const raw = localStorage.getItem(key);
-    if(raw) return JSON.parse(raw);
-    const seed = [
-      {name:'아동 간식 스낵 모음 84g x 5개', date:'2026.08.02', status:'wait'},
-      {name:'기초 위생용품 세트', date:'2026.07.20', status:'sent'},
-      {name:'아동 도서 30권 세트 (기부)', date:'2026.07.05', status:'done'},
-    ];
-    localStorage.setItem(key, JSON.stringify(seed));
-    return seed;
-  }
-  function setOrders(fac, list){ localStorage.setItem('nb_orders_'+fac.n, JSON.stringify(list)); }
 
-  if(!isPublicView){
-    document.getElementById('ownWhoName').textContent = OWNER.n;
-    document.getElementById('ownBalance').textContent = fmt(getBalance(OWNER));
-
-    const ledger = getLedger(OWNER);
-    document.getElementById('ledgerListFull').innerHTML = ledger.map(l => `
-      <li><span class="src">${l.d} · ${l.src}</span><span class="${l.amt>=0?'plus':'minus'}">${l.amt>=0?'+':''}${fmt(l.amt)}</span></li>`).join('');
-  }
-
-  const STATUS_LABEL = {wait:'수령확인 대기', sent:'발송완료', done:'수령확인 완료'};
+  // 서버 주문 상태(pending/done) → 화면 라벨 매핑
+  const STATUS_LABEL = {pending:'수령확인 대기', done:'수령확인 완료'};
   const PKG_ICON = '<svg class="lucide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z"/><path d="M12 22V12"/><polyline points="3.29 7 12 12 20.71 7"/></svg>';
-  const CHECK_ICON = '<svg class="lucide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
+
+  let MYDATA = { balance: 0, orders: [], ledger: [] };
+
+  async function loadMyPage(){
+    const res = await fetch(API_BASE + '/api/bazaar/mypage/' + OWNER.id);
+    if(!res.ok) throw new Error('mypage load failed');
+    MYDATA = await res.json();
+
+    // 잔액
+    document.getElementById('ownWhoName').textContent = OWNER.n;
+    document.getElementById('ownBalance').textContent = fmt(MYDATA.balance);
+    // 로컬 잔액도 동기화 (bazaar.html 표시용)
+    localStorage.setItem('nb_balance_' + OWNER.n, String(MYDATA.balance));
+
+    // 원장
+    document.getElementById('ledgerListFull').innerHTML = MYDATA.ledger.map(l => {
+      const d = (l.created_at || '').slice(5,10).replace('-','.');
+      return `<li><span class="src">${d} · ${l.memo}</span><span class="${l.amount>=0?'plus':'minus'}">${l.amount>=0?'+':''}${fmt(l.amount)}</span></li>`;
+    }).join('') || '<li><span class="src">거래 내역이 없습니다.</span></li>';
+
+    renderOrders();
+  }
 
   function renderOrders(){
-    const orders = getOrders(OWNER);
-    document.getElementById('orderList').innerHTML = orders.map((o,i) => `
+    document.getElementById('orderList').innerHTML = MYDATA.orders.map((o) => {
+      const d = (o.created_at || '').slice(0,10).replace(/-/g,'.');
+      return `
       <div class="order">
         <div class="oimg">${PKG_ICON}</div>
-        <div class="otext"><b>${o.name}</b><span>${o.date}</span></div>
-        ${o.status==='sent' && !isPublicView
-          ? `<button type="button" class="ostatus sent confirm-btn" data-i="${i}">${STATUS_LABEL[o.status]} · 수령확인</button>`
-          : `<span class="ostatus ${o.status}">${STATUS_LABEL[o.status]}</span>`}
-      </div>`).join('');
+        <div class="otext"><b>${o.product_name} ${o.qty}개</b><span>${d} · ${fmt(o.total_price)}원</span></div>
+        ${o.status==='pending'
+          ? `<button type="button" class="ostatus sent confirm-btn" data-id="${o.id}">${STATUS_LABEL.pending} · 수령확인</button>`
+          : `<span class="ostatus done">${STATUS_LABEL.done}</span>`}
+      </div>`;
+    }).join('') || '<p style="color:var(--ink-faint);font-size:13px;padding:10px 0">주문 내역이 없습니다.</p>';
 
     document.querySelectorAll('.confirm-btn').forEach(btn=>{
       btn.addEventListener('click', ()=>{
-        document.getElementById('receiptIdx').value = btn.dataset.i;
+        document.getElementById('receiptIdx').value = btn.dataset.id;
         document.getElementById('receiptModal').style.display = 'flex';
       });
     });
   }
-  if(!isPublicView) renderOrders();
 
-  /* ── 수령확인: 사진 업로드 후 상태를 '수령확인 완료'로 변경 ── */
+  if(!isPublicView){
+    loadMyPage().catch(()=>{
+      document.getElementById('orderList').innerHTML =
+        '<p style="color:#C0392B;font-size:13px;padding:10px 0">데이터를 불러오지 못했습니다. 새로고침 해주세요.</p>';
+    });
+  }
+
+  /* ── 수령확인: 사진 업로드 후 서버에 상태 반영 ── */
   const receiptFile = document.getElementById('receiptFile');
   const receiptPreviewWrap = document.getElementById('receiptPreviewWrap');
   if(receiptFile){
@@ -603,16 +594,26 @@
   }
   const receiptSubmitBtn = document.getElementById('receiptSubmit');
   if(receiptSubmitBtn){
-    receiptSubmitBtn.addEventListener('click', ()=>{
-      const idx = parseInt(document.getElementById('receiptIdx').value, 10);
-      const orders = getOrders(OWNER);
-      orders[idx].status = 'done';
-      setOrders(OWNER, orders);
-      document.getElementById('receiptModal').style.display = 'none';
-      receiptPreviewWrap.innerHTML = '';
-      receiptFile.value = '';
+    receiptSubmitBtn.addEventListener('click', async ()=>{
+      const orderId = parseInt(document.getElementById('receiptIdx').value, 10);
       receiptSubmitBtn.disabled = true;
-      renderOrders();
+      try {
+        // 참고: 실제 사진 파일 업로드(스토리지)는 별도 구현 필요.
+        // 지금은 수령확인 완료 상태만 서버에 반영합니다.
+        const res = await fetch(API_BASE + '/api/bazaar/receipt', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ order_id: orderId, facility_id: OWNER.id, receipt_url: 'uploaded' })
+        });
+        if(!res.ok) throw new Error('receipt failed');
+        document.getElementById('receiptModal').style.display = 'none';
+        receiptPreviewWrap.innerHTML = '';
+        receiptFile.value = '';
+        await loadMyPage();
+      } catch(e){
+        alert('수령확인 처리에 실패했습니다. 다시 시도해 주세요.');
+        receiptSubmitBtn.disabled = false;
+      }
     });
   }
   const receiptCancel = document.getElementById('receiptCancel');
