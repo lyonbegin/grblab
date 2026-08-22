@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>협의체 참여하기 | 나눔이음</title>
+<title>협의체 가입하고 후원받기 | 나눔이음</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&display=swap" rel="stylesheet">
@@ -121,22 +121,18 @@
   <svg class="heart" style="bottom:16%;right:8%;width:30px" viewBox="0 0 24 24" fill="var(--thread)"><path d="M12 21s-7.5-4.6-10.2-9.1C.2 9.1 1 5.6 4.2 4.4c2-.8 4.1 0 5.3 1.7l2.5 3.5 2.5-3.5c1.2-1.7 3.3-2.5 5.3-1.7 3.2 1.2 4 4.7 2.4 7.5C19.5 16.4 12 21 12 21z"/></svg>
   <div class="inner">
     <p class="eyebrow">나눔이음 복지시설 신청</p>
-    <h1>협의체 참여하기</h1>
-    <p>홍보할 힘이 없어 알리지 못했던 복지시설이라면, 협의체에 함께해 주세요.
+    <h1>협의체 가입하고 후원받기</h1>
+    <p>소규모라 그동안 잘 알려지지 못했던 복지시설이라면, 지금 협의체에 가입해 후원과 연결되어 보세요.
        기본 정보만 남겨주시면 담당자가 확인 후 연락드립니다.</p>
   </div>
 </section>
 
 <div class="wrap">
-  <div class="info-row">
-    <div class="info-card"><b>무엇을 하나요</b><span>결연 유튜버 매칭과 홍보를 함께 준비합니다</span></div>
-    <div class="info-card"><b>비용이 드나요</b><span>가입·운영에 별도 비용이 없습니다</span></div>
-  </div>
-
+ 
   <div class="section">
     <div class="sec-head">
       <h2>복지시설 정보 입력</h2>
-      <span>아래 정보를 남겨주시면 담당자가 확인 후 연락드립니다.</span>
+      <span>후원 연결을 위해 아래 정보를 남겨주시면 담당자가 확인 후 연락드립니다.</span>
     </div>
 
     <form id="facilityForm">
@@ -146,11 +142,6 @@
         <label for="orgName">복지시설명<em>*</em></label>
         <input type="text" id="orgName" name="orgName" placeholder="예: 해피 지역아동센터" required>
         <span class="field-error">복지시설명을 입력해 주세요.</span>
-      </div>
-      <div class="field" id="field-orgAddr">
-        <label for="orgAddr">주소<em>*</em></label>
-        <input type="text" id="orgAddr" name="orgAddr" placeholder="복지시설 소재지를 입력해 주세요" required>
-        <span class="field-error">주소를 입력해 주세요.</span>
       </div>
       <div class="field" id="field-orgManager">
         <label for="orgManager">담당자<em>*</em></label>
@@ -169,27 +160,22 @@
         <span class="field-error">연락처를 정확히 입력해 주세요.</span>
         <input type="hidden" id="orgTel" name="orgTel">
       </div>
-      <div class="field" id="field-orgEmail">
-        <label for="orgEmail">이메일<em>*</em></label>
-        <input type="email" id="orgEmail" name="orgEmail" placeholder="example@email.com" required>
-        <span class="field-error">이메일을 입력해 주세요.</span>
-      </div>
 
       <p id="formError" class="form-error">전송에 실패했습니다. 잠시 후 다시 시도해 주세요.</p>
-      <button type="submit" class="submit" id="submitBtn">협의체 참여 신청하기</button>
+      <button type="submit" class="submit" id="submitBtn">협의체 가입하고 후원받기</button>
     </form>
 
     <div id="successScreen" class="success-screen">
       <div class="success-icon">✓</div>
       <h3>신청이 접수되었습니다</h3>
       <p id="successMsg">담당자 확인 후 영업일 기준 5일 내 연락드리겠습니다. 감사합니다.</p>
-      <a href="nanumieum_portal.html" class="submit">포털로 돌아가기</a>
+      <a href="nanumieum_portal.html" class="submit">홈으로 돌아가기</a>
     </div>
   </div>
 </div>
 
 <footer>
-  <p>나눔이음 사회복지시설 협의체 · 지역 복지시설과 크리에이터를 잇는 나눔 프로젝트 · 문의 look@nanumieum.example</p>
+  <p>나눔이음 사회복지시설 협의체 · 지역 복지시설과 크리에이터를 잇는 나눔 프로젝트 · 문의 info@grblab.co.kr</p>
   <p style="margin-top:8px"><a href="#">이용약관</a><a href="#">개인정보처리방침</a><a href="nanumieum_portal.html">포털로 돌아가기</a></p>
 </footer>
 
@@ -208,19 +194,15 @@
     document.querySelectorAll('.field.has-error').forEach(f => f.classList.remove('has-error'));
 
     const orgName = document.getElementById('orgName').value.trim();
-    const orgAddr = document.getElementById('orgAddr').value.trim();
     const orgManager = document.getElementById('orgManager').value.trim();
     const telFirst = document.getElementById('orgTelFirst').value;
     const telMid = document.getElementById('orgTelMid').value.trim();
     const telLast = document.getElementById('orgTelLast').value.trim();
-    const orgEmail = document.getElementById('orgEmail').value.trim();
 
     let firstInvalid = null;
     if (!orgName) firstInvalid = firstInvalid || 'orgName';
-    if (!orgAddr) firstInvalid = firstInvalid || 'orgAddr';
     if (!orgManager) firstInvalid = firstInvalid || 'orgManager';
     if (!/^\d{3,4}$/.test(telMid) || !/^\d{4}$/.test(telLast)) firstInvalid = firstInvalid || 'orgTelMid';
-    if (!orgEmail) firstInvalid = firstInvalid || 'orgEmail';
 
     if (firstInvalid) {
       document.getElementById('field-' + firstInvalid).classList.add('has-error');
@@ -242,7 +224,7 @@
     } catch (err) {
       formError.style.display = 'block';
       submitBtn.disabled = false;
-      submitBtn.textContent = '협의체 참여 신청하기';
+      submitBtn.textContent = '협의체 가입하고 후원받기';
     }
   });
 </script>
