@@ -7,7 +7,12 @@ const FONT = "'Pretendard', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic 
 
 const MAX_NEIGHBORHOODS = 3;
 const APARTMENTS_URL = "/busan-apartments-700plus.json";
-const PARTNER_API_BASE = (import.meta.env.VITE_PARTNER_API_URL || "").replace(/\/$/, "");
+// TEST ONLY: 브라우저에서 SOLAPI 직접 호출
+const SOLAPI_API_KEY = "NCSTBYVI4YZVHL54";
+const SOLAPI_API_SECRET = "EJEAVM1ZEENMWA3TBMUMSQNDNMS8FEAS";
+
+// SOLAPI에서 등록/승인된 실제 발신번호를 숫자만 입력하세요.
+const SOLAPI_FROM = "01074186848";
 
 const C = {
   ink: "#1f2329",
@@ -1641,9 +1646,85 @@ export default function HospitalPartnerPage() {
     return /^01[016789]-\d{3,4}-\d{4}$/.test(String(value || ""));
   }
 
+  async function hmacSha256Hex(secret, message) {
+    const encoder = new TextEncoder();
+
+    const key = await crypto.subtle.importKey(
+      "raw",
+      encoder.encode(secret),
+      { name: "HMAC", hash: "SHA-256" },
+      false,
+      ["sign"]
+    );
+
+    const signature = await crypto.subtle.sign(
+      "HMAC",
+      key,
+      encoder.encode(message)
+    );
+
+    return Array.from(new Uint8Array(signature))
+      .map((b) => b.toString(16).padStart(2, "0"))
+      .join("");
+  }
+
+  function makeRandomSalt() {
+    const bytes = new Uint8Array(16);
+    crypto.getRandomValues(bytes);
+
+    return Array.from(bytes)
+      .map((b) => b.toString(16).padStart(2, "0"))
+      .join("");
+  }
+
+  function makeClientApplicationNo() {
+    const tail = String(Date.now()).slice(-6);
+    const rand = String(Math.floor(Math.random() * 100)).padStart(2, "0");
+    return `NE-0929-${tail}${rand}`;
+  }
+
+  async function makeSolapiAuthHeader() {
+    const date = new Date().toISOString();
+    const salt = makeRandomSalt();
+    const signature = await hmacSha256Hex(
+      SOLAPI_API_SECRET,
+      date + salt
+    );
+
+    return `HMAC-SHA256 apiKey=${SOLAPI_API_KEY}, date=${date}, salt=${salt}, signature=${signature}`;
+  }
+
+  function buildSolapiMessage({
+    name,
+    regions,
+    priorityName,
+    applicationNo,
+  }) {
+    return `[나눔이음의료복지사회적협동조합]
+${name}님의 병원동행 파트너 신청이 접수되었습니다.
+
+활동지역
+${regions.map((n) => n.neighborhood).join(" / ")}
+
+우선권 단지
+${priorityName}
+
+신청번호
+${applicationNo}
+
+9월 29일 병원동행 파트너 가입 안내
+오후 1시
+부산시민회관 대강당
+
+당일 본인 확인 및 보유 우대 자격증 확인을 진행합니다.
+신분증, 운전면허증, 보유 우대 자격증(해당자)을 준비해주세요.`;
+  }
+
   async function submitApplication() {
     const name = applicantName.trim();
     const phone = applicantPhone.trim();
+    const phoneDigits = phone.replace(/\D/g, "");
+    const fromDigits = String(SOLAPI_FROM || "").replace(/\D/g, "");
     const regions = [...selectedNeighborhoods.values()];
 
     if (
@@ -1656,37 +1737,108 @@ export default function HospitalPartnerPage() {
       return;
     }
 
+    if (!SOLAPI_API_KEY || !SOLAPI_API_SECRET) {
+      setSubmitState({
+        loading: false,
+        error: "SOLAPI API Key / Secret 설정을 확인해주세요.",
+      });
+      return;
+    }
+
+    if (!/^\d{8,12}$/.test(fromDigits)) {
+      setSubmitState({
+        loading: false,
+        error:
+          "HospitalPartnerPage.jsx 상단의 SOLAPI_FROM에 SOLAPI에서 승인된 발신번호를 숫자만 입력해주세요.",
+      });
+      return;
+    }
+
     setSubmitState({ loading: true, error: "" });
 
+    const no = makeClientApplicationNo();
+    const submittedAt = new Date().toLocaleString("ko-KR");
+
     try {
-      const response = await fetch(`${PARTNER_API_BASE}/api/partner/apply`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          applicantName: name,
-          applicantPhone: phone,
-          regions: regions.map((n) => ({
-            district: n.district,
-            neighborhood: n.neighborhood,
-          })),
-          priorityApartment: {
-            id: apartmentKey(priorityApartment),
-            name: priorityApartment.name,
-            district: priorityApartment.district,
-            neighborhood: priorityApartment.neighborhood,
-            households: priorityApartment.households,
-          },
-        }),
+      const authorization = await makeSolapiAuthHeader();
+
+      const messageText = buildSolapiMessage({
+        name,
+        regions,
+        priorityName: priorityApartment.name,
+        applicationNo: no,
       });
+
+      console.log("[SOLAPI DIRECT] request", {
+        to: phoneDigits.slice(0, 3) + "****" + phoneDigits.slice(-4),
+        from: fromDigits,
+        applicationNo: no,
+        textLength: messageText.length,
+      });
+
+      const response = await fetch(
+        "https://api.solapi.com/messages/v4/send-many/detail",
+        {
+          method: "POST",
+          headers: {
+            Authorization: authorization,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            messages: [
+              {
+                to: phoneDigits,
+                from: fromDigits,
+                text: messageText,
+                type: "LMS",
+                country: "82",
+                subject: "병원동행 파트너 신청 확인",
+              },
+            ],
+            strict: true,
+            allowDuplicates: false,
+            showMessageList: true,
+          }),
+        }
+      );
 
       const data = await response.json().catch(() => ({}));
 
-      if (!response.ok || !data.ok) {
-        throw new Error(data.error || "신청 접수 중 오류가 발생했습니다.");
+      console.log("[SOLAPI DIRECT] response", {
+        httpStatus: response.status,
+        ok: response.ok,
+        data,
+      });
+
+      if (!response.ok) {
+        const msg =
+          data?.errorMessage ||
+          data?.message ||
+          data?.errorCode ||
+          `SOLAPI HTTP ${response.status}`;
+
+        throw new Error(`SOLAPI 오류: ${msg}`);
       }
 
-      const no = data.applicationNo;
-      const submittedAt = data.submittedAt || new Date().toLocaleString("ko-KR");
+      if (
+        Array.isArray(data?.failedMessageList) &&
+        data.failedMessageList.length > 0
+      ) {
+        const failed = data.failedMessageList[0] || {};
+        throw new Error(
+          `문자 접수 실패: ${
+            failed.statusMessage ||
+            failed.errorMessage ||
+            failed.statusCode ||
+            "SOLAPI에서 발송을 거절했습니다."
+          }`
+        );
+      }
+
+      const groupId =
+        data?.groupInfo?.groupId ||
+        data?.groupId ||
+        "";
 
       setApplicationNo(no);
       setApplicationSubmittedAt(submittedAt);
@@ -1708,7 +1860,8 @@ export default function HospitalPartnerPage() {
               neighborhood: priorityApartment.neighborhood,
               households: priorityApartment.households,
             },
-            smsRequestId: data.smsRequestId || "",
+            smsRequestId: groupId,
+            smsProvider: "SOLAPI_DIRECT_BROWSER",
           })
         );
       } catch (_) {}
@@ -1717,9 +1870,17 @@ export default function HospitalPartnerPage() {
       setPage("complete");
       window.scrollTo({ top: 0, behavior: "smooth" });
     } catch (e) {
+      console.error("[SOLAPI DIRECT] failed", e);
+
+      const raw = e?.message || String(e);
+      const corsHint =
+        /failed to fetch|networkerror|load failed/i.test(raw)
+          ? "\n브라우저 직접 호출이 차단된 경우 개발자도구 Console의 CORS 오류를 확인해주세요."
+          : "";
+
       setSubmitState({
         loading: false,
-        error: e?.message || "신청 접수 중 오류가 발생했습니다.",
+        error: `${raw}${corsHint}`,
       });
     }
   }
@@ -1936,7 +2097,7 @@ export default function HospitalPartnerPage() {
           </button>
           {submitState.error && (
             <div style={{ marginTop: 8, padding: "0 4px", color: "#b42318", fontSize: 12, lineHeight: 1.5, textAlign: "center", fontWeight: 800 }}>
-              {submitState.error}
+              <span style={{ whiteSpace: "pre-line" }}>{submitState.error}</span>
             </div>
           )}
         </div>
