@@ -22,6 +22,10 @@ import PpeDetailPage from './pages/PpeDetailPage'
 import SafetyEduDetailPage from './pages/SafetyEduDetailPage'
 import SafetyEduListPage   from './pages/SafetyEduListPage'
 import GrbLabPage from './pages/GrbLabPage'
+
+import HospitalPartnerPage from './pages/HospitalPartnerPage'
+
+
 // ✅ 기프트카드 교환 (담당자용)
 import AdminExchangePage from './pages/AdminExchangePage'
 // import PartnerPage   from './pages/PartnerPage'
@@ -71,6 +75,12 @@ export default function App() {
 
 {/* <Route path="/partner" element={<PartnerPage />} /> */}
 <Route path="/pt" element={<InputPage />} />
+
+
+<Route path="/hp" element={<HospitalPartnerPage />} />
+
+
+
 {/* ✅ 기프트카드 교환 (담당자가 참여자 바코드를 스캔) */}
 <Route path="/admin/exchange" element={<AdminExchangePage />} />
 <Route path="/emergency"            element={<EmergencyListPage />} />
