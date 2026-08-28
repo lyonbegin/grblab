@@ -1,11 +1,32 @@
-import http from "node:http";
-import crypto from "node:crypto";
+const http = require("node:http");
+const crypto = require("node:crypto");
 
 const PORT = Number(process.env.PARTNER_API_PORT || 3001);
 
 const SOLAPI_API_KEY = process.env.SOLAPI_API_KEY || "";
 const SOLAPI_API_SECRET = process.env.SOLAPI_API_SECRET || "";
 const SOLAPI_FROM = String(process.env.SOLAPI_FROM || "").replace(/\D/g, "");
+
+const PARTNER_DEBUG = String(process.env.PARTNER_DEBUG || "") === "1";
+
+function maskPhone(phone) {
+  const p = cleanPhone(phone);
+  if (p.length < 7) return "***";
+  return `${p.slice(0, 3)}****${p.slice(-4)}`;
+}
+
+function makeDebugId() {
+  return crypto.randomBytes(4).toString("hex").toUpperCase();
+}
+
+console.log("[PARTNER API START]", {
+  port: PORT,
+  solapiApiKeyConfigured: Boolean(SOLAPI_API_KEY),
+  solapiApiSecretConfigured: Boolean(SOLAPI_API_SECRET),
+  solapiFromConfigured: Boolean(SOLAPI_FROM),
+  solapiFrom: SOLAPI_FROM ? maskPhone(SOLAPI_FROM) : "",
+  debugMode: PARTNER_DEBUG,
+});
 
 function json(res, status, body) {
   res.writeHead(status, {
@@ -80,49 +101,88 @@ ${applicationNo}
 신분증, 운전면허증, 보유 우대 자격증(해당자)을 준비해주세요.`;
 }
 
-async function sendSolapiLms({ to, text }) {
+async function sendSolapiLms({ to, text, debugId }) {
   if (!SOLAPI_FROM) {
-    throw new Error("SOLAPI_FROM 환경변수가 없습니다.");
+    const error = new Error("SOLAPI_FROM 환경변수가 없습니다.");
+    error.code = "ENV_FROM_MISSING";
+    throw error;
   }
 
-  const response = await fetch(
-    "https://api.solapi.com/messages/v4/send-many/detail",
-    {
-      method: "POST",
-      headers: {
-        Authorization: createSolapiAuthorization(),
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        messages: [
-          {
-            to,
-            from: SOLAPI_FROM,
-            text,
-            type: "LMS",
-            subject: "병원동행 파트너 신청 확인",
-            country: "82",
-          },
-        ],
-        strict: true,
-        allowDuplicates: false,
-        showMessageList: true,
-      }),
-    }
-  );
+  const requestStartedAt = Date.now();
 
-  const data = await response.json().catch(() => ({}));
+  console.log("[SOLAPI SEND START]", {
+    debugId,
+    to: maskPhone(to),
+    from: maskPhone(SOLAPI_FROM),
+    textLength: text.length,
+  });
+
+  let response;
+  let data = {};
+
+  try {
+    response = await fetch(
+      "https://api.solapi.com/messages/v4/send-many/detail",
+      {
+        method: "POST",
+        headers: {
+          Authorization: createSolapiAuthorization(),
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          messages: [
+            {
+              to,
+              from: SOLAPI_FROM,
+              text,
+              type: "LMS",
+              subject: "병원동행 파트너 신청 확인",
+              country: "82",
+            },
+          ],
+          strict: true,
+          allowDuplicates: false,
+          showMessageList: true,
+        }),
+      }
+    );
+
+    data = await response.json().catch(() => ({}));
+  } catch (networkError) {
+    console.error("[SOLAPI NETWORK ERROR]", {
+      debugId,
+      message: networkError?.message || String(networkError),
+      elapsedMs: Date.now() - requestStartedAt,
+    });
+
+    const error = new Error("SOLAPI 서버 연결에 실패했습니다.");
+    error.code = "SOLAPI_NETWORK_ERROR";
+    error.causeMessage = networkError?.message || String(networkError);
+    throw error;
+  }
+
+  console.log("[SOLAPI RESPONSE]", {
+    debugId,
+    httpStatus: response.status,
+    ok: response.ok,
+    elapsedMs: Date.now() - requestStartedAt,
+    response: data,
+  });
 
   if (!response.ok) {
-    console.error("[SOLAPI ERROR]", response.status, data);
+    const error = new Error(
+      String(
+        data?.errorMessage ||
+        data?.message ||
+        data?.errorCode ||
+        `SOLAPI HTTP ${response.status}`
+      )
+    );
 
-    const message =
-      data?.errorMessage ||
-      data?.message ||
-      data?.errorCode ||
-      `SOLAPI HTTP ${response.status}`;
-
-    throw new Error(String(message));
+    error.code = String(data?.errorCode || `HTTP_${response.status}`);
+    error.httpStatus = response.status;
+    error.solapiResponse = data;
+    throw error;
   }
 
   return data;
@@ -181,6 +241,15 @@ function allowPhone(phone) {
 }
 
 async function handlePartnerApply(req, res) {
+  const debugId = makeDebugId();
+  const startedAt = Date.now();
+
+  console.log("[PARTNER APPLY RECEIVED]", {
+    debugId,
+    method: req.method,
+    url: req.url,
+  });
+
   let body;
 
   try {
@@ -189,6 +258,7 @@ async function handlePartnerApply(req, res) {
     return json(res, 400, {
       ok: false,
       error: error.message || "요청 내용을 확인해주세요.",
+      debugId,
     });
   }
 
@@ -257,6 +327,14 @@ async function handlePartnerApply(req, res) {
     });
   }
 
+  console.log("[PARTNER APPLY VALIDATED]", {
+    debugId,
+    applicantName,
+    applicantPhone: maskPhone(applicantPhone),
+    regions: regions.map((r) => `${r.district} ${r.neighborhood}`),
+    priorityApartment: priorityApartment?.name || "",
+  });
+
   const applicationNo = makeApplicationNo();
 
   const submittedAt = new Date().toLocaleString("ko-KR", {
@@ -276,6 +354,7 @@ async function handlePartnerApply(req, res) {
     const result = await sendSolapiLms({
       to: applicantPhone,
       text,
+      debugId,
     });
 
     const groupId =
@@ -290,6 +369,8 @@ async function handlePartnerApply(req, res) {
       regions,
       priorityApartment,
       solapiGroupId: groupId,
+      debugId,
+      elapsedMs: Date.now() - startedAt,
     });
 
     return json(res, 200, {
@@ -297,13 +378,31 @@ async function handlePartnerApply(req, res) {
       applicationNo,
       submittedAt,
       smsRequestId: groupId,
+      debugId,
     });
   } catch (error) {
-    console.error("[PARTNER APPLY FAILED]", error);
+    console.error("[PARTNER APPLY FAILED]", {
+      debugId,
+      code: error?.code || "",
+      httpStatus: error?.httpStatus || "",
+      message: error?.message || String(error),
+      causeMessage: error?.causeMessage || "",
+      solapiResponse: error?.solapiResponse || null,
+      elapsedMs: Date.now() - startedAt,
+    });
 
     return json(res, 502, {
       ok: false,
       error: `문자 발송 실패: ${error.message}`,
+      debugId,
+      ...(PARTNER_DEBUG
+        ? {
+            detail: {
+              code: error?.code || "",
+              httpStatus: error?.httpStatus || "",
+            },
+          }
+        : {}),
     });
   }
 }
@@ -315,6 +414,14 @@ const server = http.createServer(async (req, res) => {
     return json(res, 200, {
       ok: true,
       service: "partner-apply-solapi",
+      environment: {
+        apiKey: Boolean(SOLAPI_API_KEY),
+        apiSecret: Boolean(SOLAPI_API_SECRET),
+        from: Boolean(SOLAPI_FROM),
+        fromMasked: SOLAPI_FROM ? maskPhone(SOLAPI_FROM) : "",
+      },
+      debugMode: PARTNER_DEBUG,
+      serverTime: new Date().toISOString(),
     });
   }
 
