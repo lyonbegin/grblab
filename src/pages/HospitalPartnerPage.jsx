@@ -7,6 +7,7 @@ const FONT = "'Pretendard', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic 
 
 const MAX_NEIGHBORHOODS = 3;
 const APARTMENTS_URL = "/busan-apartments-700plus.json";
+const PARTNER_API_BASE = (import.meta.env.VITE_PARTNER_API_URL || "").replace(/\/$/, "");
 
 const C = {
   ink: "#1f2329",
@@ -381,6 +382,7 @@ export default function HospitalPartnerPage() {
   const [applicationNo, setApplicationNo] = useState("");
   const [applicationSubmittedAt, setApplicationSubmittedAt] = useState("");
   const [showCertificate, setShowCertificate] = useState(false);
+  const [submitState, setSubmitState] = useState({ loading: false, error: "" });
 
   // 고령 사용자용 단계 안내.
   // 처음에는 구 선택/지도 확대 방법부터 지도 위 큰 모달로 안내한다.
@@ -1639,39 +1641,34 @@ export default function HospitalPartnerPage() {
     return /^01[016789]-\d{3,4}-\d{4}$/.test(String(value || ""));
   }
 
-  function makeApplicationNo() {
-    return `NE-0929-${String(Date.now()).slice(-5)}`;
-  }
-
-  function submitApplication() {
+  async function submitApplication() {
     const name = applicantName.trim();
     const phone = applicantPhone.trim();
+    const regions = [...selectedNeighborhoods.values()];
 
     if (
       name.length < 2 ||
       !validApplicantPhone(phone) ||
       !priorityApartment ||
-      selectedNeighborhoods.size !== MAX_NEIGHBORHOODS
+      regions.length !== MAX_NEIGHBORHOODS ||
+      submitState.loading
     ) {
       return;
     }
 
-    const no = makeApplicationNo();
-    const submittedAt = new Date().toLocaleString("ko-KR");
-
-    setApplicationNo(no);
-    setApplicationSubmittedAt(submittedAt);
-    setShowCertificate(false);
+    setSubmitState({ loading: true, error: "" });
 
     try {
-      localStorage.setItem(
-        "nanumieum-hospital-partner-application",
-        JSON.stringify({
-          applicationNo: no,
+      const response = await fetch(`${PARTNER_API_BASE}/api/partner/apply`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
           applicantName: name,
           applicantPhone: phone,
-          submittedAt,
-          regions: [...selectedNeighborhoods.values()],
+          regions: regions.map((n) => ({
+            district: n.district,
+            neighborhood: n.neighborhood,
+          })),
           priorityApartment: {
             id: apartmentKey(priorityApartment),
             name: priorityApartment.name,
@@ -1679,12 +1676,52 @@ export default function HospitalPartnerPage() {
             neighborhood: priorityApartment.neighborhood,
             households: priorityApartment.households,
           },
-        })
-      );
-    } catch (_) {}
+        }),
+      });
 
-    setPage("complete");
-    window.scrollTo({ top: 0, behavior: "smooth" });
+      const data = await response.json().catch(() => ({}));
+
+      if (!response.ok || !data.ok) {
+        throw new Error(data.error || "신청 접수 중 오류가 발생했습니다.");
+      }
+
+      const no = data.applicationNo;
+      const submittedAt = data.submittedAt || new Date().toLocaleString("ko-KR");
+
+      setApplicationNo(no);
+      setApplicationSubmittedAt(submittedAt);
+      setShowCertificate(false);
+
+      try {
+        localStorage.setItem(
+          "nanumieum-hospital-partner-application",
+          JSON.stringify({
+            applicationNo: no,
+            applicantName: name,
+            applicantPhone: phone,
+            submittedAt,
+            regions,
+            priorityApartment: {
+              id: apartmentKey(priorityApartment),
+              name: priorityApartment.name,
+              district: priorityApartment.district,
+              neighborhood: priorityApartment.neighborhood,
+              households: priorityApartment.households,
+            },
+            smsRequestId: data.smsRequestId || "",
+          })
+        );
+      } catch (_) {}
+
+      setSubmitState({ loading: false, error: "" });
+      setPage("complete");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } catch (e) {
+      setSubmitState({
+        loading: false,
+        error: e?.message || "신청 접수 중 오류가 발생했습니다.",
+      });
+    }
   }
 
   // 우선권 단지를 새로 선택하거나 교체하면 이 화면으로 즉시 이동한다.
@@ -1882,21 +1919,26 @@ export default function HospitalPartnerPage() {
         >
           <button
             type="button"
-            disabled={!canSubmit}
+            disabled={!canSubmit || submitState.loading}
             onClick={submitApplication}
             style={{
               width: "100%",
               height: 54,
               border: 0,
               borderRadius: 14,
-              background: canSubmit ? C.brand : "#d7d9de",
+              background: canSubmit && !submitState.loading ? C.brand : "#d7d9de",
               color: "#fff",
               fontSize: 15.5,
               fontWeight: 950,
             }}
           >
-            이 내용으로 신청하기
+            {submitState.loading ? "신청 접수 중..." : "이 내용으로 신청하기"}
           </button>
+          {submitState.error && (
+            <div style={{ marginTop: 8, padding: "0 4px", color: "#b42318", fontSize: 12, lineHeight: 1.5, textAlign: "center", fontWeight: 800 }}>
+              {submitState.error}
+            </div>
+          )}
         </div>
       </>
     );
