@@ -1,0 +1,6114 @@
+[
+  {
+    "id": "db95301edc6f3f75",
+    "name": "엘지메트로시티",
+    "district": "남구",
+    "neighborhood": "용호동",
+    "address": "부산광역시 남구 분포로 111",
+    "households": 7374,
+    "lat": 35.1279925,
+    "lng": 129.1121446,
+    "popularity": {
+      "score": 0.56421855,
+      "rank": 0.62565445,
+      "level": 4,
+      "color": "#ec7e91"
+    }
+  },
+  {
+    "id": "bd8b6bdad4260722",
+    "name": "화명 롯데캐슬 카이저",
+    "district": "북구",
+    "neighborhood": "화명동",
+    "address": "부산광역시 북구 금곡대로 166 (화명동, 롯데캐슬카이저)",
+    "households": 5239,
+    "lat": 35.2220606,
+    "lng": 129.0106433,
+    "popularity": {
+      "score": 0.55585831,
+      "rank": 0.60471204,
+      "level": 4,
+      "color": "#ec7e91"
+    }
+  },
+  {
+    "id": "58ec1734b11fb0aa",
+    "name": "레이카운티",
+    "district": "연제구",
+    "neighborhood": "거제동",
+    "address": "부산광역시 연제구 아시아드대로39(거제동)",
+    "households": 4470,
+    "lat": 35.1866537,
+    "lng": 129.0669327,
+    "popularity": {
+      "score": 0.70970662,
+      "rank": 0.87172775,
+      "level": 5,
+      "color": "#d92f4c"
+    }
+  },
+  {
+    "id": "da496a9fa80182ea",
+    "name": "동래 래미안 아이파크",
+    "district": "동래구",
+    "neighborhood": "온천동",
+    "address": "부산광역시 동래구 금정마을로 150",
+    "households": 3853,
+    "lat": 35.2106413,
+    "lng": 129.0687559,
+    "popularity": {
+      "score": 0.54525848,
+      "rank": 0.58376963,
+      "level": 3,
+      "color": "#f7c2cc"
+    }
+  },
+  {
+    "id": "bd35c2e3856d5400",
+    "name": "다대동 롯데캐슬 몰운대아파트",
+    "district": "사하구",
+    "neighborhood": "다대동",
+    "address": "부산광역시 사하구 다대낙조2길 100(다대동, 다대동 롯데캐슬 몰운대아파트)",
+    "households": 3462,
+    "lat": 35.0566344,
+    "lng": 128.9654456,
+    "popularity": {
+      "score": 0.70308636,
+      "rank": 0.86125654,
+      "level": 5,
+      "color": "#d92f4c"
+    }
+  },
+  {
+    "id": "1fe15186807c8699",
+    "name": "화명동대림타운",
+    "district": "북구",
+    "neighborhood": "화명동",
+    "address": "부산광역시 북구 금곡대로 268 (화명동, 화명동대림타운)",
+    "households": 3382,
+    "lat": 35.2308715,
+    "lng": 129.0154964,
+    "popularity": {
+      "score": 0.82529129,
+      "rank": 0.98429319,
+      "level": 5,
+      "color": "#d92f4c"
+    }
+  },
+  {
+    "id": "ac49d524eede0cfb",
+    "name": "백양산동문굿모닝힐",
+    "district": "북구",
+    "neighborhood": "만덕동",
+    "address": "부산광역시 북구 덕천로276번길 60 (만덕동, 백양산동문굿모닝힐)",
+    "households": 3160,
+    "lat": 35.207631,
+    "lng": 129.032675,
+    "popularity": {
+      "score": 0.72227687,
+      "rank": 0.89528796,
+      "level": 5,
+      "color": "#d92f4c"
+    }
+  },
+  {
+    "id": "8a07f36fd5ff92c3",
+    "name": "롯데캐슬레전드",
+    "district": "남구",
+    "neighborhood": "대연동",
+    "address": "부산광역시 남구 수영로 135",
+    "households": 3149,
+    "lat": 35.1363591,
+    "lng": 129.0811361,
+    "popularity": {
+      "score": 0.71175345,
+      "rank": 0.88219895,
+      "level": 5,
+      "color": "#d92f4c"
+    }
+  },
+  {
+    "id": "c174a05bf92a2512",
+    "name": "삼익비치",
+    "district": "수영구",
+    "neighborhood": "남천동",
+    "address": "부산광역시 수영구 광안해변로 100(남천동)",
+    "households": 3060,
+    "lat": 35.1430393,
+    "lng": 129.1164133,
+    "popularity": {
+      "score": 0.67222685,
+      "rank": 0.81937173,
+      "level": 5,
+      "color": "#d92f4c"
+    }
+  },
+  {
+    "id": "41a92b41fc8b3ce2",
+    "name": "오륙도SK뷰",
+    "district": "남구",
+    "neighborhood": "용호동",
+    "address": "부산광역시 남구 오륙도로 85",
+    "households": 3000,
+    "lat": 35.1030157,
+    "lng": 129.1193262,
+    "popularity": {
+      "score": 0.53403129,
+      "rank": 0.56806283,
+      "level": 3,
+      "color": "#f7c2cc"
+    }
+  },
+  {
+    "id": "bc42982e3eb34959",
+    "name": "가락타운2·3단지",
+    "district": "사하구",
+    "neighborhood": "하단동",
+    "address": "부산광역시 사하구 하신번영로 233(하단동, 가락타운2·3단지)",
+    "households": 2980,
+    "lat": 35.1014214,
+    "lng": 128.9574384,
+    "popularity": {
+      "score": 0.46648109,
+      "rank": 0.43193717,
+      "level": 3,
+      "color": "#f7c2cc"
+    }
+  },
+  {
+    "id": "650d0f1cdfcd93f6",
+    "name": "도시몰운대임대아파트",
+    "district": "사하구",
+    "neighborhood": "다대동",
+    "address": "부산광역시 사하구 다대낙조2길 13(다대동, 도시몰운대임대아파트)",
+    "households": 2960,
+    "lat": 35.0504478,
+    "lng": 128.9638316,
+    "popularity": {
+      "score": 0.67130385,
+      "rank": 0.81151832,
+      "level": 5,
+      "color": "#d92f4c"
+    }
+  },
+  {
+    "id": "4bb0582bc4ca0090",
+    "name": "사직 쌍용 예가(1차)",
+    "district": "동래구",
+    "neighborhood": "사직동",
+    "address": "부산광역시 동래구 사직로 80",
+    "households": 2947,
+    "lat": 35.1969782,
+    "lng": 129.0557802,
+    "popularity": {
+      "score": 0.51254652,
+      "rank": 0.53403141,
+      "level": 3,
+      "color": "#f7c2cc"
+    }
+  },
+  {
+    "id": "1ee5df7f3bdd54f3",
+    "name": "더 샾 센텀파크1차아파트",
+    "district": "해운대구",
+    "neighborhood": "재송동",
+    "address": "부산광역시 해운대구 센텀중앙로 145 (재송동, 더샵센텀파크1차아파트)",
+    "households": 2752,
+    "lat": 35.1788329,
+    "lng": 129.1219423,
+    "popularity": {
+      "score": 0.60959278,
+      "rank": 0.72513089,
+      "level": 4,
+      "color": "#ec7e91"
+    }
+  },
+  {
+    "id": "9ffe246d686eb53a",
+    "name": "개금주공3단지",
+    "district": "부산진구",
+    "neighborhood": "당감동",
+    "address": "부산광역시 부산진구 백양관문로 10",
+    "households": 2716,
+    "lat": 35.1616833,
+    "lng": 129.0326913,
+    "popularity": {
+      "score": 0.87914976,
+      "rank": 0.9947644,
+      "level": 5,
+      "color": "#d92f4c"
+    }
+  },
+  {
+    "id": "5b8ee74119337c88",
+    "name": "래미안 어반파크",
+    "district": "부산진구",
+    "neighborhood": "연지동",
+    "address": "부산광역시 부산진구 연지동 250-76",
+    "households": 2616,
+    "lat": 35.1750153,
+    "lng": 129.0510965,
+    "popularity": {
+      "score": 0.60759856,
+      "rank": 0.71989529,
+      "level": 4,
+      "color": "#ec7e91"
+    }
+  },
+  {
+    "id": "4c80806cc4f74c26",
+    "name": "개금주공2단지",
+    "district": "부산진구",
+    "neighborhood": "개금동",
+    "address": "부산광역시 부산진구 백양관문로 7",
+    "households": 2544,
+    "lat": 35.1602793,
+    "lng": 129.0298645,
+    "popularity": {
+      "score": 0.61003602,
+      "rank": 0.72774869,
+      "level": 4,
+      "color": "#ec7e91"
+    }
+  },
+  {
+    "id": "a7ee41f4576cc5fc",
+    "name": "모라주공1단지",
+    "district": "사상구",
+    "neighborhood": "모라동",
+    "address": "부산광역시 사상구 모라로110번길 121",
+    "households": 2529,
+    "lat": 35.1844321,
+    "lng": 128.9980449,
+    "popularity": {
+      "score": 0.73379403,
+      "rank": 0.90837696,
+      "level": 5,
+      "color": "#d92f4c"
+    }
+  },
+  {
+    "id": "2b18ba76a7402e08",
+    "name": "신개금LG(1차,2차)",
+    "district": "부산진구",
+    "neighborhood": "개금동",
+    "address": "부산광역시 부산진구 백양대로300번길 19,20",
+    "households": 2510,
+    "lat": 35.1562067,
+    "lng": 129.0177338,
+    "popularity": {
+      "score": 0.79744003,
+      "rank": 0.97382199,
+      "level": 5,
+      "color": "#d92f4c"
+    }
+  },
+  {
+    "id": "22866d4e6a3d6d2d",
+    "name": "모라주공3단지",
+    "district": "사상구",
+    "neighborhood": "모라동",
+    "address": "부산광역시 사상구 모라로192번길 20-21",
+    "households": 2385,
+    "lat": 35.182932,
+    "lng": 128.9990679,
+    "popularity": {
+      "score": 0.68454101,
+      "rank": 0.84293194,
+      "level": 5,
+      "color": "#d92f4c"
+    }
+  },
+  {
+    "id": "afc967737090f7b8",
+    "name": "해운대힐스테이트위브",
+    "district": "해운대구",
+    "neighborhood": "중동",
+    "address": "부산광역시 해운대구 좌동순환로433번길 30 (중동, 해운대힐스테이트위브)",
+    "households": 2369,
+    "lat": 35.1615929,
+    "lng": 129.1810028,
+    "popularity": {
+      "score": 0.40908813,
+      "rank": 0.29319372,
+      "level": 2,
+      "color": "#fde9ed"
+    }
+  },
+  {
+    "id": "c31d23f5ee6701dd",
+    "name": "대연힐스테이트푸르지오",
+    "district": "남구",
+    "neighborhood": "대연동",
+    "address": "부산광역시 남구 수영로 345",
+    "households": 2304,
+    "lat": 35.1422158,
+    "lng": 129.1010779,
+    "popularity": {
+      "score": 0.72432451,
+      "rank": 0.89790576,
+      "level": 5,
+      "color": "#d92f4c"
+    }
+  },
+  {
+    "id": "dbcead096b2114b4",
+    "name": "연산엘지아파트",
+    "district": "연제구",
+    "neighborhood": "연산동",
+    "address": "부산광역시 연제구 고분로 200 (연산동, 연산엘지아파트)",
+    "households": 2302,
+    "lat": 35.18486,
+    "lng": 129.1031995,
+    "popularity": {
+      "score": 0.60062438,
+      "rank": 0.70157068,
+      "level": 4,
+      "color": "#ec7e91"
+    }
+  },
+  {
+    "id": "addde5d17fdb23e1",
+    "name": "아시아선수촌아파트",
+    "district": "해운대구",
+    "neighborhood": "반여동",
+    "address": "부산광역시 해운대구 선수촌로 122 (반여동, 아시아선수촌아파트)",
+    "households": 2290,
+    "lat": 35.203005,
+    "lng": 129.1215293,
+    "popularity": {
+      "score": 0.75118636,
+      "rank": 0.93717277,
+      "level": 5,
+      "color": "#d92f4c"
+    }
+  },
+  {
+    "id": "7355b18713285e0b",
+    "name": "백양산롯데 캐슬골드센트럴아파트",
+    "district": "부산진구",
+    "neighborhood": "부암동",
+    "address": "부산진구 백양순환로 75",
+    "households": 2195,
+    "lat": 35.1724943,
+    "lng": 129.0358595,
+    "popularity": {
+      "score": 0.61820708,
+      "rank": 0.73560209,
+      "level": 4,
+      "color": "#ec7e91"
+    }
+  },
+  {
+    "id": "388be21eab775115",
+    "name": "다대포현대아파트",
+    "district": "사하구",
+    "neighborhood": "다대동",
+    "address": "부산광역시 사하구 다대로 473(다대동, 다대포현대아파트)",
+    "households": 2181,
+    "lat": 35.0611812,
+    "lng": 128.9783573,
+    "popularity": {
+      "score": 0.69397146,
+      "rank": 0.85078534,
+      "level": 5,
+      "color": "#d92f4c"
+    }
+  },
+  {
+    "id": "4ebaaffaf9128a4a",
+    "name": "서면아이파크",
+    "district": "부산진구",
+    "neighborhood": "전포동",
+    "address": "부산광역시 부산진구 동성로 50",
+    "households": 2144,
+    "lat": 35.1563919,
+    "lng": 129.069877,
+    "popularity": {
+      "score": 0.6656121,
+      "rank": 0.80366492,
+      "level": 5,
+      "color": "#d92f4c"
+    }
+  },
+  {
+    "id": "0ce51a8342a3fe2f",
+    "name": "삼환아파트",
+    "district": "사하구",
+    "neighborhood": "다대동",
+    "address": "부산광역시 사하구 다대로429번길 20(다대동, 삼환아파트)",
+    "households": 2107,
+    "lat": 35.0621262,
+    "lng": 128.9809653,
+    "popularity": {
+      "score": 0.72744411,
+      "rank": 0.90052356,
+      "level": 5,
+      "color": "#d92f4c"
+    }
+  },
+  {
+    "id": "31ba026a5e9686b5",
+    "name": "동삼그린힐아파트(3단지, 4단지)",
+    "district": "영도구",
+    "neighborhood": "동삼동",
+    "address": "부산광역시 영도구 상리로 1 (동삼동, 동삼그린힐아파트)",
+    "households": 2088,
+    "lat": 35.0864091,
+    "lng": 129.0682196,
+    "popularity": {
+      "score": 0.50028734,
+      "rank": 0.51832461,
+      "level": 3,
+      "color": "#f7c2cc"
+    }
+  },
+  {
+    "id": "e1ac358fd9c1a193",
+    "name": "명륜2차아이파크",
+    "district": "동래구",
+    "neighborhood": "명륜동",
+    "address": "부산광역시 동래구 시실로 49",
+    "households": 2058,
+    "lat": 35.2159315,
+    "lng": 129.0891364,
+    "popularity": {
+      "score": 0.43641537,
+      "rank": 0.36910995,
+      "level": 2,
+      "color": "#fde9ed"
+    }
+  },
+  {
+    "id": "cfc06a3396feedb0",
+    "name": "두산위브더제니스하버시티",
+    "district": "동구",
+    "neighborhood": "범일동",
+    "address": "부산광역시 동구 범일로 21",
+    "households": 2040,
+    "lat": 35.1321758,
+    "lng": 129.0576463,
+    "popularity": {
+      "score": 0.46018887,
+      "rank": 0.41623037,
+      "level": 3,
+      "color": "#f7c2cc"
+    }
+  },
+  {
+    "id": "55e8008aa57c4306",
+    "name": "망미주공",
+    "district": "연제구",
+    "neighborhood": "연산동",
+    "address": "부산광역시 연제구 토현로 10 (연산동, 주공아파트)",
+    "households": 2038,
+    "lat": 35.1785171,
+    "lng": 129.1110554,
+    "popularity": {
+      "score": 0.78877282,
+      "rank": 0.96596859,
+      "level": 5,
+      "color": "#d92f4c"
+    }
+  },
+  {
+    "id": "bc4667cc0625e4fe",
+    "name": "동원로얄듀크",
+    "district": "사하구",
+    "neighborhood": "장림동",
+    "address": "부산광역시 사하구 하신중앙로 2(장림동, 동원로얄듀크)",
+    "households": 1973,
+    "lat": 35.0781485,
+    "lng": 128.9648456,
+    "popularity": {
+      "score": 0.47394978,
+      "rank": 0.46335079,
+      "level": 3,
+      "color": "#f7c2cc"
+    }
+  },
+  {
+    "id": "4dd88f1be601817b",
+    "name": "이편한세상 금정산",
+    "district": "북구",
+    "neighborhood": "만덕동",
+    "address": "부산광역시 북구 상학로 36 (만덕동, 이편한세상 금정산)",
+    "households": 1969,
+    "lat": 35.2169967,
+    "lng": 129.0384361,
+    "popularity": {
+      "score": 0.85703381,
+      "rank": 0.9895288,
+      "level": 5,
+      "color": "#d92f4c"
+    }
+  },
+  {
+    "id": "9bf0e9860bf9f8f4",
+    "name": "주공 영구임대아파트(2단지)(LH 한국토지주택공사)",
+    "district": "영도구",
+    "neighborhood": "동삼동",
+    "address": "부산광역시 영도구 상리로 1 (동삼동, 주공아파트 2단지)",
+    "households": 1968,
+    "lat": 35.0864091,
+    "lng": 129.0682196,
+    "popularity": {
+      "score": 0.40593958,
+      "rank": 0.27486911,
+      "level": 2,
+      "color": "#fde9ed"
+    }
+  },
+  {
+    "id": "eba661813476291e",
+    "name": "주례럭키",
+    "district": "사상구",
+    "neighborhood": "주례동",
+    "address": "부산광역시 사상구 가야대로284번길 12",
+    "households": 1963,
+    "lat": 35.1478193,
+    "lng": 129.0032931,
+    "popularity": {
+      "score": 0.40158603,
+      "rank": 0.2617801,
+      "level": 2,
+      "color": "#fde9ed"
+    }
+  },
+  {
+    "id": "611edd143706fd67",
+    "name": "화명동 롯데아파트 낙천대",
+    "district": "북구",
+    "neighborhood": "화명동",
+    "address": "부산광역시 북구 화명신도시로 156 (화명동, 롯데아파트낙천대)",
+    "households": 1950,
+    "lat": 35.2378268,
+    "lng": 129.0125412,
+    "popularity": {
+      "score": 0.9117083,
+      "rank": 1,
+      "level": 5,
+      "color": "#d92f4c"
+    }
+  },
+  {
+    "id": "d019492aa1f77046",
+    "name": "래미안장전",
+    "district": "금정구",
+    "neighborhood": "장전동",
+    "address": "부산광역시 금정구 금정로 20",
+    "households": 1938,
+    "lat": 35.2259724,
+    "lng": 129.0871177,
+    "popularity": {
+      "score": 0.7351757,
+      "rank": 0.91361257,
+      "level": 5,
+      "color": "#d92f4c"
+    }
+  },
+  {
+    "id": "673cdd53b72bbc06",
+    "name": "금곡4단지주공아파트",
+    "district": "북구",
+    "neighborhood": "금곡동",
+    "address": "부산광역시 북구 효열로 76 (금곡동, 금곡4단지주공아파트)",
+    "households": 1937,
+    "lat": 35.2532673,
+    "lng": 129.0146839,
+    "popularity": {
+      "score": 0.62944687,
+      "rank": 0.7513089,
+      "level": 4,
+      "color": "#ec7e91"
+    }
+  },
+  {
+    "id": "909d270b4a6b060a",
+    "name": "정관LH7단지",
+    "district": "기장군",
+    "neighborhood": "정관읍",
+    "address": "부산광역시 기장군 정관읍 모전로 41",
+    "households": 1934,
+    "lat": 35.3384971,
+    "lng": 129.1681914,
+    "popularity": {
+      "score": 0.60693936,
+      "rank": 0.71465969,
+      "level": 4,
+      "color": "#ec7e91"
+    }
+  },
+  {
+    "id": "42b85b073b9a08a8",
+    "name": "구서롯데캐슬2단지",
+    "district": "금정구",
+    "neighborhood": "구서동",
+    "address": "부산광역시 금정구 금강로 503 (구서동, 롯데캐슬골드2단지)",
+    "households": 1926,
+    "lat": 35.2506004,
+    "lng": 129.0861771,
+    "popularity": {
+      "score": 0.45090776,
+      "rank": 0.40314136,
+      "level": 3,
+      "color": "#f7c2cc"
+    }
+  },
+  {
+    "id": "d6d85ae67500a471",
+    "name": "다대4지구도개공영구임대아파트",
+    "district": "사하구",
+    "neighborhood": "다대동",
+    "address": "부산광역시 사하구 다송로 59(다대동, 다대4지구도개공영구임대아파트)",
+    "households": 1920,
+    "lat": 35.0621031,
+    "lng": 128.9852252,
+    "popularity": {
+      "score": 0.60432723,
+      "rank": 0.71204188,
+      "level": 4,
+      "color": "#ec7e91"
+    }
+  },
+  {
+    "id": "f494fad7a82fcc17",
+    "name": "양정현대2차",
+    "district": "부산진구",
+    "neighborhood": "양정동",
+    "address": "부산광역시 부산진구 거제대로 37",
+    "households": 1901,
+    "lat": 35.1719652,
+    "lng": 129.0649166,
+    "popularity": {
+      "score": 0.59193976,
+      "rank": 0.67801047,
+      "level": 4,
+      "color": "#ec7e91"
+    }
+  },
+  {
+    "id": "73a756b07d5e4ff3",
+    "name": "안락SK 1차",
+    "district": "동래구",
+    "neighborhood": "안락동",
+    "address": "부산광역시 동래구 충렬대로 487",
+    "households": 1898,
+    "lat": 35.1959826,
+    "lng": 129.1115735,
+    "popularity": {
+      "score": 0.73552077,
+      "rank": 0.91623037,
+      "level": 5,
+      "color": "#d92f4c"
+    }
+  },
+  {
+    "id": "ee365b2fec8bb761",
+    "name": "대림·쌍용강변타운",
+    "district": "북구",
+    "neighborhood": "화명동",
+    "address": "부산광역시 북구 화명신도시로 39 (화명동, 대림쌍용강변타운)",
+    "households": 1895,
+    "lat": 35.2272699,
+    "lng": 129.0083722,
+    "popularity": {
+      "score": 0.67143396,
+      "rank": 0.81413613,
+      "level": 5,
+      "color": "#d92f4c"
+    }
+  },
+  {
+    "id": "45b410c5944ec9e8",
+    "name": "엄궁롯데캐슬리버",
+    "district": "사상구",
+    "neighborhood": "엄궁동",
+    "address": "부산광역시 사상구 엄궁북로 61(401∼404), 62(101∼302)",
+    "households": 1852,
+    "lat": 35.1281653,
+    "lng": 128.9773169,
+    "popularity": {
+      "score": 0.67361643,
+      "rank": 0.82198953,
+      "level": 5,
+      "color": "#d92f4c"
+    }
+  },
+  {
+    "id": "e35ca985316f8cc1",
+    "name": "엘지아파트",
+    "district": "해운대구",
+    "neighborhood": "좌동",
+    "address": "부산광역시 해운대구 대천로103번길 61 (좌동, 엘지아파트)",
+    "households": 1848,
+    "lat": 35.1811467,
+    "lng": 129.1736239,
+    "popularity": {
+      "score": 0.85227026,
+      "rank": 0.98691099,
+      "level": 5,
+      "color": "#d92f4c"
+    }
+  },
+  {
+    "id": "4f740976c15e7966",
+    "name": "하단동에스케이뷰아파트",
+    "district": "사하구",
+    "neighborhood": "하단동",
+    "address": "부산광역시 사하구 하신번영로 400(하단동, 하단동에스케이뷰아파트)",
+    "households": 1828,
+    "lat": 35.1181663,
+    "lng": 128.9617442,
+    "popularity": {
+      "score": 0.67478317,
+      "rank": 0.82722513,
+      "level": 5,
+      "color": "#d92f4c"
+    }
+  },
+  {
+    "id": "df244af3d58b9633",
+    "name": "화승삼성아파트",
+    "district": "부산진구",
+    "neighborhood": "부암동",
+    "address": "부산광역시 부산진구 당감로 79, 80",
+    "households": 1812,
+    "lat": 35.169001,
+    "lng": 129.0375119,
+    "popularity": {
+      "score": 0.79553367,
+      "rank": 0.97120419,
+      "level": 5,
+      "color": "#d92f4c"
+    }
+  },
+  {
+    "id": "5964cedf823f271b",
+    "name": "해운대두산위브더제니스",
+    "district": "해운대구",
+    "neighborhood": "우동",
+    "address": "부산광역시 해운대구 마린시티2로 33 (우동, 해운대두산위브더제니스)",
+    "households": 1788,
+    "lat": 35.156667,
+    "lng": 129.1450909,
+    "popularity": {
+      "score": 0.64906066,
+      "rank": 0.78010471,
+      "level": 4,
+      "color": "#ec7e91"
+    }
+  },
+  {
+    "id": "8db05227ba1b3add",
+    "name": "수정강변타운",
+    "district": "북구",
+    "neighborhood": "화명동",
+    "address": "부산광역시 북구 학사로17번길 31 (화명동, 수정강변타운)",
+    "households": 1780,
+    "lat": 35.2219756,
+    "lng": 129.0067295,
+    "popularity": {
+      "score": 0.64793159,
+      "rank": 0.77748691,
+      "level": 4,
+      "color": "#ec7e91"
+    }
+  },
+  {
+    "id": "4d6df9092b27ef2e",
+    "name": "가야벽산",
+    "district": "부산진구",
+    "neighborhood": "가야동",
+    "address": "부산광역시 부산진구 엄광로 122",
+    "households": 1772,
+    "lat": 35.1474637,
+    "lng": 129.0281269,
+    "popularity": {
+      "score": 0.51774659,
+      "rank": 0.53926702,
+      "level": 3,
+      "color": "#f7c2cc"
+    }
+  },
+  {
+    "id": "b017e16322e492bd",
+    "name": "정관 동일스위트 1차",
+    "district": "기장군",
+    "neighborhood": "정관읍",
+    "address": "부산광역시 기장군 정관읍 정관4로 24",
+    "households": 1758,
+    "lat": 35.3243552,
+    "lng": 129.1696997,
+    "popularity": {
+      "score": 0.74397053,
+      "rank": 0.93193717,
+      "level": 5,
+      "color": "#d92f4c"
+    }
+  },
+  {
+    "id": "ca0e6998a2412ffe",
+    "name": "더샵파크시티",
+    "district": "연제구",
+    "neighborhood": "연산동",
+    "address": "부산광역시 연제구 안연로 33 (연산동, 더샵 파크시티)",
+    "households": 1758,
+    "lat": 35.1910855,
+    "lng": 129.0975154,
+    "popularity": {
+      "score": 0.59328171,
+      "rank": 0.68324607,
+      "level": 4,
+      "color": "#ec7e91"
+    }
+  },
+  {
+    "id": "43e805a9a9227035",
+    "name": "가락타운1단지",
+    "district": "사하구",
+    "neighborhood": "하단동",
+    "address": "부산광역시 사하구 하신번영로 365(하단동, 가락타운1단지)",
+    "households": 1746,
+    "lat": 35.1127384,
+    "lng": 128.9590502,
+    "popularity": {
+      "score": 0.34782873,
+      "rank": 0.18586387,
+      "level": 1,
+      "color": "#ffffff"
+    }
+  },
+  {
+    "id": "e14c895352ef3fae",
+    "name": "구포현대아파트",
+    "district": "북구",
+    "neighborhood": "구포동",
+    "address": "부산광역시 북구 백양대로 1003 (구포동, 현대아파트)",
+    "households": 1741,
+    "lat": 35.196999,
+    "lng": 128.9930759,
+    "popularity": {
+      "score": 0.52781689,
+      "rank": 0.56020942,
+      "level": 3,
+      "color": "#f7c2cc"
+    }
+  },
+  {
+    "id": "b528b90b1515f3b2",
+    "name": "양정현대1차",
+    "district": "부산진구",
+    "neighborhood": "양정동",
+    "address": "부산광역시 부산진구 동평로 352",
+    "households": 1733,
+    "lat": 35.1733576,
+    "lng": 129.0632962,
+    "popularity": {
+      "score": 0.76181756,
+      "rank": 0.94764398,
+      "level": 5,
+      "color": "#d92f4c"
+    }
+  },
+  {
+    "id": "6f31fef46954c22e",
+    "name": "구서롯데캐슬1단지",
+    "district": "금정구",
+    "neighborhood": "구서동",
+    "address": "부산광역시 금정구 금강로 502 (구서동, 롯데캐슬골드1단지)",
+    "households": 1728,
+    "lat": 35.2514818,
+    "lng": 129.088661,
+    "popularity": {
+      "score": 0.698104,
+      "rank": 0.85602094,
+      "level": 5,
+      "color": "#d92f4c"
+    }
+  },
+  {
+    "id": "82fe0efbd7e903d5",
+    "name": "데시앙해링턴",
+    "district": "남구",
+    "neighborhood": "용호동",
+    "address": "부산광역시 남구 용주로 36",
+    "households": 1725,
+    "lat": 35.1117277,
+    "lng": 129.1126846,
+    "popularity": {
+      "score": 0.75227437,
+      "rank": 0.93979058,
+      "level": 5,
+      "color": "#d92f4c"
+    }
+  },
+  {
+    "id": "dc55ad7cad939e7c",
+    "name": "SK VIEW(주공 3단지)",
+    "district": "해운대구",
+    "neighborhood": "좌동",
+    "address": "부산광역시 해운대구 청사포로 12 (좌동, 에스케이뷰아파트)",
+    "households": 1721,
+    "lat": 35.1656657,
+    "lng": 129.1827032,
+    "popularity": {
+      "score": 0.71044356,
+      "rank": 0.87696335,
+      "level": 5,
+      "color": "#d92f4c"
+    }
+  },
+  {
+    "id": "bed5134257a102ce",
+    "name": "반송영구임대아파트(반송주공아파트)",
+    "district": "해운대구",
+    "neighborhood": "반송동",
+    "address": "부산광역시 해운대구 신반송로 200 (반송동, 주공아파트)",
+    "households": 1710,
+    "lat": 35.2323125,
+    "lng": 129.1585726,
+    "popularity": {
+      "score": 0.62300339,
+      "rank": 0.7434555,
+      "level": 4,
+      "color": "#ec7e91"
+    }
+  },
+  {
+    "id": "02cc269fbbeca45c",
+    "name": "동부올림픽타운",
+    "district": "해운대구",
+    "neighborhood": "우동",
+    "address": "부산광역시 해운대구 해운대로 428 (우동, 동부올림픽타운)",
+    "households": 1680,
+    "lat": 35.1659184,
+    "lng": 129.1402171,
+    "popularity": {
+      "score": 0.44682578,
+      "rank": 0.39267016,
+      "level": 2,
+      "color": "#fde9ed"
+    }
+  },
+  {
+    "id": "7e69b3f1792cb246",
+    "name": "금정산엘에이치뉴웰시티",
+    "district": "북구",
+    "neighborhood": "만덕동",
+    "address": "부산광역시 북구 상학로 35 (만덕동, 금정산엘에이치뉴웰시티)",
+    "households": 1677,
+    "lat": 35.2150267,
+    "lng": 129.0371776,
+    "popularity": {
+      "score": 0.47336154,
+      "rank": 0.46073298,
+      "level": 3,
+      "color": "#f7c2cc"
+    }
+  },
+  {
+    "id": "35c9c32ddbbd1a6a",
+    "name": "도시몰운대아파트",
+    "district": "사하구",
+    "neighborhood": "다대동",
+    "address": "부산광역시 사하구 다대낙조2길 14(다대동, 도시몰운대아파트)",
+    "households": 1669,
+    "lat": 35.0520178,
+    "lng": 128.9686686,
+    "popularity": {
+      "score": 0.59650197,
+      "rank": 0.69895288,
+      "level": 4,
+      "color": "#ec7e91"
+    }
+  },
+  {
+    "id": "891a7fb164db3aba",
+    "name": "명지 협성휴포레",
+    "district": "강서구",
+    "neighborhood": "명지동",
+    "address": "부산광역시 강서구 명지국제5로 141 (명지동, 협성휴포레)",
+    "households": 1664,
+    "lat": 35.1062277,
+    "lng": 128.9202218,
+    "popularity": {
+      "score": 0.70396701,
+      "rank": 0.86387435,
+      "level": 5,
+      "color": "#d92f4c"
+    }
+  },
+  {
+    "id": "37a6cc40ca0cf1dd",
+    "name": "힐스테이트 연산 1, 2단지",
+    "district": "연제구",
+    "neighborhood": "연산동",
+    "address": "부산광역시 연제구 봉수로 2, 25(연산동)",
+    "households": 1651,
+    "lat": 35.1736603,
+    "lng": 129.0891812,
+    "popularity": {
+      "score": 0.6519361,
+      "rank": 0.78534031,
+      "level": 4,
+      "color": "#ec7e91"
+    }
+  },
+  {
+    "id": "308044f1f58cc6e3",
+    "name": "두산위브더제니스센트럴사하",
+    "district": "사하구",
+    "neighborhood": "장림동",
+    "address": "부산광역시 사하구 장림로 199 (장림동, 두산위브더제니스센트럴사하)",
+    "households": 1643,
+    "lat": 35.0835025,
+    "lng": 128.9701581,
+    "popularity": {
+      "score": 0.63062706,
+      "rank": 0.7565445,
+      "level": 4,
+      "color": "#ec7e91"
+    }
+  },
+  {
+    "id": "88c63f0cf929a2d1",
+    "name": "정관 동일스위트2차",
+    "district": "기장군",
+    "neighborhood": "정관읍",
+    "address": "부산광역시 기장군 정관읍 정관3로 23",
+    "households": 1638,
+    "lat": 35.3301476,
+    "lng": 129.1656897,
+    "popularity": {
+      "score": 0.74150418,
+      "rank": 0.92408377,
+      "level": 5,
+      "color": "#d92f4c"
+    }
+  },
+  {
+    "id": "9ce5dbdb21425cd0",
+    "name": "해운대아이파크",
+    "district": "해운대구",
+    "neighborhood": "우동",
+    "address": "부산광역시 해운대구 마린시티2로 38 (우동, 해운대아이파크)",
+    "households": 1631,
+    "lat": 35.1565821,
+    "lng": 129.1425875,
+    "popularity": {
+      "score": 0.63054986,
+      "rank": 0.7539267,
+      "level": 4,
+      "color": "#ec7e91"
+    }
+  },
+  {
+    "id": "96b80aa089d6af16",
+    "name": "화명동원로얄듀크",
+    "district": "북구",
+    "neighborhood": "화명동",
+    "address": "부산광역시 북구 금곡대로 228 (화명동, 동원로얄듀크)",
+    "households": 1627,
+    "lat": 35.2282927,
+    "lng": 129.0142986,
+    "popularity": {
+      "score": 0.71114695,
+      "rank": 0.87958115,
+      "level": 5,
+      "color": "#d92f4c"
+    }
+  },
+  {
+    "id": "edc6b5bc313ca883",
+    "name": "모라우신",
+    "district": "사상구",
+    "neighborhood": "모라동",
+    "address": "부산광역시 사상구 백양대로 880",
+    "households": 1620,
+    "lat": 35.1843799,
+    "lng": 128.9915986,
+    "popularity": {
+      "score": 0.7372808,
+      "rank": 0.91884817,
+      "level": 5,
+      "color": "#d92f4c"
+    }
+  },
+  {
+    "id": "a5b3e1f2588cbd80",
+    "name": "연산자이",
+    "district": "연제구",
+    "neighborhood": "연산동",
+    "address": "부산광역시 연제구 과정로343번길 43 (연산동, 연산 자이)",
+    "households": 1598,
+    "lat": 35.1887655,
+    "lng": 129.0890537,
+    "popularity": {
+      "score": 0.71927465,
+      "rank": 0.89267016,
+      "level": 5,
+      "color": "#d92f4c"
+    }
+  },
+  {
+    "id": "4210de0f19950ce3",
+    "name": "사상중흥S-클래스그랜드센트럴",
+    "district": "사상구",
+    "neighborhood": "덕포동",
+    "address": "부산광역시 사상구 사상로 300",
+    "households": 1572,
+    "lat": 35.1709792,
+    "lng": 128.9842602,
+    "popularity": {
+      "score": 0.29280078,
+      "rank": 0.11518325,
+      "level": 1,
+      "color": "#ffffff"
+    }
+  },
+  {
+    "id": "bd26cc9f08e01731",
+    "name": "해운대메가센텀한화꿈에그린",
+    "district": "해운대구",
+    "neighborhood": "반여동",
+    "address": "부산광역시 해운대구 반여로 67 (반여동, 해운대메가센텀한화꿈에그린아파트)",
+    "households": 1564,
+    "lat": 35.1987105,
+    "lng": 129.1202572,
+    "popularity": {
+      "score": 0.77060145,
+      "rank": 0.95287958,
+      "level": 5,
+      "color": "#d92f4c"
+    }
+  },
+  {
+    "id": "5c197e106168b729",
+    "name": "럭키",
+    "district": "동래구",
+    "neighborhood": "온천동",
+    "address": "부산광역시 동래구 충렬대로107번길 54",
+    "households": 1536,
+    "lat": 35.2086542,
+    "lng": 129.0748927,
+    "popularity": {
+      "score": 0.68415682,
+      "rank": 0.84031414,
+      "level": 5,
+      "color": "#d92f4c"
+    }
+  },
+  {
+    "id": "ea9b598bc99fd433",
+    "name": "정관휴먼시아1단지",
+    "district": "기장군",
+    "neighborhood": "정관읍",
+    "address": "부산광역시 기장군 정관읍 정관4로 23",
+    "households": 1533,
+    "lat": 35.3267344,
+    "lng": 129.1679492,
+    "popularity": {
+      "score": 0.66755241,
+      "rank": 0.80890052,
+      "level": 5,
+      "color": "#d92f4c"
+    }
+  },
+  {
+    "id": "9c802984784e95e8",
+    "name": "더샵 명지퍼스트월드 3단지",
+    "district": "강서구",
+    "neighborhood": "명지동",
+    "address": "부산광역시 강서구 명지국제2로 41 (명지동, 더샵 명지퍼스트월드 3단지)",
+    "households": 1530,
+    "lat": 35.0953046,
+    "lng": 128.9061687,
+    "popularity": {
+      "score": 0.69684782,
+      "rank": 0.85340314,
+      "level": 5,
+      "color": "#d92f4c"
+    }
+  },
+  {
+    "id": "3e3e780475f8a6a9",
+    "name": "명지화전 우방아이유쉘",
+    "district": "강서구",
+    "neighborhood": "화전동",
+    "address": "부산광역시 강서구 화전산단4로 74 (화전동, 우방아이유쉘)",
+    "households": 1515,
+    "lat": 35.1100848,
+    "lng": 128.8867252,
+    "popularity": {
+      "score": 0.57769763,
+      "rank": 0.64921466,
+      "level": 4,
+      "color": "#ec7e91"
+    }
+  },
+  {
+    "id": "077c5369eb6724a7",
+    "name": "덕천주공2단지아파트",
+    "district": "북구",
+    "neighborhood": "덕천동",
+    "address": "부산광역시 북구 덕천로 74 (덕천동, 주공2단지아파트)",
+    "households": 1507,
+    "lat": 35.2090508,
+    "lng": 129.0156077,
+    "popularity": {
+      "score": 0.38675876,
+      "rank": 0.23298429,
+      "level": 2,
+      "color": "#fde9ed"
+    }
+  },
+  {
+    "id": "27aaa6c93533c3ff",
+    "name": "정관 동일스위트3차",
+    "district": "기장군",
+    "neighborhood": "정관읍",
+    "address": "부산광역시 기장군 정관읍 모전1길 9",
+    "households": 1500,
+    "lat": 35.3371408,
+    "lng": 129.1661813,
+    "popularity": {
+      "score": 0.72756829,
+      "rank": 0.90575916,
+      "level": 5,
+      "color": "#d92f4c"
+    }
+  },
+  {
+    "id": "9690a7893fce1933",
+    "name": "센텀대림아파트(삼해대림타운)",
+    "district": "해운대구",
+    "neighborhood": "반여동",
+    "address": "부산광역시 해운대구 선수촌로 95 (반여동, 센텀대림아파트)",
+    "households": 1500,
+    "lat": 35.2004854,
+    "lng": 129.1183034,
+    "popularity": {
+      "score": 0.46712369,
+      "rank": 0.43717277,
+      "level": 3,
+      "color": "#f7c2cc"
+    }
+  },
+  {
+    "id": "0e7aed59aaa65f44",
+    "name": "W",
+    "district": "남구",
+    "neighborhood": "용호동",
+    "address": "부산광역시 남구 분포로 145",
+    "households": 1488,
+    "lat": 35.1337125,
+    "lng": 129.1126448,
+    "popularity": {
+      "score": 0.52031349,
+      "rank": 0.54712042,
+      "level": 3,
+      "color": "#f7c2cc"
+    }
+  },
+  {
+    "id": "77d2e8eac72a5bf1",
+    "name": "금곡3단지주공아파트",
+    "district": "북구",
+    "neighborhood": "금곡동",
+    "address": "부산광역시 북구 효열로220번길 23 (금곡동, 금곡3단지주공아파트)",
+    "households": 1484,
+    "lat": 35.2644042,
+    "lng": 129.0219071,
+    "popularity": {
+      "score": 0.47540461,
+      "rank": 0.47120419,
+      "level": 3,
+      "color": "#f7c2cc"
+    }
+  },
+  {
+    "id": "b01a4036e89979d8",
+    "name": "만덕그린코아아파트",
+    "district": "북구",
+    "neighborhood": "만덕동",
+    "address": "부산광역시 북구 덕천로234번길 47 (만덕동, 그린코아아파트)",
+    "households": 1468,
+    "lat": 35.2074086,
+    "lng": 129.0301347,
+    "popularity": {
+      "score": 0.59330228,
+      "rank": 0.68586387,
+      "level": 4,
+      "color": "#ec7e91"
+    }
+  },
+  {
+    "id": "2c8d738b52aba0b3",
+    "name": "금곡2단지주공아파트",
+    "district": "북구",
+    "neighborhood": "금곡동",
+    "address": "부산광역시 북구 금곡대로616번길 10-9 (금곡동, 금곡2단지주공아파트)",
+    "households": 1460,
+    "lat": 35.2609,
+    "lng": 129.0152624,
+    "popularity": {
+      "score": 0.6594754,
+      "rank": 0.79842932,
+      "level": 4,
+      "color": "#ec7e91"
+    }
+  },
+  {
+    "id": "2c69a92f47fd2aca",
+    "name": "연산한양",
+    "district": "연제구",
+    "neighborhood": "연산동",
+    "address": "부산광역시 연제구 온천천남로 110 (연산동, 한양아파트)",
+    "households": 1452,
+    "lat": 35.1897179,
+    "lng": 129.1055957,
+    "popularity": {
+      "score": 0.80580006,
+      "rank": 0.98167539,
+      "level": 5,
+      "color": "#d92f4c"
+    }
+  },
+  {
+    "id": "ec7887326e81072c",
+    "name": "개금현대I(아이)",
+    "district": "부산진구",
+    "neighborhood": "개금동",
+    "address": "부산광역시 부산진구 복지로 70",
+    "households": 1424,
+    "lat": 35.1474575,
+    "lng": 129.0196337,
+    "popularity": {
+      "score": 0.79211865,
+      "rank": 0.96858639,
+      "level": 5,
+      "color": "#d92f4c"
+    }
+  },
+  {
+    "id": "b4aaa7276ab77cfc",
+    "name": "대림아파트(1차)",
+    "district": "해운대구",
+    "neighborhood": "좌동",
+    "address": "부산광역시 해운대구 대천로103번길 47 (좌동, 대림1차아파트)",
+    "households": 1424,
+    "lat": 35.178977,
+    "lng": 129.1733101,
+    "popularity": {
+      "score": 0.86543913,
+      "rank": 0.9921466,
+      "level": 5,
+      "color": "#d92f4c"
+    }
+  },
+  {
+    "id": "2d1e20abef14b9c6",
+    "name": "대연파크푸르지오",
+    "district": "남구",
+    "neighborhood": "대연동",
+    "address": "부산광역시 남구 홍곡로 360",
+    "households": 1422,
+    "lat": 35.1252547,
+    "lng": 129.090075,
+    "popularity": {
+      "score": 0.71283987,
+      "rank": 0.88481675,
+      "level": 5,
+      "color": "#d92f4c"
+    }
+  },
+  {
+    "id": "95383f479a508eec",
+    "name": "두산1차아파트",
+    "district": "해운대구",
+    "neighborhood": "좌동",
+    "address": "부산광역시 해운대구 양운로 182 (좌동, 두산1차아파트)",
+    "households": 1422,
+    "lat": 35.1802354,
+    "lng": 129.170284,
+    "popularity": {
+      "score": 0.58502959,
+      "rank": 0.66492147,
+      "level": 4,
+      "color": "#ec7e91"
+    }
+  },
+  {
+    "id": "f811a91855a6b5e8",
+    "name": "안락뜨란채2단지",
+    "district": "동래구",
+    "neighborhood": "안락동",
+    "address": "부산광역시 동래구 연안로 74",
+    "households": 1420,
+    "lat": 35.1927377,
+    "lng": 129.1096267,
+    "popularity": {
+      "score": 0.67419226,
+      "rank": 0.82460733,
+      "level": 5,
+      "color": "#d92f4c"
+    }
+  },
+  {
+    "id": "49321ab4da2a0b18",
+    "name": "명륜현대아이파크",
+    "district": "동래구",
+    "neighborhood": "명륜동",
+    "address": "부산광역시 동래구 명륜로 170",
+    "households": 1409,
+    "lat": 35.2091033,
+    "lng": 129.0834006,
+    "popularity": {
+      "score": 0.73486982,
+      "rank": 0.91099476,
+      "level": 5,
+      "color": "#d92f4c"
+    }
+  },
+  {
+    "id": "2a077c64a74b03ef",
+    "name": "경남한신",
+    "district": "금정구",
+    "neighborhood": "부곡동",
+    "address": "부산광역시 금정구 중앙대로1685번길 22 (부곡동)",
+    "households": 1408,
+    "lat": 35.2351655,
+    "lng": 129.0906584,
+    "popularity": {
+      "score": 0.38153104,
+      "rank": 0.22251309,
+      "level": 2,
+      "color": "#fde9ed"
+    }
+  },
+  {
+    "id": "3be87b26476fe74c",
+    "name": "더샵 명지퍼스트월드 2단지",
+    "district": "강서구",
+    "neighborhood": "명지동",
+    "address": "부산광역시 강서구 명지국제7로 37 (명지동, 더샵 명지퍼스트월드 2단지)",
+    "households": 1406,
+    "lat": 35.0989136,
+    "lng": 128.9060116,
+    "popularity": {
+      "score": 0.58869903,
+      "rank": 0.67015707,
+      "level": 4,
+      "color": "#ec7e91"
+    }
+  },
+  {
+    "id": "9643a4613522767f",
+    "name": "e편한세상 시민공원 아파트",
+    "district": "부산진구",
+    "neighborhood": "전포동",
+    "address": "부산광역시 부산진구 전포동 15-2",
+    "households": 1401,
+    "lat": 35.165165,
+    "lng": 129.0680518,
+    "popularity": {
+      "score": 0.3811157,
+      "rank": 0.21989529,
+      "level": 2,
+      "color": "#fde9ed"
+    }
+  },
+  {
+    "id": "ea689a03687c9386",
+    "name": "서면롯데캐슬스카이",
+    "district": "부산진구",
+    "neighborhood": "전포동",
+    "address": "부산광역시 부산진구 전포대로275번길 20",
+    "households": 1395,
+    "lat": 35.162153,
+    "lng": 129.0642218,
+    "popularity": {
+      "score": 0.53565524,
+      "rank": 0.57068063,
+      "level": 3,
+      "color": "#f7c2cc"
+    }
+  },
+  {
+    "id": "53e34a9971a4dca0",
+    "name": "부산신호사랑으로부영2차",
+    "district": "강서구",
+    "neighborhood": "",
+    "address": "신호산단4로 27 (신호동, 부산신호사랑으로부영2차)",
+    "households": 1388,
+    "lat": 35.0868856,
+    "lng": 128.8751572,
+    "popularity": {
+      "score": 0.6308694,
+      "rank": 0.7591623,
+      "level": 4,
+      "color": "#ec7e91"
+    }
+  },
+  {
+    "id": "d01e7d592e282601",
+    "name": "더비치푸르지오써밋",
+    "district": "남구",
+    "neighborhood": "대연동",
+    "address": "부산광역시 남구 황령대로 504",
+    "households": 1384,
+    "lat": 35.1366314,
+    "lng": 129.1079075,
+    "popularity": {
+      "score": 0.70703579,
+      "rank": 0.86649215,
+      "level": 5,
+      "color": "#d92f4c"
+    }
+  },
+  {
+    "id": "e109e70007b41bf5",
+    "name": "e편한세상 동래명장",
+    "district": "동래구",
+    "neighborhood": "명장동",
+    "address": "부산광역시 동래구 명장로 65",
+    "households": 1384,
+    "lat": 35.205338,
+    "lng": 129.1074266,
+    "popularity": {
+      "score": 0.58987653,
+      "rank": 0.67277487,
+      "level": 4,
+      "color": "#ec7e91"
+    }
+  },
+  {
+    "id": "aa7df3bd3ace4565",
+    "name": "센텀 SK VIEW 아파트",
+    "district": "해운대구",
+    "neighborhood": "반여동",
+    "address": "부산광역시 해운대구 삼어로 55 (반여동, 센텀에스케이뷰아파트)",
+    "households": 1374,
+    "lat": 35.2027336,
+    "lng": 129.1147363,
+    "popularity": {
+      "score": 0.78064545,
+      "rank": 0.95549738,
+      "level": 5,
+      "color": "#d92f4c"
+    }
+  },
+  {
+    "id": "1224dfe59386548a",
+    "name": "힐스테이트이진베이시티",
+    "district": "서구",
+    "neighborhood": "암남동",
+    "address": "부산광역시 서구 등대로 27",
+    "households": 1368,
+    "lat": 35.0784418,
+    "lng": 129.0242477,
+    "popularity": {
+      "score": 0.2708495,
+      "rank": 0.07853403,
+      "level": 1,
+      "color": "#ffffff"
+    }
+  },
+  {
+    "id": "a7afb1952266e067",
+    "name": "금곡8,9단지주공아파트",
+    "district": "북구",
+    "neighborhood": "금곡동",
+    "address": "부산광역시 북구 효열로 134 (금곡동, 금곡8,9단지주공아파트)",
+    "households": 1366,
+    "lat": 35.2581404,
+    "lng": 129.0155025,
+    "popularity": {
+      "score": 0.62849565,
+      "rank": 0.7486911,
+      "level": 4,
+      "color": "#ec7e91"
+    }
+  },
+  {
+    "id": "c6ac2013c3a7c8d0",
+    "name": "서면더샵센트럴스타",
+    "district": "부산진구",
+    "neighborhood": "부전동",
+    "address": "부산광역시 부산진구 중앙대로666번길 50",
+    "households": 1360,
+    "lat": 35.1519683,
+    "lng": 129.0609585,
+    "popularity": {
+      "score": 0.36091482,
+      "rank": 0.20680628,
+      "level": 2,
+      "color": "#fde9ed"
+    }
+  },
+  {
+    "id": "6ea1d326c2286afc",
+    "name": "경남선경아파트",
+    "district": "해운대구",
+    "neighborhood": "좌동",
+    "address": "부산광역시 해운대구 청사포로 27 (좌동, 경남선경아파트)",
+    "households": 1358,
+    "lat": 35.1663987,
+    "lng": 129.185789,
+    "popularity": {
+      "score": 0.78522802,
+      "rank": 0.95811518,
+      "level": 5,
+      "color": "#d92f4c"
+    }
+  },
+  {
+    "id": "7e45500a58166602",
+    "name": "만덕3단지주공아파트",
+    "district": "북구",
+    "neighborhood": "만덕동",
+    "address": "부산광역시 북구 함박봉로140번길 21 (만덕동, 만덕3단지주공아파트)",
+    "households": 1350,
+    "lat": 35.2040072,
+    "lng": 129.034236,
+    "popularity": {
+      "score": 0.74326922,
+      "rank": 0.92931937,
+      "level": 5,
+      "color": "#d92f4c"
+    }
+  },
+  {
+    "id": "791c8817aa8e1776",
+    "name": "코오롱하늘채2차아파트",
+    "district": "북구",
+    "neighborhood": "화명동",
+    "address": "부산광역시 북구 화명신도시로 100 (화명동, 코오롱하늘채2차아파트)",
+    "households": 1344,
+    "lat": 35.2327018,
+    "lng": 129.0110312,
+    "popularity": {
+      "score": 0.56855999,
+      "rank": 0.63089005,
+      "level": 4,
+      "color": "#ec7e91"
+    }
+  },
+  {
+    "id": "f969ff67c8b4d0ce",
+    "name": "동삼절영2차아파트",
+    "district": "영도구",
+    "neighborhood": "동삼동",
+    "address": "부산광역시 영도구 와치로 231 (동삼동, 절영아파트)",
+    "households": 1340,
+    "lat": 35.0767452,
+    "lng": 129.0677636,
+    "popularity": {
+      "score": 0.63138191,
+      "rank": 0.7617801,
+      "level": 4,
+      "color": "#ec7e91"
+    }
+  },
+  {
+    "id": "ebf59eb1c9300b1f",
+    "name": "양정 포레힐즈 스위첸",
+    "district": "부산진구",
+    "neighborhood": "양정동",
+    "address": "부산진구 양연로 36",
+    "households": 1338,
+    "lat": 35.1724541,
+    "lng": 129.0790395,
+    "popularity": {
+      "score": 0.41986218,
+      "rank": 0.33246073,
+      "level": 2,
+      "color": "#fde9ed"
+    }
+  },
+  {
+    "id": "a6c3072db8a227b9",
+    "name": "벽산블루밍장전디자인시티2단지",
+    "district": "금정구",
+    "neighborhood": "장전동",
+    "address": "부산광역시 금정구 금강로 225 (장전동, 벽산블루밍디자인시티)",
+    "households": 1335,
+    "lat": 35.2302793,
+    "lng": 129.0818985,
+    "popularity": {
+      "score": 0.29236155,
+      "rank": 0.10994764,
+      "level": 1,
+      "color": "#ffffff"
+    }
+  },
+  {
+    "id": "dc765a90eeeb7e94",
+    "name": "거제유림아시아드",
+    "district": "연제구",
+    "neighborhood": "거제동",
+    "address": "부산광역시 연제구 해맞이로 23 (거제동, 거제유림아시아드)",
+    "households": 1330,
+    "lat": 35.1771935,
+    "lng": 129.0660899,
+    "popularity": {
+      "score": 0.73924801,
+      "rank": 0.92146597,
+      "level": 5,
+      "color": "#d92f4c"
+    }
+  },
+  {
+    "id": "90bdbf3ae85a5efa",
+    "name": "다대 롯데캐슬 블루",
+    "district": "사하구",
+    "neighborhood": "다대동",
+    "address": "부산광역시 사하구 다송로 23(다대동, 다대 롯데캐슬 블루)",
+    "households": 1326,
+    "lat": 35.0653823,
+    "lng": 128.9825354,
+    "popularity": {
+      "score": 0.80214577,
+      "rank": 0.97643979,
+      "level": 5,
+      "color": "#d92f4c"
+    }
+  },
+  {
+    "id": "ffb503490dfe4526",
+    "name": "덕천주공1단지아파트",
+    "district": "북구",
+    "neighborhood": "덕천동",
+    "address": "부산광역시 북구 덕천로 72 (덕천동, 주공1단지아파트)",
+    "households": 1320,
+    "lat": 35.2063293,
+    "lng": 129.0128423,
+    "popularity": {
+      "score": 0.58394551,
+      "rank": 0.65968586,
+      "level": 4,
+      "color": "#ec7e91"
+    }
+  },
+  {
+    "id": "332112fc12a0c45a",
+    "name": "힐스테이트 사하역",
+    "district": "사하구",
+    "neighborhood": "괴정동",
+    "address": "부산광역시 사하구 괴정로 166(괴정동, 힐스테이트 사하역)",
+    "households": 1314,
+    "lat": 35.0973687,
+    "lng": 128.9811763,
+    "popularity": {
+      "score": 0.29239922,
+      "rank": 0.11256545,
+      "level": 1,
+      "color": "#ffffff"
+    }
+  },
+  {
+    "id": "8ec456c3243434c1",
+    "name": "금정산 SK뷰",
+    "district": "금정구",
+    "neighborhood": "장전동",
+    "address": "부산광역시 금정구 식물원로 64 (장전동, 금정산에스케이뷰아파트)",
+    "households": 1306,
+    "lat": 35.2270674,
+    "lng": 129.0802102,
+    "popularity": {
+      "score": 0.5958016,
+      "rank": 0.69109948,
+      "level": 4,
+      "color": "#ec7e91"
+    }
+  },
+  {
+    "id": "d2da45fb62886523",
+    "name": "송도 이편한아파트",
+    "district": "서구",
+    "neighborhood": "암남동",
+    "address": "부산광역시 서구 충무대로 21번길 9",
+    "households": 1302,
+    "lat": 35.0766222,
+    "lng": 129.0148569,
+    "popularity": {
+      "score": 0.32035075,
+      "rank": 0.13350785,
+      "level": 1,
+      "color": "#ffffff"
+    }
+  },
+  {
+    "id": "47ed680fbe2eb6b1",
+    "name": "정관신도시 휴먼시아2단지",
+    "district": "기장군",
+    "neighborhood": "정관읍",
+    "address": "부산광역시 기장군 정관읍 정관2로 24",
+    "households": 1301,
+    "lat": 35.3326165,
+    "lng": 129.1641875,
+    "popularity": {
+      "score": 0.5564282,
+      "rank": 0.60732984,
+      "level": 4,
+      "color": "#ec7e91"
+    }
+  },
+  {
+    "id": "71b06a3d639db80d",
+    "name": "부곡늘푸른",
+    "district": "금정구",
+    "neighborhood": "부곡동",
+    "address": "부산광역시 금정구 동현로 77 (부곡동, 시영아파트)",
+    "households": 1288,
+    "lat": 35.2229229,
+    "lng": 129.0982062,
+    "popularity": {
+      "score": 0.39742551,
+      "rank": 0.2539267,
+      "level": 2,
+      "color": "#fde9ed"
+    }
+  },
+  {
+    "id": "671abdd3724dbc72",
+    "name": "코오롱하늘채1차아파트",
+    "district": "북구",
+    "neighborhood": "화명동",
+    "address": "부산광역시 북구 화명신도시로 70 (화명동, 코오롱하늘채1차아파트)",
+    "households": 1280,
+    "lat": 35.2304251,
+    "lng": 129.011539,
+    "popularity": {
+      "score": 0.90879783,
+      "rank": 0.9973822,
+      "level": 5,
+      "color": "#d92f4c"
+    }
+  },
+  {
+    "id": "e7a2c1bec09f6645",
+    "name": "부산신호사랑으로부영3차",
+    "district": "강서구",
+    "neighborhood": "",
+    "address": "신호산단5로 31 (신호동, 부산신호사랑으로부영3차)",
+    "households": 1278,
+    "lat": 35.0845217,
+    "lng": 128.8758209,
+    "popularity": {
+      "score": 0.38937241,
+      "rank": 0.2434555,
+      "level": 2,
+      "color": "#fde9ed"
+    }
+  },
+  {
+    "id": "147b4a96a9110d7e",
+    "name": "협성 · DS 엘리시안",
+    "district": "강서구",
+    "neighborhood": "지사동",
+    "address": "부산광역시 강서구 과학산단로306번길 10 (지사동, 협성DS엘리시안)",
+    "households": 1277,
+    "lat": 35.1499833,
+    "lng": 128.8382549,
+    "popularity": {
+      "score": 0.5963506,
+      "rank": 0.69371728,
+      "level": 4,
+      "color": "#ec7e91"
+    }
+  },
+  {
+    "id": "9253ccc8e37ce3b8",
+    "name": "삼한골든뷰센트럴파크",
+    "district": "부산진구",
+    "neighborhood": "범전동",
+    "address": "부산광역시 부산진구 중앙대로 821",
+    "households": 1272,
+    "lat": 35.1650289,
+    "lng": 129.0632958,
+    "popularity": {
+      "score": 0.46112947,
+      "rank": 0.41884817,
+      "level": 3,
+      "color": "#f7c2cc"
+    }
+  },
+  {
+    "id": "d4c76bcce7a3aa1c",
+    "name": "부곡대우",
+    "district": "금정구",
+    "neighborhood": "부곡동",
+    "address": "부산광역시 금정구 부산대학로 10 (부곡동, 대우아파트)",
+    "households": 1270,
+    "lat": 35.2328414,
+    "lng": 129.0906882,
+    "popularity": {
+      "score": 0.47649229,
+      "rank": 0.47382199,
+      "level": 3,
+      "color": "#f7c2cc"
+    }
+  },
+  {
+    "id": "e311357feb46ddcb",
+    "name": "명지 두산위브 포세이돈",
+    "district": "강서구",
+    "neighborhood": "명지동",
+    "address": "부산광역시 강서구 명지오션시티11로 22 (명지동, 명지두산위브포세이돈)",
+    "households": 1256,
+    "lat": 35.0832184,
+    "lng": 128.8978012,
+    "popularity": {
+      "score": 0.40458173,
+      "rank": 0.26701571,
+      "level": 2,
+      "color": "#fde9ed"
+    }
+  },
+  {
+    "id": "11df95e7ae9b7ac2",
+    "name": "정관 동원로얄듀크2차",
+    "district": "기장군",
+    "neighborhood": "정관읍",
+    "address": "부산광역시 기장군 정관읍 정관5로 12",
+    "households": 1249,
+    "lat": 35.319023,
+    "lng": 129.1750522,
+    "popularity": {
+      "score": 0.67792972,
+      "rank": 0.83246073,
+      "level": 5,
+      "color": "#d92f4c"
+    }
+  },
+  {
+    "id": "24834b06e94ab2c6",
+    "name": "대동타운",
+    "district": "해운대구",
+    "neighborhood": "좌동",
+    "address": "부산광역시 해운대구 대천로103번길 29 (좌동, 대동타운)",
+    "households": 1240,
+    "lat": 35.1767671,
+    "lng": 129.1730542,
+    "popularity": {
+      "score": 0.56629012,
+      "rank": 0.62827225,
+      "level": 4,
+      "color": "#ec7e91"
+    }
+  },
+  {
+    "id": "65c676c75a632bca",
+    "name": "연산 롯데캐슬 골드포레",
+    "district": "연제구",
+    "neighborhood": "연산동",
+    "address": "부산광역시 연제구 황령산로 615",
+    "households": 1230,
+    "lat": 35.1735954,
+    "lng": 129.0814337,
+    "popularity": {
+      "score": 0.4061148,
+      "rank": 0.27748691,
+      "level": 2,
+      "color": "#fde9ed"
+    }
+  },
+  {
+    "id": "55886b7fb9bab522",
+    "name": "오션라이프 에일린의뜰",
+    "district": "영도구",
+    "neighborhood": "동삼동",
+    "address": "부산광역시 태종로 611(동삼동)",
+    "households": 1228,
+    "lat": 35.0756543,
+    "lng": 129.07435,
+    "popularity": {
+      "score": 0.34167102,
+      "rank": 0.17277487,
+      "level": 1,
+      "color": "#ffffff"
+    }
+  },
+  {
+    "id": "5b5785f5ce075cb9",
+    "name": "에일린의 뜰",
+    "district": "영도구",
+    "neighborhood": "봉래동4가",
+    "address": "부산광역시 영도구 태종로 172(봉래동)",
+    "households": 1216,
+    "lat": 35.0932006,
+    "lng": 129.0481486,
+    "popularity": {
+      "score": 0.21244734,
+      "rank": 0.03926702,
+      "level": 1,
+      "color": "#ffffff"
+    }
+  },
+  {
+    "id": "6f794a6a98241caa",
+    "name": "명지 더 힐 시그니처",
+    "district": "강서구",
+    "neighborhood": "명지동",
+    "address": "부산광역시 강서구 명지국제7로 110 (명지동, 더 힐 시그니처)",
+    "households": 1210,
+    "lat": 35.0955249,
+    "lng": 128.9143848,
+    "popularity": {
+      "score": 0.50135569,
+      "rank": 0.52094241,
+      "level": 3,
+      "color": "#f7c2cc"
+    }
+  },
+  {
+    "id": "5a1e916fa0368d1b",
+    "name": "반도보라매머드타운",
+    "district": "사상구",
+    "neighborhood": "주례동",
+    "address": "부산광역시 사상구 백양대로 372-22",
+    "households": 1206,
+    "lat": 35.1547172,
+    "lng": 129.0121942,
+    "popularity": {
+      "score": 0.41814086,
+      "rank": 0.32984293,
+      "level": 2,
+      "color": "#fde9ed"
+    }
+  },
+  {
+    "id": "ef84a0019275ad14",
+    "name": "명지더웨스턴",
+    "district": "강서구",
+    "neighborhood": "명지동",
+    "address": "부산광역시 강서구 명지국제7로 111 (명지동, 명지더웨스턴)",
+    "households": 1201,
+    "lat": 35.0978376,
+    "lng": 128.9137585,
+    "popularity": {
+      "score": 0.48681453,
+      "rank": 0.4895288,
+      "level": 3,
+      "color": "#f7c2cc"
+    }
+  },
+  {
+    "id": "3755a09dca104692",
+    "name": "벽산라인타운",
+    "district": "북구",
+    "neighborhood": "만덕동",
+    "address": "부산광역시 북구 덕천로 182 (만덕동, 벽산라인타운)",
+    "households": 1198,
+    "lat": 35.2105821,
+    "lng": 129.0240278,
+    "popularity": {
+      "score": 0.50917991,
+      "rank": 0.52879581,
+      "level": 3,
+      "color": "#f7c2cc"
+    }
+  },
+  {
+    "id": "9cc026fd88e83d69",
+    "name": "센텀롯데캐슬아파트",
+    "district": "해운대구",
+    "neighborhood": "반여동",
+    "address": "부산광역시 해운대구 반여로 133 (반여동, 장산1차롯데낙천대아파트)",
+    "households": 1198,
+    "lat": 35.2046629,
+    "lng": 129.124034,
+    "popularity": {
+      "score": 0.42197942,
+      "rank": 0.33769634,
+      "level": 2,
+      "color": "#fde9ed"
+    }
+  },
+  {
+    "id": "a9a2340c2b87e935",
+    "name": "센텀 이-편한세상",
+    "district": "해운대구",
+    "neighborhood": "재송동",
+    "address": "부산광역시 해운대구 해운대로76번길 55 (재송동, 센텀이편한세상아파트)",
+    "households": 1190,
+    "lat": 35.1890183,
+    "lng": 129.1174751,
+    "popularity": {
+      "score": 0.75526955,
+      "rank": 0.94240838,
+      "level": 5,
+      "color": "#d92f4c"
+    }
+  },
+  {
+    "id": "e85ffd8426c24058",
+    "name": "현대아파트",
+    "district": "수영구",
+    "neighborhood": "수영동",
+    "address": "부산광역시 수영구 수영로741번길 20(수영동)",
+    "households": 1180,
+    "lat": 35.1681927,
+    "lng": 129.1233157,
+    "popularity": {
+      "score": 0.41266494,
+      "rank": 0.31675393,
+      "level": 2,
+      "color": "#fde9ed"
+    }
+  },
+  {
+    "id": "d89b7924fe940ef2",
+    "name": "유림노르웨이숲",
+    "district": "북구",
+    "neighborhood": "구포동",
+    "address": "부산광역시 북구 낙동북로 737 (구포동, 유림노르웨이숲아파트)",
+    "households": 1176,
+    "lat": 35.1954435,
+    "lng": 129.0023763,
+    "popularity": {
+      "score": 0.32181499,
+      "rank": 0.14397906,
+      "level": 1,
+      "color": "#ffffff"
+    }
+  },
+  {
+    "id": "fcca8c5fc34d4d82",
+    "name": "연제 롯데캐슬&데시앙",
+    "district": "연제구",
+    "neighborhood": "연산동",
+    "address": "부산광역시 연제구 월드컵대로 55(연산동)",
+    "households": 1168,
+    "lat": 35.1795634,
+    "lng": 129.0832601,
+    "popularity": {
+      "score": 0.69025218,
+      "rank": 0.84554974,
+      "level": 5,
+      "color": "#d92f4c"
+    }
+  },
+  {
+    "id": "efabe2ec80b715de",
+    "name": "센텀롯데캐슬2차",
+    "district": "해운대구",
+    "neighborhood": "반여동",
+    "address": "부산광역시 해운대구 반여로 68-12 (반여동, 센텀롯데캐슬2차아파트)",
+    "households": 1166,
+    "lat": 35.1964953,
+    "lng": 129.1246101,
+    "popularity": {
+      "score": 0.42436868,
+      "rank": 0.34293194,
+      "level": 2,
+      "color": "#fde9ed"
+    }
+  },
+  {
+    "id": "4e562c7fdd7ab918",
+    "name": "수정아파트(1~18호동)",
+    "district": "동구",
+    "neighborhood": "수정동",
+    "address": "부산광역시 동구 망양로685번길 11(수정동, 수정아파트)",
+    "households": 1164,
+    "lat": 35.126864,
+    "lng": 129.0404644,
+    "popularity": {
+      "score": 0.29146154,
+      "rank": 0.10471204,
+      "level": 1,
+      "color": "#ffffff"
+    }
+  },
+  {
+    "id": "af86072f269b4ee5",
+    "name": "대우마리나아파트",
+    "district": "해운대구",
+    "neighborhood": "우동",
+    "address": "부산광역시 해운대구 해운대해변로 117 (우동, 대우마리나1차아파트)",
+    "households": 1164,
+    "lat": 35.1603177,
+    "lng": 129.1465989,
+    "popularity": {
+      "score": 0.63282998,
+      "rank": 0.76439791,
+      "level": 4,
+      "color": "#ec7e91"
+    }
+  },
+  {
+    "id": "2ed1c08c959766a5",
+    "name": "엄궁코오롱",
+    "district": "사상구",
+    "neighborhood": "엄궁동",
+    "address": "부산광역시 사상구 엄궁로 142",
+    "households": 1158,
+    "lat": 35.1265801,
+    "lng": 128.9781673,
+    "popularity": {
+      "score": 0.43981568,
+      "rank": 0.37958115,
+      "level": 2,
+      "color": "#fde9ed"
+    }
+  },
+  {
+    "id": "147a84bc79b77630",
+    "name": "거제동월드메르디앙",
+    "district": "연제구",
+    "neighborhood": "거제동",
+    "address": "부산광역시 연제구 거제천로 233 (거제동, 거제동월드메르디앙아파트)",
+    "households": 1156,
+    "lat": 35.1927316,
+    "lng": 129.0827415,
+    "popularity": {
+      "score": 0.70999767,
+      "rank": 0.87434555,
+      "level": 5,
+      "color": "#d92f4c"
+    }
+  },
+  {
+    "id": "913d58009beed08d",
+    "name": "국제백양",
+    "district": "부산진구",
+    "neighborhood": "당감동",
+    "address": "부산광역시 부산진구 백양관문로 104, 104-1",
+    "households": 1153,
+    "lat": 35.1686685,
+    "lng": 129.0287074,
+    "popularity": {
+      "score": 0.62532133,
+      "rank": 0.7460733,
+      "level": 4,
+      "color": "#ec7e91"
+    }
+  },
+  {
+    "id": "17fe3b20e2a302fc",
+    "name": "GS하이츠자이",
+    "district": "남구",
+    "neighborhood": "용호동",
+    "address": "부산광역시 남구 신선로 566",
+    "households": 1149,
+    "lat": 35.1327753,
+    "lng": 129.1103946,
+    "popularity": {
+      "score": 0.67580422,
+      "rank": 0.82984293,
+      "level": 5,
+      "color": "#d92f4c"
+    }
+  },
+  {
+    "id": "641b76fc18009e80",
+    "name": "온천동반도보라스카이뷰",
+    "district": "동래구",
+    "neighborhood": "온천동",
+    "address": "부산광역시 동래구 아시아드대로 234",
+    "households": 1149,
+    "lat": 35.204255,
+    "lng": 129.0686636,
+    "popularity": {
+      "score": 0.72751322,
+      "rank": 0.90314136,
+      "level": 5,
+      "color": "#d92f4c"
+    }
+  },
+  {
+    "id": "9ef246a7183b1350",
+    "name": "수영 SK VIEW 1단지",
+    "district": "수영구",
+    "neighborhood": "망미동",
+    "address": "부산광역시 수영구 망미배산로 56",
+    "households": 1147,
+    "lat": 35.1754619,
+    "lng": 129.1016761,
+    "popularity": {
+      "score": 0.42748242,
+      "rank": 0.34816754,
+      "level": 2,
+      "color": "#fde9ed"
+    }
+  },
+  {
+    "id": "f77b15ae65b7248c",
+    "name": "한신아파트",
+    "district": "기장군",
+    "neighborhood": "기장읍",
+    "address": "부산광역시 기장군 기장읍 차성로344번길 13",
+    "households": 1131,
+    "lat": 35.2494955,
+    "lng": 129.2153968,
+    "popularity": {
+      "score": 0.28610505,
+      "rank": 0.09685864,
+      "level": 1,
+      "color": "#ffffff"
+    }
+  },
+  {
+    "id": "a80dc202a5fd8034",
+    "name": "정관신도시 엘에이치5단지",
+    "district": "기장군",
+    "neighborhood": "정관읍",
+    "address": "부산광역시 기장군 정관읍 산단2로 60",
+    "households": 1128,
+    "lat": 35.318617,
+    "lng": 129.18549,
+    "popularity": {
+      "score": 0.35100456,
+      "rank": 0.19109948,
+      "level": 1,
+      "color": "#ffffff"
+    }
+  },
+  {
+    "id": "b88169a9818cb8b9",
+    "name": "거제1차현대홈타운",
+    "district": "연제구",
+    "neighborhood": "거제동",
+    "address": "부산광역시 연제구 법원북로 34 (거제동, 거제1차 현대홈타운)",
+    "households": 1127,
+    "lat": 35.1932347,
+    "lng": 129.0713203,
+    "popularity": {
+      "score": 0.6100604,
+      "rank": 0.73036649,
+      "level": 4,
+      "color": "#ec7e91"
+    }
+  },
+  {
+    "id": "4c0185b7ad4972ee",
+    "name": "명지 극동스타클래스",
+    "district": "강서구",
+    "neighborhood": "명지동",
+    "address": "부산광역시 강서구 명지오션시티2로 71 (명지동, 극동스타클래스아파트)",
+    "households": 1124,
+    "lat": 35.0833341,
+    "lng": 128.9010584,
+    "popularity": {
+      "score": 0.5108926,
+      "rank": 0.53141361,
+      "level": 3,
+      "color": "#f7c2cc"
+    }
+  },
+  {
+    "id": "195a1eca8d5e7d4b",
+    "name": "명지 롯데캐슬",
+    "district": "강서구",
+    "neighborhood": "명지동",
+    "address": "부산광역시 강서구 명지오션시티11로 84 (명지동, 롯데캐슬아파트)",
+    "households": 1122,
+    "lat": 35.083964,
+    "lng": 128.9060762,
+    "popularity": {
+      "score": 0.74155009,
+      "rank": 0.92670157,
+      "level": 5,
+      "color": "#d92f4c"
+    }
+  },
+  {
+    "id": "8d8f14c449698968",
+    "name": "동삼2지구 도개공아파트(BMC 도시개발공사)",
+    "district": "영도구",
+    "neighborhood": "동삼동",
+    "address": "부산광역시 영도구 함지로79번길 53 (동삼동, 동삼2지구영구임대아파트)",
+    "households": 1120,
+    "lat": 35.0756201,
+    "lng": 129.064937,
+    "popularity": {
+      "score": 0.48031136,
+      "rank": 0.48167539,
+      "level": 3,
+      "color": "#f7c2cc"
+    }
+  },
+  {
+    "id": "0bdf7615ea9a2f5f",
+    "name": "구서우성",
+    "district": "금정구",
+    "neighborhood": "구서동",
+    "address": "부산광역시 금정구 금강로555번길 25 (구서동)",
+    "households": 1118,
+    "lat": 35.256872,
+    "lng": 129.0862547,
+    "popularity": {
+      "score": 0.6078071,
+      "rank": 0.72251309,
+      "level": 4,
+      "color": "#ec7e91"
+    }
+  },
+  {
+    "id": "8e462e3eeffd10bb",
+    "name": "백양푸른채(당감주공3단지)",
+    "district": "부산진구",
+    "neighborhood": "당감동",
+    "address": "부산광역시 부산진구 백양산로53번길 62",
+    "households": 1116,
+    "lat": 35.1722973,
+    "lng": 129.025456,
+    "popularity": {
+      "score": 0.47041199,
+      "rank": 0.44764398,
+      "level": 3,
+      "color": "#f7c2cc"
+    }
+  },
+  {
+    "id": "bebb0f92b730bcd1",
+    "name": "초읍한화포레나",
+    "district": "부산진구",
+    "neighborhood": "초읍동",
+    "address": "부산광역시 부산진구 초연로 6",
+    "households": 1113,
+    "lat": 35.1747065,
+    "lng": 129.0465848,
+    "popularity": {
+      "score": 0.43952223,
+      "rank": 0.37696335,
+      "level": 2,
+      "color": "#fde9ed"
+    }
+  },
+  {
+    "id": "cb2147a42f909375",
+    "name": "퀸덤1차 아인슈타인",
+    "district": "강서구",
+    "neighborhood": "명지동",
+    "address": "부산광역시 강서구 명지오션시티11로 51 (명지동, 퀸덤1차 아인슈타인)",
+    "households": 1112,
+    "lat": 35.0863733,
+    "lng": 128.8998472,
+    "popularity": {
+      "score": 0.5449787,
+      "rank": 0.58115183,
+      "level": 3,
+      "color": "#f7c2cc"
+    }
+  },
+  {
+    "id": "c133d539ee3469ee",
+    "name": "지사금강펜테리움",
+    "district": "강서구",
+    "neighborhood": "지사동",
+    "address": "부산광역시 강서구 과학산단2로20번길 69 (지사동, 지사금강펜테리움)",
+    "households": 1111,
+    "lat": 35.1518104,
+    "lng": 128.8383278,
+    "popularity": {
+      "score": 0.5449371,
+      "rank": 0.57853403,
+      "level": 3,
+      "color": "#f7c2cc"
+    }
+  },
+  {
+    "id": "fb7150d54bb290f5",
+    "name": "모라동원",
+    "district": "사상구",
+    "neighborhood": "모라동",
+    "address": "부산광역시 사상구 백양대로 879",
+    "households": 1110,
+    "lat": 35.1848331,
+    "lng": 128.9898435,
+    "popularity": {
+      "score": 0.67982619,
+      "rank": 0.83769634,
+      "level": 5,
+      "color": "#d92f4c"
+    }
+  },
+  {
+    "id": "7ce75baf0e084324",
+    "name": "구학마을",
+    "district": "사상구",
+    "neighborhood": "학장동",
+    "address": "부산광역시 사상구 학감대로 49번길 28-19",
+    "households": 1110,
+    "lat": 35.1369527,
+    "lng": 128.9916964,
+    "popularity": {
+      "score": 0.54617299,
+      "rank": 0.58900524,
+      "level": 3,
+      "color": "#f7c2cc"
+    }
+  },
+  {
+    "id": "15ecb53dbd3b1fe1",
+    "name": "거제2차현대홈타운",
+    "district": "연제구",
+    "neighborhood": "거제동",
+    "address": "부산광역시 연제구 법원북로 16 (거제동, 거제2차 현대홈타운)",
+    "households": 1110,
+    "lat": 35.1926952,
+    "lng": 129.0684951,
+    "popularity": {
+      "score": 0.71662543,
+      "rank": 0.89005236,
+      "level": 5,
+      "color": "#d92f4c"
+    }
+  },
+  {
+    "id": "9d5f5dab31438055",
+    "name": "부산신호사랑으로부영5차",
+    "district": "강서구",
+    "neighborhood": "",
+    "address": "신호산단1로 101 (신호동, 부산신호사랑으로부영5차)",
+    "households": 1109,
+    "lat": 35.0826964,
+    "lng": 128.8754548,
+    "popularity": {
+      "score": 0.25578539,
+      "rank": 0.06282723,
+      "level": 1,
+      "color": "#ffffff"
+    }
+  },
+  {
+    "id": "49d3fbf7ee890d59",
+    "name": "퀸덤1차 링컨타운",
+    "district": "강서구",
+    "neighborhood": "명지동",
+    "address": "부산광역시 강서구 명지오션시티10로 16 (명지동, 퀸덤1차 링컨타운)",
+    "households": 1102,
+    "lat": 35.0855819,
+    "lng": 128.8976538,
+    "popularity": {
+      "score": 0.57709236,
+      "rank": 0.64659686,
+      "level": 4,
+      "color": "#ec7e91"
+    }
+  },
+  {
+    "id": "f8d8733c84631543",
+    "name": "금곡1단지주공아파트",
+    "district": "북구",
+    "neighborhood": "금곡동",
+    "address": "부산광역시 북구 효열로 268 (금곡동, 금곡1단지주공아파트)",
+    "households": 1099,
+    "lat": 35.2684511,
+    "lng": 129.0189829,
+    "popularity": {
+      "score": 0.49344546,
+      "rank": 0.5052356,
+      "level": 3,
+      "color": "#f7c2cc"
+    }
+  },
+  {
+    "id": "50609eb844177858",
+    "name": "괘법한신2차",
+    "district": "사상구",
+    "neighborhood": "괘법동",
+    "address": "부산광역시 사상구 낙동대로1210번길 33",
+    "households": 1094,
+    "lat": 35.1684571,
+    "lng": 128.9799896,
+    "popularity": {
+      "score": 0.27536603,
+      "rank": 0.08900524,
+      "level": 1,
+      "color": "#ffffff"
+    }
+  },
+  {
+    "id": "66c0e73229434925",
+    "name": "당감동일스위트",
+    "district": "부산진구",
+    "neighborhood": "당감동",
+    "address": "부산광역시 부산진구 백양관문로 115",
+    "households": 1090,
+    "lat": 35.1677096,
+    "lng": 129.0257624,
+    "popularity": {
+      "score": 0.39466204,
+      "rank": 0.2486911,
+      "level": 2,
+      "color": "#fde9ed"
+    }
+  },
+  {
+    "id": "c3503a8c331159a0",
+    "name": "부곡 SK",
+    "district": "금정구",
+    "neighborhood": "부곡동",
+    "address": "부산광역시 금정구 수림로 12 (부곡동, 에스케이아파트)",
+    "households": 1084,
+    "lat": 35.2401757,
+    "lng": 129.0910594,
+    "popularity": {
+      "score": 0.49443199,
+      "rank": 0.5104712,
+      "level": 3,
+      "color": "#f7c2cc"
+    }
+  },
+  {
+    "id": "4cae04aa3f22e3be",
+    "name": "고촌휴먼시아1",
+    "district": "기장군",
+    "neighborhood": "철마면",
+    "address": "부산광역시 기장군 철마면 고촌로44번길 16",
+    "households": 1084,
+    "lat": 35.2418338,
+    "lng": 129.1683295,
+    "popularity": {
+      "score": 0.28958374,
+      "rank": 0.09947644,
+      "level": 1,
+      "color": "#ffffff"
+    }
+  },
+  {
+    "id": "650b35862387c9dc",
+    "name": "센텀비치푸르지오",
+    "district": "수영구",
+    "neighborhood": "민락동",
+    "address": "부산광역시 수영구 광안해변로 418 (민락동, 센텀비치푸르지오)",
+    "households": 1082,
+    "lat": 35.1597532,
+    "lng": 129.1312553,
+    "popularity": {
+      "score": 0.41755227,
+      "rank": 0.32722513,
+      "level": 2,
+      "color": "#fde9ed"
+    }
+  },
+  {
+    "id": "6251adfe1cbe0d03",
+    "name": "백양그린",
+    "district": "사상구",
+    "neighborhood": "모라동",
+    "address": "부산광역시 사상구 모라로110번길 88",
+    "households": 1080,
+    "lat": 35.1832745,
+    "lng": 128.9949197,
+    "popularity": {
+      "score": 0.64682514,
+      "rank": 0.77225131,
+      "level": 4,
+      "color": "#ec7e91"
+    }
+  },
+  {
+    "id": "89c1642d02cf1c64",
+    "name": "구포동원로얄듀크비스타",
+    "district": "북구",
+    "neighborhood": "구포동",
+    "address": "부산광역시 북구 낙동대로1738번길 10 (구포동, 동원로얄듀크비스타)",
+    "households": 1079,
+    "lat": 35.2083462,
+    "lng": 128.9991685,
+    "popularity": {
+      "score": 0.38677366,
+      "rank": 0.23560209,
+      "level": 2,
+      "color": "#fde9ed"
+    }
+  },
+  {
+    "id": "cceff77728b1511e",
+    "name": "삼호가든맨션",
+    "district": "해운대구",
+    "neighborhood": "우동",
+    "address": "부산광역시 해운대구 해운대로349번길 24 (우동, 삼호가든아파트)",
+    "households": 1076,
+    "lat": 35.1735105,
+    "lng": 129.1378947,
+    "popularity": {
+      "score": 0.51567468,
+      "rank": 0.53664921,
+      "level": 3,
+      "color": "#f7c2cc"
+    }
+  },
+  {
+    "id": "a497457542a6065c",
+    "name": "서면삼익",
+    "district": "부산진구",
+    "neighborhood": "당감동",
+    "address": "부산광역시 부산진구 당감로 17",
+    "households": 1074,
+    "lat": 35.1624943,
+    "lng": 129.0377432,
+    "popularity": {
+      "score": 0.57158163,
+      "rank": 0.63350785,
+      "level": 4,
+      "color": "#ec7e91"
+    }
+  },
+  {
+    "id": "d1a2258e7036daf9",
+    "name": "연산 더샵",
+    "district": "연제구",
+    "neighborhood": "연산동",
+    "address": "부산광역시 연제구 연수로130(연산동, 연산더샵)",
+    "households": 1071,
+    "lat": 35.1736243,
+    "lng": 129.0845103,
+    "popularity": {
+      "score": 0.6473823,
+      "rank": 0.77486911,
+      "level": 4,
+      "color": "#ec7e91"
+    }
+  },
+  {
+    "id": "7d0e9affaa8a3960",
+    "name": "벽산아파트(2차)",
+    "district": "해운대구",
+    "neighborhood": "좌동",
+    "address": "부산광역시 해운대구 좌동순환로299번길 11 (좌동, 벽산2차아파트)",
+    "households": 1070,
+    "lat": 35.1704076,
+    "lng": 129.1841241,
+    "popularity": {
+      "score": 0.78575817,
+      "rank": 0.96073298,
+      "level": 5,
+      "color": "#d92f4c"
+    }
+  },
+  {
+    "id": "a7abbb930d7228a1",
+    "name": "괴정 협성휴포레 아파트",
+    "district": "사하구",
+    "neighborhood": "괴정동",
+    "address": "부산광역시 사하구 사하로 183(괴정동, 괴정 협성휴포레 아파트)",
+    "households": 1068,
+    "lat": 35.0980067,
+    "lng": 128.9937157,
+    "popularity": {
+      "score": 0.17313425,
+      "rank": 0.02094241,
+      "level": 1,
+      "color": "#ffffff"
+    }
+  },
+  {
+    "id": "b135edd8b8cab757",
+    "name": "부산신호사랑으로부영1차",
+    "district": "강서구",
+    "neighborhood": "",
+    "address": "신호산단3로 27 (신호동, 부산신호사랑으로부영1차)",
+    "households": 1064,
+    "lat": 35.0881441,
+    "lng": 128.875186,
+    "popularity": {
+      "score": 0.46761014,
+      "rank": 0.43979058,
+      "level": 3,
+      "color": "#f7c2cc"
+    }
+  },
+  {
+    "id": "cb53dc2a6312b4dc",
+    "name": "사직롯데캐슬더클래식",
+    "district": "동래구",
+    "neighborhood": "사직동",
+    "address": "부산광역시 동래구 아시아드대로146번길 1",
+    "households": 1064,
+    "lat": 35.1979478,
+    "lng": 129.0675925,
+    "popularity": {
+      "score": 0.60722289,
+      "rank": 0.71727749,
+      "level": 4,
+      "color": "#ec7e91"
+    }
+  },
+  {
+    "id": "fce5661c0d7df77b",
+    "name": "일광 자이푸르지오 2단지",
+    "district": "기장군",
+    "neighborhood": "일광읍",
+    "address": "부산광역시 기장군 일광면 해빛로 29",
+    "households": 1059,
+    "lat": 35.2657039,
+    "lng": 129.2243214,
+    "popularity": {
+      "score": 0.55246407,
+      "rank": 0.59947644,
+      "level": 3,
+      "color": "#f7c2cc"
+    }
+  },
+  {
+    "id": "3dd5af590af80468",
+    "name": "해운대자이1단지",
+    "district": "해운대구",
+    "neighborhood": "우동",
+    "address": "부산광역시 해운대구 해운대로 435 (우동, 해운대자이아파트)",
+    "households": 1059,
+    "lat": 35.1673753,
+    "lng": 129.1428959,
+    "popularity": {
+      "score": 0.65219909,
+      "rank": 0.78795812,
+      "level": 4,
+      "color": "#ec7e91"
+    }
+  },
+  {
+    "id": "4f09f99c9baa5e26",
+    "name": "대연푸르지오클라센트",
+    "district": "남구",
+    "neighborhood": "대연동",
+    "address": "부산광역시남구 유엔로 81",
+    "households": 1057,
+    "lat": 35.1298948,
+    "lng": 129.0860391,
+    "popularity": {
+      "score": 0.4303296,
+      "rank": 0.35863874,
+      "level": 2,
+      "color": "#fde9ed"
+    }
+  },
+  {
+    "id": "adf61e3eda9c41df",
+    "name": "반송지구도개공영구임대아파트",
+    "district": "해운대구",
+    "neighborhood": "반송동",
+    "address": "부산광역시 해운대구 신반송로 159 (반송동, 도개공아파트)",
+    "households": 1050,
+    "lat": 35.2285071,
+    "lng": 129.1625109,
+    "popularity": {
+      "score": 0.5534732,
+      "rank": 0.60209424,
+      "level": 4,
+      "color": "#ec7e91"
+    }
+  },
+  {
+    "id": "a62a4bababa10590",
+    "name": "가야반도보라빌",
+    "district": "부산진구",
+    "neighborhood": "가야동",
+    "address": "부산광역시 부산진구 가야공원로 41",
+    "households": 1048,
+    "lat": 35.1503136,
+    "lng": 129.0319722,
+    "popularity": {
+      "score": 0.55101503,
+      "rank": 0.59424084,
+      "level": 3,
+      "color": "#f7c2cc"
+    }
+  },
+  {
+    "id": "d31fc8d80efd0b72",
+    "name": "벽산강변타운",
+    "district": "북구",
+    "neighborhood": "화명동",
+    "address": "부산광역시 북구 양달로9번길 21 (화명동, 벽산강변타운)",
+    "households": 1044,
+    "lat": 35.2439417,
+    "lng": 129.0135477,
+    "popularity": {
+      "score": 0.59068672,
+      "rank": 0.67539267,
+      "level": 4,
+      "color": "#ec7e91"
+    }
+  },
+  {
+    "id": "a39990a3ea447bb2",
+    "name": "비치그린아파트",
+    "district": "수영구",
+    "neighborhood": "광안동",
+    "address": "부산광역시 수영구 광일로 49 (광안동, 비치그린아파트)",
+    "households": 1038,
+    "lat": 35.1622314,
+    "lng": 129.1084625,
+    "popularity": {
+      "score": 0.27143406,
+      "rank": 0.08115183,
+      "level": 1,
+      "color": "#ffffff"
+    }
+  },
+  {
+    "id": "eb4fcf54b63ee935",
+    "name": "이지더원3차아파트",
+    "district": "기장군",
+    "neighborhood": "정관읍",
+    "address": "부산광역시 기장군 정관로 350",
+    "households": 1035,
+    "lat": 35.3359064,
+    "lng": 129.1629314,
+    "popularity": {
+      "score": 0.53100949,
+      "rank": 0.56544503,
+      "level": 3,
+      "color": "#f7c2cc"
+    }
+  },
+  {
+    "id": "5861f2b09457fa89",
+    "name": "부산명지 중흥S-클래스 프라디움",
+    "district": "강서구",
+    "neighborhood": "명지동",
+    "address": "부산광역시 강서구 명지국제7로 133 (명지동, 중흥 S-클래스 프라디움)",
+    "households": 1033,
+    "lat": 35.097567,
+    "lng": 128.9165114,
+    "popularity": {
+      "score": 0.56285288,
+      "rank": 0.61518325,
+      "level": 4,
+      "color": "#ec7e91"
+    }
+  },
+  {
+    "id": "c8f27d2a57c77e9a",
+    "name": "정관 동원로얄듀크1차",
+    "district": "기장군",
+    "neighborhood": "정관읍",
+    "address": "부산광역시 기장군 정관읍 산단4로 139",
+    "households": 1028,
+    "lat": 35.3189741,
+    "lng": 129.1901177,
+    "popularity": {
+      "score": 0.49537672,
+      "rank": 0.51308901,
+      "level": 3,
+      "color": "#f7c2cc"
+    }
+  },
+  {
+    "id": "a60d025443152db9",
+    "name": "화명 한일 유앤아이(화명 리버빌 1차)",
+    "district": "북구",
+    "neighborhood": "금곡동",
+    "address": "부산광역시 북구 화명신도시로 194 (금곡동, 화명한일유앤아이)",
+    "households": 1026,
+    "lat": 35.2423168,
+    "lng": 129.0129613,
+    "popularity": {
+      "score": 0.44535771,
+      "rank": 0.38743455,
+      "level": 2,
+      "color": "#fde9ed"
+    }
+  },
+  {
+    "id": "24b1c04e55720b26",
+    "name": "엄궁한신2차",
+    "district": "사상구",
+    "neighborhood": "엄궁동",
+    "address": "부산광역시 사상구 엄궁로 40",
+    "households": 1016,
+    "lat": 35.1233517,
+    "lng": 128.9713645,
+    "popularity": {
+      "score": 0.33257222,
+      "rank": 0.15968586,
+      "level": 1,
+      "color": "#ffffff"
+    }
+  },
+  {
+    "id": "26ab8a8eeb6b4da8",
+    "name": "지사 과학 삼정그린코아",
+    "district": "강서구",
+    "neighborhood": "지사동",
+    "address": "부산광역시 강서구 과학산단2로20번길 91 (지사동, 지사과학단지 삼정그린코아)",
+    "households": 1013,
+    "lat": 35.1516664,
+    "lng": 128.8413302,
+    "popularity": {
+      "score": 0.52126214,
+      "rank": 0.55497382,
+      "level": 3,
+      "color": "#f7c2cc"
+    }
+  },
+  {
+    "id": "3cb5b29b0a05f2b8",
+    "name": "연지자이2차",
+    "district": "부산진구",
+    "neighborhood": "연지동",
+    "address": "부산광역시 부산진구 초연로 11",
+    "households": 1011,
+    "lat": 35.1722775,
+    "lng": 129.0475947,
+    "popularity": {
+      "score": 0.32880458,
+      "rank": 0.15183246,
+      "level": 1,
+      "color": "#ffffff"
+    }
+  },
+  {
+    "id": "fd5cc6484928c318",
+    "name": "더샵센텀포레아파트",
+    "district": "수영구",
+    "neighborhood": "민락동",
+    "address": "수영로 776 (민락동, 부산 더샵 센텀포레)",
+    "households": 1006,
+    "lat": 35.1652715,
+    "lng": 129.1234668,
+    "popularity": {
+      "score": 0.46894368,
+      "rank": 0.44502618,
+      "level": 3,
+      "color": "#f7c2cc"
+    }
+  },
+  {
+    "id": "c7d0fff2bd523c9f",
+    "name": "내리휴먼시아1단지",
+    "district": "기장군",
+    "neighborhood": "기장읍",
+    "address": "부산광역시 기장군 기장읍 소정안길 68",
+    "households": 1002,
+    "lat": 35.2075583,
+    "lng": 129.2051905,
+    "popularity": {
+      "score": 0.32144504,
+      "rank": 0.14136126,
+      "level": 1,
+      "color": "#ffffff"
+    }
+  },
+  {
+    "id": "5c1d07a63bb08acf",
+    "name": "대우2차",
+    "district": "해운대구",
+    "neighborhood": "좌동",
+    "address": "부산광역시 해운대구 좌동순환로 275 (좌동, 대우2차아파트)",
+    "households": 1002,
+    "lat": 35.172225,
+    "lng": 129.1833314,
+    "popularity": {
+      "score": 0.52048692,
+      "rank": 0.54973822,
+      "level": 3,
+      "color": "#f7c2cc"
+    }
+  },
+  {
+    "id": "01f7cf55b5472a5b",
+    "name": "함지그린아파트",
+    "district": "영도구",
+    "neighborhood": "동삼동",
+    "address": "부산광역시 영도구 함지로 8 (동삼동, 함지그린아파트)",
+    "households": 1000,
+    "lat": 35.0712064,
+    "lng": 129.0625281,
+    "popularity": {
+      "score": 0.52803183,
+      "rank": 0.56282723,
+      "level": 3,
+      "color": "#f7c2cc"
+    }
+  },
+  {
+    "id": "29e6871ed133299f",
+    "name": "해운대상록아파트",
+    "district": "해운대구",
+    "neighborhood": "좌동",
+    "address": "부산광역시 해운대구 세실로 7 (좌동, 상록아파트)",
+    "households": 1000,
+    "lat": 35.1666724,
+    "lng": 129.1808035,
+    "popularity": {
+      "score": 0.56392144,
+      "rank": 0.62303665,
+      "level": 4,
+      "color": "#ec7e91"
+    }
+  },
+  {
+    "id": "63f2213acece9817",
+    "name": "금호 센트럴베이 행복주택 일광",
+    "district": "기장군",
+    "neighborhood": "일광읍",
+    "address": "부산광역시 기장군 일광읍 해빛1로 61",
+    "households": 999,
+    "lat": 35.2611963,
+    "lng": 129.2247614,
+    "popularity": {
+      "score": 0.39429711,
+      "rank": 0.2460733,
+      "level": 2,
+      "color": "#fde9ed"
+    }
+  },
+  {
+    "id": "d46d103290d9849f",
+    "name": "사직KCC스위첸",
+    "district": "동래구",
+    "neighborhood": "사직동",
+    "address": "부산광역시 동래구 사직북로64",
+    "households": 999,
+    "lat": 35.2000186,
+    "lng": 129.0568791,
+    "popularity": {
+      "score": 0.4229614,
+      "rank": 0.34031414,
+      "level": 2,
+      "color": "#fde9ed"
+    }
+  },
+  {
+    "id": "0b80e712e037a94c",
+    "name": "동래 3차 SK VIEW",
+    "district": "동래구",
+    "neighborhood": "온천동",
+    "address": "부산광역시 동래구 온천장로 65번길 9",
+    "households": 999,
+    "lat": 35.2172032,
+    "lng": 129.0808716,
+    "popularity": {
+      "score": 0.47968021,
+      "rank": 0.47905759,
+      "level": 3,
+      "color": "#f7c2cc"
+    }
+  },
+  {
+    "id": "d4bb57257e0f18d0",
+    "name": "목화",
+    "district": "사상구",
+    "neighborhood": "학장동",
+    "address": "부산광역시 사상구 대동로 104-8",
+    "households": 999,
+    "lat": 35.138228,
+    "lng": 128.9809021,
+    "popularity": {
+      "score": 0.44142199,
+      "rank": 0.38219895,
+      "level": 2,
+      "color": "#fde9ed"
+    }
+  },
+  {
+    "id": "3224b87b14ac773b",
+    "name": "시청앞 행복주택 2단지",
+    "district": "연제구",
+    "neighborhood": "연산동",
+    "address": "부산광역시 연제구 연산동 2400",
+    "households": 999,
+    "lat": 35.1793787,
+    "lng": 129.0788621,
+    "popularity": {
+      "score": 0.41503877,
+      "rank": 0.32198953,
+      "level": 2,
+      "color": "#fde9ed"
+    }
+  },
+  {
+    "id": "c8248e129b092837",
+    "name": "e편한세상 서면 더센트럴",
+    "district": "부산진구",
+    "neighborhood": "범천동",
+    "address": "부산광역시 부산진구 범천동 1187",
+    "households": 998,
+    "lat": 35.1518496,
+    "lng": 129.0495065,
+    "popularity": {
+      "score": 0.19155542,
+      "rank": 0.02879581,
+      "level": 1,
+      "color": "#ffffff"
+    }
+  },
+  {
+    "id": "94e883bf9cb8b840",
+    "name": "주례롯데캐슬골드스마트",
+    "district": "사상구",
+    "neighborhood": "주례동",
+    "address": "부산광역시 사상구 가야대로255번길 5",
+    "households": 998,
+    "lat": 35.15176,
+    "lng": 128.9995076,
+    "popularity": {
+      "score": 0.65477008,
+      "rank": 0.79057592,
+      "level": 4,
+      "color": "#ec7e91"
+    }
+  },
+  {
+    "id": "2f196b8225e356fc",
+    "name": "학장반도보라",
+    "district": "사상구",
+    "neighborhood": "학장동",
+    "address": "부산광역시 사상구 대동로 98",
+    "households": 998,
+    "lat": 35.1374118,
+    "lng": 128.9793927,
+    "popularity": {
+      "score": 0.33391841,
+      "rank": 0.16230366,
+      "level": 1,
+      "color": "#ffffff"
+    }
+  },
+  {
+    "id": "844c71de0ebd9eb0",
+    "name": "우방신세계 아파트",
+    "district": "해운대구",
+    "neighborhood": "반여동",
+    "address": "부산광역시 해운대구 삼어로 61 (반여동, 우방신세계아파트)",
+    "households": 998,
+    "lat": 35.2039256,
+    "lng": 129.115636,
+    "popularity": {
+      "score": 0.39641335,
+      "rank": 0.2513089,
+      "level": 2,
+      "color": "#fde9ed"
+    }
+  },
+  {
+    "id": "920682e479fa1847",
+    "name": "더 샾 센텀파크 2차아파트",
+    "district": "해운대구",
+    "neighborhood": "재송동",
+    "address": "부산광역시 해운대구 센텀중앙로 142 (재송동, 더샵센텀파크2차아파트)",
+    "households": 998,
+    "lat": 35.1790549,
+    "lng": 129.1235492,
+    "popularity": {
+      "score": 0.3519721,
+      "rank": 0.19895288,
+      "level": 1,
+      "color": "#ffffff"
+    }
+  },
+  {
+    "id": "bf16300dc82ae698",
+    "name": "국제그린아파트",
+    "district": "사하구",
+    "neighborhood": "다대동",
+    "address": "부산광역시 사하구 다대로381번길 75(다대동, 국제그린아파트)",
+    "households": 996,
+    "lat": 35.0663308,
+    "lng": 128.9839783,
+    "popularity": {
+      "score": 0.57699203,
+      "rank": 0.64397906,
+      "level": 4,
+      "color": "#ec7e91"
+    }
+  },
+  {
+    "id": "14e889c761b25a99",
+    "name": "대연SK뷰힐스",
+    "district": "남구",
+    "neighborhood": "대연동",
+    "address": "부산광역시 남구 수영로 261",
+    "households": 994,
+    "lat": 35.136867,
+    "lng": 129.0938572,
+    "popularity": {
+      "score": 0.4249182,
+      "rank": 0.34554974,
+      "level": 2,
+      "color": "#fde9ed"
+    }
+  },
+  {
+    "id": "add3debf57770a75",
+    "name": "신평현대아파트",
+    "district": "사하구",
+    "neighborhood": "신평동",
+    "address": "부산광역시 사하구 하신중앙로 170(신평동, 신평현대아파트)",
+    "households": 992,
+    "lat": 35.0947239,
+    "lng": 128.9644237,
+    "popularity": {
+      "score": 0.6102203,
+      "rank": 0.73298429,
+      "level": 4,
+      "color": "#ec7e91"
+    }
+  },
+  {
+    "id": "6929af739d34506a",
+    "name": "부곡뉴그린",
+    "district": "금정구",
+    "neighborhood": "부곡동",
+    "address": "부산광역시 금정구 동현로 90 (부곡동, 뉴그린아파트)",
+    "households": 990,
+    "lat": 35.2202662,
+    "lng": 129.0946515,
+    "popularity": {
+      "score": 0.40926332,
+      "rank": 0.29581152,
+      "level": 2,
+      "color": "#fde9ed"
+    }
+  },
+  {
+    "id": "6b2a4bc7aee68d07",
+    "name": "덕천2지구도개공아파트",
+    "district": "북구",
+    "neighborhood": "덕천동",
+    "address": "부산광역시 북구 만덕대로155번길 86-9 (덕천동, 덕천2지구도개공아파트)",
+    "households": 990,
+    "lat": 35.2179132,
+    "lng": 129.0202169,
+    "popularity": {
+      "score": 0.66272186,
+      "rank": 0.80104712,
+      "level": 5,
+      "color": "#d92f4c"
+    }
+  },
+  {
+    "id": "40fabe5d03a0f0b3",
+    "name": "신세대지큐빌",
+    "district": "사하구",
+    "neighborhood": "장림동",
+    "address": "부산광역시 사하구 다대로277번길 85(장림동, 신세대지큐빌)",
+    "households": 990,
+    "lat": 35.0765811,
+    "lng": 128.981389,
+    "popularity": {
+      "score": 0.34746603,
+      "rank": 0.18324607,
+      "level": 1,
+      "color": "#ffffff"
+    }
+  },
+  {
+    "id": "cfa748a7b7c806c7",
+    "name": "신평엘에이치천년나무",
+    "district": "사하구",
+    "neighborhood": "신평동",
+    "address": "부산광역시 사하구 신산북로43번길 59(신평동, 신평엘에이치천년나무)",
+    "households": 990,
+    "lat": 35.0952723,
+    "lng": 128.9718991,
+    "popularity": {
+      "score": 0.27231403,
+      "rank": 0.08638743,
+      "level": 1,
+      "color": "#ffffff"
+    }
+  },
+  {
+    "id": "2d30a2a0988607d8",
+    "name": "뉴비치",
+    "district": "수영구",
+    "neighborhood": "남천동",
+    "address": "부산광역시 수영구 광안해변로15번길 68(남천동)",
+    "households": 990,
+    "lat": 35.1387853,
+    "lng": 129.1113555,
+    "popularity": {
+      "score": 0.47238711,
+      "rank": 0.45549738,
+      "level": 3,
+      "color": "#f7c2cc"
+    }
+  },
+  {
+    "id": "7e1b6524f8b2176e",
+    "name": "대우이안아파트",
+    "district": "북구",
+    "neighborhood": "화명동",
+    "address": "부산광역시 북구 화명신도시로 145 (화명동, 대우이안아파트)",
+    "households": 989,
+    "lat": 35.2369013,
+    "lng": 129.0099173,
+    "popularity": {
+      "score": 0.70709132,
+      "rank": 0.86910995,
+      "level": 5,
+      "color": "#d92f4c"
+    }
+  },
+  {
+    "id": "0cd697a8c01f7062",
+    "name": "동원아파트",
+    "district": "북구",
+    "neighborhood": "만덕동",
+    "address": "부산광역시 북구 덕천로234번길 7 (만덕동, 동원아파트)",
+    "households": 988,
+    "lat": 35.2096507,
+    "lng": 129.0305017,
+    "popularity": {
+      "score": 0.45367217,
+      "rank": 0.40837696,
+      "level": 3,
+      "color": "#f7c2cc"
+    }
+  },
+  {
+    "id": "c94ab02415eb23b2",
+    "name": "한일유앤아이",
+    "district": "사상구",
+    "neighborhood": "주례동",
+    "address": "부산광역시 사상구 백양대로 372-15",
+    "households": 988,
+    "lat": 35.154004,
+    "lng": 129.0101406,
+    "popularity": {
+      "score": 0.61963088,
+      "rank": 0.7382199,
+      "level": 4,
+      "color": "#ec7e91"
+    }
+  },
+  {
+    "id": "cd934342f1904dc6",
+    "name": "다대자유아파트",
+    "district": "사하구",
+    "neighborhood": "다대동",
+    "address": "부산광역시 사하구 다대로 617(다대동, 다대자유아파트)",
+    "households": 987,
+    "lat": 35.0520574,
+    "lng": 128.972193,
+    "popularity": {
+      "score": 0.47301026,
+      "rank": 0.45811518,
+      "level": 3,
+      "color": "#f7c2cc"
+    }
+  },
+  {
+    "id": "4fb6bf74a8d80357",
+    "name": "남천코오롱하늘채골든비치",
+    "district": "수영구",
+    "neighborhood": "남천동",
+    "address": "부산광역시 수영구 남천동로 41 (남천동, 남천동 코오롱 하늘채 골든비치)",
+    "households": 987,
+    "lat": 35.1426699,
+    "lng": 129.113084,
+    "popularity": {
+      "score": 0.31819827,
+      "rank": 0.13089005,
+      "level": 1,
+      "color": "#ffffff"
+    }
+  },
+  {
+    "id": "3ebc953b572af05e",
+    "name": "화명뜨란채아파트",
+    "district": "북구",
+    "neighborhood": "금곡동",
+    "address": "부산광역시 북구 화명신도시로 209 (금곡동, 화명뜨란채아파트)",
+    "households": 981,
+    "lat": 35.242677,
+    "lng": 129.0112628,
+    "popularity": {
+      "score": 0.76964229,
+      "rank": 0.95026178,
+      "level": 5,
+      "color": "#d92f4c"
+    }
+  },
+  {
+    "id": "3cbff7f6f8cd0acd",
+    "name": "에일린의뜰",
+    "district": "강서구",
+    "neighborhood": "명지동",
+    "address": "부산광역시 강서구 명지국제5로 60 (명지동, 에일린의 뜰)",
+    "households": 980,
+    "lat": 35.0997389,
+    "lng": 128.9216478,
+    "popularity": {
+      "score": 0.35607277,
+      "rank": 0.20418848,
+      "level": 2,
+      "color": "#fde9ed"
+    }
+  },
+  {
+    "id": "92c155e44da124a1",
+    "name": "개금우드빌",
+    "district": "부산진구",
+    "neighborhood": "개금동",
+    "address": "부산광역시 부산진구 백양대로208번길 144,백양관문로77번길 56(81)",
+    "households": 980,
+    "lat": 35.1631325,
+    "lng": 129.0245984,
+    "popularity": {
+      "score": 0.71626795,
+      "rank": 0.88743455,
+      "level": 5,
+      "color": "#d92f4c"
+    }
+  },
+  {
+    "id": "e53b4911116c4916",
+    "name": "정관 이지더원1차",
+    "district": "기장군",
+    "neighborhood": "정관읍",
+    "address": "부산광역시 기장군 정관읍 정관1로 18",
+    "households": 978,
+    "lat": 35.3387854,
+    "lng": 129.164002,
+    "popularity": {
+      "score": 0.56296431,
+      "rank": 0.61780105,
+      "level": 4,
+      "color": "#ec7e91"
+    }
+  },
+  {
+    "id": "b08586b5f5f77d27",
+    "name": "현대무지개",
+    "district": "사상구",
+    "neighborhood": "주례동",
+    "address": "부산광역시 사상구 주례로 93",
+    "households": 977,
+    "lat": 35.1453274,
+    "lng": 129.0051862,
+    "popularity": {
+      "score": 0.60256611,
+      "rank": 0.70942408,
+      "level": 4,
+      "color": "#ec7e91"
+    }
+  },
+  {
+    "id": "37dd261714b31199",
+    "name": "주공 영구임대아파트(1단지)(LH 한국토지주택공사)",
+    "district": "영도구",
+    "neighborhood": "동삼동",
+    "address": "부산광역시 영도구 동삼북로 2 (동삼동, 주공아파트)",
+    "households": 976,
+    "lat": 35.082782,
+    "lng": 129.0667692,
+    "popularity": {
+      "score": 0.52505682,
+      "rank": 0.55759162,
+      "level": 3,
+      "color": "#f7c2cc"
+    }
+  },
+  {
+    "id": "8d34fe8d06382c45",
+    "name": "더샵 남천프레스티지",
+    "district": "수영구",
+    "neighborhood": "남천동",
+    "address": "부산광역시 수영구 수영로 389",
+    "households": 975,
+    "lat": 35.1416737,
+    "lng": 129.1058028,
+    "popularity": {
+      "score": 0.42967831,
+      "rank": 0.35602094,
+      "level": 2,
+      "color": "#fde9ed"
+    }
+  },
+  {
+    "id": "16ff822a6e402ea4",
+    "name": "부산다대푸르지오",
+    "district": "사하구",
+    "neighborhood": "다대동",
+    "address": "부산광역시 사하구 윤공단로 123(다대동, 부산다대푸르지오)",
+    "households": 972,
+    "lat": 35.0623525,
+    "lng": 128.9723213,
+    "popularity": {
+      "score": 0.74856268,
+      "rank": 0.93455497,
+      "level": 5,
+      "color": "#d92f4c"
+    }
+  },
+  {
+    "id": "5c1ad70d8e378b8a",
+    "name": "광안자이아파트",
+    "district": "수영구",
+    "neighborhood": "광안동",
+    "address": "부산광역시 수영구 호암로29번길 50",
+    "households": 971,
+    "lat": 35.1545631,
+    "lng": 129.1092157,
+    "popularity": {
+      "score": 0.23640445,
+      "rank": 0.05235602,
+      "level": 1,
+      "color": "#ffffff"
+    }
+  },
+  {
+    "id": "c67559838c3cdabb",
+    "name": "코오롱하늘채",
+    "district": "사하구",
+    "neighborhood": "신평동",
+    "address": "부산광역시 사하구 신산북로41(신평동, 코오롱하늘채)",
+    "households": 969,
+    "lat": 35.0934278,
+    "lng": 128.967595,
+    "popularity": {
+      "score": 0.49939848,
+      "rank": 0.51570681,
+      "level": 3,
+      "color": "#f7c2cc"
+    }
+  },
+  {
+    "id": "eaa6c299597e8d4c",
+    "name": "대연자이아파트",
+    "district": "남구",
+    "neighborhood": "대연동",
+    "address": "부산광역시 남구 유엔로 246",
+    "households": 965,
+    "lat": 35.1298824,
+    "lng": 129.1032648,
+    "popularity": {
+      "score": 0.75804913,
+      "rank": 0.94502618,
+      "level": 5,
+      "color": "#d92f4c"
+    }
+  },
+  {
+    "id": "55481566b22c867d",
+    "name": "정관신도시 엘에이치4단지",
+    "district": "기장군",
+    "neighborhood": "정관읍",
+    "address": "부산광역시 기장군 정관읍 산단4로 160",
+    "households": 964,
+    "lat": 35.3213739,
+    "lng": 129.1923433,
+    "popularity": {
+      "score": 0.3705379,
+      "rank": 0.21204188,
+      "level": 2,
+      "color": "#fde9ed"
+    }
+  },
+  {
+    "id": "156e06d68bd5419a",
+    "name": "부산지사휴먼시아",
+    "district": "강서구",
+    "neighborhood": "지사동",
+    "address": "과학산단2로20번길 35 (지사동, 부산지사휴먼시아)",
+    "households": 961,
+    "lat": 35.1517398,
+    "lng": 128.8339368,
+    "popularity": {
+      "score": 0.23414961,
+      "rank": 0.04973822,
+      "level": 1,
+      "color": "#ffffff"
+    }
+  },
+  {
+    "id": "781abe45ba4e7735",
+    "name": "대신 푸르지오",
+    "district": "서구",
+    "neighborhood": "서대신동1가",
+    "address": "부산광역시 서구 대영로 38번길 11",
+    "households": 959,
+    "lat": 35.1079698,
+    "lng": 129.0163311,
+    "popularity": {
+      "score": 0.47529226,
+      "rank": 0.46858639,
+      "level": 3,
+      "color": "#f7c2cc"
+    }
+  },
+  {
+    "id": "2375a44796c34ca1",
+    "name": "현대아파트",
+    "district": "해운대구",
+    "neighborhood": "좌동",
+    "address": "부산광역시 해운대구 양운로37번길 11 (좌동, 현대아파트)",
+    "households": 957,
+    "lat": 35.1658039,
+    "lng": 129.1773622,
+    "popularity": {
+      "score": 0.80529008,
+      "rank": 0.97905759,
+      "level": 5,
+      "color": "#d92f4c"
+    }
+  },
+  {
+    "id": "33fcd3a3b6c27f94",
+    "name": "신주례LG1차",
+    "district": "사상구",
+    "neighborhood": "주례동",
+    "address": "부산광역시 사상구 백양대로 342번길16",
+    "households": 953,
+    "lat": 35.1544925,
+    "lng": 129.0150465,
+    "popularity": {
+      "score": 0.59391176,
+      "rank": 0.68848168,
+      "level": 4,
+      "color": "#ec7e91"
+    }
+  },
+  {
+    "id": "30144797076335de",
+    "name": "범천경남아파트",
+    "district": "부산진구",
+    "neighborhood": "범천동",
+    "address": "부산광역시 부산진구 신암로 32",
+    "households": 946,
+    "lat": 35.1452362,
+    "lng": 129.0564749,
+    "popularity": {
+      "score": 0.24583492,
+      "rank": 0.05497382,
+      "level": 1,
+      "color": "#ffffff"
+    }
+  },
+  {
+    "id": "76f25753aeacdd7a",
+    "name": "e편한세상 사하2차",
+    "district": "사하구",
+    "neighborhood": "구평동",
+    "address": "부산광역시 사하구 서포로30번길 12(구평동, e편한세상 사하2차)",
+    "households": 946,
+    "lat": 35.0815324,
+    "lng": 128.985031,
+    "popularity": {
+      "score": 0.38231655,
+      "rank": 0.22513089,
+      "level": 2,
+      "color": "#fde9ed"
+    }
+  },
+  {
+    "id": "66669f38a9a64905",
+    "name": "건영아파트(2차)",
+    "district": "해운대구",
+    "neighborhood": "좌동",
+    "address": "부산광역시 해운대구 세실로 126 (좌동, 건영2차아파트)",
+    "households": 938,
+    "lat": 35.1751226,
+    "lng": 129.1763103,
+    "popularity": {
+      "score": 0.51848717,
+      "rank": 0.54188482,
+      "level": 3,
+      "color": "#f7c2cc"
+    }
+  },
+  {
+    "id": "2c43386f1da0cc0c",
+    "name": "한신아파트",
+    "district": "사하구",
+    "neighborhood": "신평동",
+    "address": "부산광역시 사하구 비봉로 42(신평동, 한신아파트)",
+    "households": 937,
+    "lat": 35.0980462,
+    "lng": 128.9664471,
+    "popularity": {
+      "score": 0.58118135,
+      "rank": 0.65706806,
+      "level": 4,
+      "color": "#ec7e91"
+    }
+  },
+  {
+    "id": "57d9a03dd9f812cf",
+    "name": "신익강변타운아파트",
+    "district": "사하구",
+    "neighborhood": "신평동",
+    "address": "부산광역시 사하구 하신중앙로 180(신평동, 신익강변타운아파트)",
+    "households": 937,
+    "lat": 35.0964213,
+    "lng": 128.9637828,
+    "popularity": {
+      "score": 0.33844042,
+      "rank": 0.17015707,
+      "level": 1,
+      "color": "#ffffff"
+    }
+  },
+  {
+    "id": "d51e1b9137a67a48",
+    "name": "센텀삼익(재송삼익)",
+    "district": "해운대구",
+    "neighborhood": "재송동",
+    "address": "부산광역시 해운대구 해운대로61번가길 6 (재송동, 센텀삼익아파트)",
+    "households": 936,
+    "lat": 35.1911236,
+    "lng": 129.1217899,
+    "popularity": {
+      "score": 0.65030911,
+      "rank": 0.78272251,
+      "level": 4,
+      "color": "#ec7e91"
+    }
+  },
+  {
+    "id": "08c8418d2aaecff9",
+    "name": "낙민동 한일유앤아이",
+    "district": "동래구",
+    "neighborhood": "낙민동",
+    "address": "부산광역시 동래구 온천천로339번길 28",
+    "households": 935,
+    "lat": 35.1954577,
+    "lng": 129.0920294,
+    "popularity": {
+      "score": 0.47046461,
+      "rank": 0.45026178,
+      "level": 3,
+      "color": "#f7c2cc"
+    }
+  },
+  {
+    "id": "b9101592f4bacaf3",
+    "name": "가야롯데캐슬 골드아너",
+    "district": "부산진구",
+    "neighborhood": "가야동",
+    "address": "부산광역시 부산진구 가야동 186",
+    "households": 935,
+    "lat": 35.1529273,
+    "lng": 129.0309789,
+    "popularity": {
+      "score": 0.31755446,
+      "rank": 0.12827225,
+      "level": 1,
+      "color": "#ffffff"
+    }
+  },
+  {
+    "id": "04caf751cb33aeb5",
+    "name": "현대아파트",
+    "district": "기장군",
+    "neighborhood": "기장읍",
+    "address": "부산광역시 기장군 기장읍 기장대로 563",
+    "households": 930,
+    "lat": 35.245172,
+    "lng": 129.2200797,
+    "popularity": {
+      "score": 0.40611537,
+      "rank": 0.28010471,
+      "level": 2,
+      "color": "#fde9ed"
+    }
+  },
+  {
+    "id": "bd307a6de4a2105d",
+    "name": "광안동 쌍용예가 디오션",
+    "district": "수영구",
+    "neighborhood": "광안동",
+    "address": "광안로 20 (광안동, 부산 광안동 쌍용 예가 디 오션)",
+    "households": 928,
+    "lat": 35.1556664,
+    "lng": 129.1154015,
+    "popularity": {
+      "score": 0.18227593,
+      "rank": 0.02617801,
+      "level": 1,
+      "color": "#ffffff"
+    }
+  },
+  {
+    "id": "4b69d631e7eff310",
+    "name": "(좌동)코오롱아파트",
+    "district": "해운대구",
+    "neighborhood": "좌동",
+    "address": "부산광역시 해운대구 대천로 35 (좌동, 코오롱아파트)",
+    "households": 928,
+    "lat": 35.1709506,
+    "lng": 129.1689349,
+    "popularity": {
+      "score": 0.43687207,
+      "rank": 0.37172775,
+      "level": 2,
+      "color": "#fde9ed"
+    }
+  },
+  {
+    "id": "3725064176ba9e71",
+    "name": "LH뜨란채아파트(주공 4단지)",
+    "district": "해운대구",
+    "neighborhood": "좌동",
+    "address": "부산광역시 해운대구 대천로67번길 18 (좌동, 해운대주공아파트)",
+    "households": 928,
+    "lat": 35.1747982,
+    "lng": 129.1691024,
+    "popularity": {
+      "score": 0.46776897,
+      "rank": 0.44240838,
+      "level": 3,
+      "color": "#f7c2cc"
+    }
+  },
+  {
+    "id": "a9b4d9d71f349b7b",
+    "name": "센텀삼환아파트",
+    "district": "해운대구",
+    "neighborhood": "우동",
+    "address": "부산광역시 해운대구 해운대로 361 (우동, 센텀삼환아파트)",
+    "households": 926,
+    "lat": 35.1716002,
+    "lng": 129.1384681,
+    "popularity": {
+      "score": 0.4292614,
+      "rank": 0.35340314,
+      "level": 2,
+      "color": "#fde9ed"
+    }
+  },
+  {
+    "id": "8376ecb1a67a5947",
+    "name": "일광신도시 비스타 동원 2차",
+    "district": "기장군",
+    "neighborhood": "일광읍",
+    "address": "부산광역시 기장군 일광면 해송1로 33",
+    "households": 917,
+    "lat": 35.269323,
+    "lng": 129.2310036,
+    "popularity": {
+      "score": 0.33555532,
+      "rank": 0.16492147,
+      "level": 1,
+      "color": "#ffffff"
+    }
+  },
+  {
+    "id": "458abac958c767e2",
+    "name": "문현동삼성아파트",
+    "district": "남구",
+    "neighborhood": "문현동",
+    "address": "부산광역시 남구 전포대로20번길 15",
+    "households": 916,
+    "lat": 35.1395005,
+    "lng": 129.0692696,
+    "popularity": {
+      "score": 0.35117407,
+      "rank": 0.19371728,
+      "level": 1,
+      "color": "#ffffff"
+    }
+  },
+  {
+    "id": "f5f99c24f3643357",
+    "name": "쌍용더플래티넘사직아시아드아파트",
+    "district": "동래구",
+    "neighborhood": "사직동",
+    "address": "부산광역시 동래구 아시아드대로 134번길 14",
+    "households": 914,
+    "lat": 35.1964773,
+    "lng": 129.0678134,
+    "popularity": {
+      "score": 0.54024945,
+      "rank": 0.57329843,
+      "level": 3,
+      "color": "#f7c2cc"
+    }
+  },
+  {
+    "id": "2b0fdb7eaa456c43",
+    "name": "e편한세상 일광",
+    "district": "기장군",
+    "neighborhood": "일광읍",
+    "address": "부산광역시 기장군 일광면 해빛2로 21",
+    "households": 913,
+    "lat": 35.2685066,
+    "lng": 129.2253552,
+    "popularity": {
+      "score": 0.41172097,
+      "rank": 0.31151832,
+      "level": 2,
+      "color": "#fde9ed"
+    }
+  },
+  {
+    "id": "8a699bd52030346f",
+    "name": "남천자이아파트",
+    "district": "수영구",
+    "neighborhood": "남천동",
+    "address": "부산광역시 수영구 남천동로 46",
+    "households": 913,
+    "lat": 35.1405238,
+    "lng": 129.1128241,
+    "popularity": {
+      "score": 0.41012104,
+      "rank": 0.30104712,
+      "level": 2,
+      "color": "#fde9ed"
+    }
+  },
+  {
+    "id": "983449a05fab172f",
+    "name": "정관 롯데캐슬2차",
+    "district": "기장군",
+    "neighborhood": "정관읍",
+    "address": "부산광역시 기장군 정관읍 정관3로 51",
+    "households": 911,
+    "lat": 35.3312046,
+    "lng": 129.1684987,
+    "popularity": {
+      "score": 0.58463475,
+      "rank": 0.66230366,
+      "level": 4,
+      "color": "#ec7e91"
+    }
+  },
+  {
+    "id": "4555b00fb78b7178",
+    "name": "스위트팰리스",
+    "district": "강서구",
+    "neighborhood": "명지동",
+    "address": "부산광역시 강서구 명지국제5로 165 (명지동, 명지 스위트팰리스)",
+    "households": 908,
+    "lat": 35.1090698,
+    "lng": 128.9204927,
+    "popularity": {
+      "score": 0.50196743,
+      "rank": 0.52356021,
+      "level": 3,
+      "color": "#f7c2cc"
+    }
+  },
+  {
+    "id": "9601ede70e45fbbf",
+    "name": "럭키만덕1차아파트",
+    "district": "북구",
+    "neighborhood": "만덕동",
+    "address": "부산광역시 북구 덕천로 194 (만덕동, 럭키1차아파트)",
+    "households": 900,
+    "lat": 35.2091833,
+    "lng": 129.0270234,
+    "popularity": {
+      "score": 0.39991557,
+      "rank": 0.2591623,
+      "level": 2,
+      "color": "#fde9ed"
+    }
+  },
+  {
+    "id": "cfa0b3e0652b3d1d",
+    "name": "그린숲속아파트",
+    "district": "북구",
+    "neighborhood": "화명동",
+    "address": "부산광역시 북구 산성로 88 (화명동, 그린숲속아파트)",
+    "households": 900,
+    "lat": 35.2410244,
+    "lng": 129.0225827,
+    "popularity": {
+      "score": 0.69372082,
+      "rank": 0.84816754,
+      "level": 5,
+      "color": "#d92f4c"
+    }
+  },
+  {
+    "id": "c88163f1161da254",
+    "name": "모라주공4단지",
+    "district": "사상구",
+    "neighborhood": "모라동",
+    "address": "부산광역시 사상구 모라로 192번길 50",
+    "households": 900,
+    "lat": 35.1834204,
+    "lng": 129.0018412,
+    "popularity": {
+      "score": 0.49394152,
+      "rank": 0.5078534,
+      "level": 3,
+      "color": "#f7c2cc"
+    }
+  },
+  {
+    "id": "ad0d80c133cad5bb",
+    "name": "해운대화목타운",
+    "district": "해운대구",
+    "neighborhood": "좌동",
+    "address": "부산광역시 해운대구 대천로 187 (좌동, 해운대화목타운)",
+    "households": 896,
+    "lat": 35.1718872,
+    "lng": 129.1787616,
+    "popularity": {
+      "score": 0.78736088,
+      "rank": 0.96335079,
+      "level": 5,
+      "color": "#d92f4c"
+    }
+  },
+  {
+    "id": "b3e6af6ad141710d",
+    "name": "동원화인패밀리타운",
+    "district": "부산진구",
+    "neighborhood": "개금동",
+    "address": "부산광역시 부산진구 백양관문로77번길 55",
+    "households": 894,
+    "lat": 35.1632679,
+    "lng": 129.0282971,
+    "popularity": {
+      "score": 0.57925444,
+      "rank": 0.65445026,
+      "level": 4,
+      "color": "#ec7e91"
+    }
+  },
+  {
+    "id": "ce138dff82d8d255",
+    "name": "학장무학",
+    "district": "사상구",
+    "neighborhood": "학장동",
+    "address": "부산광역시 사상구 대동로 84",
+    "households": 893,
+    "lat": 35.1370521,
+    "lng": 128.9775941,
+    "popularity": {
+      "score": 0.27181784,
+      "rank": 0.08376963,
+      "level": 1,
+      "color": "#ffffff"
+    }
+  },
+  {
+    "id": "0a8ad9e472aaebb5",
+    "name": "경동마리나아파트",
+    "district": "해운대구",
+    "neighborhood": "우동",
+    "address": "부산광역시 해운대구 해운대해변로 85 (우동, 경동아파트)",
+    "households": 892,
+    "lat": 35.1632944,
+    "lng": 129.1428514,
+    "popularity": {
+      "score": 0.59639756,
+      "rank": 0.69633508,
+      "level": 4,
+      "color": "#ec7e91"
+    }
+  },
+  {
+    "id": "a3e291fc1cbd8b28",
+    "name": "송정2휴먼시아",
+    "district": "해운대구",
+    "neighborhood": "송정동",
+    "address": "부산광역시 해운대구 해운대로 1188 (송정동, 송정2휴먼시아)",
+    "households": 890,
+    "lat": 35.1908085,
+    "lng": 129.205439,
+    "popularity": {
+      "score": 0.46356433,
+      "rank": 0.42931937,
+      "level": 3,
+      "color": "#f7c2cc"
+    }
+  },
+  {
+    "id": "b19bd238801e75b8",
+    "name": "화명푸르지오 헤리센트",
+    "district": "북구",
+    "neighborhood": "화명동",
+    "address": "부산광역시 북구 산성로 28 (화명동, 화명푸르지오 헤리센트)",
+    "households": 886,
+    "lat": 35.2394423,
+    "lng": 129.0171363,
+    "popularity": {
+      "score": 0.48958008,
+      "rank": 0.4921466,
+      "level": 3,
+      "color": "#f7c2cc"
+    }
+  },
+  {
+    "id": "8796395cbf3a465e",
+    "name": "감만현대1차아파트",
+    "district": "남구",
+    "neighborhood": "감만동",
+    "address": "부산광역시 남구 우암로2번길 5",
+    "households": 885,
+    "lat": 35.111607,
+    "lng": 129.0831476,
+    "popularity": {
+      "score": 0.22074531,
+      "rank": 0.04450262,
+      "level": 1,
+      "color": "#ffffff"
+    }
+  },
+  {
+    "id": "c248ceffeb56377c",
+    "name": "상록한신휴플러스아파트",
+    "district": "북구",
+    "neighborhood": "만덕동",
+    "address": "부산광역시 북구 함박봉로140번길 16 (만덕동, 상록한신휴플러스아파트)",
+    "households": 882,
+    "lat": 35.2047834,
+    "lng": 129.0322388,
+    "popularity": {
+      "score": 0.57527707,
+      "rank": 0.63874346,
+      "level": 4,
+      "color": "#ec7e91"
+    }
+  },
+  {
+    "id": "e415b39481457fcc",
+    "name": "엘시티",
+    "district": "해운대구",
+    "neighborhood": "중동",
+    "address": "부산광역시 해운대구 달맞이길 30(중동, LCT더샵)",
+    "households": 882,
+    "lat": 35.1610639,
+    "lng": 129.1683764,
+    "popularity": {
+      "score": 0.3144081,
+      "rank": 0.12565445,
+      "level": 1,
+      "color": "#ffffff"
+    }
+  },
+  {
+    "id": "bd3289527fdb3b00",
+    "name": "벽산아파트(1차)",
+    "district": "해운대구",
+    "neighborhood": "좌동",
+    "address": "부산광역시 해운대구 대천로 205 (좌동, 벽산1차아파트)",
+    "households": 880,
+    "lat": 35.1705655,
+    "lng": 129.1799815,
+    "popularity": {
+      "score": 0.50528266,
+      "rank": 0.52617801,
+      "level": 3,
+      "color": "#f7c2cc"
+    }
+  },
+  {
+    "id": "9a8ca84b844a7d5b",
+    "name": "거제센트럴자이아파트",
+    "district": "연제구",
+    "neighborhood": "거제동",
+    "address": "부산광역시 연제구 법원북로 93(거제동)",
+    "households": 878,
+    "lat": 35.1932152,
+    "lng": 129.0768951,
+    "popularity": {
+      "score": 0.63345354,
+      "rank": 0.76701571,
+      "level": 4,
+      "color": "#ec7e91"
+    }
+  },
+  {
+    "id": "5018b9ca47ab736f",
+    "name": "교리주공아파트",
+    "district": "기장군",
+    "neighborhood": "기장읍",
+    "address": "부산광역시 기장군 기장읍 차성로397번길 7",
+    "households": 875,
+    "lat": 35.2554359,
+    "lng": 129.2134817,
+    "popularity": {
+      "score": 0.54461085,
+      "rank": 0.57591623,
+      "level": 3,
+      "color": "#f7c2cc"
+    }
+  },
+  {
+    "id": "148f7c556986ce9c",
+    "name": "힐스테이트 명륜 트라디움",
+    "district": "동래구",
+    "neighborhood": "명륜동",
+    "address": "부산광역시 동래구 동래로 57번길 94",
+    "households": 874,
+    "lat": 35.2138674,
+    "lng": 129.0818506,
+    "popularity": {
+      "score": 0.37366838,
+      "rank": 0.21465969,
+      "level": 2,
+      "color": "#fde9ed"
+    }
+  },
+  {
+    "id": "a7236ae4e98db485",
+    "name": "삼정그린코아",
+    "district": "동래구",
+    "neighborhood": "사직동",
+    "address": "부산광역시 동래구 쇠미로 37",
+    "households": 874,
+    "lat": 35.1978553,
+    "lng": 129.0525093,
+    "popularity": {
+      "score": 0.34210737,
+      "rank": 0.17539267,
+      "level": 1,
+      "color": "#ffffff"
+    }
+  },
+  {
+    "id": "5e02a98ec72c8686",
+    "name": "신주례LG2차",
+    "district": "사상구",
+    "neighborhood": "주례동",
+    "address": "부산광역시 사상구 백양대로 342번길 17",
+    "households": 874,
+    "lat": 35.1540681,
+    "lng": 129.0132729,
+    "popularity": {
+      "score": 0.33796029,
+      "rank": 0.16753927,
+      "level": 1,
+      "color": "#ffffff"
+    }
+  },
+  {
+    "id": "777f26408d25e672",
+    "name": "센트럴 스타힐스",
+    "district": "사상구",
+    "neighborhood": "괘법동",
+    "address": "부산광역시 사상구 사상로223번길 23",
+    "households": 874,
+    "lat": 35.1645853,
+    "lng": 128.9821496,
+    "popularity": {
+      "score": 0.37459702,
+      "rank": 0.21727749,
+      "level": 2,
+      "color": "#fde9ed"
+    }
+  },
+  {
+    "id": "c8119e47a7b910e0",
+    "name": "금강펜테리움 센트럴파크 3차",
+    "district": "강서구",
+    "neighborhood": "명지동",
+    "address": "부산광역시 강서구 명지국제5로 110 (명지동, 명지3차금강펜테리움센트럴파크)",
+    "households": 870,
+    "lat": 35.1037595,
+    "lng": 128.9223425,
+    "popularity": {
+      "score": 0.27636983,
+      "rank": 0.09162304,
+      "level": 1,
+      "color": "#ffffff"
+    }
+  },
+  {
+    "id": "e720816ebfb8d222",
+    "name": "영선동반도보라아파트",
+    "district": "영도구",
+    "neighborhood": "영선동4가",
+    "address": "부산광역시 영도구 해안산책길 30 (영선동4가, 영선동반도보라아파트)",
+    "households": 868,
+    "lat": 35.0821022,
+    "lng": 129.0397181,
+    "popularity": {
+      "score": 0.4285494,
+      "rank": 0.35078534,
+      "level": 2,
+      "color": "#fde9ed"
+    }
+  },
+  {
+    "id": "038fd2c5f2780990",
+    "name": "더샵파크리치아파트",
+    "district": "수영구",
+    "neighborhood": "망미동",
+    "address": "부산광역시 수영구 연수로315번길 16 (망미동, 더샾파크리치)",
+    "households": 862,
+    "lat": 35.1733812,
+    "lng": 129.1065824,
+    "popularity": {
+      "score": 0.44781759,
+      "rank": 0.39528796,
+      "level": 2,
+      "color": "#fde9ed"
+    }
+  },
+  {
+    "id": "8c7dba0b3a62d2b0",
+    "name": "범양레우스",
+    "district": "동구",
+    "neighborhood": "초량동",
+    "address": "부산광역시 동구 초량중로 114(초량동, 범양레우스)",
+    "households": 856,
+    "lat": 35.1216241,
+    "lng": 129.0414927,
+    "popularity": {
+      "score": 0.48648206,
+      "rank": 0.48691099,
+      "level": 3,
+      "color": "#f7c2cc"
+    }
+  },
+  {
+    "id": "53682153f5737d0a",
+    "name": "해운대대우1차아파트",
+    "district": "해운대구",
+    "neighborhood": "좌동",
+    "address": "부산광역시 해운대구 세실로 19 (좌동, 해운대대우1차아파트)",
+    "households": 852,
+    "lat": 35.1671447,
+    "lng": 129.179538,
+    "popularity": {
+      "score": 0.67964381,
+      "rank": 0.83507853,
+      "level": 5,
+      "color": "#d92f4c"
+    }
+  },
+  {
+    "id": "b0d863a63fbc7f5b",
+    "name": "롯데아파트",
+    "district": "해운대구",
+    "neighborhood": "우동",
+    "address": "부산광역시 해운대구 해운대로483번길 10 (우동, 롯데아파트)",
+    "households": 852,
+    "lat": 35.1642948,
+    "lng": 129.1485564,
+    "popularity": {
+      "score": 0.49005622,
+      "rank": 0.4947644,
+      "level": 3,
+      "color": "#f7c2cc"
+    }
+  },
+  {
+    "id": "f6b1f3835f4e1d83",
+    "name": "백양뜨란채(당감주공2단지)",
+    "district": "부산진구",
+    "neighborhood": "당감동",
+    "address": "부산광역시 부산진구 백양산로53번길 125",
+    "households": 851,
+    "lat": 35.170367,
+    "lng": 129.0273006,
+    "popularity": {
+      "score": 0.35514833,
+      "rank": 0.20157068,
+      "level": 2,
+      "color": "#fde9ed"
+    }
+  },
+  {
+    "id": "9624c67f9503402c",
+    "name": "명지1차 금강펜테리움 센트럴파크",
+    "district": "강서구",
+    "neighborhood": "명지동",
+    "address": "부산광역시 강서구 명지국제5로 59 (명지동, 명지1차금강펜테리움센트럴파크)",
+    "households": 850,
+    "lat": 35.1002009,
+    "lng": 128.9191361,
+    "popularity": {
+      "score": 0.44970049,
+      "rank": 0.39790576,
+      "level": 2,
+      "color": "#fde9ed"
+    }
+  },
+  {
+    "id": "8e309f5c39bda6d8",
+    "name": "삼한그린타운 2차",
+    "district": "해운대구",
+    "neighborhood": "반송동",
+    "address": "부산광역시 해운대구 신반송로 102 (반송동, 삼한그린타운2차)",
+    "households": 848,
+    "lat": 35.2300248,
+    "lng": 129.1635591,
+    "popularity": {
+      "score": 0.2933761,
+      "rank": 0.11780105,
+      "level": 1,
+      "color": "#ffffff"
+    }
+  },
+  {
+    "id": "9d1c12b977fdf3a8",
+    "name": "부산오션시티푸르지오아파트",
+    "district": "영도구",
+    "neighborhood": "동삼동",
+    "address": "부산광역시 영도구 동삼오션로 30(동삼동)",
+    "households": 846,
+    "lat": 35.0692462,
+    "lng": 129.0834339,
+    "popularity": {
+      "score": 0.24767559,
+      "rank": 0.05759162,
+      "level": 1,
+      "color": "#ffffff"
+    }
+  },
+  {
+    "id": "21c5d0ab07405d38",
+    "name": "센텀 우신골든빌",
+    "district": "해운대구",
+    "neighborhood": "재송동",
+    "address": "부산광역시 해운대구 재반로125번길 30 (재송동, 센텀우신골든빌아파트)",
+    "households": 846,
+    "lat": 35.1903883,
+    "lng": 129.1248894,
+    "popularity": {
+      "score": 0.45908889,
+      "rank": 0.41361257,
+      "level": 3,
+      "color": "#f7c2cc"
+    }
+  },
+  {
+    "id": "43a3a292fca59a04",
+    "name": "해운대 롯데4차",
+    "district": "해운대구",
+    "neighborhood": "좌동",
+    "address": "부산광역시 해운대구 좌동순환로217번길 8 (좌동, 롯데4차아파트)",
+    "households": 842,
+    "lat": 35.1759837,
+    "lng": 129.1809741,
+    "popularity": {
+      "score": 0.41155754,
+      "rank": 0.30890052,
+      "level": 2,
+      "color": "#fde9ed"
+    }
+  },
+  {
+    "id": "c5127870f2065615",
+    "name": "명지오션시티 한신휴플러스",
+    "district": "강서구",
+    "neighborhood": "명지동",
+    "address": "부산광역시 강서구 명지오션시티1로 155 (명지동, 한신휴플러스)",
+    "households": 841,
+    "lat": 35.0809535,
+    "lng": 128.9008019,
+    "popularity": {
+      "score": 0.58801706,
+      "rank": 0.66753927,
+      "level": 4,
+      "color": "#ec7e91"
+    }
+  },
+  {
+    "id": "5c420b8ea930d437",
+    "name": "대원칸타빌멤버스",
+    "district": "부산진구",
+    "neighborhood": "양정동",
+    "address": "부산광역시 부산진구 거제대로 26",
+    "households": 840,
+    "lat": 35.1712666,
+    "lng": 129.0682714,
+    "popularity": {
+      "score": 0.56175281,
+      "rank": 0.61256545,
+      "level": 4,
+      "color": "#ec7e91"
+    }
+  },
+  {
+    "id": "e5aad881610f9943",
+    "name": "율리마을주공아파트",
+    "district": "북구",
+    "neighborhood": "금곡동",
+    "address": "부산광역시 북구 화명신도시로 255 (금곡동, 율리마을주공아파트)",
+    "households": 840,
+    "lat": 35.2463447,
+    "lng": 129.0106054,
+    "popularity": {
+      "score": 0.57360351,
+      "rank": 0.63612565,
+      "level": 4,
+      "color": "#ec7e91"
+    }
+  },
+  {
+    "id": "05895c39c14eb175",
+    "name": "센텀비스타동원",
+    "district": "수영구",
+    "neighborhood": "민락동",
+    "address": "부산광역시 수영구 수영로 754 (민락동, 센텀비스타동원)",
+    "households": 840,
+    "lat": 35.166836,
+    "lng": 129.1204388,
+    "popularity": {
+      "score": 0.41466919,
+      "rank": 0.31937173,
+      "level": 2,
+      "color": "#fde9ed"
+    }
+  },
+  {
+    "id": "a45cbb3dae108251",
+    "name": "주례경동리인",
+    "district": "사상구",
+    "neighborhood": "주례동",
+    "address": "부산광역시 사상구 백양대로 526",
+    "households": 839,
+    "lat": 35.1562062,
+    "lng": 128.9967656,
+    "popularity": {
+      "score": 0.5487625,
+      "rank": 0.59162304,
+      "level": 3,
+      "color": "#f7c2cc"
+    }
+  },
+  {
+    "id": "55b84d8c7dc84ae4",
+    "name": "한신더휴포레스티지",
+    "district": "사하구",
+    "neighborhood": "괴정동",
+    "address": "부산광역시 사하구 사리로106(괴정동, 한신더휴포레스티지)",
+    "households": 835,
+    "lat": 35.1071283,
+    "lng": 128.9993148,
+    "popularity": {
+      "score": 0.43500431,
+      "rank": 0.36649215,
+      "level": 2,
+      "color": "#fde9ed"
+    }
+  },
+  {
+    "id": "ab3c03ab289e8ce8",
+    "name": "주례청구",
+    "district": "사상구",
+    "neighborhood": "주례동",
+    "address": "부산광역시 사상구 백양대로494번길 38",
+    "households": 831,
+    "lat": 35.1550758,
+    "lng": 129.0009132,
+    "popularity": {
+      "score": 0.2639275,
+      "rank": 0.07329843,
+      "level": 1,
+      "color": "#ffffff"
+    }
+  },
+  {
+    "id": "8f59c3c57efd2941",
+    "name": "정관 풀리페아파트",
+    "district": "기장군",
+    "neighborhood": "정관읍",
+    "address": "부산광역시 기장군 정관읍 정관5로 144",
+    "households": 830,
+    "lat": 35.3295822,
+    "lng": 129.1800943,
+    "popularity": {
+      "score": 0.40485341,
+      "rank": 0.26963351,
+      "level": 2,
+      "color": "#fde9ed"
+    }
+  },
+  {
+    "id": "5724992c6ad2831e",
+    "name": "장림현대아파트",
+    "district": "사하구",
+    "neighborhood": "장림동",
+    "address": "부산광역시 사하구 다대로 301(장림동, 장림현대아파트)",
+    "households": 828,
+    "lat": 35.0736843,
+    "lng": 128.9771906,
+    "popularity": {
+      "score": 0.32434007,
+      "rank": 0.14659686,
+      "level": 1,
+      "color": "#ffffff"
+    }
+  },
+  {
+    "id": "2f63efc82584cfa1",
+    "name": "송정1단지 주공아파트(임대)",
+    "district": "해운대구",
+    "neighborhood": "송정동",
+    "address": "부산광역시 해운대구 송정1로 20 (송정동, 송정1단지주공아파트)",
+    "households": 828,
+    "lat": 35.182832,
+    "lng": 129.197043,
+    "popularity": {
+      "score": 0.43267612,
+      "rank": 0.36125654,
+      "level": 2,
+      "color": "#fde9ed"
+    }
+  },
+  {
+    "id": "98a3c68ba2ed602e",
+    "name": "롯데캐슬스타",
+    "district": "해운대구",
+    "neighborhood": "중동",
+    "address": "부산광역시 해운대구 중동2로34번길 15(중동. 롯데캐슬스타)",
+    "households": 828,
+    "lat": 35.1655291,
+    "lng": 129.1636559,
+    "popularity": {
+      "score": 0.40951929,
+      "rank": 0.29842932,
+      "level": 2,
+      "color": "#fde9ed"
+    }
+  },
+  {
+    "id": "a6b04d91911c8795",
+    "name": "기비골마을",
+    "district": "북구",
+    "neighborhood": "덕천동",
+    "address": "부산광역시 북구 만덕1로104번길 29 (덕천동, 기비골마을)",
+    "households": 825,
+    "lat": 35.2158829,
+    "lng": 129.0234061,
+    "popularity": {
+      "score": 0.60214812,
+      "rank": 0.70680628,
+      "level": 4,
+      "color": "#ec7e91"
+    }
+  },
+  {
+    "id": "017fa3c2df04e64a",
+    "name": "구덕대림",
+    "district": "사상구",
+    "neighborhood": "학장동",
+    "address": "부산광역시 사상구 학감대로49번길 62",
+    "households": 825,
+    "lat": 35.1351698,
+    "lng": 128.9925825,
+    "popularity": {
+      "score": 0.44576659,
+      "rank": 0.39005236,
+      "level": 2,
+      "color": "#fde9ed"
+    }
+  },
+  {
+    "id": "c01760f85ff0cbdd",
+    "name": "롯데아파트(3차)",
+    "district": "해운대구",
+    "neighborhood": "좌동",
+    "address": "부산광역시 해운대구 세실로 138 (좌동, 롯데3차아파트)",
+    "households": 824,
+    "lat": 35.1765469,
+    "lng": 129.1777108,
+    "popularity": {
+      "score": 0.45789335,
+      "rank": 0.41099476,
+      "level": 3,
+      "color": "#f7c2cc"
+    }
+  },
+  {
+    "id": "ad564f4851661f52",
+    "name": "태화현대2차",
+    "district": "부산진구",
+    "neighborhood": "당감동",
+    "address": "부산광역시 부산진구 가야대로 635-13",
+    "households": 820,
+    "lat": 35.1567924,
+    "lng": 129.0404356,
+    "popularity": {
+      "score": 0.67213298,
+      "rank": 0.81675393,
+      "level": 5,
+      "color": "#d92f4c"
+    }
+  },
+  {
+    "id": "148f49937febe9a6",
+    "name": "대성타워맨션",
+    "district": "북구",
+    "neighborhood": "만덕동",
+    "address": "부산광역시 북구 덕천로259번길 30 (만덕동, 대성타워맨션)",
+    "households": 816,
+    "lat": 35.2118574,
+    "lng": 129.0347192,
+    "popularity": {
+      "score": 0.57584525,
+      "rank": 0.64136126,
+      "level": 4,
+      "color": "#ec7e91"
+    }
+  },
+  {
+    "id": "ed34be9370dcd58a",
+    "name": "대신푸르지오2차",
+    "district": "서구",
+    "neighborhood": "서대신동2가",
+    "address": "부산광역시 서구 고운들로 181",
+    "households": 815,
+    "lat": 35.1093273,
+    "lng": 129.0123444,
+    "popularity": {
+      "score": 0.29015504,
+      "rank": 0.10209424,
+      "level": 1,
+      "color": "#ffffff"
+    }
+  },
+  {
+    "id": "6a0367e4e06e1b66",
+    "name": "강변뜨란채",
+    "district": "동래구",
+    "neighborhood": "안락동",
+    "address": "부산광역시 동래구 안남로 79",
+    "households": 814,
+    "lat": 35.1950933,
+    "lng": 129.1009468,
+    "popularity": {
+      "score": 0.46268789,
+      "rank": 0.42670157,
+      "level": 3,
+      "color": "#f7c2cc"
+    }
+  },
+  {
+    "id": "01138a15556afb66",
+    "name": "해운대자이2차 1단지",
+    "district": "해운대구",
+    "neighborhood": "우동",
+    "address": "부산광역시 해운대구 해운대로469번길 110 (우동, 해운대자이2차)",
+    "households": 813,
+    "lat": 35.1687933,
+    "lng": 129.1438575,
+    "popularity": {
+      "score": 0.52124277,
+      "rank": 0.55235602,
+      "level": 3,
+      "color": "#f7c2cc"
+    }
+  },
+  {
+    "id": "07d60aa8a9affa47",
+    "name": "구서쌍용예가2단지",
+    "district": "금정구",
+    "neighborhood": "구서동",
+    "address": "부산광역시 금정구 금샘로 262 (구서동, 쌍용예가2단지)",
+    "households": 809,
+    "lat": 35.2469252,
+    "lng": 129.0865808,
+    "popularity": {
+      "score": 0.56341051,
+      "rank": 0.62041885,
+      "level": 4,
+      "color": "#ec7e91"
+    }
+  },
+  {
+    "id": "76aaa96c7e611c9d",
+    "name": "삼한힐파크",
+    "district": "북구",
+    "neighborhood": "화명동",
+    "address": "부산광역시 북구 화명대로 119 (화명동, 삼한힐파크)",
+    "households": 807,
+    "lat": 35.2355913,
+    "lng": 129.0198507,
+    "popularity": {
+      "score": 0.70215472,
+      "rank": 0.85863874,
+      "level": 5,
+      "color": "#d92f4c"
+    }
+  },
+  {
+    "id": "6bd0111819710c5c",
+    "name": "서면비스타동원아파트",
+    "district": "부산진구",
+    "neighborhood": "당감동",
+    "address": "부산광역시 부산진구 당감동 573-89",
+    "households": 806,
+    "lat": 35.1572703,
+    "lng": 129.0371119,
+    "popularity": {
+      "score": 0.51860242,
+      "rank": 0.54450262,
+      "level": 3,
+      "color": "#f7c2cc"
+    }
+  },
+  {
+    "id": "65b8dbdf3eadc715",
+    "name": "서면 비스타동원",
+    "district": "부산진구",
+    "neighborhood": "당감동",
+    "address": "부산진구 마철로 114",
+    "households": 806,
+    "lat": 35.1573279,
+    "lng": 129.0372648,
+    "popularity": {
+      "score": 0.65914529,
+      "rank": 0.79581152,
+      "level": 4,
+      "color": "#ec7e91"
+    }
+  },
+  {
+    "id": "e649258391d26781",
+    "name": "두산위브포세이돈Ⅱ",
+    "district": "동구",
+    "neighborhood": "범일동",
+    "address": "부산광역시 동구 자성로116번길 2(범일동, 두산위브포세이돈Ⅱ)",
+    "households": 804,
+    "lat": 35.1358118,
+    "lng": 129.0639426,
+    "popularity": {
+      "score": 0.32909539,
+      "rank": 0.15445026,
+      "level": 1,
+      "color": "#ffffff"
+    }
+  },
+  {
+    "id": "9038be3a8b6c0a87",
+    "name": "금곡7단지주공아파트",
+    "district": "북구",
+    "neighborhood": "금곡동",
+    "address": "부산광역시 북구 금곡대로550번길 23 (금곡동, 금곡7단지주공아파트)",
+    "households": 802,
+    "lat": 35.2581569,
+    "lng": 129.0135905,
+    "popularity": {
+      "score": 0.49237682,
+      "rank": 0.5,
+      "level": 3,
+      "color": "#f7c2cc"
+    }
+  },
+  {
+    "id": "d45c4c1710f18f0e",
+    "name": "이편한세상 화명힐스",
+    "district": "북구",
+    "neighborhood": "화명동",
+    "address": "부산광역시 북구 화명대로 68 (화명동, 이편한세상화명힐스)",
+    "households": 800,
+    "lat": 35.2336766,
+    "lng": 129.0160183,
+    "popularity": {
+      "score": 0.38775752,
+      "rank": 0.2382199,
+      "level": 2,
+      "color": "#fde9ed"
+    }
+  },
+  {
+    "id": "ca2961b179fbc983",
+    "name": "센텀센시빌",
+    "district": "해운대구",
+    "neighborhood": "우동",
+    "address": "부산광역시 해운대구 해운대로 284 (우동, 센텀센시빌아파트)",
+    "households": 800,
+    "lat": 35.1754142,
+    "lng": 129.1293902,
+    "popularity": {
+      "score": 0.40556911,
+      "rank": 0.27225131,
+      "level": 2,
+      "color": "#fde9ed"
+    }
+  },
+  {
+    "id": "3d73a031e98f16f7",
+    "name": "해운대센트럴파크아파트(주공 2단지)",
+    "district": "해운대구",
+    "neighborhood": "좌동",
+    "address": "부산광역시 해운대구 좌동순환로 118 (좌동, 주공2단지아파트)",
+    "households": 799,
+    "lat": 35.1751127,
+    "lng": 129.1709214,
+    "popularity": {
+      "score": 0.46232552,
+      "rank": 0.42146597,
+      "level": 3,
+      "color": "#f7c2cc"
+    }
+  },
+  {
+    "id": "0dcdc7aed9b3bb48",
+    "name": "경동포레스트힐 행복주택 아미",
+    "district": "서구",
+    "neighborhood": "아미동2가",
+    "address": "부산광역시 서구 옥천로 173번길 29",
+    "households": 797,
+    "lat": 35.1008286,
+    "lng": 129.0105657,
+    "popularity": {
+      "score": 0.46241383,
+      "rank": 0.42408377,
+      "level": 3,
+      "color": "#f7c2cc"
+    }
+  },
+  {
+    "id": "8239ec884c8543fa",
+    "name": "모라우성1차",
+    "district": "사상구",
+    "neighborhood": "모라동",
+    "address": "부산광역시 사상구 백양대로 906",
+    "households": 796,
+    "lat": 35.1880974,
+    "lng": 128.9918931,
+    "popularity": {
+      "score": 0.60163162,
+      "rank": 0.70418848,
+      "level": 4,
+      "color": "#ec7e91"
+    }
+  },
+  {
+    "id": "9e1c4c3d98746af6",
+    "name": "구서선경3차",
+    "district": "금정구",
+    "neighborhood": "구서동",
+    "address": "부산광역시 금정구 금강로565번길 54 (구서동, 선경3차아파트)",
+    "households": 795,
+    "lat": 35.2594932,
+    "lng": 129.0850988,
+    "popularity": {
+      "score": 0.40666938,
+      "rank": 0.28534031,
+      "level": 2,
+      "color": "#fde9ed"
+    }
+  },
+  {
+    "id": "a1bece479c052044",
+    "name": "포레나 부산덕천2차",
+    "district": "북구",
+    "neighborhood": "덕천동",
+    "address": "부산광역시 북구 만덕대로 101(덕천동, 포레나 부산덕천)",
+    "households": 795,
+    "lat": 35.2134048,
+    "lng": 129.0156518,
+    "popularity": {
+      "score": 0.40665018,
+      "rank": 0.28272251,
+      "level": 2,
+      "color": "#fde9ed"
+    }
+  },
+  {
+    "id": "37a2b2e433d5be69",
+    "name": "동래화목타운",
+    "district": "동래구",
+    "neighborhood": "안락동",
+    "address": "부산광역시 동래구 충렬사로 39",
+    "households": 793,
+    "lat": 35.2037126,
+    "lng": 129.0970317,
+    "popularity": {
+      "score": 0.19319211,
+      "rank": 0.03141361,
+      "level": 1,
+      "color": "#ffffff"
+    }
+  },
+  {
+    "id": "c8afe1dd3ab6abba",
+    "name": "신화명리버뷰자이",
+    "district": "북구",
+    "neighborhood": "금곡동",
+    "address": "부산광역시 북구 금곡대로470번길 29 (금곡동, 신화명리버뷰자이)",
+    "households": 792,
+    "lat": 35.2523759,
+    "lng": 129.011897,
+    "popularity": {
+      "score": 0.34690366,
+      "rank": 0.18062827,
+      "level": 1,
+      "color": "#ffffff"
+    }
+  },
+  {
+    "id": "042f7f7678c05e1f",
+    "name": "롯데캐슬마린아파트",
+    "district": "해운대구",
+    "neighborhood": "중동",
+    "address": "부산광역시 해운대구 중동2로34번길 29 (중동, 롯데캐슬마린아파트)",
+    "households": 792,
+    "lat": 35.1656363,
+    "lng": 129.1653789,
+    "popularity": {
+      "score": 0.57817589,
+      "rank": 0.65183246,
+      "level": 4,
+      "color": "#ec7e91"
+    }
+  },
+  {
+    "id": "676b75d3b115aa53",
+    "name": "리버파크 반도유보라",
+    "district": "북구",
+    "neighborhood": "구포동",
+    "address": "부산광역시 북구 백양대로 1136 (구포동, 리버파크 반도유보라)",
+    "households": 790,
+    "lat": 35.2039838,
+    "lng": 129.0021461,
+    "popularity": {
+      "score": 0.26152749,
+      "rank": 0.07068063,
+      "level": 1,
+      "color": "#ffffff"
+    }
+  },
+  {
+    "id": "a195cf3f3526dfca",
+    "name": "세동한신",
+    "district": "부산진구",
+    "neighborhood": "연지동",
+    "address": "부산광역시 부산진구 새싹로 183",
+    "households": 789,
+    "lat": 35.1724512,
+    "lng": 129.0489278,
+    "popularity": {
+      "score": 0.47066126,
+      "rank": 0.45287958,
+      "level": 3,
+      "color": "#f7c2cc"
+    }
+  },
+  {
+    "id": "4c5142810332ed3e",
+    "name": "수정협성휴포레 부산진역더뷰아파트",
+    "district": "동구",
+    "neighborhood": "수정동",
+    "address": "동구 중앙대로 357(수정동, 협성휴포레부산진역)",
+    "households": 788,
+    "lat": 35.1279912,
+    "lng": 129.0467201,
+    "popularity": {
+      "score": 0.13822146,
+      "rank": 0.0104712,
+      "level": 1,
+      "color": "#ffffff"
+    }
+  },
+  {
+    "id": "298c0870f0106ab9",
+    "name": "(좌동)LIG건영아파트",
+    "district": "해운대구",
+    "neighborhood": "좌동",
+    "address": "부산광역시 해운대구 좌동순환로217번길 19 (좌동, 엘아이지건영아파트)",
+    "households": 788,
+    "lat": 35.1776097,
+    "lng": 129.1811215,
+    "popularity": {
+      "score": 0.45044993,
+      "rank": 0.40052356,
+      "level": 3,
+      "color": "#f7c2cc"
+    }
+  },
+  {
+    "id": "f1bae414b0decc75",
+    "name": "이지더원2차 포레온",
+    "district": "기장군",
+    "neighborhood": "일광읍",
+    "address": "부산광역시 기장군 일광읍 해빛5로 26",
+    "households": 786,
+    "lat": 35.2591727,
+    "lng": 129.2208338,
+    "popularity": {
+      "score": 0.25142285,
+      "rank": 0.06020942,
+      "level": 1,
+      "color": "#ffffff"
+    }
+  },
+  {
+    "id": "3816e253850970fd",
+    "name": "네오스포아파트",
+    "district": "부산진구",
+    "neighborhood": "부전동",
+    "address": "부산광역시 부산진구 신천대로 122",
+    "households": 783,
+    "lat": 35.1536256,
+    "lng": 129.0540471,
+    "popularity": {
+      "score": 0.34507424,
+      "rank": 0.17801047,
+      "level": 1,
+      "color": "#ffffff"
+    }
+  },
+  {
+    "id": "be2fd43fc71267b4",
+    "name": "풀리페",
+    "district": "서구",
+    "neighborhood": "남부민동",
+    "address": "부산광역시 서구 해돋이로 23",
+    "households": 782,
+    "lat": 35.0825501,
+    "lng": 129.019937,
+    "popularity": {
+      "score": 0.30567957,
+      "rank": 0.12041885,
+      "level": 1,
+      "color": "#ffffff"
+    }
+  },
+  {
+    "id": "709fd8d83a55203c",
+    "name": "덕포자유",
+    "district": "사상구",
+    "neighborhood": "덕포동",
+    "address": "부산광역시 사상구 백양대로 820",
+    "households": 780,
+    "lat": 35.1811283,
+    "lng": 128.9894683,
+    "popularity": {
+      "score": 0.22590419,
+      "rank": 0.04712042,
+      "level": 1,
+      "color": "#ffffff"
+    }
+  },
+  {
+    "id": "f809fd9779546c0b",
+    "name": "모라벽산",
+    "district": "사상구",
+    "neighborhood": "모라동",
+    "address": "부산광역시 사상구 백양대로934번길 84",
+    "households": 780,
+    "lat": 35.191679,
+    "lng": 128.9941051,
+    "popularity": {
+      "score": 0.41142362,
+      "rank": 0.30628272,
+      "level": 2,
+      "color": "#fde9ed"
+    }
+  },
+  {
+    "id": "dd68b0af6615fe8a",
+    "name": "협성피닉스타운아파트",
+    "district": "부산진구",
+    "neighborhood": "부암동",
+    "address": "부산광역시 부산진구 당감로 108",
+    "households": 774,
+    "lat": 35.1713902,
+    "lng": 129.0379699,
+    "popularity": {
+      "score": 0.48491374,
+      "rank": 0.48429319,
+      "level": 3,
+      "color": "#f7c2cc"
+    }
+  },
+  {
+    "id": "785e08fd5f098e91",
+    "name": "센텀피오레 1차",
+    "district": "해운대구",
+    "neighborhood": "재송동",
+    "address": "부산광역시 해운대구 수영강변대로 382 (재송동, 센텀피오레1차아파트)",
+    "households": 774,
+    "lat": 35.1927392,
+    "lng": 129.1161176,
+    "popularity": {
+      "score": 0.41240094,
+      "rank": 0.31413613,
+      "level": 2,
+      "color": "#fde9ed"
+    }
+  },
+  {
+    "id": "c9e30773376b3c96",
+    "name": "용호예가",
+    "district": "남구",
+    "neighborhood": "용호동",
+    "address": "부산광역시 남구 용호로216번가길 10",
+    "households": 773,
+    "lat": 35.1116434,
+    "lng": 129.10965,
+    "popularity": {
+      "score": 0.36684392,
+      "rank": 0.20942408,
+      "level": 2,
+      "color": "#fde9ed"
+    }
+  },
+  {
+    "id": "0020f3eb49379ed9",
+    "name": "벽산삼협한솔아파트",
+    "district": "해운대구",
+    "neighborhood": "반송동",
+    "address": "부산광역시 해운대구 신반송로 29 (반송동, 벽산삼협한솔아파트)",
+    "households": 764,
+    "lat": 35.2270691,
+    "lng": 129.1594344,
+    "popularity": {
+      "score": 0.43860121,
+      "rank": 0.37434555,
+      "level": 2,
+      "color": "#fde9ed"
+    }
+  },
+  {
+    "id": "6c0f9239f96f1488",
+    "name": "정관신도시 한진해모로",
+    "district": "기장군",
+    "neighborhood": "정관읍",
+    "address": "부산광역시 기장군 정관읍 정관로 548",
+    "households": 763,
+    "lat": 35.3215119,
+    "lng": 129.1731129,
+    "popularity": {
+      "score": 0.45355478,
+      "rank": 0.40575916,
+      "level": 3,
+      "color": "#f7c2cc"
+    }
+  },
+  {
+    "id": "1a1f0e34613f9758",
+    "name": "신구덕우성",
+    "district": "사상구",
+    "neighborhood": "학장동",
+    "address": "부산광역시 사상구 학감대로 109-16",
+    "households": 763,
+    "lat": 35.1402758,
+    "lng": 128.9875119,
+    "popularity": {
+      "score": 0.29203506,
+      "rank": 0.10732984,
+      "level": 1,
+      "color": "#ffffff"
+    }
+  },
+  {
+    "id": "c6f74d3abb6050da",
+    "name": "동래 효성해링턴플레이스",
+    "district": "동래구",
+    "neighborhood": "온천동",
+    "address": "부산광역시 동래구 아시아드대로 255번길 14",
+    "households": 762,
+    "lat": 35.2072183,
+    "lng": 129.0678168,
+    "popularity": {
+      "score": 0.5519308,
+      "rank": 0.59685864,
+      "level": 3,
+      "color": "#f7c2cc"
+    }
+  },
+  {
+    "id": "00791e384a2647ee",
+    "name": "정관신도시 롯데캐슬",
+    "district": "기장군",
+    "neighborhood": "정관읍",
+    "address": "부산광역시 기장군 정관읍 정관3로 52",
+    "households": 761,
+    "lat": 35.3284978,
+    "lng": 129.170041,
+    "popularity": {
+      "score": 0.65745695,
+      "rank": 0.79319372,
+      "level": 4,
+      "color": "#ec7e91"
+    }
+  },
+  {
+    "id": "e28088627db4b491",
+    "name": "정관 이지더원 2차",
+    "district": "기장군",
+    "neighborhood": "정관읍",
+    "address": "부산광역시 기장군 정관읍 정관2로 9",
+    "households": 756,
+    "lat": 35.3340688,
+    "lng": 129.1635624,
+    "popularity": {
+      "score": 0.47418288,
+      "rank": 0.46596859,
+      "level": 3,
+      "color": "#f7c2cc"
+    }
+  },
+  {
+    "id": "f818629693141179",
+    "name": "초읍하늘채포레스원아파트",
+    "district": "부산진구",
+    "neighborhood": "초읍동",
+    "address": "부산광역시 부산진구 성지로 117",
+    "households": 756,
+    "lat": 35.1796543,
+    "lng": 129.0504631,
+    "popularity": {
+      "score": 0.16943644,
+      "rank": 0.01832461,
+      "level": 1,
+      "color": "#ffffff"
+    }
+  },
+  {
+    "id": "4a4d87651c1476d7",
+    "name": "대신롯데캐슬",
+    "district": "서구",
+    "neighborhood": "서대신동3가",
+    "address": "부산광역시 서구 대티로 161",
+    "households": 753,
+    "lat": 35.1156093,
+    "lng": 129.0101256,
+    "popularity": {
+      "score": 0.13947767,
+      "rank": 0.01308901,
+      "level": 1,
+      "color": "#ffffff"
+    }
+  },
+  {
+    "id": "01b981c399e233f3",
+    "name": "센텀리슈빌 1단지 센텀리슈빌 2단지",
+    "district": "해운대구",
+    "neighborhood": "재송동",
+    "address": "부산광역시 해운대구 해운대로76번길 40 (재송동, 센텀계룡리슈빌)",
+    "households": 753,
+    "lat": 35.1912512,
+    "lng": 129.1165481,
+    "popularity": {
+      "score": 0.28577251,
+      "rank": 0.09424084,
+      "level": 1,
+      "color": "#ffffff"
+    }
+  },
+  {
+    "id": "e40cc4a39e14a8a8",
+    "name": "e편한세상 부산항",
+    "district": "동구",
+    "neighborhood": "초량동",
+    "address": "동구 홍곡로 50(초량동, 이편한세상부산항)",
+    "households": 752,
+    "lat": 35.1237212,
+    "lng": 129.0405988,
+    "popularity": {
+      "score": 0.38247621,
+      "rank": 0.22774869,
+      "level": 2,
+      "color": "#fde9ed"
+    }
+  },
+  {
+    "id": "d6638994d91dec8d",
+    "name": "서면동일파크스위트1차",
+    "district": "부산진구",
+    "neighborhood": "부암동",
+    "address": "부산광역시 부산진구 동평로150번길 14",
+    "households": 751,
+    "lat": 35.1651336,
+    "lng": 129.044587,
+    "popularity": {
+      "score": 0.3210862,
+      "rank": 0.13612565,
+      "level": 1,
+      "color": "#ffffff"
+    }
+  },
+  {
+    "id": "4c3994a1f8be4b93",
+    "name": "서면대우디오빌2",
+    "district": "부산진구",
+    "neighborhood": "전포동",
+    "address": "부산광역시 부산진구 전포대로 274",
+    "households": 751,
+    "lat": 35.1609443,
+    "lng": 129.0658134,
+    "popularity": {
+      "score": 0.40423426,
+      "rank": 0.26439791,
+      "level": 2,
+      "color": "#fde9ed"
+    }
+  },
+  {
+    "id": "fc5af793e8b3b6fb",
+    "name": "부산명지 중흥S-클래스 에듀오션",
+    "district": "강서구",
+    "neighborhood": "명지동",
+    "address": "부산광역시 강서구 명지국제5로 90 (명지동, 중흥S-클래스 에듀오션)",
+    "households": 750,
+    "lat": 35.1016629,
+    "lng": 128.9218694,
+    "popularity": {
+      "score": 0.40861174,
+      "rank": 0.29057592,
+      "level": 2,
+      "color": "#fde9ed"
+    }
+  },
+  {
+    "id": "829f5800072d2966",
+    "name": "다대3지구도개공아파트",
+    "district": "사하구",
+    "neighborhood": "다대동",
+    "address": "부산광역시 사하구 다대로 430(다대동, 다대3지구도개공아파트)",
+    "households": 750,
+    "lat": 35.0667978,
+    "lng": 128.9793649,
+    "popularity": {
+      "score": 0.43370097,
+      "rank": 0.36387435,
+      "level": 2,
+      "color": "#fde9ed"
+    }
+  },
+  {
+    "id": "d640c5792a875e9f",
+    "name": "드파인 센텀",
+    "district": "해운대구",
+    "neighborhood": "반여동",
+    "address": "부산광역시 해운대구 선수촌로 30",
+    "households": 750,
+    "lat": 35.1960259,
+    "lng": 129.1194168,
+    "popularity": {
+      "score": 0.66721785,
+      "rank": 0.80628272,
+      "level": 5,
+      "color": "#d92f4c"
+    }
+  },
+  {
+    "id": "9b6a874bb95a9d51",
+    "name": "대우마리나3차아파트",
+    "district": "해운대구",
+    "neighborhood": "우동",
+    "address": "부산광역시 해운대구 해운대해변로 115 (우동, 대우마리나3차아파트)",
+    "households": 750,
+    "lat": 35.1620087,
+    "lng": 129.1443226,
+    "popularity": {
+      "score": 0.26732498,
+      "rank": 0.07591623,
+      "level": 1,
+      "color": "#ffffff"
+    }
+  },
+  {
+    "id": "f61930f666559076",
+    "name": "일광 한신더휴 센트럴포레 2단지",
+    "district": "기장군",
+    "neighborhood": "일광읍",
+    "address": "부산광역시 기장군 일광면 해빛3로 62",
+    "households": 748,
+    "lat": 35.2623395,
+    "lng": 129.2207144,
+    "popularity": {
+      "score": 0.49027824,
+      "rank": 0.4973822,
+      "level": 3,
+      "color": "#f7c2cc"
+    }
+  },
+  {
+    "id": "cfb8bf8ddc8811d8",
+    "name": "용당현대아이파크",
+    "district": "남구",
+    "neighborhood": "용당동",
+    "address": "부산광역시 남구 동명로 26",
+    "households": 748,
+    "lat": 35.1189475,
+    "lng": 129.0990645,
+    "popularity": {
+      "score": 0.38286906,
+      "rank": 0.23036649,
+      "level": 2,
+      "color": "#fde9ed"
+    }
+  },
+  {
+    "id": "3d0522c5ef30f870",
+    "name": "래미안 해운대",
+    "district": "해운대구",
+    "neighborhood": "중동",
+    "address": "부산광역시 해운대구 좌동순환로 402 (중동, 래미안해운대)",
+    "households": 745,
+    "lat": 35.1636159,
+    "lng": 129.1765214,
+    "popularity": {
+      "score": 0.3114672,
+      "rank": 0.12303665,
+      "level": 1,
+      "color": "#ffffff"
+    }
+  },
+  {
+    "id": "1d86f8c204689ee2",
+    "name": "우성베스토피아",
+    "district": "동래구",
+    "neighborhood": "복천동",
+    "address": "부산광역시 동래구 복천로5번길 34",
+    "households": 744,
+    "lat": 35.2067496,
+    "lng": 129.0878941,
+    "popularity": {
+      "score": 0.12720004,
+      "rank": 0.0078534,
+      "level": 1,
+      "color": "#ffffff"
+    }
+  },
+  {
+    "id": "1864a99900c79bb5",
+    "name": "베스티움",
+    "district": "남구",
+    "neighborhood": "문현동",
+    "address": "부산광역시 남구 고동골로 29",
+    "households": 743,
+    "lat": 35.1399251,
+    "lng": 129.0701983,
+    "popularity": {
+      "score": 0.20552899,
+      "rank": 0.03403141,
+      "level": 1,
+      "color": "#ffffff"
+    }
+  },
+  {
+    "id": "4c5edd1a8f5845d7",
+    "name": "화명2차현대아파트",
+    "district": "북구",
+    "neighborhood": "화명동",
+    "address": "부산광역시 북구 화명신도시로 48 (화명동, 화명2차현대아파트)",
+    "households": 743,
+    "lat": 35.2281114,
+    "lng": 129.0105215,
+    "popularity": {
+      "score": 0.44488848,
+      "rank": 0.38481675,
+      "level": 2,
+      "color": "#fde9ed"
+    }
+  },
+  {
+    "id": "fa2a763eb51dab61",
+    "name": "엄궁대림",
+    "district": "사상구",
+    "neighborhood": "엄궁동",
+    "address": "부산광역시 사상구 엄궁로 158",
+    "households": 741,
+    "lat": 35.1291601,
+    "lng": 128.978442,
+    "popularity": {
+      "score": 0.33122934,
+      "rank": 0.15706806,
+      "level": 1,
+      "color": "#ffffff"
+    }
+  },
+  {
+    "id": "b03a956959944aeb",
+    "name": "시청역 비스타 동원",
+    "district": "연제구",
+    "neighborhood": "연산동",
+    "address": "부산광역시 연제구 연제로 30",
+    "households": 740,
+    "lat": 35.1792656,
+    "lng": 129.0769594,
+    "popularity": {
+      "score": 0.35173793,
+      "rank": 0.19633508,
+      "level": 1,
+      "color": "#ffffff"
+    }
+  },
+  {
+    "id": "a1fd0f37900f3da5",
+    "name": "안락 현대아파트",
+    "district": "동래구",
+    "neighborhood": "안락동",
+    "address": "부산광역시 동래구 삼어로 9",
+    "households": 738,
+    "lat": 35.200524,
+    "lng": 129.1144183,
+    "popularity": {
+      "score": 0.41575242,
+      "rank": 0.32460733,
+      "level": 2,
+      "color": "#fde9ed"
+    }
+  },
+  {
+    "id": "d16e940ea4171d29",
+    "name": "명지 대방노블랜드 오션뷰1차",
+    "district": "강서구",
+    "neighborhood": "명지동",
+    "address": "부산광역시 강서구 명지국제5로 30 (명지동, 대방노블랜드오션뷰1차)",
+    "households": 737,
+    "lat": 35.0965133,
+    "lng": 128.9215289,
+    "popularity": {
+      "score": 0.3214227,
+      "rank": 0.13874346,
+      "level": 1,
+      "color": "#ffffff"
+    }
+  },
+  {
+    "id": "0c660e5ee51095b0",
+    "name": "이진젠시티",
+    "district": "부산진구",
+    "neighborhood": "개금동",
+    "address": "부산진구 가야대로 497",
+    "households": 736,
+    "lat": 35.1538983,
+    "lng": 129.0267195,
+    "popularity": {
+      "score": 0.62008237,
+      "rank": 0.7408377,
+      "level": 4,
+      "color": "#ec7e91"
+    }
+  },
+  {
+    "id": "c88231f693a9521c",
+    "name": "대신해모로센트럴",
+    "district": "서구",
+    "neighborhood": "서대신동2가",
+    "address": "부산광역시 서구 대티로 178",
+    "households": 733,
+    "lat": 35.1109466,
+    "lng": 129.0102856,
+    "popularity": {
+      "score": 0.17864314,
+      "rank": 0.02356021,
+      "level": 1,
+      "color": "#ffffff"
+    }
+  },
+  {
+    "id": "3fa12896fe58b8e8",
+    "name": "학장금강",
+    "district": "사상구",
+    "neighborhood": "학장동",
+    "address": "부산광역시 사상구 대동로64번길 25",
+    "households": 730,
+    "lat": 35.1361311,
+    "lng": 128.9783618,
+    "popularity": {
+      "score": 0.42065854,
+      "rank": 0.33507853,
+      "level": 2,
+      "color": "#fde9ed"
+    }
+  },
+  {
+    "id": "38f8fe82c7979d31",
+    "name": "웨이브리즈",
+    "district": "기장군",
+    "neighborhood": "기장읍",
+    "address": "부산광역시 기장군 기장읍 대변로 43",
+    "households": 728,
+    "lat": 35.2329943,
+    "lng": 129.2218167,
+    "popularity": {
+      "score": 0.07046445,
+      "rank": 0.0026178,
+      "level": 1,
+      "color": "#ffffff"
+    }
+  },
+  {
+    "id": "89d04431a97d3a52",
+    "name": "삼성아파트",
+    "district": "해운대구",
+    "neighborhood": "좌동",
+    "address": "부산광역시 해운대구 세실로 174 (좌동, 삼성아파트)",
+    "households": 728,
+    "lat": 35.1793445,
+    "lng": 129.178825,
+    "popularity": {
+      "score": 0.47684925,
+      "rank": 0.47643979,
+      "level": 3,
+      "color": "#f7c2cc"
+    }
+  },
+  {
+    "id": "325c12e31112703f",
+    "name": "서면동일파크스위트3차",
+    "district": "부산진구",
+    "neighborhood": "부암동",
+    "address": "부산광역시 부산진구 동평로 162",
+    "households": 727,
+    "lat": 35.1650788,
+    "lng": 129.0475401,
+    "popularity": {
+      "score": 0.41112596,
+      "rank": 0.30366492,
+      "level": 2,
+      "color": "#fde9ed"
+    }
+  },
+  {
+    "id": "136d7e15e2739dc7",
+    "name": "대연삼익그린아파트",
+    "district": "남구",
+    "neighborhood": "대연동",
+    "address": "부산광역시 남구 황령대로319번가길 142",
+    "households": 725,
+    "lat": 35.1523921,
+    "lng": 129.0876844,
+    "popularity": {
+      "score": 0.39798414,
+      "rank": 0.2565445,
+      "level": 2,
+      "color": "#fde9ed"
+    }
+  },
+  {
+    "id": "2409016f946682c7",
+    "name": "화명리버빌2차아파트",
+    "district": "북구",
+    "neighborhood": "금곡동",
+    "address": "부산광역시 북구 화명신도시로 244 (금곡동, 화명리버빌2차아파트)",
+    "households": 722,
+    "lat": 35.2460244,
+    "lng": 129.0119448,
+    "popularity": {
+      "score": 0.56140742,
+      "rank": 0.60994764,
+      "level": 4,
+      "color": "#ec7e91"
+    }
+  },
+  {
+    "id": "698a7b7cfc52cc7a",
+    "name": "도시화명그린21B",
+    "district": "북구",
+    "neighborhood": "화명동",
+    "address": "부산광역시 북구 양달로 69 (화명동, 도시화명그린21B아파트)",
+    "households": 720,
+    "lat": 35.2449456,
+    "lng": 129.0228252,
+    "popularity": {
+      "score": 0.59224215,
+      "rank": 0.68062827,
+      "level": 4,
+      "color": "#ec7e91"
+    }
+  },
+  {
+    "id": "b36c24a8d9ddfd72",
+    "name": "학장도개공(학장지구임대)아파트",
+    "district": "사상구",
+    "neighborhood": "학장동",
+    "address": "부산광역시 사상구 학감대로 49번길 28-39",
+    "households": 720,
+    "lat": 35.1382256,
+    "lng": 128.9893158,
+    "popularity": {
+      "score": 0.25729584,
+      "rank": 0.06544503,
+      "level": 1,
+      "color": "#ffffff"
+    }
+  },
+  {
+    "id": "0f718da7c7ea1023",
+    "name": "백양산쌍용스윗닷홈",
+    "district": "부산진구",
+    "neighborhood": "부암동",
+    "address": "부산광역시 부산진구 백양산로 70",
+    "households": 718,
+    "lat": 35.175575,
+    "lng": 129.0315292,
+    "popularity": {
+      "score": 0.26150748,
+      "rank": 0.06806283,
+      "level": 1,
+      "color": "#ffffff"
+    }
+  },
+  {
+    "id": "dead187193621eb7",
+    "name": "럭키만덕2차아파트",
+    "district": "북구",
+    "neighborhood": "만덕동",
+    "address": "부산광역시 북구 덕천로234번길 34 (만덕동, 럭키만덕2차아파트)",
+    "households": 714,
+    "lat": 35.2101895,
+    "lng": 129.0277995,
+    "popularity": {
+      "score": 0.46681133,
+      "rank": 0.43455497,
+      "level": 3,
+      "color": "#f7c2cc"
+    }
+  },
+  {
+    "id": "c3db0239c2656f5c",
+    "name": "다대해송아파트",
+    "district": "사하구",
+    "neighborhood": "다대동",
+    "address": "부산광역시 사하구 다대로 470(다대동, 다대해송아파트)",
+    "households": 714,
+    "lat": 35.0624125,
+    "lng": 128.9765513,
+    "popularity": {
+      "score": 0.34900917,
+      "rank": 0.18848168,
+      "level": 1,
+      "color": "#ffffff"
+    }
+  },
+  {
+    "id": "9bf5a158f5edf38c",
+    "name": "금곡5단지주공아파트",
+    "district": "북구",
+    "neighborhood": "금곡동",
+    "address": "부산광역시 북구 효열로37번길 22 (금곡동, 금곡5단지주공아파트)",
+    "households": 713,
+    "lat": 35.2504434,
+    "lng": 129.0135128,
+    "popularity": {
+      "score": 0.63384677,
+      "rank": 0.76963351,
+      "level": 4,
+      "color": "#ec7e91"
+    }
+  },
+  {
+    "id": "b52c6f2a0fd56e9a",
+    "name": "신대연코오롱하늘채",
+    "district": "남구",
+    "neighborhood": "용당동",
+    "address": "부산광역시 남구 홍곡로320번길 132",
+    "households": 712,
+    "lat": 35.1231902,
+    "lng": 129.0932201,
+    "popularity": {
+      "score": 0.08080767,
+      "rank": 0.0052356,
+      "level": 1,
+      "color": "#ffffff"
+    }
+  },
+  {
+    "id": "d1dc2e7242f4c82c",
+    "name": "용호일신님Ⅱ",
+    "district": "남구",
+    "neighborhood": "용호동",
+    "address": "부산광역시 남구 용호로 38-17",
+    "households": 710,
+    "lat": 35.126407,
+    "lng": 129.1063749,
+    "popularity": {
+      "score": 0.49340297,
+      "rank": 0.5026178,
+      "level": 3,
+      "color": "#f7c2cc"
+    }
+  },
+  {
+    "id": "83e00050f478cbed",
+    "name": "사직한신",
+    "district": "동래구",
+    "neighborhood": "사직동",
+    "address": "부산광역시 동래구 쇠미로81번길 33",
+    "households": 710,
+    "lat": 35.2012579,
+    "lng": 129.0528627,
+    "popularity": {
+      "score": 0.32440462,
+      "rank": 0.14921466,
+      "level": 1,
+      "color": "#ffffff"
+    }
+  },
+  {
+    "id": "ceee9e78e7aa84ce",
+    "name": "서면한신아파트",
+    "district": "부산진구",
+    "neighborhood": "전포동",
+    "address": "부산광역시 부산진구 전포대로 294",
+    "households": 705,
+    "lat": 35.1631506,
+    "lng": 129.0664003,
+    "popularity": {
+      "score": 0.545671,
+      "rank": 0.58638743,
+      "level": 3,
+      "color": "#f7c2cc"
+    }
+  },
+  {
+    "id": "916ef8c6673d1ff4",
+    "name": "덕천동 롯데아파트",
+    "district": "북구",
+    "neighborhood": "덕천동",
+    "address": "부산광역시 북구 함박봉로 22 (덕천동, 롯데아파트)",
+    "households": 705,
+    "lat": 35.2099579,
+    "lng": 129.0218318,
+    "popularity": {
+      "score": 0.4069204,
+      "rank": 0.28795812,
+      "level": 2,
+      "color": "#fde9ed"
+    }
+  },
+  {
+    "id": "431e9ad53b02358e",
+    "name": "센텀 동부센트레빌",
+    "district": "해운대구",
+    "neighborhood": "재송동",
+    "address": "부산광역시 해운대구 해운대로161번길 12 (재송동, 센텀동부센트레빌아파트)",
+    "households": 703,
+    "lat": 35.1830523,
+    "lng": 129.1235158,
+    "popularity": {
+      "score": 0.20843969,
+      "rank": 0.03664921,
+      "level": 1,
+      "color": "#ffffff"
+    }
+  },
+  {
+    "id": "364b4ed9c96a96bc",
+    "name": "서부주공아파트",
+    "district": "기장군",
+    "neighborhood": "기장읍",
+    "address": "부산광역시 기장군 기장읍 차성서로 123",
+    "households": 702,
+    "lat": 35.2444879,
+    "lng": 129.2095227,
+    "popularity": {
+      "score": 0.38866264,
+      "rank": 0.2408377,
+      "level": 2,
+      "color": "#fde9ed"
+    }
+  },
+  {
+    "id": "0e8dbc881406f5ad",
+    "name": "동래동일스위트",
+    "district": "동래구",
+    "neighborhood": "명장동",
+    "address": "부산광역시 동래구 시실로 119",
+    "households": 702,
+    "lat": 35.2126817,
+    "lng": 129.0950096,
+    "popularity": {
+      "score": 0.1600773,
+      "rank": 0.01570681,
+      "level": 1,
+      "color": "#ffffff"
+    }
+  },
+  {
+    "id": "e8f514cbde436ab5",
+    "name": "일광 비스타 동원1차",
+    "district": "기장군",
+    "neighborhood": "일광읍",
+    "address": "부산광역시 기장군 일광면 해빛2로 24",
+    "households": 701,
+    "lat": 35.2679276,
+    "lng": 129.2272788,
+    "popularity": {
+      "score": 0.21771224,
+      "rank": 0.04188482,
+      "level": 1,
+      "color": "#ffffff"
+    }
+  }
+]

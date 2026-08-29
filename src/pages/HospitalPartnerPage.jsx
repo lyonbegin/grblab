@@ -3,16 +3,18 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 const NCP_CLIENT_ID = "fu193267aq";
 const BUSAN = { lat: 35.1795543, lng: 129.0756416 };
 const BUSAN_BOX = { south: 34.95, west: 128.72, north: 35.42, east: 129.32 };
-const FONT = "'Pretendard', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif";
+const FONT = "-apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif";
 
 const MAX_NEIGHBORHOODS = 3;
-const APARTMENTS_URL = "/busan-apartments-700plus.json";
-// TEST ONLY: 브라우저에서 SOLAPI 직접 호출
-const SOLAPI_API_KEY = "NCSTBYVI4YZVHL54";
-const SOLAPI_API_SECRET = "EJEAVM1ZEENMWA3TBMUMSQNDNMS8FEAS";
+const APARTMENTS_URL = "/busan-apartments-700plus-with-popularity.json";
+// NAVER Cloud SENS SMS
+// 네이버클라우드 콘솔에서 발급한 값을 입력하세요.
+const NCP_ACCESS_KEY = "NCP_ACCESS_KEY_입력";
+const NCP_SECRET_KEY = "NCP_SECRET_KEY_입력";
+const NCP_SENS_SERVICE_ID = "ncp:sms:kr:서비스ID입력:sens";
 
-// SOLAPI에서 등록/승인된 실제 발신번호를 숫자만 입력하세요.
-const SOLAPI_FROM = "01074186848";
+// SENS에 등록된 발신번호를 숫자만 입력하세요.
+const NCP_SENS_FROM = "발신번호입력";
 
 const C = {
   ink: "#1f2329",
@@ -86,10 +88,20 @@ function loadNaverMapsSDK(clientId) {
 }
 
 async function fetchAllApartments() {
-  const res = await fetch(APARTMENTS_URL, { credentials: "omit" });
+  const res = await fetch(APARTMENTS_URL, {
+    credentials: "omit",
+    cache: "force-cache",
+  });
   if (!res.ok) throw new Error(`${APARTMENTS_URL} HTTP ${res.status}`);
+
   const rows = await res.json();
-  return rows.filter((p) => Number.isFinite(p.lat) && Number.isFinite(p.lng) && Number(p.households) > 0);
+
+  return rows.filter(
+    (p) =>
+      Number.isFinite(p.lat) &&
+      Number.isFinite(p.lng) &&
+      Number(p.households) > 0
+  );
 }
 
 
@@ -104,6 +116,75 @@ function householdTier(n) {
   if (n >= 1500) return { label: "대형 단지", size: 58 };
   if (n >= 1000) return { label: "대단지", size: 52 };
   return { label: "대단지", size: 46 };
+}
+
+
+function popularityRegionKey(district, neighborhood) {
+  return `${String(district || "").trim()}|${String(neighborhood || "").trim()}`;
+}
+
+function haversineKm(a, b) {
+  const toRad = (value) => (Number(value) * Math.PI) / 180;
+  const earthRadiusKm = 6371;
+
+  const lat1 = toRad(a.lat);
+  const lat2 = toRad(b.lat);
+  const dLat = lat2 - lat1;
+  const dLng = toRad(Number(b.lng) - Number(a.lng));
+
+  const sinLat = Math.sin(dLat / 2);
+  const sinLng = Math.sin(dLng / 2);
+  const h =
+    sinLat * sinLat +
+    Math.cos(lat1) * Math.cos(lat2) * sinLng * sinLng;
+
+  return 2 * earthRadiusKm * Math.asin(Math.min(1, Math.sqrt(h)));
+}
+
+function percentileRank(sortedValues, value) {
+  if (!sortedValues.length) return 0;
+  if (sortedValues.length === 1) return 1;
+
+  let low = 0;
+  let high = sortedValues.length;
+
+  while (low < high) {
+    const mid = Math.floor((low + high) / 2);
+    if (sortedValues[mid] <= value) low = mid + 1;
+    else high = mid;
+  }
+
+  return Math.max(0, Math.min(1, low / sortedValues.length));
+}
+
+function popularityColor(level) {
+  const colors = [
+    "#ffffff",
+    "#fde9ed",
+    "#f7c2cc",
+    "#ec7e91",
+    "#d92f4c",
+  ];
+
+  return colors[Math.max(0, Math.min(4, Number(level || 1) - 1))];
+}
+
+function popularityStarColor(level) {
+  return Number(level || 1) >= 4 ? "#ffffff" : "#b52f49";
+}
+
+
+function stableInterestRandom(p) {
+  const source = `${p.id || ""}|${p.name || ""}|${p.district || ""}|${p.neighborhood || ""}`;
+  let hash = 2166136261;
+
+  for (let i = 0; i < source.length; i += 1) {
+    hash ^= source.charCodeAt(i);
+    hash = Math.imul(hash, 16777619);
+  }
+
+  // 0~1 사이의 고정된 값. 새로고침해도 같은 단지는 같은 값.
+  return (hash >>> 0) / 4294967295;
 }
 
 function pointInBounds(p, b) {
@@ -212,7 +293,12 @@ const selectStyle = {
 };
 
 
-function markerHtmlForApartment(p, isPriority, zoom) {
+function markerHtmlForApartment(
+  p,
+  isPriority,
+  zoom,
+  popularity = { level: 1, color: "#ffffff" }
+) {
   const size = apartmentMarkerSize(p.households, zoom);
 
   if (zoom <= 13) {
@@ -222,13 +308,13 @@ function markerHtmlForApartment(p, isPriority, zoom) {
         width:${circle}px;
         height:${circle}px;
         border-radius:50%;
-        background:${isPriority ? C.brand : "#ffffff"};
-        border:2px solid ${isPriority ? C.brand : "#c95a70"};
+        background:${popularity.color};
+        border:${isPriority ? "3px solid #a8243d" : popularity.level >= 4 ? "2px solid #d35b70" : "1.5px solid #d4d7dc"};
         box-shadow:${isPriority ? "0 0 0 5px rgba(201,90,112,.22),0 4px 12px rgba(31,35,41,.18)" : "0 3px 9px rgba(31,35,41,.14)"};
         display:grid;
         place-items:center;
         box-sizing:border-box;
-        color:#fff;
+        color:${popularityStarColor(popularity.level)};
         font-family:${FONT};
         font-weight:950;
         cursor:pointer;
@@ -276,7 +362,7 @@ function markerHtmlForApartment(p, isPriority, zoom) {
         ${isPriority ? `
           <div
             data-priority-clear="1"
-            title="우선권 단지 해제"
+            title="우선권 전담단지 해제"
             style="
               position:absolute;
               right:8px;
@@ -310,13 +396,13 @@ function markerHtmlForApartment(p, isPriority, zoom) {
         width:${m.circle}px;
         height:${m.circle}px;
         border-radius:50%;
-        background:${isPriority ? C.brand : "#ffffff"};
-        border:2.2px solid ${isPriority ? C.brand : "#c95a70"};
+        background:${popularity.color};
+        border:${isPriority ? "3px solid #a8243d" : popularity.level >= 4 ? "2px solid #d35b70" : "1.5px solid #d4d7dc"};
         box-shadow:${isPriority ? "0 0 0 5px rgba(201,90,112,.22),0 5px 14px rgba(31,35,41,.20)" : "0 4px 11px rgba(31,35,41,.16)"};
         display:grid;
         place-items:center;
         box-sizing:border-box;
-        color:#ffffff;
+        color:${popularityStarColor(popularity.level)};
         font-size:${m.circle >= 60 ? 18 : m.circle >= 40 ? 15 : 12}px;
         font-weight:950;
         z-index:2;
@@ -371,23 +457,33 @@ export default function HospitalPartnerPage() {
   const districtSyncTimerRef = useRef(null);
 
   const [allApartments, setAllApartments] = useState([]);
+  const [dataReady, setDataReady] = useState(false);
+  const [mapReady, setMapReady] = useState(false);
   const [error, setError] = useState("");
   const [selectedDistrict, setSelectedDistrict] = useState("");
   const [selectedNeighborhoods, setSelectedNeighborhoods] = useState(() => new Map());
   const selectedNeighborhoodsRef = useRef(new Map());
   const [priorityApartmentKey, setPriorityApartmentKey] = useState(null);
-  const [detailKey, setDetailKey] = useState(null);
-  const [page, setPage] = useState("main"); // main | detail | summary | complete
+  const [page, setPage] = useState("main"); // main | summary | complete
   const [zoom, setZoom] = useState(11);
   const [bounds, setBounds] = useState(null);
   const [listLimit, setListLimit] = useState(12);
+  const [apartmentSort, setApartmentSort] = useState("households"); // households | popularity
+  const [mapListView, setMapListView] = useState("map"); // map | list
+  const [isDesktopLayout, setIsDesktopLayout] = useState(() =>
+    typeof window !== "undefined"
+      ? window.matchMedia("(min-width: 980px)").matches
+      : false
+  );
 
   const [applicantName, setApplicantName] = useState("");
   const [applicantPhone, setApplicantPhone] = useState("");
   const [applicationNo, setApplicationNo] = useState("");
   const [applicationSubmittedAt, setApplicationSubmittedAt] = useState("");
   const [showCertificate, setShowCertificate] = useState(false);
+  const mobileFocusRef = useRef(null);
   const [submitState, setSubmitState] = useState({ loading: false, error: "" });
+  const [applicantModalOpen, setApplicantModalOpen] = useState(false);
 
   // 고령 사용자용 단계 안내.
   // 처음에는 구 선택/지도 확대 방법부터 지도 위 큰 모달로 안내한다.
@@ -399,7 +495,41 @@ export default function HospitalPartnerPage() {
     selectedNeighborhoodsRef.current = selectedNeighborhoods;
   }, [selectedNeighborhoods]);
 
-  // 지도 위 우선권 단지 알약의 오른쪽 X 버튼 처리.
+  useEffect(() => {
+    const media = window.matchMedia("(min-width: 980px)");
+    const sync = () => setIsDesktopLayout(media.matches);
+
+    sync();
+    media.addEventListener?.("change", sync);
+
+    return () => {
+      media.removeEventListener?.("change", sync);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!applicantModalOpen) return;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [applicantModalOpen]);
+
+  useEffect(() => {
+    if (!(isDesktopLayout && page === "complete")) return;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [isDesktopLayout, page]);
+
+  // 지도 위 우선권 전담단지 알약의 오른쪽 X 버튼 처리.
   // Custom Naver Marker HTML 내부 클릭이므로 document capture에서 받아
   // 전체 마커 클릭(상세 열기)으로 전달되지 않게 차단한다.
   useEffect(() => {
@@ -431,10 +561,15 @@ export default function HospitalPartnerPage() {
 
   useEffect(() => {
     let dead = false;
-    (async () => {
+
+    let raf1 = 0;
+    let raf2 = 0;
+
+    const loadData = async () => {
       try {
         const rows = await fetchAllApartments();
         if (dead) return;
+
         const normalized = rows.map((p) => ({
           ...p,
           households: Number(p.households) || 0,
@@ -449,13 +584,29 @@ export default function HospitalPartnerPage() {
           );
         }
 
+        if (dead) return;
         setAllApartments(normalized);
+        setDataReady(true);
       } catch (e) {
         console.error(e);
-        if (!dead) setError(e?.message || "대단지 목록을 불러오지 못했습니다.");
+        if (!dead) {
+          setDataReady(true);
+          setError(e?.message || "대단지 목록을 불러오지 못했습니다.");
+        }
       }
-    })();
-    return () => { dead = true; };
+    };
+
+    raf1 = window.requestAnimationFrame(() => {
+      raf2 = window.requestAnimationFrame(() => {
+        if (!dead) loadData();
+      });
+    });
+
+    return () => {
+      dead = true;
+      window.cancelAnimationFrame(raf1);
+      window.cancelAnimationFrame(raf2);
+    };
   }, []);
 
   const districts = useMemo(
@@ -469,7 +620,24 @@ export default function HospitalPartnerPage() {
     .filter((p) => pointInBounds(p, bounds))
     .sort((a, b) => b.households - a.households), [allApartments, bounds]);
 
-  const detail = useMemo(() => allApartments.find((p) => apartmentKey(p) === detailKey) || null, [allApartments, detailKey]);
+
+  const apartmentPopularity = useMemo(() => {
+    const result = new Map();
+
+    allApartments.forEach((p) => {
+      const popularity = p?.popularity;
+      if (!popularity) return;
+
+      result.set(apartmentKey(p), {
+        score: Number(popularity.score) || 0,
+        rank: Number(popularity.rank) || 0,
+        level: Number(popularity.level) || 1,
+        color: popularity.color || "#ffffff",
+      });
+    });
+
+    return result;
+  }, [allApartments]);
 
   const priorityApartment = useMemo(
     () => allApartments.find((p) => apartmentKey(p) === priorityApartmentKey) || null,
@@ -477,7 +645,7 @@ export default function HospitalPartnerPage() {
   );
 
   // 동 3곳을 고른 뒤에도 바로 단지 화면으로 넘어가지 않는다.
-  // 완료 모달의 [우선권 단지 선택] 버튼을 눌러야 다음 단계가 시작된다.
+  // 완료 모달의 [우선권 전담단지 선택] 버튼을 눌러야 다음 단계가 시작된다.
   const priorityMode =
     priorityStageStarted &&
     selectedNeighborhoods.size === MAX_NEIGHBORHOODS;
@@ -490,6 +658,31 @@ export default function HospitalPartnerPage() {
       .filter((p) => selectedKeys.has(neighborhoodKey(p.district, p.neighborhood)))
       .sort((a, b) => b.households - a.households);
   }, [allApartments, selectedNeighborhoods]);
+
+
+  const sortedSelectedApartmentRows = useMemo(() => {
+    const rows = [...selectedApartmentRows];
+
+    if (apartmentSort === "popularity") {
+      rows.sort((a, b) => {
+        const aPopularity = apartmentPopularity.get(apartmentKey(a));
+        const bPopularity = apartmentPopularity.get(apartmentKey(b));
+
+        const aRank = aPopularity?.rank ?? 0;
+        const bRank = bPopularity?.rank ?? 0;
+
+        if (bRank !== aRank) return bRank - aRank;
+        return Number(b.households || 0) - Number(a.households || 0);
+      });
+    } else {
+      rows.sort(
+        (a, b) =>
+          Number(b.households || 0) - Number(a.households || 0)
+      );
+    }
+
+    return rows;
+  }, [selectedApartmentRows, apartmentSort, apartmentPopularity]);
 
   const visibleNeighborhoods = useMemo(
     () => aggregateNeighborhoodHouseholds(listRows),
@@ -629,10 +822,14 @@ export default function HospitalPartnerPage() {
 
   useEffect(() => {
     let dead = false;
-    (async () => {
+    let raf1 = 0;
+    let raf2 = 0;
+
+    const initializeMap = async () => {
       try {
         await loadNaverMapsSDK(NCP_CLIENT_ID);
         if (dead || !mapElRef.current) return;
+
         const nv = window.naver.maps;
         const map = new nv.Map(mapElRef.current, {
           center: new nv.LatLng(BUSAN.lat, BUSAN.lng),
@@ -649,6 +846,7 @@ export default function HospitalPartnerPage() {
           mapTypeControl: false,
           zoomControl: false,
         });
+
         mapRef.current = map;
         mapEventsRef.current = [
           nv.Event.addListener(map, "dragstart", () => {
@@ -667,26 +865,70 @@ export default function HospitalPartnerPage() {
             }
           }),
         ];
+
         updateMapState();
+        if (!dead) setMapReady(true);
       } catch (e) {
         console.error(e);
-        if (!dead) setError(e?.message || "지도를 불러오지 못했습니다.");
+        if (!dead) {
+          setMapReady(true);
+          setError(e?.message || "지도를 불러오지 못했습니다.");
+        }
       }
-    })();
+    };
+
+    // React의 첫 화면을 먼저 2프레임 그린 뒤 지도 SDK를 붙인다.
+    raf1 = window.requestAnimationFrame(() => {
+      raf2 = window.requestAnimationFrame(() => {
+        if (!dead) initializeMap();
+      });
+    });
+
     return () => {
       dead = true;
+      window.cancelAnimationFrame(raf1);
+      window.cancelAnimationFrame(raf2);
       clearTimeout(districtSyncTimerRef.current);
+
       const nv = window.naver?.maps;
+
       markersRef.current.forEach(({ marker, listener }) => {
         if (listener && nv) nv.Event.removeListener(listener);
         marker.setMap(null);
       });
+
       markersRef.current.clear();
-      if (nv) mapEventsRef.current.forEach((listener) => nv.Event.removeListener(listener));
+
+      if (nv) {
+        mapEventsRef.current.forEach((listener) =>
+          nv.Event.removeListener(listener)
+        );
+      }
+
       mapEventsRef.current = [];
       mapRef.current = null;
     };
   }, []);
+
+  useEffect(() => {
+    if (
+      page !== "main" ||
+      (!isDesktopLayout && mapListView !== "map")
+    ) return;
+
+    const map = mapRef.current;
+    const nv = window.naver?.maps;
+    if (!map || !nv) return;
+
+    const center = map.getCenter();
+
+    const id = window.requestAnimationFrame(() => {
+      nv.Event.trigger(map, "resize");
+      if (center) map.setCenter(center);
+    });
+
+    return () => window.cancelAnimationFrame(id);
+  }, [page, mapListView, priorityStageStarted, isDesktopLayout]);
 
   // 처음 구를 누르거나 사용자가 직접 줌인해서 동 단계(12+)에 들어오면
   // 지도 위에 큰 "동 이름을 하나 눌러주세요" 안내를 최초 1회 띄운다.
@@ -727,10 +969,10 @@ export default function HospitalPartnerPage() {
     });
 
     return () => window.cancelAnimationFrame(id);
-  }, [page]);
+  }, [page, isDesktopLayout]);
 
 
-  // 3/3 완료 모달에서 [우선권 단지 선택]을 누른 뒤에만
+  // 3/3 완료 모달에서 [우선권 전담단지 선택]을 누른 뒤에만
   // 선택한 3개 동의 모든 단지를 한 화면에 들어오도록 자동 fit한다.
   useEffect(() => {
     if (!priorityMode || selectedApartmentRows.length === 0) return;
@@ -747,7 +989,7 @@ export default function HospitalPartnerPage() {
   //   10~11 = 구·군 총 세대수
   //   구·군 클릭 = 해당 구로 자동 확대하여 줌 12 이상 → 동 마커 표시
   //   12 이상 = 동 총 세대수 (동을 눌러도 자동 확대하지 않음)
-  // 우선권 단지 선택 모드:
+  // 우선권 전담단지 선택 모드:
   //   줌과 무관하게 선택한 3개 동의 개별 단지 알약만 표시
   useEffect(() => {
     const map = mapRef.current;
@@ -786,6 +1028,11 @@ export default function HospitalPartnerPage() {
         const apartmentId = apartmentKey(p);
         const key = `priority-apt:${apartmentId}`;
         const isPriority = priorityApartmentKey === apartmentId;
+        const popularity =
+          apartmentPopularity.get(apartmentId) || {
+            level: 1,
+            color: "#ffffff",
+          };
         const pill = apartmentPillMetrics(p.name, p.households);
 
         upsertMarker(
@@ -796,11 +1043,16 @@ export default function HospitalPartnerPage() {
             zIndex: isPriority ? 220 : 60,
             icon: {
               // 강제로 14를 넘겨서, 실제 지도 줌값이 낮아도 항상 알약 마커를 그린다.
-              content: markerHtmlForApartment(p, isPriority, 14),
+              content: markerHtmlForApartment(
+                p,
+                isPriority,
+                14,
+                popularity
+              ),
               anchor: new nv.Point(pill.circle / 2, pill.height / 2),
             },
           },
-          () => openDetail(p)
+          () => setPriorityApartment(p)
         );
       });
     } else if (zoom <= 11) {
@@ -859,7 +1111,7 @@ export default function HospitalPartnerPage() {
       item.marker.setMap(null);
       markersRef.current.delete(key);
     }
-  }, [zoom, bounds, allApartments, districtAgg, selectedNeighborhoods, selectedApartmentRows, priorityMode, priorityApartmentKey, selectedDistrict]);
+  }, [zoom, bounds, allApartments, districtAgg, selectedNeighborhoods, selectedApartmentRows, priorityMode, priorityApartmentKey, selectedDistrict, apartmentPopularity]);
 
   function neighborhoodKey(district, neighborhood) {
     return `${district}|${neighborhood}`;
@@ -939,32 +1191,18 @@ export default function HospitalPartnerPage() {
 
   function setPriorityApartment(p) {
     if (!p?.neighborhood) return;
+
     const nKey = neighborhoodKey(p.district, p.neighborhood);
     if (!selectedNeighborhoods.has(nKey)) return;
 
     const key = apartmentKey(p);
 
-    if (priorityApartmentKey === key) {
-      // 이미 선택된 우선권 단지를 다시 누르면 해제만 하고 지도에 머문다.
-      setPriorityApartmentKey(null);
-      return;
-    }
-
-    // 새 선택 또는 기존 우선권 교체:
-    // 선택 즉시 최종 '활동지역 확인' 화면으로 이동한다.
+    // 지도 또는 목록에서 단지를 누르는 순간
+    // 새 선택/교체 모두 바로 우선권 전담단지로 확정하고 신청 내용 확인으로 이동한다.
     setPriorityApartmentKey(key);
     setPage("summary");
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }
-
-  function openDetail(p) {
-    setDetailKey(apartmentKey(p));
-    setPage("detail");
-  }
-
-  const detailNeighborhoodSelected = detail
-    ? selectedNeighborhoods.has(neighborhoodKey(detail.district, detail.neighborhood))
-    : false;
-  const detailPriority = detail ? priorityApartmentKey === apartmentKey(detail) : false;
 
   function handleGuideAction() {
     if (!guide) return;
@@ -972,6 +1210,7 @@ export default function HospitalPartnerPage() {
     if (guide.type === "dongComplete") {
       if (selectedNeighborhoodsRef.current.size !== MAX_NEIGHBORHOODS) return;
       setPriorityStageStarted(true);
+      setMapListView("map");
       setGuide({ type: "priorityIntro" });
       return;
     }
@@ -981,6 +1220,7 @@ export default function HospitalPartnerPage() {
 
   function renderMapGuide() {
     if (!guide || page !== "main") return null;
+    if (guide.type === "dongComplete") return null;
 
     const selectedNames = [...selectedNeighborhoods.values()].map(
       (n) => n.neighborhood
@@ -1012,13 +1252,13 @@ export default function HospitalPartnerPage() {
       button = remaining === 1 ? "마지막 동 선택하기" : "계속 선택하기";
     } else if (guide.type === "dongComplete") {
       title = "활동지역 선택 완료";
-      body = "이제 선택한 3개 동의 대단지 중에서 우선권 단지 1곳을 선택합니다.";
+      body = "이제 선택한 3개 동의 대단지 중에서 우선권 전담단지 1곳을 선택합니다.";
       progress = "3 / 3";
-      button = "우선권 단지 선택";
+      button = "우선권 전담단지 선택";
       accent = true;
     } else if (guide.type === "priorityIntro") {
-      title = "우선권 단지를 선택해주세요";
-      body = "선택한 3개 동의 아파트만 표시했습니다. 지도에서 아파트 이름을 눌러주세요.";
+      title = "우선권 전담단지를 선택해주세요";
+      body = "선택한 3개 동의 대단지만 표시했습니다. 원하는 단지 이름을 누르면 바로 우선권 전담단지로 선택됩니다.";
       button = "확인";
       accent = true;
     }
@@ -1183,28 +1423,414 @@ export default function HospitalPartnerPage() {
     );
   }
 
+  useEffect(() => {
+    const shouldLock =
+      page === "main" &&
+      guide?.type === "dongComplete";
+
+    if (!shouldLock) return;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [page, guide?.type]);
+
+  useEffect(() => {
+    if (
+      page !== "main" ||
+      priorityMode ||
+      selectedNeighborhoods.size <= 0 ||
+      selectedNeighborhoods.size >= MAX_NEIGHBORHOODS
+    ) {
+      return;
+    }
+
+    const timer = window.setTimeout(() => {
+      mobileFocusRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+
+      window.setTimeout(() => {
+        window.scrollBy({ top: -8, behavior: "smooth" });
+      }, 180);
+    }, 220);
+
+    return () => window.clearTimeout(timer);
+  }, [page, priorityMode, selectedNeighborhoods.size]);
+
+  function renderPriorityTransitionGuide() {
+    if (
+      page !== "main" ||
+      !guide ||
+      guide.type !== "dongComplete"
+    ) {
+      return null;
+    }
+
+    const selectedNames = [...selectedNeighborhoods.values()].map(
+      (n) => n.neighborhood
+    );
+
+    return (
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-label="우선권 전담단지 선택 안내"
+        style={{
+          position: "fixed",
+          inset: 0,
+          zIndex: 1000,
+          background: isDesktopLayout
+            ? "rgba(31,35,41,.44)"
+            : "#f3f1ef",
+          overflowY: "auto",
+          overscrollBehavior: "contain",
+          display: isDesktopLayout ? "grid" : "block",
+          placeItems: isDesktopLayout ? "center" : undefined,
+          padding: isDesktopLayout ? 28 : 0,
+        }}
+      >
+        <div
+          style={{
+            width: isDesktopLayout ? "min(560px, calc(100vw - 56px))" : "100%",
+            maxWidth: isDesktopLayout ? 560 : 520,
+            minHeight: isDesktopLayout ? 0 : "100dvh",
+            maxHeight: isDesktopLayout ? "calc(100vh - 56px)" : undefined,
+            margin: isDesktopLayout ? 0 : "0 auto",
+            background: "#fff",
+            display: "flex",
+            flexDirection: "column",
+            borderRadius: isDesktopLayout ? 22 : 0,
+            overflow: isDesktopLayout ? "hidden" : "visible",
+            boxShadow: isDesktopLayout
+              ? "0 28px 80px rgba(20,24,32,.28)"
+              : "none",
+          }}
+        >
+          <div
+            style={{
+              position: "sticky",
+              top: 0,
+              zIndex: 4,
+              background: "rgba(255,255,255,.98)",
+              backdropFilter: "blur(14px)",
+              borderBottom: `1px solid ${C.line}`,
+              padding: "10px 16px 9px",
+            }}
+          >
+            <div
+              style={{
+                width: 38,
+                height: 4,
+                margin: "0 auto 8px",
+                borderRadius: 999,
+                background: "#e4e2e2",
+              }}
+            />
+
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10 }}>
+              <div style={{ fontSize: 16, fontWeight: 950, letterSpacing: "-.035em" }}>
+                나눔이음
+              </div>
+              <div
+                style={{
+                  padding: "5px 8px",
+                  borderRadius: 999,
+                  background: C.brandSoft,
+                  color: C.brand,
+                  fontSize: 10.5,
+                  fontWeight: 900,
+                }}
+              >
+                2 / 4 · 전담단지 선택
+              </div>
+            </div>
+
+            <div
+              style={{
+                marginTop: 8,
+                display: "flex",
+                alignItems: "center",
+                gap: 6,
+                fontSize: 10.5,
+                fontWeight: 850,
+                color: C.muted,
+              }}
+            >
+              <span style={{ color: C.brand }}>✓ 활동지역 완료</span>
+              <span>→</span>
+              <span style={{ color: C.ink }}>우선권 전담단지</span>
+              <span>→</span>
+              <span>신청정보</span>
+            </div>
+          </div>
+
+          <main
+            style={{
+              flex: "1 1 auto",
+              padding: isDesktopLayout
+                ? "16px 16px 18px"
+                : "16px 16px 140px",
+              overflowY: isDesktopLayout ? "auto" : "visible",
+            }}
+          >
+            <div style={{ textAlign: "center" }}>
+              <div
+                style={{
+                  width: 40,
+                  height: 40,
+                  margin: "0 auto",
+                  borderRadius: "50%",
+                  background: C.brand,
+                  color: "#fff",
+                  display: "grid",
+                  placeItems: "center",
+                  fontSize: 19,
+                  fontWeight: 950,
+                  boxShadow: "0 8px 22px rgba(208,90,114,.22)",
+                }}
+              >
+                ✓
+              </div>
+
+              <h2
+                style={{
+                  margin: "11px 0 0",
+                  fontSize: 22,
+                  lineHeight: 1.3,
+                  letterSpacing: "-.045em",
+                  color: C.ink,
+                }}
+              >
+                활동지역 선택이 완료되었습니다
+              </h2>
+
+              <p
+                style={{
+                  margin: "7px auto 0",
+                  maxWidth: 390,
+                  fontSize: 13.5,
+                  lineHeight: 1.6,
+                  color: C.muted,
+                  fontWeight: 750,
+                  wordBreak: "keep-all",
+                }}
+              >
+                이제 선택한 3개 동 안에서
+                <br/>
+                <strong style={{ color: C.brand }}>예약 우선권을 받을 전담단지 1곳</strong>을 선택합니다.
+              </p>
+            </div>
+
+            <section
+              style={{
+                marginTop: 14,
+                padding: "12px 13px",
+                borderRadius: 14,
+                background: "#faf8f7",
+                border: `1px solid ${C.line}`,
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  gap: 8,
+                }}
+              >
+                <div style={{ fontSize: 11.5, color: C.muted, fontWeight: 850 }}>
+                  내가 선택한 활동지역
+                </div>
+                <div style={{ fontSize: 11.5, color: C.brand, fontWeight: 950 }}>
+                  3 / 3 완료
+                </div>
+              </div>
+
+              <div
+                style={{
+                  marginTop: 8,
+                  display: "flex",
+                  flexWrap: "wrap",
+                  gap: 6,
+                }}
+              >
+                {selectedNames.map((name) => (
+                  <span
+                    key={name}
+                    style={{
+                      minHeight: 30,
+                      padding: "6px 9px",
+                      borderRadius: 999,
+                      background: "#fff",
+                      border: "1px solid #e8c0ca",
+                      color: C.brand,
+                      fontSize: 12,
+                      fontWeight: 900,
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: 4,
+                    }}
+                  >
+                    <span>✓</span>
+                    <span>{name}</span>
+                  </span>
+                ))}
+              </div>
+            </section>
+
+            <div
+              style={{
+                marginTop: 12,
+                width: "100%",
+                borderRadius: 16,
+                overflow: "hidden",
+                background: "#fff",
+                border: "1px solid #f0d2d8",
+              }}
+            >
+              <img
+                src="/hospital-priority-guide.png"
+                alt="우선권 전담단지 안내. 선택한 전담단지는 해당 단지와 주변의 병원동행 예약 신청을 다른 파트너보다 가장 먼저 받아볼 수 있습니다."
+                style={{
+                  display: "block",
+                  width: "100%",
+                  height: "auto",
+                  aspectRatio: "4 / 3",
+                  objectFit: "cover",
+                }}
+              />
+            </div>
+
+          </main>
+
+          <div
+            style={{
+              position: isDesktopLayout ? "relative" : "fixed",
+              left: isDesktopLayout ? "auto" : "50%",
+              bottom: isDesktopLayout ? "auto" : 0,
+              transform: isDesktopLayout ? "none" : "translateX(-50%)",
+              width: isDesktopLayout ? "100%" : "100%",
+              maxWidth: isDesktopLayout ? "none" : 520,
+              zIndex: 1002,
+              padding: isDesktopLayout
+                ? "10px 14px 12px"
+                : "10px 14px calc(10px + env(safe-area-inset-bottom))",
+              background: "rgba(255,255,255,.98)",
+              borderTop: `1px solid ${C.line}`,
+              backdropFilter: "blur(14px)",
+              flex: "0 0 auto",
+            }}
+          >
+            <button
+              type="button"
+              onClick={() => {
+                if (selectedNeighborhoodsRef.current.size !== MAX_NEIGHBORHOODS) return;
+                setPriorityStageStarted(true);
+                setMapListView("map");
+                setGuide({ type: "priorityIntro" });
+                window.scrollTo({ top: 0, behavior: "instant" });
+              }}
+              style={{
+                width: "100%",
+                height: 52,
+                border: 0,
+                borderRadius: 15,
+                background: C.brand,
+                color: "#fff",
+                fontSize: 16,
+                fontWeight: 950,
+                boxShadow: "0 8px 18px rgba(208,90,114,.20)",
+              }}
+            >
+              우선권 전담단지 선택하기
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setGuide(null)}
+              style={{
+                width: "100%",
+                height: 38,
+                marginTop: 4,
+                border: 0,
+                background: "transparent",
+                color: C.muted,
+                fontSize: 12.5,
+                fontWeight: 850,
+              }}
+            >
+              활동지역 다시 선택
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  function goToApplicationStep(stepNo, activeStep) {
+    if (activeStep >= 4 || stepNo >= activeStep) return;
+
+    if (stepNo === 1) {
+      setPage("main");
+      setPriorityStageStarted(false);
+      setGuide(null);
+      setMapListView("map");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+
+    if (stepNo === 2 && selectedNeighborhoodsRef.current.size === MAX_NEIGHBORHOODS) {
+      setPage("main");
+      setPriorityStageStarted(true);
+      setGuide(null);
+      setMapListView("map");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }
+
   function renderApplicationProgress(activeStep = 1) {
     const steps = [
-      { no: 1, label: "활동지역 선택" },
-      { no: 2, label: "신청자 정보" },
-      { no: 3, label: "신청 완료" },
+      { no: 1, label: "활동지역" },
+      { no: 2, label: "전담단지" },
+      { no: 3, label: "신청자 정보" },
+      { no: 4, label: "신청 완료" },
     ];
 
     return (
       <div style={{ marginTop: 17 }}>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", alignItems: "center" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", alignItems: "center" }}>
           {steps.map((step, index) => {
             const active = step.no === activeStep;
             const done = step.no < activeStep;
+            const canGoBack = activeStep < 4 && done && step.no <= 2;
+
             return (
-              <div
+              <button
                 key={step.no}
+                type="button"
+                disabled={!canGoBack}
+                onClick={() => goToApplicationStep(step.no, activeStep)}
                 style={{
                   position: "relative",
                   display: "flex",
                   alignItems: "center",
-                  justifyContent: index === 0 ? "flex-start" : index === 2 ? "flex-end" : "center",
+                  justifyContent:
+                    index === 0
+                      ? "flex-start"
+                      : index === steps.length - 1
+                        ? "flex-end"
+                        : "center",
                   minWidth: 0,
+                  width: "100%",
+                  border: 0,
+                  padding: 0,
+                  background: "transparent",
+                  cursor: canGoBack ? "pointer" : "default",
                 }}
               >
                 {index > 0 && (
@@ -1248,8 +1874,8 @@ export default function HospitalPartnerPage() {
                 >
                   <div
                     style={{
-                      width: 34,
-                      height: 34,
+                      width: 30,
+                      height: 30,
                       borderRadius: "50%",
                       display: "grid",
                       placeItems: "center",
@@ -1257,7 +1883,7 @@ export default function HospitalPartnerPage() {
                       background: active ? C.brand : done ? C.brandSoft : "#fff",
                       border: active ? `1px solid ${C.brand}` : done ? "1px solid #e7bdc7" : "1px solid #d7dbe1",
                       color: active ? "#fff" : done ? C.brand : "#8b9098",
-                      fontSize: 14,
+                      fontSize: 12.5,
                       fontWeight: 950,
                     }}
                   >
@@ -1266,7 +1892,7 @@ export default function HospitalPartnerPage() {
 
                   <div
                     style={{
-                      fontSize: 12,
+                      fontSize: 10.5,
                       fontWeight: active ? 950 : 800,
                       color: active ? C.brand : done ? C.ink : "#7e838b",
                       whiteSpace: "nowrap",
@@ -1276,7 +1902,7 @@ export default function HospitalPartnerPage() {
                     {step.label}
                   </div>
                 </div>
-              </div>
+              </button>
             );
           })}
         </div>
@@ -1292,7 +1918,14 @@ export default function HospitalPartnerPage() {
         >
           <div
             style={{
-              width: activeStep === 1 ? "33.333%" : activeStep === 2 ? "66.666%" : "100%",
+              width:
+                activeStep === 1
+                  ? "25%"
+                  : activeStep === 2
+                    ? "50%"
+                    : activeStep === 3
+                      ? "75%"
+                      : "100%",
               height: "100%",
               background: C.brand,
             }}
@@ -1303,15 +1936,20 @@ export default function HospitalPartnerPage() {
   }
 
   function renderMain() {
+    const initialResourcesReady = dataReady && mapReady;
     const neighborhoodMode = !priorityMode && zoom >= 12;
     const apartmentMode = priorityMode;
     const remainingNeighborhoods = Math.max(
       0,
       MAX_NEIGHBORHOODS - selectedNeighborhoods.size
     );
+    const compactActivityMode =
+      !priorityMode && selectedNeighborhoods.size > 0;
 
     return (
       <>
+        {renderPriorityTransitionGuide()}
+
         <header style={{ padding: "16px 18px 12px", background: "#fff" }}>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
             <div
@@ -1335,26 +1973,30 @@ export default function HospitalPartnerPage() {
                 fontWeight: 900,
               }}
             >
-              활동지역 선택
+              {priorityMode ? "우선권 전담단지" : "활동지역 선택"}
             </div>
           </div>
 
-          {renderApplicationProgress(1)}
+          {renderApplicationProgress(priorityMode ? 2 : 1)}
 
-          <div style={{ marginTop: 26 }}>
+          <div style={{ marginTop: compactActivityMode ? 16 : 26 }}>
             <h1
               style={{
                 margin: 0,
-                fontSize: 29,
+                fontSize: compactActivityMode ? 22 : 29,
                 lineHeight: 1.25,
                 letterSpacing: "-.045em",
                 color: C.ink,
               }}
             >
-              {priorityMode ? "우선권 단지를 선택해주세요" : "병원동행 파트너 신청"}
+              {priorityMode
+                ? "우선권 전담단지를 선택해주세요"
+                : compactActivityMode
+                  ? `활동지역 ${selectedNeighborhoods.size} / ${MAX_NEIGHBORHOODS}`
+                  : "병원동행 파트너 신청"}
             </h1>
 
-            {!priorityMode ? (
+            {!priorityMode && !compactActivityMode ? (
               <div style={{ marginTop: 11 }}>
                 <div
                   style={{
@@ -1378,7 +2020,7 @@ export default function HospitalPartnerPage() {
                   먼저 활동할 지역을 선택해주세요.
                 </div>
               </div>
-            ) : (
+            ) : priorityMode ? (
               <p
                 style={{
                   margin: "10px 0 0",
@@ -1388,12 +2030,12 @@ export default function HospitalPartnerPage() {
                   fontWeight: 700,
                 }}
               >
-                선택한 3개 동의 대단지 중에서 우선권 단지 1곳을 선택해주세요.
+                선택한 3개 동의 대단지 중에서 우선권 전담단지 1곳을 선택해주세요.
               </p>
-            )}
+            ) : null}
           </div>
 
-          {!priorityMode && (
+          {(isDesktopLayout || mapListView === "list") && !priorityMode && !compactActivityMode && (
             <div
               style={{
                 marginTop: 22,
@@ -1453,6 +2095,88 @@ export default function HospitalPartnerPage() {
             </div>
           )}
 
+          {!priorityMode && compactActivityMode && (
+            <div
+              ref={mobileFocusRef}
+              style={{
+                marginTop: 14,
+                padding: "14px 14px 15px",
+                border: `1px solid ${C.line}`,
+                borderRadius: 15,
+                background: "#fff",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  gap: 6,
+                  flexWrap: "wrap",
+                  minHeight: 31,
+                }}
+              >
+                {[...selectedNeighborhoods.values()].map((n) => (
+                  <button
+                    key={neighborhoodKey(n.district, n.neighborhood)}
+                    type="button"
+                    onClick={() => toggleNeighborhood(n)}
+                    style={{
+                      height: 31,
+                      padding: "0 10px",
+                      borderRadius: 999,
+                      border: "1px solid #e7bcc6",
+                      background: C.brandSoft,
+                      color: C.brand,
+                      fontSize: 11.5,
+                      fontWeight: 900,
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 5,
+                    }}
+                  >
+                    {n.neighborhood} <IconX size={12} color={C.brand}/>
+                  </button>
+                ))}
+              </div>
+
+              <div style={{ marginTop: 10, display: "flex", gap: 8, alignItems: "center" }}>
+                <div
+                  style={{
+                    height: 44,
+                    padding: "0 11px",
+                    border: `1px solid ${C.line}`,
+                    borderRadius: 12,
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 6,
+                    fontSize: 13,
+                    fontWeight: 900,
+                    background: "#fff",
+                    flex: "0 0 auto",
+                  }}
+                >
+                  <IconPin size={14}/> 부산
+                </div>
+
+                <select
+                  value={selectedDistrict}
+                  onChange={(e) => navigateToDistrict(e.target.value)}
+                  style={{
+                    ...selectStyle,
+                    height: 44,
+                    borderRadius: 12,
+                    fontSize: 13.5,
+                    fontWeight: 850,
+                  }}
+                >
+                  <option value="">구·군 선택</option>
+                  {districts.map((d) => (
+                    <option key={d} value={d}>{d}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+          )}
+
           {priorityMode && (
             <>
               <div
@@ -1497,11 +2221,167 @@ export default function HospitalPartnerPage() {
           )}
         </header>
 
-        <div style={{ padding: "0 18px", background: "#fff" }}>
+        {!isDesktopLayout && (neighborhoodMode || apartmentMode) && (
           <div
             style={{
+              padding: "0 18px 10px",
+              background: "#fff",
+            }}
+          >
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "1fr 1fr",
+                gap: 5,
+                padding: 4,
+                borderRadius: 13,
+                background: "#f3f4f6",
+                border: `1px solid ${C.line}`,
+              }}
+            >
+              {[
+                ["map", "지도로 보기"],
+                ["list", "리스트로 보기"],
+              ].map(([value, label]) => {
+                const active = mapListView === value;
+
+                return (
+                  <button
+                    key={value}
+                    type="button"
+                    onClick={() => {
+                      setMapListView(value);
+
+                      if (value === "map") {
+                        window.requestAnimationFrame(() => {
+                          const map = mapRef.current;
+                          const nv = window.naver?.maps;
+                          if (!map || !nv) return;
+                          const center = map.getCenter();
+                          nv.Event.trigger(map, "resize");
+                          if (center) map.setCenter(center);
+                        });
+                      }
+                    }}
+                    style={{
+                      minHeight: 42,
+                      border: 0,
+                      borderRadius: 10,
+                      background: active ? "#fff" : "transparent",
+                      color: active ? C.brand : C.muted,
+                      fontSize: 13.5,
+                      fontWeight: active ? 950 : 850,
+                      boxShadow: active
+                        ? "0 1px 5px rgba(31,35,41,.10)"
+                        : "none",
+                    }}
+                  >
+                    {label}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {priorityMode && (isDesktopLayout || mapListView === "map") && (
+          <div
+            style={{
+              padding: "0 18px 9px",
+              background: "#fff",
+            }}
+          >
+            <div
+              style={{
+                minHeight: 34,
+                padding: "7px 10px",
+                borderRadius: 11,
+                border: `1px solid ${C.line}`,
+                background: "#fff",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                gap: 8,
+              }}
+            >
+              <span
+                style={{
+                  fontSize: 11.5,
+                  fontWeight: 900,
+                  color: C.ink,
+                  whiteSpace: "nowrap",
+                }}
+              >
+                전담단지 관심도
+              </span>
+
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 4,
+                  minWidth: 0,
+                }}
+              >
+                <span
+                  style={{
+                    fontSize: 10.5,
+                    color: C.muted,
+                    fontWeight: 800,
+                  }}
+                >
+                  낮음
+                </span>
+
+                {[1, 2, 3, 4, 5].map((level) => (
+                  <span
+                    key={level}
+                    aria-hidden="true"
+                    style={{
+                      width: 12,
+                      height: 12,
+                      borderRadius: "50%",
+                      background: popularityColor(level),
+                      border:
+                        level >= 4
+                          ? "1px solid #d35b70"
+                          : "1px solid #d4d7dc",
+                      flex: "0 0 auto",
+                    }}
+                  />
+                ))}
+
+                <span
+                  style={{
+                    fontSize: 10.5,
+                    color: C.muted,
+                    fontWeight: 800,
+                  }}
+                >
+                  높음
+                </span>
+              </div>
+            </div>
+          </div>
+        )}
+
+        <div className="hp-map-list-layout">
+        <div
+          className="hp-map-pane"
+          style={{
+            padding: isDesktopLayout ? "0" : "0 18px",
+            background: "#fff",
+            display:
+              isDesktopLayout || mapListView === "map"
+                ? "block"
+                : "none",
+          }}
+        >
+          <div
+            className="hp-map-canvas"
+            style={{
               position: "relative",
-              height: priorityMode ? 360 : 405,
+              height: priorityMode ? 360 : compactActivityMode ? 350 : 405,
               borderRadius: 17,
               overflow: "hidden",
               background: "#edf0f2",
@@ -1509,6 +2389,25 @@ export default function HospitalPartnerPage() {
             }}
           >
             <div ref={mapElRef} style={{ position: "absolute", inset: 0 }}/>
+
+            {!mapReady && (
+              <div
+                aria-live="polite"
+                style={{
+                  position: "absolute",
+                  inset: 0,
+                  zIndex: 3,
+                  display: "grid",
+                  placeItems: "center",
+                  background: "#f3f4f5",
+                  color: C.muted,
+                  fontSize: 13,
+                  fontWeight: 800,
+                }}
+              >
+                {initialResourcesReady ? "지도 준비 중" : "활동지역 준비 중"}
+              </div>
+            )}
 
             {priorityMode && (
               <div
@@ -1526,7 +2425,7 @@ export default function HospitalPartnerPage() {
                   fontWeight: 800,
                 }}
               >
-                선택한 3개 동의 대단지만 표시 · ★ 우선권 단지
+                선택한 3개 동의 대단지만 표시 · ★ 우선권 전담단지
               </div>
             )}
 
@@ -1610,8 +2509,19 @@ export default function HospitalPartnerPage() {
           </div>
         </div>
 
-        <section style={{ padding: "18px 18px 115px", background: "#fff" }}>
-          {!priorityMode && (
+        <section
+          className="hp-list-pane"
+          style={{
+            padding:
+              isDesktopLayout
+                ? "0 0 110px"
+                : mapListView === "list"
+                  ? "8px 18px 115px"
+                  : "0 18px 115px",
+            background: "#fff",
+          }}
+        >
+          {!priorityMode && !compactActivityMode && (
             <div
               style={{
                 padding: "18px 16px",
@@ -1709,8 +2619,8 @@ export default function HospitalPartnerPage() {
             </div>
           )}
 
-          {neighborhoodMode ? (
-            <div style={{ marginTop: 17 }}>
+          {(isDesktopLayout || mapListView === "list") && neighborhoodMode ? (
+            <div style={{ marginTop: 8 }}>
               <div
                 style={{
                   display: "flex",
@@ -1832,7 +2742,7 @@ export default function HospitalPartnerPage() {
                 })}
               </div>
             </div>
-          ) : apartmentMode ? (
+          ) : (isDesktopLayout || mapListView === "list") && apartmentMode ? (
             <div>
               <div
                 style={{
@@ -1847,8 +2757,10 @@ export default function HospitalPartnerPage() {
                   <div style={{ fontSize: 16, fontWeight: 900 }}>
                     대단지에서 우선권 선택
                   </div>
-                  <div style={{ marginTop: 3, fontSize: 11.5, color: C.muted }}>
-                    선택한 활동 동 안에서 우선권 단지 1곳을 선택하세요.
+                  <div style={{ marginTop: 3, fontSize: 11.5, color: C.muted, lineHeight: 1.5 }}>
+                    {priorityApartment
+                      ? "다른 단지를 누르면 기존 전담단지가 자동으로 교체됩니다."
+                      : "원하는 단지를 누르면 우선권 전담단지로 바로 선택됩니다."}
                   </div>
                 </div>
                 {selectedDistrict && (
@@ -1870,13 +2782,83 @@ export default function HospitalPartnerPage() {
                   선택한 활동 동에 표시할 대단지가 없습니다.
                 </div>
               ) : (
-                <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                  {selectedApartmentRows.slice(0, listLimit).map((p) => {
+                <>
+                  <div
+                    style={{
+                      marginBottom: 10,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      gap: 10,
+                    }}
+                  >
+                    <div
+                      style={{
+                        fontSize: 11.5,
+                        fontWeight: 850,
+                        color: C.muted,
+                      }}
+                    >
+                      정렬
+                    </div>
+
+                    <div
+                      style={{
+                        display: "inline-flex",
+                        padding: 3,
+                        borderRadius: 10,
+                        background: "#f4f4f5",
+                        border: `1px solid ${C.line}`,
+                      }}
+                    >
+                      {[
+                        ["households", "세대수순"],
+                        ["popularity", "관심도순"],
+                      ].map(([value, label]) => {
+                        const active = apartmentSort === value;
+
+                        return (
+                          <button
+                            key={value}
+                            type="button"
+                            onClick={() => {
+                              setApartmentSort(value);
+                              setListLimit(12);
+                            }}
+                            style={{
+                              minHeight: 32,
+                              padding: "0 11px",
+                              border: 0,
+                              borderRadius: 8,
+                              background: active ? "#fff" : "transparent",
+                              color: active ? C.ink : C.muted,
+                              fontSize: 11.5,
+                              fontWeight: active ? 950 : 800,
+                              boxShadow: active
+                                ? "0 1px 4px rgba(31,35,41,.08)"
+                                : "none",
+                            }}
+                          >
+                            {label}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                  {sortedSelectedApartmentRows.slice(0, listLimit).map((p) => {
                     const key = apartmentKey(p);
                     const nKey = neighborhoodKey(p.district, p.neighborhood);
                     const regionSelected = selectedNeighborhoods.has(nKey);
                     const priority = priorityApartmentKey === key;
                     const tier = householdTier(p.households);
+                    const popularity =
+                      apartmentPopularity.get(key) || {
+                        level: 1,
+                        rank: 0,
+                        color: "#ffffff",
+                      };
 
                     return (
                       <div
@@ -1895,7 +2877,7 @@ export default function HospitalPartnerPage() {
                       >
                         <button
                           type="button"
-                          onClick={() => openDetail(p)}
+                          onClick={() => setPriorityApartment(p)}
                           style={{
                             border: 0,
                             padding: 0,
@@ -1949,6 +2931,51 @@ export default function HospitalPartnerPage() {
                               세대 · {tier.label}
                             </span>
                           </div>
+
+                          <div
+                            style={{
+                              marginTop: 7,
+                              display: "flex",
+                              alignItems: "center",
+                              gap: 7,
+                            }}
+                          >
+                            <span
+                              style={{
+                                fontSize: 10.5,
+                                color: C.muted,
+                                fontWeight: 850,
+                              }}
+                            >
+                              관심도
+                            </span>
+
+                            <div
+                              aria-label={`관심도 ${popularity.level}점`}
+                              style={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: 1.5,
+                                lineHeight: 1,
+                              }}
+                            >
+                              {[1, 2, 3, 4, 5].map((star) => (
+                                <span
+                                  key={star}
+                                  aria-hidden="true"
+                                  style={{
+                                    fontSize: 14,
+                                    color:
+                                      star <= popularity.level
+                                        ? C.brand
+                                        : "#d9dadd",
+                                  }}
+                                >
+                                  ★
+                                </span>
+                              ))}
+                            </div>
+                          </div>
                         </button>
 
                         <div
@@ -1989,36 +3016,20 @@ export default function HospitalPartnerPage() {
                             }}
                           >
                             {priority
-                              ? "우선권 해제"
+                              ? "선택됨"
                               : regionSelected
-                                ? "우선권 선택"
+                                ? "전담단지 선택"
                                 : "동 미선택"}
-                          </button>
-
-                          <button
-                            type="button"
-                            onClick={() => openDetail(p)}
-                            style={{
-                              border: 0,
-                              background: "transparent",
-                              color: C.muted,
-                              fontSize: 10.5,
-                              fontWeight: 700,
-                              display: "flex",
-                              alignItems: "center",
-                              gap: 2,
-                            }}
-                          >
-                            상세 <IconChevronRight size={13}/>
                           </button>
                         </div>
                       </div>
                     );
                   })}
-                </div>
+                  </div>
+                </>
               )}
 
-              {selectedApartmentRows.length > listLimit && (
+              {sortedSelectedApartmentRows.length > listLimit && (
                 <button
                   type="button"
                   onClick={() => setListLimit((n) => n + 12)}
@@ -2040,15 +3051,23 @@ export default function HospitalPartnerPage() {
             </div>
           ) : null}
         </section>
+        </div>
 
+        {guide?.type !== "dongComplete" && (
         <div
+          className="hp-bottom-action"
           style={{
             position: "fixed",
-            left: "50%",
+            left: isDesktopLayout ? "auto" : "50%",
+            right: isDesktopLayout
+              ? "max(24px, calc((100vw - min(1180px, calc(100vw - 48px))) / 2 + 28px))"
+              : "auto",
             bottom: 0,
-            transform: "translateX(-50%)",
-            width: "100%",
-            maxWidth: 520,
+            transform: isDesktopLayout ? "none" : "translateX(-50%)",
+            width: isDesktopLayout
+              ? "clamp(320px, 34vw, 455px)"
+              : "100%",
+            maxWidth: isDesktopLayout ? "none" : 520,
             zIndex: 30,
             padding: "10px 14px calc(10px + env(safe-area-inset-bottom))",
             background: "rgba(255,255,255,.97)",
@@ -2080,8 +3099,10 @@ export default function HospitalPartnerPage() {
               }}
             >
               {selectedNeighborhoods.size === MAX_NEIGHBORHOODS
-                ? "우선권 단지 선택하기"
-                : `활동할 동 ${remainingNeighborhoods}곳을 선택해주세요`}
+                ? "우선권 전담단지 선택하기"
+                : selectedNeighborhoods.size === 0
+                  ? "활동할 동 3곳을 선택해주세요"
+                  : `활동할 동 ${remainingNeighborhoods}곳을 더 선택해주세요`}
             </button>
           ) : (
             <button
@@ -2099,211 +3120,11 @@ export default function HospitalPartnerPage() {
                 fontWeight: 950,
               }}
             >
-              {priorityApartment ? "선택 내용 확인" : "우선권 단지를 선택해주세요"}
+              {priorityApartment ? "선택 내용 확인" : "우선권 전담단지를 선택해주세요"}
             </button>
           )}
         </div>
-      </>
-    );
-  }
-
-  function renderDetail() {
-    if (!detail) return null;
-    const tier = householdTier(detail.households);
-    const nKey = neighborhoodKey(detail.district, detail.neighborhood);
-    const regionSelected = selectedNeighborhoods.has(nKey);
-    const regionFull = !regionSelected && selectedNeighborhoods.size >= MAX_NEIGHBORHOODS;
-    const replacingPriority = Boolean(priorityApartment && !detailPriority);
-
-    return (
-      <>
-        <PageHeader title="대단지 상세" onBack={() => setPage("main")}/>
-        <main style={{ padding: "22px 18px 110px" }}>
-          <div style={{ display: "flex", justifyContent: "space-between", gap: 16, alignItems: "flex-start" }}>
-            <div style={{ minWidth: 0 }}>
-              {detailPriority && <div style={{ display: "inline-flex", padding: "5px 9px", borderRadius: 999, background: C.brandSoft, color: C.brand, fontSize: 11, fontWeight: 900 }}>★ 내 우선권 단지</div>}
-              {replacingPriority && <div style={{ display: "inline-flex", padding: "5px 9px", borderRadius: 999, background: "#fff0f3", color: C.brand, border: "1px solid #ecc1cb", fontSize: 11, fontWeight: 900 }}>우선권 교체 후보</div>}
-              <h2 style={{ margin: (detailPriority || replacingPriority) ? "12px 0 3px" : "0 0 3px", fontSize: 25, lineHeight: 1.22, letterSpacing: "-.04em" }}>{detail.name}</h2>
-              <div style={{ fontSize: 12.5, color: C.muted }}>{detail.district} {detail.neighborhood}</div>
-            </div>
-            <div style={{ flex: "0 0 auto", textAlign: "right" }}>
-              <strong style={{ display: "block", fontSize: detail.households >= 2000 ? 30 : 27, color: C.brand, letterSpacing: "-.04em" }}>{detail.households.toLocaleString("ko-KR")}</strong>
-              <span style={{ fontSize: 11.5, color: C.muted }}>세대 · {tier.label}</span>
-            </div>
-          </div>
-
-          <div style={{ marginTop: 22, padding: 16, border: regionSelected ? `1.5px solid ${C.brand}` : `1px solid ${C.line}`, borderRadius: 16, background: regionSelected ? "#fffafb" : "#fff" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12 }}>
-              <div>
-                <div style={{ fontSize: 11.5, color: C.muted, fontWeight: 800 }}>이 단지가 속한 활동지역</div>
-                <div style={{ marginTop: 4, fontSize: 18, fontWeight: 900 }}>{detail.neighborhood}</div>
-              </div>
-              <button
-                type="button"
-                disabled={regionFull}
-                onClick={() => toggleNeighborhood({
-                  district: detail.district,
-                  neighborhood: detail.neighborhood,
-                })}
-                style={{ height: 36, padding: "0 12px", borderRadius: 10, border: `1px solid ${regionSelected ? C.line : regionFull ? C.line : C.brand}`, background: regionSelected ? "#fff" : regionFull ? "#f3f4f6" : C.brand, color: regionSelected ? C.muted : regionFull ? "#a2a7af" : "#fff", fontSize: 12, fontWeight: 900 }}
-              >
-                {regionSelected ? "활동지역 해제" : regionFull ? "3개 동 선택 완료" : "활동지역 선택"}
-              </button>
-            </div>
-          </div>
-
-          {replacingPriority && (
-            <div style={{
-              marginTop: 16,
-              padding: "16px",
-              borderRadius: 16,
-              background: "#fff8fa",
-              border: `1.5px solid #e8b4c0`,
-            }}>
-              <div style={{ fontSize: 13, color: C.brand, fontWeight: 900 }}>
-                우선권 단지를 교체합니다
-              </div>
-
-              <div style={{
-                marginTop: 12,
-                display: "grid",
-                gridTemplateColumns: "minmax(0,1fr) 28px minmax(0,1fr)",
-                gap: 8,
-                alignItems: "center",
-              }}>
-                <div style={{
-                  minWidth: 0,
-                  padding: "12px",
-                  borderRadius: 12,
-                  background: "#fff",
-                  border: `1px solid ${C.line}`,
-                }}>
-                  <div style={{ fontSize: 10.5, color: C.muted, fontWeight: 800 }}>현재 우선권</div>
-                  <div style={{
-                    marginTop: 5,
-                    fontSize: 13,
-                    fontWeight: 900,
-                    color: C.ink,
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    whiteSpace: "nowrap",
-                  }}>
-                    {priorityApartment.name}
-                  </div>
-                  <div style={{ marginTop: 3, fontSize: 10.5, color: C.muted }}>
-                    {priorityApartment.neighborhood}
-                  </div>
-                </div>
-
-                <div style={{
-                  width: 28,
-                  height: 28,
-                  borderRadius: "50%",
-                  background: C.brandSoft,
-                  color: C.brand,
-                  display: "grid",
-                  placeItems: "center",
-                  fontSize: 17,
-                  fontWeight: 900,
-                }}>
-                  →
-                </div>
-
-                <div style={{
-                  minWidth: 0,
-                  padding: "12px",
-                  borderRadius: 12,
-                  background: C.brandSoft,
-                  border: `1.5px solid #e5aeba`,
-                }}>
-                  <div style={{ fontSize: 10.5, color: C.brand, fontWeight: 900 }}>새 우선권</div>
-                  <div style={{
-                    marginTop: 5,
-                    fontSize: 13,
-                    fontWeight: 900,
-                    color: C.brand,
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    whiteSpace: "nowrap",
-                  }}>
-                    {detail.name}
-                  </div>
-                  <div style={{ marginTop: 3, fontSize: 10.5, color: "#9f5969" }}>
-                    {detail.neighborhood}
-                  </div>
-                </div>
-              </div>
-
-              <div style={{
-                marginTop: 11,
-                padding: "10px 11px",
-                borderRadius: 10,
-                background: "#fff",
-                color: C.muted,
-                fontSize: 11.5,
-                lineHeight: 1.55,
-              }}>
-                이 단지를 선택하면 <strong style={{ color: C.ink }}>{priorityApartment.name}</strong>의 우선권은 자동으로 해제되고,
-                <strong style={{ color: C.brand }}> {detail.name}</strong>으로 교체됩니다.
-              </div>
-            </div>
-          )}
-
-
-
-
-
-          <div style={{ marginTop: 16, padding: "18px 16px", borderRadius: 16, background: "#faf8f7", border: `1px solid ${C.line}` }}>
-            <div style={{ fontSize: 15, fontWeight: 900 }}>우선권 단지란?</div>
-            <p style={{ margin: "10px 0 0", fontSize: 13, lineHeight: 1.65, color: C.muted }}>
-              선택한 3개 활동 동의 대단지 중 예약을 가장 우선적으로 받고 싶은 단지 1곳을 정합니다.
-            </p>
-            <div style={{ marginTop: 12, padding: "10px 12px", borderRadius: 12, background: "#fff", border: `1px solid ${C.line}`, fontSize: 12.5, lineHeight: 1.6 }}>
-              다른 파트너의 선택 현황이나 선택 인원은 화면에 표시하지 않습니다.
-            </div>
-          </div>
-        </main>
-
-        <div style={{ position: "fixed", left: "50%", bottom: 0, transform: "translateX(-50%)", width: "100%", maxWidth: 520, padding: "10px 14px calc(10px + env(safe-area-inset-bottom))", background: "rgba(255,255,255,.97)", borderTop: `1px solid ${C.line}`, zIndex: 30 }}>
-          <button
-            type="button"
-            disabled={!regionSelected}
-            onClick={() => {
-              if (!regionSelected) return;
-
-              if (detailPriority) {
-                // 현재 우선권 단지를 해제하는 경우에는 다시 지도에서 선택할 수 있게 복귀.
-                setPriorityApartmentKey(null);
-                setPage("main");
-                return;
-              }
-
-              // 새 우선권 선택 또는 기존 우선권 교체:
-              // 기존 key는 새 key로 덮어써지고 곧바로 최종 확인 화면을 보여준다.
-              setPriorityApartmentKey(apartmentKey(detail));
-              setPage("summary");
-            }}
-            style={{
-              width: "100%",
-              height: 52,
-              border: 0,
-              borderRadius: 14,
-              background: !regionSelected ? "#d7d9de" : detailPriority ? "#fff" : C.brand,
-              color: !regionSelected ? "#fff" : detailPriority ? C.brand : "#fff",
-              boxShadow: detailPriority ? `inset 0 0 0 1px ${C.brand}` : replacingPriority ? "0 5px 14px rgba(201,90,112,.22)" : "none",
-              fontWeight: 900,
-              fontSize: 15,
-            }}
-          >
-            {!regionSelected
-              ? `${detail.neighborhood}을 먼저 활동지역으로 선택`
-              : detailPriority
-                ? "우선권 단지 선택 해제"
-                : replacingPriority
-                  ? "이 단지로 우선권 교체"
-                  : "이 단지를 우선권 단지로 선택"}
-          </button>
-        </div>
+        )}
       </>
     );
   }
@@ -2319,7 +3140,7 @@ export default function HospitalPartnerPage() {
     return /^01[016789]-\d{3,4}-\d{4}$/.test(String(value || ""));
   }
 
-  async function hmacSha256Hex(secret, message) {
+  async function hmacSha256Base64(secret, message) {
     const encoder = new TextEncoder();
 
     const key = await crypto.subtle.importKey(
@@ -2336,18 +3157,26 @@ export default function HospitalPartnerPage() {
       encoder.encode(message)
     );
 
-    return Array.from(new Uint8Array(signature))
-      .map((b) => b.toString(16).padStart(2, "0"))
-      .join("");
+    const bytes = new Uint8Array(signature);
+    let binary = "";
+
+    bytes.forEach((byte) => {
+      binary += String.fromCharCode(byte);
+    });
+
+    return btoa(binary);
   }
 
-  function makeRandomSalt() {
-    const bytes = new Uint8Array(16);
-    crypto.getRandomValues(bytes);
+  async function makeNcpSensSignature(timestamp, uri) {
+    const message =
+      `POST ${uri}\n` +
+      `${timestamp}\n` +
+      `${NCP_ACCESS_KEY}`;
 
-    return Array.from(bytes)
-      .map((b) => b.toString(16).padStart(2, "0"))
-      .join("");
+    return hmacSha256Base64(
+      NCP_SECRET_KEY,
+      message
+    );
   }
 
   function makeClientApplicationNo() {
@@ -2356,18 +3185,7 @@ export default function HospitalPartnerPage() {
     return `NE-0929-${tail}${rand}`;
   }
 
-  async function makeSolapiAuthHeader() {
-    const date = new Date().toISOString();
-    const salt = makeRandomSalt();
-    const signature = await hmacSha256Hex(
-      SOLAPI_API_SECRET,
-      date + salt
-    );
-
-    return `HMAC-SHA256 apiKey=${SOLAPI_API_KEY}, date=${date}, salt=${salt}, signature=${signature}`;
-  }
-
-  function buildSolapiMessage({
+  function buildNcpSensMessage({
     name,
     regions,
     priorityName,
@@ -2376,28 +3194,30 @@ export default function HospitalPartnerPage() {
     return `[나눔이음의료복지사회적협동조합]
 ${name}님의 병원동행 파트너 신청이 접수되었습니다.
 
-활동지역
-${regions.map((n) => n.neighborhood).join(" / ")}
-
-우선권 단지
-${priorityName}
-
 신청번호
 ${applicationNo}
 
-9월 29일 병원동행 파트너 가입 안내
-오후 1시
-부산시민회관 대강당
+활동지역
+${regions.map((n) => n.neighborhood).join(" / ")}
 
-당일 본인 확인 및 보유 우대 자격증 확인을 진행합니다.
-신분증, 운전면허증, 보유 우대 자격증(해당자)을 준비해주세요.`;
+우선권 전담단지
+${priorityName}
+
+병원동행 파트너 가입 안내
+9월 29일 오후 1시 30분
+부산시민회관
+
+병원동행 파트너 가입과 활동 안내를 진행합니다.
+
+준비물
+신분증 · 운전면허증 · 보유 우대 자격증(해당자)`;
   }
 
   async function submitApplication() {
     const name = applicantName.trim();
     const phone = applicantPhone.trim();
     const phoneDigits = phone.replace(/\D/g, "");
-    const fromDigits = String(SOLAPI_FROM || "").replace(/\D/g, "");
+    const fromDigits = String(NCP_SENS_FROM || "").replace(/\D/g, "");
     const regions = [...selectedNeighborhoods.values()];
 
     if (
@@ -2410,10 +3230,18 @@ ${applicationNo}
       return;
     }
 
-    if (!SOLAPI_API_KEY || !SOLAPI_API_SECRET) {
+    if (
+      !NCP_ACCESS_KEY ||
+      NCP_ACCESS_KEY.includes("_입력") ||
+      !NCP_SECRET_KEY ||
+      NCP_SECRET_KEY.includes("_입력") ||
+      !NCP_SENS_SERVICE_ID ||
+      NCP_SENS_SERVICE_ID.includes("서비스ID입력")
+    ) {
       setSubmitState({
         loading: false,
-        error: "SOLAPI API Key / Secret 설정을 확인해주세요.",
+        error:
+          "네이버클라우드 SENS의 Access Key / Secret Key / SMS Service ID 설정을 확인해주세요.",
       });
       return;
     }
@@ -2422,7 +3250,7 @@ ${applicationNo}
       setSubmitState({
         loading: false,
         error:
-          "HospitalPartnerPage.jsx 상단의 SOLAPI_FROM에 SOLAPI에서 승인된 발신번호를 숫자만 입력해주세요.",
+          "HospitalPartnerPage.jsx 상단의 NCP_SENS_FROM에 SENS에 등록한 발신번호를 숫자만 입력해주세요.",
       });
       return;
     }
@@ -2433,16 +3261,22 @@ ${applicationNo}
     const submittedAt = new Date().toLocaleString("ko-KR");
 
     try {
-      const authorization = await makeSolapiAuthHeader();
+      const timestamp = String(Date.now());
+      const uri =
+        `/sms/v2/services/${NCP_SENS_SERVICE_ID}/messages`;
+      const signature = await makeNcpSensSignature(
+        timestamp,
+        uri
+      );
 
-      const messageText = buildSolapiMessage({
+      const messageText = buildNcpSensMessage({
         name,
         regions,
         priorityName: priorityApartment.name,
         applicationNo: no,
       });
 
-      console.log("[SOLAPI DIRECT] request", {
+      console.log("[NAVER SENS] request", {
         to: phoneDigits.slice(0, 3) + "****" + phoneDigits.slice(-4),
         from: fromDigits,
         applicationNo: no,
@@ -2450,34 +3284,34 @@ ${applicationNo}
       });
 
       const response = await fetch(
-        "https://api.solapi.com/messages/v4/send-many/detail",
+        `https://sens.apigw.ntruss.com${uri}`,
         {
           method: "POST",
           headers: {
-            Authorization: authorization,
             "Content-Type": "application/json",
+            "x-ncp-apigw-timestamp": timestamp,
+            "x-ncp-iam-access-key": NCP_ACCESS_KEY,
+            "x-ncp-apigw-signature-v2": signature,
           },
           body: JSON.stringify({
+            type: "LMS",
+            contentType: "COMM",
+            countryCode: "82",
+            from: fromDigits,
+            subject: "병원동행 파트너 신청 확인",
+            content: messageText,
             messages: [
               {
                 to: phoneDigits,
-                from: fromDigits,
-                text: messageText,
-                type: "LMS",
-                country: "82",
-                subject: "병원동행 파트너 신청 확인",
               },
             ],
-            strict: true,
-            allowDuplicates: false,
-            showMessageList: true,
           }),
         }
       );
 
       const data = await response.json().catch(() => ({}));
 
-      console.log("[SOLAPI DIRECT] response", {
+      console.log("[NAVER SENS] response", {
         httpStatus: response.status,
         ok: response.ok,
         data,
@@ -2485,33 +3319,28 @@ ${applicationNo}
 
       if (!response.ok) {
         const msg =
+          data?.error?.message ||
           data?.errorMessage ||
           data?.message ||
+          data?.error?.errorCode ||
           data?.errorCode ||
-          `SOLAPI HTTP ${response.status}`;
+          `NAVER SENS HTTP ${response.status}`;
 
-        throw new Error(`SOLAPI 오류: ${msg}`);
+        throw new Error(`네이버 SENS 오류: ${msg}`);
       }
 
-      if (
-        Array.isArray(data?.failedMessageList) &&
-        data.failedMessageList.length > 0
-      ) {
-        const failed = data.failedMessageList[0] || {};
+      const statusCode = String(data?.statusCode || "");
+      if (statusCode && !statusCode.startsWith("2")) {
         throw new Error(
           `문자 접수 실패: ${
-            failed.statusMessage ||
-            failed.errorMessage ||
-            failed.statusCode ||
-            "SOLAPI에서 발송을 거절했습니다."
+            data?.statusName ||
+            data?.statusMessage ||
+            statusCode
           }`
         );
       }
 
-      const groupId =
-        data?.groupInfo?.groupId ||
-        data?.groupId ||
-        "";
+      const requestId = data?.requestId || "";
 
       setApplicationNo(no);
       setApplicationSubmittedAt(submittedAt);
@@ -2533,22 +3362,23 @@ ${applicationNo}
               neighborhood: priorityApartment.neighborhood,
               households: priorityApartment.households,
             },
-            smsRequestId: groupId,
-            smsProvider: "SOLAPI_DIRECT_BROWSER",
+            smsRequestId: requestId,
+            smsProvider: "NAVER_CLOUD_SENS_DIRECT_BROWSER",
           })
         );
       } catch (_) {}
 
       setSubmitState({ loading: false, error: "" });
+      setApplicantModalOpen(false);
       setPage("complete");
       window.scrollTo({ top: 0, behavior: "smooth" });
     } catch (e) {
-      console.error("[SOLAPI DIRECT] failed", e);
+      console.error("[NAVER SENS] failed", e);
 
       const raw = e?.message || String(e);
       const corsHint =
         /failed to fetch|networkerror|load failed/i.test(raw)
-          ? "\n브라우저 직접 호출이 차단된 경우 개발자도구 Console의 CORS 오류를 확인해주세요."
+          ? "\n브라우저 직접 호출이 차단된 경우 네이버 SENS API의 CORS 제한 여부를 확인해주세요."
           : "";
 
       setSubmitState({
@@ -2558,129 +3388,139 @@ ${applicationNo}
     }
   }
 
-  // 우선권 단지를 새로 선택하거나 교체하면 이 화면으로 즉시 이동한다.
-  function renderSummary() {
-    const regions = [...selectedNeighborhoods.values()];
+  // 우선권 전담단지를 새로 선택하거나 교체하면 이 화면으로 즉시 이동한다.
+  function renderApplicantModal() {
+    if (!applicantModalOpen) return null;
+
     const canSubmit =
-      regions.length === MAX_NEIGHBORHOODS &&
-      Boolean(priorityApartment) &&
       applicantName.trim().length >= 2 &&
-      validApplicantPhone(applicantPhone);
+      validApplicantPhone(applicantPhone) &&
+      Boolean(priorityApartment) &&
+      selectedNeighborhoods.size === MAX_NEIGHBORHOODS;
 
     return (
-      <>
-        <PageHeader title="신청 내용 확인" onBack={() => setPage("main")}/>
-        <div style={{ padding: "0 18px 4px", background: "#fff" }}>
-          {renderApplicationProgress(2)}
-        </div>
-        <main style={{ padding: "22px 18px 150px" }}>
-          <div>
-            <div style={{ fontSize: 13, color: C.muted, fontWeight: 700 }}>선택한 활동지역</div>
-            <div style={{ marginTop: 4, fontSize: 29, fontWeight: 900, letterSpacing: "-.04em" }}>
-              <span style={{ color: C.brand }}>{regions.length}</span> / {MAX_NEIGHBORHOODS}개 동
-            </div>
-          </div>
-
-          <div style={{ marginTop: 18, display: "flex", flexDirection: "column", gap: 9 }}>
-            {regions.map((n, i) => (
-              <div
-                key={neighborhoodKey(n.district, n.neighborhood)}
-                style={{
-                  padding: 14,
-                  border: `1px solid ${C.line}`,
-                  borderRadius: 15,
-                  background: "#fff",
-                  display: "grid",
-                  gridTemplateColumns: "28px minmax(0,1fr) auto",
-                  gap: 10,
-                  alignItems: "center",
-                }}
-              >
-                <div style={{ width: 28, height: 28, borderRadius: "50%", background: C.brandSoft, color: C.brand, display: "grid", placeItems: "center", fontSize: 12, fontWeight: 900 }}>
-                  {i + 1}
-                </div>
-                <div style={{ minWidth: 0 }}>
-                  <div style={{ fontSize: 15, fontWeight: 900 }}>{n.neighborhood}</div>
-                  <div style={{ marginTop: 3, fontSize: 11.5, color: C.muted }}>
-                    {n.district} · 대단지 {n.count || 0}곳 · {(n.households || 0).toLocaleString("ko-KR")}세대
-                  </div>
-                </div>
-                <button
-                  type="button"
-                  aria-label="활동지역 변경"
-                  onClick={() => { toggleNeighborhood(n); setPage("main"); }}
-                  style={{ width: 34, height: 34, border: `1px solid ${C.line}`, borderRadius: 10, background: "#fff", display: "grid", placeItems: "center" }}
-                >
-                  <IconX/>
-                </button>
-              </div>
-            ))}
-          </div>
-
-          <div style={{ marginTop: 22 }}>
-            <div style={{ fontSize: 13, color: C.muted, fontWeight: 700 }}>우선권 단지</div>
-            {priorityApartment ? (
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-label="신청자 정보 입력"
+        onMouseDown={(e) => {
+          if (e.target === e.currentTarget && !submitState.loading) {
+            setApplicantModalOpen(false);
+          }
+        }}
+        style={{
+          position: "fixed",
+          inset: 0,
+          zIndex: 1200,
+          background: "rgba(31,35,41,.46)",
+          display: "flex",
+          alignItems: isDesktopLayout ? "center" : "flex-end",
+          justifyContent: "center",
+          padding: isDesktopLayout ? 24 : 0,
+        }}
+      >
+        <div
+          style={{
+            width: "100%",
+            maxWidth: isDesktopLayout ? 520 : 520,
+            maxHeight: isDesktopLayout ? "calc(100dvh - 48px)" : "92dvh",
+            overflowY: "auto",
+            borderRadius: isDesktopLayout ? 22 : "22px 22px 0 0",
+            background: "#fff",
+            boxShadow: isDesktopLayout
+              ? "0 24px 70px rgba(31,35,41,.26)"
+              : "0 -16px 42px rgba(31,35,41,.18)",
+            paddingBottom: isDesktopLayout
+              ? 16
+              : "calc(16px + env(safe-area-inset-bottom))",
+          }}
+        >
+          <div
+            style={{
+              position: "sticky",
+              top: 0,
+              zIndex: 2,
+              background: "rgba(255,255,255,.98)",
+              padding: isDesktopLayout ? "18px 18px 14px" : "10px 18px 12px",
+              borderBottom: `1px solid ${C.line}`,
+            }}
+          >
+            {!isDesktopLayout && (
               <div
                 style={{
-                  marginTop: 9,
-                  padding: "16px 15px",
-                  borderRadius: 16,
-                  background: C.brandSoft,
-                  border: `1.5px solid #e7b5c1`,
-                  display: "flex",
-                  justifyContent: "space-between",
-                  gap: 12,
-                  alignItems: "center",
+                  width: 40,
+                  height: 4,
+                  margin: "0 auto 10px",
+                  borderRadius: 999,
+                  background: "#dfe1e5",
                 }}
-              >
-                <div style={{ minWidth: 0 }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
-                    <span style={{ color: C.brand, fontSize: 18 }}>★</span>
-                    <strong style={{ fontSize: 16, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                      {priorityApartment.name}
-                    </strong>
-                  </div>
-                  <div style={{ marginTop: 5, fontSize: 11.5, color: C.muted }}>
-                    {priorityApartment.district} {priorityApartment.neighborhood} · {priorityApartment.households.toLocaleString("ko-KR")}세대
-                  </div>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => { setPriorityApartmentKey(null); setPage("main"); }}
-                  style={{ flex: "0 0 auto", height: 34, padding: "0 10px", borderRadius: 10, border: `1px solid #e1a9b7`, background: "#fff", color: C.brand, fontSize: 11.5, fontWeight: 900 }}
+              />
+            )}
+
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                gap: 10,
+              }}
+            >
+              <div>
+                <div
+                  style={{
+                    fontSize: 19,
+                    fontWeight: 950,
+                    letterSpacing: "-.035em",
+                  }}
                 >
-                  변경
-                </button>
+                  신청자 정보를 입력해주세요
+                </div>
               </div>
-            ) : (
+
               <button
                 type="button"
-                onClick={() => setPage("main")}
-                style={{ width: "100%", height: 52, marginTop: 9, borderRadius: 14, border: `1px dashed ${C.brand}`, background: "#fff", color: C.brand, fontSize: 14, fontWeight: 900 }}
+                disabled={submitState.loading}
+                aria-label="닫기"
+                onClick={() => setApplicantModalOpen(false)}
+                style={{
+                  width: 36,
+                  height: 36,
+                  flex: "0 0 auto",
+                  borderRadius: 11,
+                  border: `1px solid ${C.line}`,
+                  background: "#fff",
+                  display: "grid",
+                  placeItems: "center",
+                  color: C.muted,
+                }}
               >
-                우선권 단지 선택하기
+                <IconX/>
               </button>
-            )}
+            </div>
           </div>
 
-          <div style={{ marginTop: 24, paddingTop: 22, borderTop: `1px solid ${C.line}` }}>
-            <div style={{ fontSize: 19, fontWeight: 950, letterSpacing: "-.03em" }}>
-              신청자 정보를 입력해주세요
-            </div>
-            <div style={{ marginTop: 5, fontSize: 12.5, lineHeight: 1.6, color: C.muted }}>
-              신청 확인서와 9월 29일 파트너 가입 안내를 보내드립니다.
-            </div>
-
-            <label style={{ display: "block", marginTop: 18 }}>
-              <div style={{ marginBottom: 7, fontSize: 13, fontWeight: 900 }}>신청자 이름</div>
+          <div style={{ padding: "18px 18px 4px" }}>
+            <label style={{ display: "block" }}>
+              <div
+                style={{
+                  marginBottom: 7,
+                  fontSize: 13,
+                  fontWeight: 900,
+                }}
+              >
+                신청자 이름
+              </div>
               <input
                 value={applicantName}
-                onChange={(e) => setApplicantName(e.target.value.slice(0, 20))}
+                onChange={(e) =>
+                  setApplicantName(e.target.value.slice(0, 20))
+                }
                 placeholder="이름을 입력해주세요"
                 autoComplete="name"
+                autoFocus
                 style={{
                   width: "100%",
-                  height: 52,
+                  height: 54,
                   padding: "0 14px",
                   borderRadius: 13,
                   border: `1.5px solid ${C.line}`,
@@ -2693,19 +3533,27 @@ ${applicationNo}
               />
             </label>
 
-            <label style={{ display: "block", marginTop: 15 }}>
-              <div style={{ marginBottom: 7, fontSize: 13, fontWeight: 900 }}>
+            <label style={{ display: "block", marginTop: 17 }}>
+              <div
+                style={{
+                  marginBottom: 7,
+                  fontSize: 13,
+                  fontWeight: 900,
+                }}
+              >
                 신청 확인서를 받을 전화번호
               </div>
               <input
                 value={applicantPhone}
-                onChange={(e) => setApplicantPhone(normalizePhone(e.target.value))}
+                onChange={(e) =>
+                  setApplicantPhone(normalizePhone(e.target.value))
+                }
                 placeholder="010-0000-0000"
                 inputMode="numeric"
                 autoComplete="tel"
                 style={{
                   width: "100%",
-                  height: 52,
+                  height: 54,
                   padding: "0 14px",
                   borderRadius: 13,
                   border: `1.5px solid ${C.line}`,
@@ -2717,143 +3565,266 @@ ${applicationNo}
                   outline: "none",
                 }}
               />
-              <div style={{ marginTop: 7, fontSize: 11.5, lineHeight: 1.55, color: C.muted }}>
-                신청 완료 후 입력한 번호로 신청 확인서와 파트너 가입 안내를 보내드립니다.
-              </div>
             </label>
-          </div>
 
-          <div
-            style={{
-              marginTop: 20,
-              padding: "15px",
-              borderRadius: 14,
-              background: "#faf8f7",
-              border: `1px solid ${C.line}`,
-            }}
-          >
-            <div style={{ fontSize: 13, fontWeight: 900, color: C.ink }}>신청 후 다음 단계</div>
-            <div style={{ marginTop: 7, fontSize: 12.5, lineHeight: 1.7, color: C.muted }}>
-              <strong style={{ color: C.brand }}>9월 29일 오후 1시</strong> · 부산시민회관 대강당<br/>
-              병원동행 파트너 가입 시 본인 확인 및 보유 우대 자격증 확인을 진행합니다.
+            <div
+              style={{
+                marginTop: 8,
+                fontSize: 11.5,
+                lineHeight: 1.55,
+                color: C.muted,
+              }}
+            >
+              신청 완료 후 입력한 번호로 신청 확인서와 파트너 가입 안내를 보내드립니다.
             </div>
-          </div>
-        </main>
 
-        <div
-          style={{
-            position: "fixed",
-            left: "50%",
-            bottom: 0,
-            transform: "translateX(-50%)",
-            width: "100%",
-            maxWidth: 520,
-            padding: "10px 14px calc(10px + env(safe-area-inset-bottom))",
-            background: "rgba(255,255,255,.97)",
-            borderTop: `1px solid ${C.line}`,
-            zIndex: 30,
-          }}
-        >
-          <button
-            type="button"
-            disabled={!canSubmit || submitState.loading}
-            onClick={submitApplication}
-            style={{
-              width: "100%",
-              height: 54,
-              border: 0,
-              borderRadius: 14,
-              background: canSubmit && !submitState.loading ? C.brand : "#d7d9de",
-              color: "#fff",
-              fontSize: 15.5,
-              fontWeight: 950,
-            }}
-          >
-            {submitState.loading ? "신청 접수 중..." : "이 내용으로 신청하기"}
-          </button>
-          {submitState.error && (
-            <div style={{ marginTop: 8, padding: "0 4px", color: "#b42318", fontSize: 12, lineHeight: 1.5, textAlign: "center", fontWeight: 800 }}>
-              <span style={{ whiteSpace: "pre-line" }}>{submitState.error}</span>
-            </div>
-          )}
+            {submitState.error && (
+              <div
+                style={{
+                  marginTop: 13,
+                  padding: "11px 12px",
+                  borderRadius: 11,
+                  background: "#fff4f4",
+                  border: "1px solid #f2c6c6",
+                  color: "#b42318",
+                  fontSize: 12,
+                  lineHeight: 1.55,
+                  fontWeight: 800,
+                  whiteSpace: "pre-line",
+                }}
+              >
+                {submitState.error}
+              </div>
+            )}
+
+            <button
+              type="button"
+              disabled={!canSubmit || submitState.loading}
+              onClick={submitApplication}
+              style={{
+                width: "100%",
+                height: 56,
+                marginTop: 20,
+                border: 0,
+                borderRadius: 15,
+                background:
+                  canSubmit && !submitState.loading
+                    ? C.brand
+                    : "#d7d9de",
+                color: "#fff",
+                fontSize: 16,
+                fontWeight: 950,
+              }}
+            >
+              {submitState.loading ? "신청 접수 중..." : "신청하기"}
+            </button>
+          </div>
         </div>
-      </>
+      </div>
     );
   }
 
-  function renderComplete() {
+  // 우선권 전담단지를 선택한 뒤 보게 되는 첫 신청 화면.
+  // 선택내용은 작게 확인하고, 파트너 활동방식을 이해한 뒤 신청버튼을 누른다.
+  function renderSummary() {
     const regions = [...selectedNeighborhoods.values()];
-    const smsText = `[나눔이음의료복지사회적협동조합]
-
-${applicantName.trim()}님의 병원동행 파트너 신청이 접수되었습니다.
-
-활동지역
-${regions.map((n) => n.neighborhood).join(" / ")}
-
-우선권 단지
-${priorityApartment?.name || "-"}
-
-신청번호
-${applicationNo}
-
-9월 29일 병원동행 파트너 가입 안내
-오후 1시 · 부산시민회관 대강당
-
-당일 본인 확인 및 보유 우대 자격증 확인을 진행합니다.
-신분증, 운전면허증, 보유 우대 자격증(해당자)을 준비해주세요.
-
-[신청 확인서 보기]`;
 
     return (
       <>
-        <PageHeader title="신청 완료"/>
+        {renderApplicantModal()}
+
+        <PageHeader title="신청 내용 확인" onBack={() => setPage("main")}/>
+
         <div style={{ padding: "0 18px 4px", background: "#fff" }}>
           {renderApplicationProgress(3)}
         </div>
-        <main style={{ padding: "28px 18px 80px" }}>
-          <div style={{ textAlign: "center" }}>
+
+        <div className="hp-summary-layout">
+        <div
+          className="hp-summary-hero-wrap"
+          style={{
+            padding: "10px 14px 0",
+            background: "#fff",
+          }}
+        >
+          <section
+            aria-label="나눔이음 병원동행 파트너 안내"
+            style={{
+              position: "relative",
+              minHeight: 188,
+              overflow: "hidden",
+              borderRadius: 22,
+              background:
+                "linear-gradient(112deg, #ffffff 0%, #ffffff 47%, #f7f4f1 72%, #eef1f3 100%)",
+              border: `1px solid ${C.line}`,
+            }}
+          >
+            <div
+              aria-hidden="true"
+              style={{
+                position: "absolute",
+                right: "-28px",
+                top: "-72px",
+                width: 238,
+                height: 238,
+                borderRadius: "50%",
+                background: "rgba(201,90,112,.055)",
+              }}
+            />
+
             <div
               style={{
-                width: 62,
-                height: 62,
-                margin: "0 auto",
-                borderRadius: "50%",
-                background: C.brand,
-                color: "#fff",
-                display: "grid",
-                placeItems: "center",
-                fontSize: 30,
-                fontWeight: 950,
-                boxShadow: "0 10px 28px rgba(201,90,112,.24)",
+                position: "relative",
+                zIndex: 3,
+                width: "58%",
+                padding: "19px 0 18px 17px",
               }}
             >
-              ✓
+              <div
+                style={{
+                  fontSize: "clamp(17px, 4.8vw, 22px)",
+                  lineHeight: 1,
+                  fontWeight: 950,
+                  letterSpacing: "-.045em",
+                  color: C.ink,
+                }}
+              >
+                나눔이음
+              </div>
+
+              <div
+                style={{
+                  marginTop: 9,
+                  fontSize: "clamp(26px, 7.4vw, 35px)",
+                  lineHeight: 1.05,
+                  fontWeight: 950,
+                  letterSpacing: "-.055em",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                <span style={{ color: C.brand }}>병원동행</span>{" "}
+                <span style={{ color: C.ink }}>파트너</span>
+              </div>
+
+              <div
+                style={{
+                  marginTop: 14,
+                  fontSize: "clamp(12px, 3.4vw, 15px)",
+                  lineHeight: 1.48,
+                  fontWeight: 800,
+                  color: C.ink,
+                  wordBreak: "keep-all",
+                }}
+              >
+                운전면허만 있으면,
+                <br/>
+                바로 활동할 수 있습니다.
+              </div>
             </div>
 
-            <h2 style={{ margin: "17px 0 6px", fontSize: 25, letterSpacing: "-.04em" }}>
-              신청이 완료되었습니다
-            </h2>
-            <p style={{ margin: 0, fontSize: 13.5, lineHeight: 1.65, color: C.muted }}>
-              신청 확인서와 9월 29일 파트너 가입 안내를<br/>
-              <strong style={{ color: C.ink }}>{applicantPhone}</strong> 번호로 보내드립니다.
-            </p>
-          </div>
+            <img
+              src="/hospital-partner-cutout.png"
+              alt=""
+              aria-hidden="true"
+              style={{
+                position: "absolute",
+                zIndex: 2,
+                right: "-8px",
+                bottom: "-4px",
+                width: "56%",
+                maxWidth: 248,
+                height: "auto",
+                display: "block",
+                pointerEvents: "none",
+                WebkitMaskImage:
+                  "linear-gradient(90deg, transparent 0%, rgba(0,0,0,.55) 12%, #000 30%, #000 100%)",
+                maskImage:
+                  "linear-gradient(90deg, transparent 0%, rgba(0,0,0,.55) 12%, #000 30%, #000 100%)",
+              }}
+            />
 
-          <div style={{ marginTop: 24, padding: "17px 16px", borderRadius: 16, background: "#fff", border: `1px solid ${C.line}` }}>
-            <div style={{ display: "flex", justifyContent: "space-between", gap: 12 }}>
-              <div>
-                <div style={{ fontSize: 11, color: C.muted, fontWeight: 800 }}>신청번호</div>
-                <div style={{ marginTop: 4, fontSize: 18, fontWeight: 950, color: C.brand }}>{applicationNo}</div>
-              </div>
-              <div style={{ textAlign: "right" }}>
-                <div style={{ fontSize: 11, color: C.muted, fontWeight: 800 }}>신청자</div>
-                <div style={{ marginTop: 4, fontSize: 14, fontWeight: 900 }}>{applicantName.trim()}</div>
-              </div>
-            </div>
+            <div
+              aria-hidden="true"
+              style={{
+                position: "absolute",
+                zIndex: 2,
+                left: "47%",
+                top: 0,
+                bottom: 0,
+                width: "18%",
+                background:
+                  "linear-gradient(90deg, #fff 0%, rgba(255,255,255,.72) 42%, rgba(255,255,255,0) 100%)",
+                pointerEvents: "none",
+              }}
+            />
+          </section>
+        </div>
 
-            <div style={{ marginTop: 15, paddingTop: 15, borderTop: `1px solid ${C.line}` }}>
-              <div style={{ fontSize: 11, color: C.muted, fontWeight: 800 }}>활동지역</div>
-              <div style={{ marginTop: 5, display: "flex", gap: 6, flexWrap: "wrap" }}>
+        <main
+          className="hp-summary-main"
+          style={{ padding: "12px 14px 112px" }}
+        >
+          <section
+            className="hp-summary-selection"
+            style={{
+              border: `1px solid ${C.line}`,
+              borderRadius: 16,
+              background: "#fff",
+              overflow: "hidden",
+            }}
+          >
+            <div
+              style={{
+                padding: "12px 13px",
+                borderBottom: `1px solid ${C.line}`,
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  gap: 10,
+                }}
+              >
+                <div
+                  style={{
+                    fontSize: 11.5,
+                    color: C.muted,
+                    fontWeight: 850,
+                  }}
+                >
+                  선택한 활동지역
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setPage("main");
+                    setPriorityStageStarted(false);
+                    setGuide(null);
+                    setMapListView("map");
+                  }}
+                  style={{
+                    border: 0,
+                    background: "transparent",
+                    color: C.brand,
+                    fontSize: 11.5,
+                    fontWeight: 900,
+                    padding: "4px 0",
+                  }}
+                >
+                  변경
+                </button>
+              </div>
+
+              <div
+                style={{
+                  marginTop: 8,
+                  display: "flex",
+                  flexWrap: "wrap",
+                  gap: 6,
+                }}
+              >
                 {regions.map((n) => (
                   <span
                     key={neighborhoodKey(n.district, n.neighborhood)}
@@ -2862,6 +3833,7 @@ ${applicationNo}
                       borderRadius: 999,
                       background: C.brandSoft,
                       color: C.brand,
+                      border: "1px solid #efcbd3",
                       fontSize: 12,
                       fontWeight: 900,
                     }}
@@ -2872,83 +3844,717 @@ ${applicationNo}
               </div>
             </div>
 
-            <div style={{ marginTop: 14 }}>
-              <div style={{ fontSize: 11, color: C.muted, fontWeight: 800 }}>우선권 단지</div>
-              <div style={{ marginTop: 5, fontSize: 15, fontWeight: 950 }}>
-                ★ {priorityApartment?.name || "-"}
+            <div
+              style={{
+                padding: "12px 13px",
+                display: "grid",
+                gridTemplateColumns: "minmax(0,1fr) auto",
+                gap: 10,
+                alignItems: "center",
+              }}
+            >
+              <div style={{ minWidth: 0 }}>
+                <div
+                  style={{
+                    fontSize: 11.5,
+                    color: C.muted,
+                    fontWeight: 850,
+                  }}
+                >
+                  우선권 전담단지
+                </div>
+                <div
+                  style={{
+                    marginTop: 5,
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 6,
+                    minWidth: 0,
+                  }}
+                >
+                  <span style={{ color: C.brand }}>★</span>
+                  <strong
+                    style={{
+                      fontSize: 14.5,
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    {priorityApartment?.name || "-"}
+                  </strong>
+                </div>
               </div>
-            </div>
-          </div>
 
-          <div
+              <button
+                type="button"
+                onClick={() => {
+                  setPriorityApartmentKey(null);
+                  setPage("main");
+                  setPriorityStageStarted(true);
+                  setGuide(null);
+                  setMapListView("map");
+                }}
+                style={{
+                  height: 34,
+                  padding: "0 10px",
+                  borderRadius: 10,
+                  border: "1px solid #e4a7b5",
+                  background: "#fff",
+                  color: C.brand,
+                  fontSize: 11.5,
+                  fontWeight: 900,
+                }}
+              >
+                변경
+              </button>
+            </div>
+          </section>
+
+          <section
+            className="hp-summary-activity"
             style={{
-              marginTop: 16,
-              padding: "18px 16px",
+              marginTop: 14,
+              padding: "15px 13px 5px",
               borderRadius: 17,
-              background: C.brandSoft,
-              border: "1px solid #e9bdc7",
+              border: `1px solid ${C.line}`,
+              background: "#fff",
             }}
           >
-            <div style={{ fontSize: 12, color: C.brand, fontWeight: 900 }}>다음 단계</div>
-            <div style={{ marginTop: 5, fontSize: 21, fontWeight: 950, color: C.ink }}>
-              9월 29일 병원동행 파트너 가입
-            </div>
-            <div style={{ marginTop: 10, fontSize: 14, lineHeight: 1.7, color: C.ink, fontWeight: 800 }}>
-              오후 1시<br/>
-              부산시민회관 대강당
+            <div
+              style={{
+                fontSize: 17,
+                fontWeight: 950,
+                letterSpacing: "-.03em",
+              }}
+            >
+              나눔이음 병원동행 파트너는 이렇게 활동합니다
             </div>
 
-            <div style={{ marginTop: 13, padding: "12px", borderRadius: 12, background: "#fff", fontSize: 12.5, lineHeight: 1.7, color: C.muted }}>
-              당일 <strong style={{ color: C.ink }}>본인 확인 및 보유 우대 자격증 확인</strong>을 진행합니다.<br/>
-              신분증 · 운전면허증 · 보유 우대 자격증(해당자)을 준비해주세요.
-            </div>
-          </div>
+            {[
+              {
+                icon: "▣",
+                title: "운전면허만 있으면 활동 가능",
+                body: "내 차가 없어도 됩니다.",
+              },
+              {
+                icon: "●",
+                title: "병원동행 차량은 나눔이음조합 차량을 함께 이용합니다",
+                body: "",
+              },
+              {
+                icon: "✓",
+                title: "가능한 예약을 직접 선택",
+                body: "예약 신청을 확인하고 내가 가능한 예약을 직접 수락합니다.",
+              },
+              {
+                icon: "★",
+                title: "우선권 전담단지는 예약을 가장 먼저 받아봅니다",
+                body: "선택한 단지와 주변 예약은 다른 파트너보다 가장 먼저 받아볼 수 있습니다.",
+              },
+            ].map((item, index) => (
+              <div
+                key={item.title}
+                style={{
+                  padding: "13px 0",
+                  display: "grid",
+                  gridTemplateColumns: "38px minmax(0,1fr)",
+                  gap: 10,
+                  alignItems: "start",
+                  borderTop:
+                    index === 0
+                      ? "none"
+                      : `1px dashed ${C.line}`,
+                }}
+              >
+                <div
+                  style={{
+                    width: 36,
+                    height: 36,
+                    borderRadius: "50%",
+                    background: C.brandSoft,
+                    color: C.brand,
+                    display: "grid",
+                    placeItems: "center",
+                    fontSize: 15,
+                    fontWeight: 950,
+                  }}
+                >
+                  {item.icon}
+                </div>
 
+                <div>
+                  <div
+                    style={{
+                      fontSize: 13.5,
+                      lineHeight: 1.45,
+                      fontWeight: 950,
+                      color: C.ink,
+                      wordBreak: "keep-all",
+                    }}
+                  >
+                    {item.title}
+                  </div>
+
+                  {item.body && (
+                    <div
+                      style={{
+                        marginTop: 4,
+                        fontSize: 11.5,
+                        lineHeight: 1.5,
+                        color: C.muted,
+                        wordBreak: "keep-all",
+                      }}
+                    >
+                      {item.body}
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))}
+          </section>
+
+          <section
+            className="hp-summary-compare"
+            style={{
+              marginTop: 10,
+              padding: "12px",
+              borderRadius: 15,
+              border: `1px solid ${C.line}`,
+              background: "#faf9f8",
+            }}
+          >
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "1fr 1fr",
+                gap: 8,
+              }}
+            >
+              <div
+                style={{
+                  minWidth: 0,
+                  padding: "11px 9px",
+                  borderRadius: 12,
+                  background: "#fff",
+                  border: `1px solid ${C.line}`,
+                  textAlign: "center",
+                }}
+              >
+                <div
+                  style={{
+                    fontSize: 10.5,
+                    color: C.muted,
+                    fontWeight: 900,
+                  }}
+                >
+                  일반 병원동행
+                </div>
+                <div
+                  style={{
+                    marginTop: 5,
+                    fontSize: 12,
+                    lineHeight: 1.45,
+                    fontWeight: 850,
+                  }}
+                >
+                  택시·대중교통 이용
+                </div>
+              </div>
+
+              <div
+                style={{
+                  minWidth: 0,
+                  padding: "11px 9px",
+                  borderRadius: 12,
+                  background: "#fff6f8",
+                  border: "1px solid #efc4ce",
+                  textAlign: "center",
+                }}
+              >
+                <div
+                  style={{
+                    fontSize: 10.5,
+                    color: C.brand,
+                    fontWeight: 900,
+                  }}
+                >
+                  나눔이음
+                </div>
+                <div
+                  style={{
+                    marginTop: 5,
+                    fontSize: 12,
+                    lineHeight: 1.45,
+                    fontWeight: 950,
+                    color: C.ink,
+                  }}
+                >
+                  조합 차량 공동 이용
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section
+            className="hp-summary-shared"
+            style={{
+              marginTop: 10,
+              padding: "14px 13px",
+              borderRadius: 16,
+              background: "#fff6f8",
+              border: "1px solid #efc5cf",
+            }}
+          >
+            <div
+              style={{
+                fontSize: 15,
+                fontWeight: 950,
+                color: C.brand,
+              }}
+            >
+              함께 차량을 이용하고, 함께 활동합니다
+            </div>
+
+            <div
+              style={{
+                marginTop: 7,
+                fontSize: 12,
+                lineHeight: 1.6,
+                color: C.ink,
+                fontWeight: 800,
+                wordBreak: "keep-all",
+              }}
+            >
+              나눔이음조합 파트너가 조합 차량을 함께 이용하며 병원동행 활동을 합니다.
+            </div>
+
+            <div
+              style={{
+                marginTop: 8,
+                paddingTop: 8,
+                borderTop: "1px dashed #e8b8c4",
+                fontSize: 12,
+                lineHeight: 1.55,
+                color: C.ink,
+                fontWeight: 900,
+              }}
+            >
+              내가 수행한 예약에서는 별도의 중개 수수료를 공제하지 않습니다.
+            </div>
+          </section>
+        </main>
+        </div>
+
+        <div
+          style={{
+            position: "fixed",
+            left: "50%",
+            bottom: 0,
+            transform: "translateX(-50%)",
+            width: isDesktopLayout ? "calc(100% - 48px)" : "100%",
+            maxWidth: isDesktopLayout ? 1180 : 520,
+            padding: "10px 14px calc(10px + env(safe-area-inset-bottom))",
+            background: "rgba(255,255,255,.98)",
+            borderTop: `1px solid ${C.line}`,
+            zIndex: 30,
+          }}
+        >
           <button
             type="button"
-            onClick={() => setShowCertificate((v) => !v)}
+            disabled={
+              selectedNeighborhoods.size !== MAX_NEIGHBORHOODS ||
+              !priorityApartment
+            }
+            onClick={() => {
+              setSubmitState({ loading: false, error: "" });
+              setApplicantModalOpen(true);
+            }}
             style={{
               width: "100%",
-              height: 52,
-              marginTop: 16,
-              borderRadius: 14,
-              border: `1.5px solid ${C.brand}`,
-              background: "#fff",
-              color: C.brand,
-              fontSize: 14.5,
+              height: 56,
+              border: 0,
+              borderRadius: 15,
+              background:
+                selectedNeighborhoods.size === MAX_NEIGHBORHOODS &&
+                priorityApartment
+                  ? C.brand
+                  : "#d7d9de",
+              color: "#fff",
+              fontSize: 16,
               fontWeight: 950,
+              boxShadow:
+                selectedNeighborhoods.size === MAX_NEIGHBORHOODS &&
+                priorityApartment
+                  ? "0 8px 20px rgba(201,90,112,.20)"
+                  : "none",
             }}
           >
-            {showCertificate ? "신청 확인서 닫기" : "신청 확인서 보기"}
+            신청하기
           </button>
+        </div>
+      </>
+    );
+  }
 
-          {showCertificate && (
-            <div style={{ marginTop: 12, padding: "18px 16px", borderRadius: 16, border: `1px solid ${C.line}`, background: "#fff" }}>
-              <div style={{ textAlign: "center", fontSize: 18, fontWeight: 950 }}>병원동행 파트너 신청 확인서</div>
-              <div style={{ marginTop: 4, textAlign: "center", fontSize: 11.5, color: C.muted }}>
-                나눔이음의료복지사회적협동조합
+  function renderComplete() {
+    const regions = [...selectedNeighborhoods.values()];
+
+    const smsText = `[나눔이음의료복지사회적협동조합]
+${applicantName.trim()}님의 병원동행 파트너 신청이 접수되었습니다.
+
+신청번호
+${applicationNo}
+
+활동지역
+${regions.map((n) => n.neighborhood).join(" / ")}
+
+우선권 전담단지
+${priorityApartment?.name || "-"}
+
+병원동행 파트너 가입 안내
+9월 29일 오후 1시 30분
+부산시민회관
+
+병원동행 파트너 가입과 활동 안내를 진행합니다.
+
+준비물
+신분증 · 운전면허증 · 보유 우대 자격증(해당자)`;
+
+    const completeContent = (
+      <>
+        <PageHeader title="신청 완료"/>
+
+        <main style={{ padding: "24px 14px 70px" }}>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "72px minmax(0,1fr)",
+              gap: 14,
+              alignItems: "center",
+            }}
+          >
+            <div
+              style={{
+                width: 64,
+                height: 64,
+                borderRadius: "50%",
+                background: C.brandSoft,
+                color: C.brand,
+                display: "grid",
+                placeItems: "center",
+                fontSize: 31,
+                fontWeight: 950,
+              }}
+            >
+              ✓
+            </div>
+
+            <div>
+              <h2
+                style={{
+                  margin: 0,
+                  fontSize: 24,
+                  lineHeight: 1.25,
+                  letterSpacing: "-.04em",
+                  color: C.brand,
+                }}
+              >
+                신청이 접수되었습니다
+              </h2>
+              <p
+                style={{
+                  margin: "7px 0 0",
+                  fontSize: 13,
+                  lineHeight: 1.6,
+                  color: C.muted,
+                  wordBreak: "keep-all",
+                }}
+              >
+                입력하신 전화번호로 신청 확인서와
+                <br/>
+                파트너 가입 안내를 보내드립니다.
+              </p>
+            </div>
+          </div>
+
+          <section
+            style={{
+              marginTop: 22,
+              borderRadius: 16,
+              border: `1px solid ${C.line}`,
+              background: "#fff",
+              overflow: "hidden",
+            }}
+          >
+            {[
+              ["신청자 이름", applicantName.trim()],
+              ["신청 확인서를 받을 전화번호", applicantPhone],
+            ].map(([label, value], index) => (
+              <div
+                key={label}
+                style={{
+                  minHeight: 64,
+                  padding: "0 14px",
+                  display: "grid",
+                  gridTemplateColumns: "minmax(0,1fr) minmax(0,1.15fr)",
+                  gap: 12,
+                  alignItems: "center",
+                  borderTop:
+                    index === 0
+                      ? "none"
+                      : `1px solid ${C.line}`,
+                }}
+              >
+                <div
+                  style={{
+                    fontSize: 12.5,
+                    color: C.ink,
+                    fontWeight: 900,
+                  }}
+                >
+                  {label}
+                </div>
+                <div
+                  style={{
+                    fontSize: index === 0 ? 17 : 16,
+                    color: C.ink,
+                    fontWeight: 950,
+                    wordBreak: "break-all",
+                  }}
+                >
+                  {value}
+                </div>
+              </div>
+            ))}
+          </section>
+
+          <section
+            style={{
+              marginTop: 16,
+              borderRadius: 17,
+              border: `1.5px solid ${C.brand}`,
+              background: "#fff",
+              overflow: "hidden",
+            }}
+          >
+            <div
+              style={{
+                minHeight: 48,
+                padding: "0 14px",
+                background: C.brand,
+                color: "#fff",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 8,
+                fontSize: 16,
+                fontWeight: 950,
+              }}
+            >
+              <span aria-hidden="true">▣</span>
+              병원동행 파트너 가입 안내
+            </div>
+
+            <div style={{ padding: "18px 14px 14px" }}>
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "1fr 1fr",
+                  gap: 0,
+                  alignItems: "stretch",
+                }}
+              >
+                <div
+                  style={{
+                    padding: "0 12px 0 4px",
+                    borderRight: `1px solid ${C.line}`,
+                  }}
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 8,
+                    }}
+                  >
+                    <span
+                      style={{
+                        color: C.brand,
+                        fontSize: 26,
+                        lineHeight: 1,
+                      }}
+                    >
+                      ▦
+                    </span>
+                    <div>
+                      <div
+                        style={{
+                          fontSize: 21,
+                          lineHeight: 1.2,
+                          fontWeight: 950,
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        9월 29일
+                      </div>
+                      <div
+                        style={{
+                          marginTop: 4,
+                          fontSize: 14,
+                          fontWeight: 900,
+                        }}
+                      >
+                        오후 1시 30분
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div style={{ padding: "0 2px 0 14px" }}>
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "flex-start",
+                      gap: 8,
+                    }}
+                  >
+                    <span
+                      style={{
+                        color: C.brand,
+                        fontSize: 27,
+                        lineHeight: 1,
+                      }}
+                    >
+                      ●
+                    </span>
+                    <div
+                      style={{
+                        fontSize: 18,
+                        lineHeight: 1.35,
+                        fontWeight: 950,
+                        wordBreak: "keep-all",
+                      }}
+                    >
+                      부산시민회관
+                    </div>
+                  </div>
+                </div>
               </div>
 
-              <div style={{ marginTop: 18, display: "grid", gridTemplateColumns: "94px 1fr", rowGap: 10, fontSize: 12.5 }}>
-                <div style={{ color: C.muted, fontWeight: 800 }}>신청번호</div><div style={{ fontWeight: 900 }}>{applicationNo}</div>
-                <div style={{ color: C.muted, fontWeight: 800 }}>신청자</div><div style={{ fontWeight: 900 }}>{applicantName.trim()}</div>
-                <div style={{ color: C.muted, fontWeight: 800 }}>전화번호</div><div style={{ fontWeight: 900 }}>{applicantPhone}</div>
-                <div style={{ color: C.muted, fontWeight: 800 }}>활동지역</div><div style={{ fontWeight: 900 }}>{regions.map((n) => n.neighborhood).join(" / ")}</div>
-                <div style={{ color: C.muted, fontWeight: 800 }}>우선권 단지</div><div style={{ fontWeight: 900 }}>{priorityApartment?.name || "-"}</div>
-                <div style={{ color: C.muted, fontWeight: 800 }}>신청일시</div><div style={{ fontWeight: 900 }}>{applicationSubmittedAt}</div>
+              <div
+                style={{
+                  marginTop: 16,
+                  padding: "12px 4px",
+                  borderTop: `1px dashed ${C.line}`,
+                  borderBottom: `1px dashed ${C.line}`,
+                  textAlign: "center",
+                  fontSize: 13,
+                  lineHeight: 1.55,
+                  color: C.ink,
+                  fontWeight: 850,
+                }}
+              >
+                병원동행 파트너 가입과 활동 안내를 진행합니다.
               </div>
 
-              <div style={{ marginTop: 17, paddingTop: 14, borderTop: `1px solid ${C.line}`, fontSize: 12, lineHeight: 1.65, color: C.muted }}>
-                위 내용으로 병원동행 파트너 활동지역 및 우선권 단지를 신청하였습니다.
+              <div
+                style={{
+                  marginTop: 13,
+                  display: "grid",
+                  gridTemplateColumns: "auto minmax(0,1fr)",
+                  gap: 10,
+                  alignItems: "start",
+                }}
+              >
+                <span
+                  style={{
+                    padding: "5px 8px",
+                    borderRadius: 8,
+                    background: C.brand,
+                    color: "#fff",
+                    fontSize: 11,
+                    fontWeight: 950,
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  준비물
+                </span>
+
+                <div
+                  style={{
+                    display: "flex",
+                    flexWrap: "wrap",
+                    gap: "7px 11px",
+                    fontSize: 12,
+                    lineHeight: 1.45,
+                    color: C.ink,
+                    fontWeight: 850,
+                  }}
+                >
+                  <span>▣ 신분증</span>
+                  <span>▣ 운전면허증</span>
+                  <span>★ 보유 우대 자격증(해당자)</span>
+                </div>
               </div>
             </div>
-          )}
+          </section>
 
-          <div style={{ marginTop: 18, padding: "15px", borderRadius: 14, background: "#f7f7f8", border: `1px solid ${C.line}` }}>
-            <div style={{ fontSize: 12, fontWeight: 900, color: C.ink }}>문자로 안내되는 내용</div>
+          <section
+            style={{
+              marginTop: 15,
+              padding: "13px 14px",
+              borderRadius: 14,
+              border: `1px solid ${C.line}`,
+              background: "#faf9f8",
+            }}
+          >
+            <div
+              style={{
+                fontSize: 11.5,
+                color: C.muted,
+                fontWeight: 850,
+              }}
+            >
+              신청번호
+            </div>
+            <div
+              style={{
+                marginTop: 4,
+                fontSize: 14,
+                color: C.ink,
+                fontWeight: 950,
+              }}
+            >
+              {applicationNo}
+            </div>
+          </section>
+
+          <details
+            style={{
+              marginTop: 12,
+              borderRadius: 14,
+              border: `1px solid ${C.line}`,
+              background: "#fff",
+              overflow: "hidden",
+            }}
+          >
+            <summary
+              style={{
+                padding: "13px 14px",
+                cursor: "pointer",
+                fontSize: 12.5,
+                color: C.ink,
+                fontWeight: 900,
+              }}
+            >
+              문자 발송 내용 확인
+            </summary>
+
             <pre
               style={{
-                margin: "10px 0 0",
+                margin: 0,
+                padding: "0 14px 14px",
                 whiteSpace: "pre-wrap",
                 fontFamily: FONT,
                 fontSize: 11.5,
@@ -2958,33 +4564,196 @@ ${applicationNo}
             >
               {smsText}
             </pre>
-          </div>
+          </details>
         </main>
       </>
+    );
+
+    if (!isDesktopLayout) return completeContent;
+
+    return (
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-label="신청 완료"
+        style={{
+          position: "fixed",
+          inset: 0,
+          zIndex: 1200,
+          display: "grid",
+          placeItems: "center",
+          padding: 28,
+          background: "rgba(31,35,41,.44)",
+          overflow: "auto",
+        }}
+      >
+        <div
+          style={{
+            width: "min(680px, calc(100vw - 56px))",
+            maxHeight: "calc(100vh - 56px)",
+            overflowY: "auto",
+            background: "#fff",
+            borderRadius: 22,
+            boxShadow: "0 28px 80px rgba(20,24,32,.28)",
+          }}
+        >
+          {completeContent}
+        </div>
+      </div>
     );
   }
 
   return (
-    <div style={{ minHeight: "100vh", background: C.canvas, color: C.ink, fontFamily: FONT }}>
+    <div
+      style={{
+        minHeight: "100vh",
+        background: C.canvas,
+        color: C.ink,
+        fontFamily: FONT,
+      }}
+    >
       <style>{`
-        @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css');
         * { box-sizing:border-box; }
         html,body,#root { margin:0; min-height:100%; background:${C.canvas}; }
         button,input,select { font:inherit; }
         button { cursor:pointer; }
         button:disabled { cursor:not-allowed; }
         select:disabled { cursor:not-allowed; }
+
+        .hp-page-frame {
+          width:100%;
+          max-width:520px;
+          min-height:100vh;
+          margin:0 auto;
+          background:#fff;
+          box-shadow:0 0 36px rgba(31,35,41,.08);
+        }
+
+        .hp-map-list-layout {
+          display:block;
+        }
+
+        .hp-summary-layout {
+          display:block;
+        }
+
+        @media (min-width:980px) {
+          .hp-page-frame {
+            width:calc(100% - 48px);
+            max-width:1180px;
+          }
+
+          .hp-page-frame header {
+            padding-left:clamp(18px, 2.4vw, 30px) !important;
+            padding-right:clamp(18px, 2.4vw, 30px) !important;
+          }
+
+          .hp-page-frame.hp-main-desktop .hp-map-list-layout {
+            display:grid;
+            grid-template-columns:minmax(0,1.35fr) minmax(320px,.85fr);
+            gap:16px;
+            padding:0 28px 36px;
+            align-items:start;
+            background:#fff;
+          }
+
+          .hp-page-frame.hp-main-desktop .hp-map-pane {
+            position:sticky;
+            top:18px;
+            min-width:0;
+          }
+
+          .hp-page-frame.hp-main-desktop .hp-map-canvas {
+            height:calc(100vh - 185px) !important;
+            min-height:540px;
+            max-height:760px;
+            border-radius:18px !important;
+          }
+
+          .hp-page-frame.hp-main-desktop .hp-list-pane {
+            min-width:0;
+            max-height:calc(100vh - 150px);
+            overflow-y:auto;
+            overscroll-behavior:contain;
+            padding-right:4px !important;
+          }
+
+          .hp-page-frame.hp-main-desktop .hp-list-pane::-webkit-scrollbar {
+            width:5px;
+          }
+
+          .hp-page-frame.hp-main-desktop .hp-list-pane::-webkit-scrollbar-thumb {
+            background:#d9dce1;
+            border-radius:999px;
+          }
+
+          .hp-summary-layout {
+            display:grid;
+            grid-template-columns:minmax(350px,.92fr) minmax(0,1.08fr);
+            grid-template-rows:auto auto auto;
+            column-gap:18px;
+            row-gap:14px;
+            padding:18px 28px 112px;
+            align-items:start;
+          }
+
+          .hp-summary-hero-wrap {
+            grid-column:1;
+            grid-row:1;
+            padding:0 !important;
+          }
+
+          .hp-summary-hero-wrap > section {
+            min-height:290px !important;
+          }
+
+          .hp-summary-hero-wrap > section > img {
+            width:62% !important;
+            max-width:330px !important;
+          }
+
+          .hp-summary-main {
+            display:contents;
+          }
+
+          .hp-summary-selection {
+            grid-column:1;
+            grid-row:2;
+            margin:0 !important;
+          }
+
+          .hp-summary-activity {
+            grid-column:2;
+            grid-row:1;
+            margin:0 !important;
+          }
+
+          .hp-summary-compare {
+            grid-column:2;
+            grid-row:2;
+            margin:0 !important;
+          }
+
+          .hp-summary-shared {
+            grid-column:2;
+            grid-row:3;
+            margin:0 !important;
+          }
+        }
       `}</style>
-      <div style={{ width: "100%", maxWidth: 520, minHeight: "100vh", margin: "0 auto", background: C.surface, boxShadow: "0 0 36px rgba(31,35,41,.08)" }}>
+
+      <div
+        className={`hp-page-frame ${
+          page === "main" && isDesktopLayout
+            ? "hp-main-desktop"
+            : ""
+        }`}
+      >
         {/* main 화면은 unmount하지 않는다.
             상세/확인 화면에서 돌아왔을 때 Naver Map DOM과 mapRef 연결이 끊어지지 않게
             display만 전환한다. */}
         <div style={{ display: page === "main" ? "block" : "none" }}>
           {renderMain()}
-        </div>
-
-        <div style={{ display: page === "detail" ? "block" : "none" }}>
-          {page === "detail" && renderDetail()}
         </div>
 
         <div style={{ display: page === "summary" ? "block" : "none" }}>
