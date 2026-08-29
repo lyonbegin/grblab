@@ -54,112 +54,6 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 :focus-visible{outline:2.5px solid var(--red);outline-offset:3px;border-radius:4px}
 .wrap{max-width:var(--wrap);margin:0 auto;padding:0 24px}
 
-/* ─── 나눔이음 공통 글로벌 헤더 ─── */
-.site-header{
-  position:relative;
-  z-index:80;
-  width:100%;
-  background:#fffaf7;
-  border-bottom:1px solid rgba(0,0,0,.06);
-}
-.header-shell{
-  max-width:1120px;
-  min-height:72px;
-  margin:0 auto;
-  padding:0 24px;
-  display:flex;
-  align-items:center;
-  gap:26px;
-}
-.site-brand{
-  display:inline-flex;
-  align-items:center;
-  white-space:nowrap;
-  font-family:var(--sans);
-  font-weight:950;
-  font-size:24px;
-  line-height:1;
-  letter-spacing:-.07em;
-  color:#111827;
-}
-.site-brand span{color:#111827}
-.site-brand b{
-  color:#f44768;
-  font:inherit;
-}
-.global-nav{
-  display:flex;
-  align-items:center;
-  gap:28px;
-  margin-left:auto;
-  white-space:nowrap;
-}
-.global-nav a{
-  position:relative;
-  color:#374151;
-  font-size:12.5px;
-  font-weight:800;
-  letter-spacing:-.03em;
-  text-decoration:none;
-}
-.global-nav a:hover{color:#111827}
-.global-nav a.partner-link{
-  color:#c94f71;
-  font-weight:900;
-}
-.header-cta-global{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  min-height:40px;
-  padding:0 17px;
-  border-radius:999px;
-  background:#111827;
-  color:#fff;
-  font-size:11.5px;
-  font-weight:900;
-  text-decoration:none;
-  white-space:nowrap;
-}
-.header-cta-global:hover{background:#202938}
-.header-menu-btn{
-  display:none;
-  width:40px;
-  height:40px;
-  margin-left:auto;
-  border:0;
-  background:transparent;
-}
-.header-menu-btn span{
-  display:block;
-  width:20px;
-  height:2px;
-  margin:4px auto;
-  background:#111827;
-  border-radius:999px;
-}
-.portal-mobile-nav{
-  display:none;
-  padding:8px 24px 16px;
-  background:#fffaf7;
-  border-top:1px solid rgba(0,0,0,.05);
-}
-.portal-mobile-nav a{
-  display:block;
-  padding:10px 0;
-  font-size:13px;
-  font-weight:800;
-  color:#374151;
-}
-.portal-mobile-nav a.partner-link{color:#c94f71}
-
-@media(max-width:900px){
-  .header-shell{min-height:62px}
-  .global-nav,.header-cta-global{display:none}
-  .header-menu-btn{display:block}
-  .portal-mobile-nav.is-open{display:block}
-}
-
 /* ─── 히어로: 썸네일 월 + 파스텔 톤 ─── */
 .hero{
   scroll-margin-top:70px;position:relative;overflow:hidden;isolation:isolate;
@@ -615,17 +509,169 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
   #ticc-benefit-modal-wrapper{max-width:66.666vw;width:66.666vw;max-height:80vh;}
   #ticc-benefit-modal-box img{max-height:calc(80vh - 40px);}
 }
+
+
+/* ===== 공통 헤더: hpartners 기준 ===== */
+.site-header{
+  position:relative;
+  z-index:80;
+  width:100%;
+  background:#fffaf7;
+  border-bottom:1px solid rgba(0,0,0,.06);
+}
+
+.site-header,
+.site-header *{
+  font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+}
+
+.site-header .header-inner{
+  max-width:1120px;
+  min-height:72px;
+  margin:0 auto;
+  padding:0 24px;
+  display:flex;
+  align-items:center;
+  gap:26px;
+}
+
+.site-header .brand{
+  display:inline-flex;
+  align-items:center;
+  white-space:nowrap;
+  font-size:24px !important;
+  line-height:1 !important;
+  font-weight:950 !important;
+  letter-spacing:-.07em !important;
+  color:#111827 !important;
+  text-decoration:none;
+}
+
+.site-header .brand span{
+  color:#111827 !important;
+  font:inherit !important;
+}
+
+.site-header .brand b{
+  color:#f44768 !important;
+  font:inherit !important;
+}
+
+.site-header .desktop-nav{
+  display:flex;
+  align-items:center;
+  gap:28px;
+  margin-left:auto;
+  white-space:nowrap;
+}
+
+.site-header .desktop-nav a{
+  position:relative;
+  color:#374151;
+  font-size:12.5px !important;
+  line-height:1.2 !important;
+  font-weight:800 !important;
+  letter-spacing:-.03em !important;
+  text-decoration:none;
+  white-space:nowrap;
+}
+
+.site-header .desktop-nav a:hover{
+  color:#111827;
+}
+
+.site-header .desktop-nav a.partner-link{
+  color:#c94f71 !important;
+  font-weight:900 !important;
+}
+
+.site-header .header-cta{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:40px;
+  padding:0 17px !important;
+  border:0 !important;
+  border-radius:999px !important;
+  background:#111827 !important;
+  color:#fff !important;
+  font-size:11.5px !important;
+  line-height:1 !important;
+  font-weight:900 !important;
+  letter-spacing:-.03em !important;
+  text-decoration:none;
+  white-space:nowrap;
+}
+
+.site-header .menu-button{
+  display:none;
+  width:40px;
+  height:40px;
+  margin-left:auto;
+  border:0;
+  background:transparent;
+  padding:0;
+}
+
+.site-header .menu-button span{
+  display:block;
+  width:20px;
+  height:2px;
+  margin:4px auto;
+  border-radius:999px;
+  background:#111827;
+}
+
+.site-header .mobile-nav{
+  padding:8px 24px 16px;
+  background:#fffaf7;
+  border-top:1px solid rgba(0,0,0,.05);
+}
+
+.site-header .mobile-nav[hidden]{
+  display:none !important;
+}
+
+.site-header .mobile-nav a{
+  display:block;
+  padding:10px 0;
+  color:#374151;
+  font-size:13px;
+  font-weight:800;
+  text-decoration:none;
+}
+
+.site-header .mobile-nav a.partner-link{
+  color:#c94f71;
+  font-weight:900;
+}
+
+@media(max-width:900px){
+  .site-header .header-inner{
+    min-height:62px;
+  }
+
+  .site-header .desktop-nav,
+  .site-header .header-cta{
+    display:none;
+  }
+
+  .site-header .menu-button{
+    display:block;
+  }
+}
+
 </style>
 </head>
 <body>
 
 <header class="site-header">
-  <div class="header-shell">
-    <a href="#top" class="site-brand" aria-label="나눔이음 홈">
+  <div class="shell header-inner">
+    <a class="brand" href="#top" aria-label="나눔이음 홈">
       <span>나눔</span><b>이음</b>
     </a>
 
-    <nav class="global-nav" aria-label="나눔이음 주요 메뉴">
+    <nav class="desktop-nav" aria-label="나눔이음 주요 메뉴">
       <a href="#cases">대표 이음 사례</a>
       <a href="#together">후원과 세금혜택</a>
       <a href="#archive">나눔 아카이브</a>
@@ -633,26 +679,21 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
       <a class="partner-link" href="/hpartners.html">병원동행 파트너스</a>
     </nav>
 
-    <a href="apply-concert.html" class="header-cta-global">총회 & 음악회 참석신청</a>
+    <a class="header-cta" href="apply-concert.html">총회 & 음악회 참석신청</a>
 
-    <button
-      class="header-menu-btn"
-      type="button"
-      aria-label="메뉴 열기"
-      aria-expanded="false"
-    >
+    <button class="menu-button" type="button" aria-label="메뉴 열기" aria-expanded="false">
       <span></span><span></span><span></span>
     </button>
   </div>
 
-  <nav class="portal-mobile-nav" aria-label="모바일 메뉴">
+  <div class="mobile-nav" hidden>
     <a href="#cases">대표 이음 사례</a>
     <a href="#together">후원과 세금혜택</a>
     <a href="#archive">나눔 아카이브</a>
     <a href="bazaar/bazaar.html">나눔이음바자</a>
     <a class="partner-link" href="/hpartners.html">병원동행 파트너스</a>
     <a href="apply-concert.html">총회 & 음악회 참석신청</a>
-  </nav>
+  </div>
 </header>
 
 <header class="hero" id="top">
@@ -1414,21 +1455,25 @@ render();
 })();
 </script>
 
+
 <script>
 (() => {
-  const btn = document.querySelector('.header-menu-btn');
-  const nav = document.querySelector('.portal-mobile-nav');
+  const btn = document.querySelector('.menu-button');
+  const nav = document.querySelector('.mobile-nav');
   if (!btn || !nav) return;
 
   btn.addEventListener('click', () => {
-    const open = nav.classList.toggle('is-open');
+    const open = nav.hasAttribute('hidden');
+    if (open) nav.removeAttribute('hidden');
+    else nav.setAttribute('hidden', '');
+
     btn.setAttribute('aria-expanded', open ? 'true' : 'false');
     btn.setAttribute('aria-label', open ? '메뉴 닫기' : '메뉴 열기');
   });
 
   nav.querySelectorAll('a').forEach((link) => {
     link.addEventListener('click', () => {
-      nav.classList.remove('is-open');
+      nav.setAttribute('hidden', '');
       btn.setAttribute('aria-expanded', 'false');
       btn.setAttribute('aria-label', '메뉴 열기');
     });
