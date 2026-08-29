@@ -12,7 +12,7 @@ const SOLAPI_API_KEY = "NCSTBYVI4YZVHL54";
 const SOLAPI_API_SECRET = "EJEAVM1ZEENMWA3TBMUMSQNDNMS8FEAS";
 
 // SOLAPI에서 등록/승인된 실제 발신번호를 숫자만 입력하세요.
-const SOLAPI_FROM = "발신번호입력";
+const SOLAPI_FROM = "01074186848";
 
 const C = {
   ink: "#1f2329",
@@ -2248,6 +2248,10 @@ export default function HospitalPartnerPage() {
               </div>
             </div>
           )}
+
+
+
+
 
           <div style={{ marginTop: 16, padding: "18px 16px", borderRadius: 16, background: "#faf8f7", border: `1px solid ${C.line}` }}>
             <div style={{ fontSize: 15, fontWeight: 900 }}>우선권 단지란?</div>
