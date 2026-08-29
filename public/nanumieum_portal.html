@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="stylesheet" href="./css/fonts.css">
 <title>나눔이음 사회복지시설 협의체</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -511,50 +512,51 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 }
 
 
-/* ===== 공통 헤더: hpartners 기준 ===== */
+
+/* ===== HEADER: hpartners 실제 폰트/치수와 동일 ===== */
 .site-header{
-  position:relative;
-  z-index:80;
-  width:100%;
-  background:#fffaf7;
-  border-bottom:1px solid rgba(0,0,0,.06);
+  height:78px;
+  position:sticky;
+  top:0;
+  z-index:50;
+  background:rgba(255,250,247,.84);
+  backdrop-filter:blur(18px);
+  -webkit-backdrop-filter:blur(18px);
+  border-bottom:1px solid rgba(115,84,68,.08);
 }
 
-.site-header,
-.site-header *{
-  font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+.site-header .shell{
+  width:min(calc(100% - 48px),1180px);
+  margin-inline:auto;
 }
 
 .site-header .header-inner{
-  max-width:1120px;
-  min-height:72px;
-  margin:0 auto;
-  padding:0 24px;
+  height:100%;
   display:flex;
   align-items:center;
-  gap:26px;
+  gap:28px;
 }
 
 .site-header .brand{
-  display:inline-flex;
-  align-items:center;
-  white-space:nowrap;
-  font-size:24px !important;
+  font-family:var(--font-display) !important;
+  font-size:27px !important;
+  font-weight:400 !important;
+  letter-spacing:-.08em !important;
   line-height:1 !important;
-  font-weight:950 !important;
-  letter-spacing:-.07em !important;
-  color:#111827 !important;
+  white-space:nowrap;
+  color:#11192a !important;
   text-decoration:none;
 }
 
 .site-header .brand span{
-  color:#111827 !important;
   font:inherit !important;
+  color:#11192a !important;
 }
 
 .site-header .brand b{
-  color:#f44768 !important;
   font:inherit !important;
+  font-weight:400 !important;
+  color:#f4476b !important;
 }
 
 .site-header .desktop-nav{
@@ -562,70 +564,76 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
   align-items:center;
   gap:28px;
   margin-left:auto;
-  white-space:nowrap;
+  font-family:var(--font-ui) !important;
+  font-size:13px !important;
+  font-weight:700 !important;
 }
 
 .site-header .desktop-nav a{
-  position:relative;
-  color:#374151;
-  font-size:12.5px !important;
-  line-height:1.2 !important;
-  font-weight:800 !important;
-  letter-spacing:-.03em !important;
+  font-family:var(--font-ui) !important;
+  font-size:13px !important;
+  font-weight:700 !important;
+  letter-spacing:-.025em !important;
+  line-height:1.2;
+  color:#11192a;
+  opacity:.78;
   text-decoration:none;
   white-space:nowrap;
 }
 
 .site-header .desktop-nav a:hover{
-  color:#111827;
+  opacity:1;
 }
 
 .site-header .desktop-nav a.partner-link{
-  color:#c94f71 !important;
-  font-weight:900 !important;
+  color:#f4476b !important;
+  opacity:1;
 }
 
 .site-header .header-cta{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  min-height:40px;
-  padding:0 17px !important;
+  margin-left:6px;
+  padding:10px 17px !important;
   border:0 !important;
   border-radius:999px !important;
-  background:#111827 !important;
+  background:#11192a !important;
   color:#fff !important;
-  font-size:11.5px !important;
-  line-height:1 !important;
-  font-weight:900 !important;
-  letter-spacing:-.03em !important;
+  font-family:var(--font-ui) !important;
+  font-size:12px !important;
+  font-weight:700 !important;
+  letter-spacing:-.025em !important;
+  line-height:1.2 !important;
   text-decoration:none;
   white-space:nowrap;
 }
 
 .site-header .menu-button{
   display:none;
+  margin-left:auto;
   width:40px;
   height:40px;
-  margin-left:auto;
   border:0;
   background:transparent;
-  padding:0;
+  padding:8px;
 }
 
 .site-header .menu-button span{
   display:block;
-  width:20px;
   height:2px;
-  margin:4px auto;
-  border-radius:999px;
-  background:#111827;
+  background:#11192a;
+  margin:6px 0;
 }
 
 .site-header .mobile-nav{
-  padding:8px 24px 16px;
-  background:#fffaf7;
-  border-top:1px solid rgba(0,0,0,.05);
+  position:fixed;
+  z-index:49;
+  left:14px;
+  right:14px;
+  top:72px;
+  background:#fff;
+  border:1px solid rgba(102,79,67,.14);
+  border-radius:20px;
+  padding:12px;
+  box-shadow:0 24px 60px rgba(58,42,32,.11);
 }
 
 .site-header .mobile-nav[hidden]{
@@ -634,23 +642,19 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 
 .site-header .mobile-nav a{
   display:block;
-  padding:10px 0;
-  color:#374151;
+  padding:14px;
+  font-family:var(--font-ui) !important;
   font-size:13px;
-  font-weight:800;
+  font-weight:700;
+  color:#11192a;
   text-decoration:none;
 }
 
 .site-header .mobile-nav a.partner-link{
-  color:#c94f71;
-  font-weight:900;
+  color:#f4476b;
 }
 
-@media(max-width:900px){
-  .site-header .header-inner{
-    min-height:62px;
-  }
-
+@media(max-width:980px){
   .site-header .desktop-nav,
   .site-header .header-cta{
     display:none;
@@ -658,6 +662,22 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 
   .site-header .menu-button{
     display:block;
+  }
+}
+
+@media(max-width:640px){
+  .site-header{height:66px}
+  .site-header .header-inner{
+    height:66px;
+    padding:0 4px;
+  }
+  .site-header .brand{
+    font-size:24px !important;
+  }
+  .site-header .mobile-nav{
+    top:66px;
+    left:12px;
+    right:12px;
   }
 }
 
