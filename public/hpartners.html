@@ -48,6 +48,62 @@
 
     @media (max-width: 767px){
 }
+
+    /* PC 한글 줄바꿈 보정: 단어가 음절 단위로 잘리지 않도록 함 */
+    @media (min-width: 981px){
+      .hero-copy h1,
+      .section-intro h2,
+      .connection-text h3,
+      .support-copy h2,
+      .work-copy h2,
+      .schedule-copy h2,
+      .benefits-copy h2,
+      .process-copy h2,
+      .final-copy h2,
+      .journey h3,
+      .benefit-floats h3,
+      .support-stamp b,
+      .vehicle-band b,
+      .process-line span,
+      .process-line small,
+      .support-flow span,
+      .support-flow small,
+      .hero-lead,
+      .editorial-note,
+      .section-intro p,
+      .connection-text p,
+      .support-copy p,
+      .work-copy p,
+      .schedule-copy p,
+      .schedule-message p,
+      .benefits-copy p,
+      .benefit-floats p,
+      .process-copy p,
+      .final-copy p {
+        word-break: keep-all !important;
+        overflow-wrap: normal !important;
+      }
+
+      .hero-copy h1,
+      .section-intro h2,
+      .support-copy h2,
+      .work-copy h2,
+      .schedule-copy h2,
+      .benefits-copy h2,
+      .process-copy h2,
+      .final-copy h2 {
+        text-wrap: balance;
+      }
+
+      /* 강조어 자체도 한 단어로 유지 */
+      h1 em,
+      h2 em,
+      h3 em,
+      .impact,
+      .feature {
+        white-space: nowrap;
+      }
+    }
   </style>
 </head>
 <body>

@@ -440,7 +440,7 @@ function aggregateBubbleHtml(a, type, isSelected = false) {
 
 function PageHeader({ title, onBack, right }) {
   return (
-    <div style={{ height: 58, display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 18px", borderBottom: `1px solid ${C.line}`, background: "#fff", position: "sticky", top: 0, zIndex: 20 }}>
+    <div className="hp-local-page-header" style={{ height: 58, display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 18px", borderBottom: `1px solid ${C.line}`, background: "#fff", position: "sticky", top: 0, zIndex: 20 }}>
       <div style={{ width: 34 }}>{onBack && <button onClick={onBack} style={{ width: 34, height: 34, border: 0, background: "transparent", display: "grid", placeItems: "center" }}><IconChevronLeft/></button>}</div>
       <div style={{ fontSize: 16, fontWeight: 900, letterSpacing: "-.02em" }}>{title}</div>
       <div style={{ width: 34, display: "flex", justifyContent: "flex-end" }}>{right || null}</div>
@@ -484,6 +484,7 @@ export default function HospitalPartnerPage() {
   const mobileFocusRef = useRef(null);
   const [submitState, setSubmitState] = useState({ loading: false, error: "" });
   const [applicantModalOpen, setApplicantModalOpen] = useState(false);
+  const [globalMenuOpen, setGlobalMenuOpen] = useState(false);
 
   // 고령 사용자용 단계 안내.
   // 처음에는 구 선택/지도 확대 방법부터 지도 위 큰 모달로 안내한다.
@@ -494,6 +495,17 @@ export default function HospitalPartnerPage() {
   useEffect(() => {
     selectedNeighborhoodsRef.current = selectedNeighborhoods;
   }, [selectedNeighborhoods]);
+
+  useEffect(() => {
+    const id = "hp-shared-fonts-css";
+    if (document.getElementById(id)) return;
+
+    const link = document.createElement("link");
+    link.id = id;
+    link.rel = "stylesheet";
+    link.href = "/css/fonts.css";
+    document.head.appendChild(link);
+  }, []);
 
   useEffect(() => {
     const media = window.matchMedia("(min-width: 980px)");
@@ -1935,6 +1947,65 @@ export default function HospitalPartnerPage() {
     );
   }
 
+  function renderGlobalHeader() {
+    return (
+      <header className="hp-global-header">
+        <div className="hp-global-shell">
+          <a
+            className="hp-global-brand"
+            href="/hpartners.html"
+            aria-label="나눔이음 메인"
+          >
+            <span>나눔</span><b>이음</b>
+          </a>
+
+          <nav className="hp-global-nav" aria-label="나눔이음 주요 메뉴">
+            <a href="/nanumieum_portal.html#cases">대표 이음 사례</a>
+            <a href="/nanumieum_portal.html#together">후원과 세금혜택</a>
+            <a href="/nanumieum_portal.html#archive">나눔 아카이브</a>
+            <a href="/bazaar/bazaar.html">나눔이음바자</a>
+            <a
+              className="hp-global-current"
+              href="/hpartners.html"
+              aria-current="page"
+            >
+              병원동행 파트너스
+            </a>
+          </nav>
+
+          <a className="hp-global-cta" href="/apply-concert.html">
+            총회 & 음악회 참석신청
+          </a>
+
+          <button
+            type="button"
+            className="hp-global-menu-button"
+            aria-label={globalMenuOpen ? "메뉴 닫기" : "메뉴 열기"}
+            aria-expanded={globalMenuOpen}
+            onClick={() => setGlobalMenuOpen((v) => !v)}
+          >
+            <span />
+            <span />
+            <span />
+          </button>
+        </div>
+
+        {globalMenuOpen && (
+          <nav className="hp-global-mobile-nav" aria-label="모바일 메뉴">
+            <a href="/nanumieum_portal.html#cases">대표 이음 사례</a>
+            <a href="/nanumieum_portal.html#together">후원과 세금혜택</a>
+            <a href="/nanumieum_portal.html#archive">나눔 아카이브</a>
+            <a href="/bazaar/bazaar.html">나눔이음바자</a>
+            <a className="hp-global-current" href="/hpartners.html">
+              병원동행 파트너스
+            </a>
+            <a href="/apply-concert.html">총회 & 음악회 참석신청</a>
+          </nav>
+        )}
+      </header>
+    );
+  }
+
   function renderMain() {
     const initialResourcesReady = dataReady && mapReady;
     const neighborhoodMode = !priorityMode && zoom >= 12;
@@ -1951,18 +2022,7 @@ export default function HospitalPartnerPage() {
         {renderPriorityTransitionGuide()}
 
         <header style={{ padding: "16px 18px 12px", background: "#fff" }}>
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-            <div
-              style={{
-                fontSize: 20,
-                fontWeight: 950,
-                letterSpacing: "-.045em",
-                color: C.ink,
-              }}
-            >
-              나눔이음
-            </div>
-
+          <div style={{ display: "flex", justifyContent: "flex-end" }}>
             <div
               style={{
                 padding: "7px 10px",
@@ -4620,10 +4680,156 @@ ${priorityApartment?.name || "-"}
         button:disabled { cursor:not-allowed; }
         select:disabled { cursor:not-allowed; }
 
+        .hp-global-header {
+          height:78px;
+          position:sticky;
+          top:0;
+          z-index:1100;
+          background:rgba(255,250,247,.84);
+          backdrop-filter:blur(18px);
+          -webkit-backdrop-filter:blur(18px);
+          border-bottom:1px solid rgba(115,84,68,.08);
+        }
+
+        .hp-global-shell {
+          width:min(calc(100% - 48px),1180px);
+          height:100%;
+          margin-inline:auto;
+          display:flex;
+          align-items:center;
+          gap:28px;
+        }
+
+        .hp-global-brand {
+          font-family:var(--font-display,'Jalnan',sans-serif) !important;
+          font-size:27px;
+          font-weight:400;
+          letter-spacing:-.08em;
+          line-height:1;
+          white-space:nowrap;
+          color:#11192a;
+          text-decoration:none;
+        }
+
+        .hp-global-brand span {
+          color:#11192a;
+          font:inherit;
+        }
+
+        .hp-global-brand b {
+          color:#f4476b;
+          font:inherit;
+          font-weight:400;
+        }
+
+        .hp-global-nav {
+          display:flex;
+          align-items:center;
+          gap:28px;
+          margin-left:auto;
+          font-family:var(--font-ui,'Pretendard','SUIT',system-ui,sans-serif) !important;
+          font-size:13px;
+          font-weight:700;
+        }
+
+        .hp-global-nav a {
+          position:relative;
+          color:#11192a;
+          opacity:.78;
+          font:inherit;
+          letter-spacing:-.025em;
+          line-height:1.2;
+          text-decoration:none;
+          white-space:nowrap;
+        }
+
+        .hp-global-nav a:hover {
+          opacity:1;
+        }
+
+        .hp-global-nav .hp-global-current {
+          color:#f4476b;
+          opacity:1;
+        }
+
+        .hp-global-nav .hp-global-current::after {
+          content:"";
+          position:absolute;
+          left:0;
+          right:0;
+          bottom:-12px;
+          height:2px;
+          border-radius:999px;
+          background:#ee6f93;
+        }
+
+        .hp-global-cta {
+          margin-left:6px;
+          padding:10px 17px;
+          border-radius:999px;
+          background:#11192a;
+          color:#fff;
+          font-family:var(--font-ui,'Pretendard','SUIT',system-ui,sans-serif) !important;
+          font-size:12px;
+          font-weight:700;
+          letter-spacing:-.025em;
+          line-height:1.2;
+          text-decoration:none;
+          white-space:nowrap;
+        }
+
+        .hp-global-menu-button {
+          display:none;
+          margin-left:auto;
+          width:40px;
+          height:40px;
+          border:0;
+          background:transparent;
+          padding:8px;
+        }
+
+        .hp-global-menu-button span {
+          display:block;
+          height:2px;
+          margin:6px 0;
+          background:#11192a;
+        }
+
+        .hp-global-mobile-nav {
+          position:fixed;
+          z-index:1099;
+          left:14px;
+          right:14px;
+          top:72px;
+          padding:12px;
+          border:1px solid rgba(102,79,67,.14);
+          border-radius:20px;
+          background:#fff;
+          box-shadow:0 24px 60px rgba(58,42,32,.11);
+        }
+
+        .hp-global-mobile-nav a {
+          display:block;
+          padding:14px;
+          color:#11192a;
+          font-family:var(--font-ui,'Pretendard','SUIT',system-ui,sans-serif) !important;
+          font-size:13px;
+          font-weight:700;
+          text-decoration:none;
+        }
+
+        .hp-global-mobile-nav .hp-global-current {
+          color:#f4476b;
+        }
+
+        .hp-local-page-header {
+          top:78px !important;
+        }
+
         .hp-page-frame {
           width:100%;
           max-width:520px;
-          min-height:100vh;
+          min-height:calc(100vh - 78px);
           margin:0 auto;
           background:#fff;
           box-shadow:0 0 36px rgba(31,35,41,.08);
@@ -4635,6 +4841,41 @@ ${priorityApartment?.name || "-"}
 
         .hp-summary-layout {
           display:block;
+        }
+
+        @media (max-width:980px) {
+          .hp-global-nav,
+          .hp-global-cta {
+            display:none;
+          }
+
+          .hp-global-menu-button {
+            display:block;
+          }
+        }
+
+        @media (max-width:640px) {
+          .hp-global-header {
+            height:66px;
+          }
+
+          .hp-global-shell {
+            width:calc(100% - 24px);
+          }
+
+          .hp-global-brand {
+            font-size:24px;
+          }
+
+          .hp-global-mobile-nav {
+            top:66px;
+            left:12px;
+            right:12px;
+          }
+
+          .hp-local-page-header {
+            top:66px !important;
+          }
         }
 
         @media (min-width:980px) {
@@ -4741,6 +4982,8 @@ ${priorityApartment?.name || "-"}
           }
         }
       `}</style>
+
+      {renderGlobalHeader()}
 
       <div
         className={`hp-page-frame ${

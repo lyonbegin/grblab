@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="../css/fonts.css">
 <title>마이페이지 | 나눔이음바자</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -205,14 +206,357 @@
   .modal-btns .m-submit:disabled{background:var(--line);color:var(--ink-faint);cursor:not-allowed}
 
   footer{background:var(--ink);color:var(--ink-faint);padding:30px 24px;font-size:12.5px;text-align:center;margin-top:50px}
+
+/* =========================================================
+   공통 글로벌 헤더
+   ========================================================= */
+.global-header{
+  height:78px;
+  position:sticky;
+  top:0;
+  z-index:1000;
+  background:rgba(255,250,247,.84);
+  backdrop-filter:blur(18px);
+  -webkit-backdrop-filter:blur(18px);
+  border-bottom:1px solid rgba(115,84,68,.08);
+}
+.global-header *{box-sizing:border-box}
+.global-header .g-shell{
+  width:min(calc(100% - 48px),1180px);
+  height:100%;
+  margin-inline:auto;
+  display:flex;
+  align-items:center;
+  gap:28px;
+}
+.global-brand{
+  font-family:var(--font-display,'Jalnan',sans-serif)!important;
+  font-size:27px!important;
+  font-weight:400!important;
+  letter-spacing:-.08em!important;
+  line-height:1!important;
+  white-space:nowrap;
+  color:#11192a!important;
+  text-decoration:none!important;
+}
+.global-brand span{color:#11192a!important;font:inherit!important}
+.global-brand b{color:#f4476b!important;font:inherit!important;font-weight:400!important}
+.global-nav-links{
+  display:flex;
+  align-items:center;
+  gap:28px;
+  margin-left:auto;
+  font-family:var(--font-ui,'Pretendard','SUIT',system-ui,sans-serif)!important;
+  font-size:13px!important;
+  font-weight:700!important;
+}
+.global-nav-links a{
+  position:relative;
+  color:#11192a!important;
+  opacity:.78;
+  font:inherit!important;
+  letter-spacing:-.025em!important;
+  line-height:1.2!important;
+  text-decoration:none!important;
+  white-space:nowrap;
+}
+.global-nav-links a:hover{opacity:1}
+.global-nav-links a.is-current{color:#f4476b!important;opacity:1}
+.global-nav-links a.is-current::after{
+  content:"";
+  position:absolute;
+  left:0;right:0;bottom:-12px;
+  height:2px;border-radius:999px;background:#ee6f93;
+}
+.global-header-cta{
+  margin-left:6px;
+  padding:10px 17px!important;
+  border-radius:999px!important;
+  background:#11192a!important;
+  color:#fff!important;
+  font-family:var(--font-ui,'Pretendard','SUIT',system-ui,sans-serif)!important;
+  font-size:12px!important;
+  font-weight:700!important;
+  letter-spacing:-.025em!important;
+  line-height:1.2!important;
+  text-decoration:none!important;
+  white-space:nowrap;
+}
+.global-menu-btn{
+  display:none;
+  margin-left:auto;
+  width:40px;height:40px;
+  border:0;background:transparent;padding:8px;cursor:pointer;
+}
+.global-menu-btn span{
+  display:block;height:2px;margin:6px 0;background:#11192a;border-radius:999px;
+}
+.global-mobile-nav{
+  display:none;
+  position:fixed;
+  z-index:1001;
+  left:14px;right:14px;top:72px;
+  padding:12px;
+  border:1px solid rgba(102,79,67,.14);
+  border-radius:20px;
+  background:#fff;
+  box-shadow:0 24px 60px rgba(58,42,32,.11);
+}
+.global-mobile-nav.open{display:block}
+.global-mobile-nav a{
+  display:block;
+  padding:14px;
+  border-radius:10px;
+  color:#11192a!important;
+  font-family:var(--font-ui,'Pretendard','SUIT',system-ui,sans-serif)!important;
+  font-size:13px!important;
+  font-weight:700!important;
+  text-decoration:none!important;
+}
+.global-mobile-nav a:hover{background:#f6efee}
+.global-mobile-nav a.is-current{color:#f4476b!important}
+
+/* 페이지별 원래 바자 서브메뉴 */
+.bazaar-subnav{
+  position:sticky;
+  top:78px;
+  z-index:900;
+  background:rgba(255,255,255,.96);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--line,#F0E1E6);
+}
+.bazaar-subnav-in{
+  width:min(calc(100% - 48px),1180px);
+  min-height:56px;
+  margin-inline:auto;
+  display:flex;
+  align-items:center;
+  gap:18px;
+  font-family:var(--sans,'SUIT Variable','SUIT',sans-serif);
+}
+.bazaar-subnav a{text-decoration:none}
+.subnav-back{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  min-height:36px;
+  padding:0 12px;
+  border-radius:999px;
+  color:var(--ink-soft,#6B5F68)!important;
+  font-size:13px;
+  font-weight:700;
+  white-space:nowrap;
+}
+.subnav-back:hover{
+  background:var(--paper-2,#F6EFEE);
+  color:var(--ink,#2B2430)!important;
+}
+.subnav-back svg{width:14px;height:14px}
+
+.bazaar-main-links{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.bazaar-main-links a{
+  display:inline-flex;
+  align-items:center;
+  min-height:36px;
+  padding:0 13px;
+  border-radius:999px;
+  color:var(--ink-soft,#6B5F68)!important;
+  font-size:13px;
+  font-weight:700;
+  white-space:nowrap;
+}
+.bazaar-main-links a:hover{
+  background:var(--paper-2,#F6EFEE);
+  color:var(--ink,#2B2430)!important;
+}
+.bazaar-main-links a.on{
+  background:var(--ink,#2B2430);
+  color:#fff!important;
+}
+.bazaar-main-account{
+  margin-left:auto;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  min-width:0;
+}
+.bazaar-main-account #whoName{
+  max-width:230px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  color:var(--ink-soft,#6B5F68);
+  font-size:12.5px;
+  font-weight:700;
+}
+.bazaar-main-account .account-actions{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  flex:none;
+}
+.bazaar-main-account .cart-ico{
+  position:relative;
+  width:36px;height:36px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:var(--ink,#2B2430)!important;
+}
+.bazaar-main-account .cart-ico svg{width:20px;height:20px}
+.bazaar-main-account .logout-btn{
+  border:0;
+  border-radius:999px;
+  padding:8px 12px;
+  background:var(--paper-2,#F6EFEE);
+  color:var(--ink-soft,#6B5F68);
+  font-family:inherit;
+  font-size:12px;
+  font-weight:700;
+  line-height:1;
+  text-decoration:none;
+  cursor:pointer;
+  white-space:nowrap;
+}
+
+.bazaar-intro-actions{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin-left:auto;
+}
+.bazaar-intro-actions a{
+  display:inline-flex;
+  align-items:center;
+  min-height:36px;
+  padding:0 13px;
+  border-radius:999px;
+  color:var(--ink-soft,#6B5F68)!important;
+  font-size:13px;
+  font-weight:700;
+  white-space:nowrap;
+}
+.bazaar-intro-actions a.primary{
+  background:var(--ink,#2B2430);
+  color:#fff!important;
+}
+
+@media(max-width:980px){
+  .global-nav-links,.global-header-cta{display:none}
+  .global-menu-btn{display:block}
+}
+@media(max-width:760px){
+  .global-header{height:66px}
+  .global-header .g-shell{width:calc(100% - 24px)}
+  .global-brand{font-size:24px!important}
+  .global-mobile-nav{top:66px;left:12px;right:12px}
+
+  .bazaar-subnav{top:66px}
+  .bazaar-subnav-in{
+    width:100%;
+    min-height:52px;
+    padding:7px 12px;
+  }
+
+  .bazaar-subnav.main .bazaar-subnav-in{
+    min-height:92px;
+    display:flex;
+    flex-direction:column;
+    align-items:stretch;
+    gap:6px;
+  }
+  .bazaar-main-links{
+    width:100%;
+    gap:6px;
+    overflow-x:auto;
+    scrollbar-width:none;
+    -webkit-overflow-scrolling:touch;
+  }
+  .bazaar-main-links::-webkit-scrollbar{display:none}
+  .bazaar-main-links a{
+    min-height:34px;
+    padding:0 12px;
+    font-size:12.5px;
+    flex:none;
+  }
+  .bazaar-main-account{
+    width:100%;
+    margin-left:0;
+    display:flex;
+    flex-direction:row;
+    align-items:center;
+    justify-content:space-between;
+    gap:8px;
+  }
+  .bazaar-main-account #whoName{
+    flex:1 1 auto;
+    min-width:0;
+    max-width:none;
+    font-size:12px;
+  }
+  .bazaar-main-account .account-actions{
+    flex:0 0 auto;
+    display:flex;
+    flex-direction:row;
+    align-items:center;
+    gap:6px;
+  }
+  .subnav-back{
+    min-height:34px;
+    padding:0 10px;
+    font-size:12.5px;
+  }
+  .bazaar-intro-actions{
+    width:100%;
+    justify-content:flex-end;
+    gap:6px;
+  }
+  .bazaar-intro-actions a{
+    min-height:34px;
+    padding:0 11px;
+    font-size:12.5px;
+  }
+}
+
 </style>
 </head>
 <body>
 
-<nav class="dnav">
-  <div class="dnav-in">
-    <a href="index.html" class="dbrand">나눔<em>이음</em>바자</a>
-    <a href="bazaar.html" class="dback" id="navBack"><svg class="lucide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg> 상품 목록으로</a>
+<header class="global-header">
+  <div class="g-shell">
+    <a class="global-brand" href="../nanumieum_portal.html" aria-label="나눔이음 메인">
+      <span>나눔</span><b>이음</b>
+    </a>
+    <nav class="global-nav-links" aria-label="나눔이음 주요 메뉴">
+      <a href="../nanumieum_portal.html#cases">대표 이음 사례</a>
+      <a href="../nanumieum_portal.html#together">후원과 세금혜택</a>
+      <a href="../nanumieum_portal.html#archive">나눔 아카이브</a>
+      <a class="is-current" href="bazaar.html" aria-current="page">나눔이음바자</a>
+      <a href="../hpartners.html">병원동행 파트너스</a>
+    </nav>
+    <a class="global-header-cta" href="../apply-concert.html">총회 & 음악회 참석신청</a>
+    <button type="button" class="global-menu-btn" id="globalMenuBtn" aria-label="메뉴 열기" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <nav class="global-mobile-nav" id="globalMobileNav" aria-label="모바일 글로벌 메뉴">
+    <a href="../nanumieum_portal.html#cases">대표 이음 사례</a>
+    <a href="../nanumieum_portal.html#together">후원과 세금혜택</a>
+    <a href="../nanumieum_portal.html#archive">나눔 아카이브</a>
+    <a class="is-current" href="bazaar.html" aria-current="page">나눔이음바자</a>
+    <a href="../hpartners.html">병원동행 파트너스</a>
+    <a href="../apply-concert.html">총회 & 음악회 참석신청</a>
+  </nav>
+</header>
+
+<nav class="bazaar-subnav" aria-label="마이페이지 메뉴">
+  <div class="bazaar-subnav-in">
+    <a href="bazaar.html" class="subnav-back" id="navBack"><svg class="lucide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg> 상품 목록으로</a>
   </div>
 </nav>
 
@@ -324,6 +668,33 @@
 </footer>
 
 <script>
+
+  (() => {
+    const btn = document.getElementById('globalMenuBtn');
+    const nav = document.getElementById('globalMobileNav');
+    if(!btn || !nav) return;
+    btn.addEventListener('click', ()=>{
+      const open = nav.classList.toggle('open');
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      btn.setAttribute('aria-label', open ? '메뉴 닫기' : '메뉴 열기');
+    });
+    nav.querySelectorAll('a').forEach(link=>{
+      link.addEventListener('click', ()=>{
+        nav.classList.remove('open');
+        btn.setAttribute('aria-expanded','false');
+        btn.setAttribute('aria-label','메뉴 열기');
+      });
+    });
+    document.addEventListener('click', e=>{
+      if(!e.target.closest('.global-header')){
+        nav.classList.remove('open');
+        btn.setAttribute('aria-expanded','false');
+        btn.setAttribute('aria-label','메뉴 열기');
+      }
+    });
+  })();
+
+
   /* ── 복지시설 소개: URL 파라미터로 공개 열람(다른 복지시설) / 본인 계정 구분 ── */
   const qs = new URLSearchParams(location.search);
   const paramFacility = qs.get('facility');
