@@ -12,7 +12,7 @@ const SOLAPI_API_KEY = "NCSTBYVI4YZVHL54";
 const SOLAPI_API_SECRET = "EJEAVM1ZEENMWA3TBMUMSQNDNMS8FEAS";
 
 // SOLAPI에서 등록/승인된 실제 발신번호를 숫자만 입력하세요.
-const SOLAPI_FROM = "01074186848";
+const SOLAPI_FROM = "발신번호입력";
 
 const C = {
   ink: "#1f2329",
@@ -993,8 +993,8 @@ export default function HospitalPartnerPage() {
     let accent = false;
 
     if (guide.type === "start") {
-      title = "활동지역을 찾아볼까요?";
-      body = "지도에서 원하는 구를 누르거나, 지도를 확대하면 동을 볼 수 있습니다.";
+      title = "동 이름을 하나 눌러주세요";
+      body = "먼저 원하는 구를 선택하거나 지도를 확대하면 동을 볼 수 있습니다.";
       button = "확인";
     } else if (guide.type === "dongIntro") {
       title = "활동할 동을 선택해주세요";
@@ -1155,9 +1155,8 @@ export default function HospitalPartnerPage() {
                 fontWeight: 800,
               }}
             >
-              <div>① 원하는 <strong>구</strong>를 누르기</div>
-              <div>② 또는 지도를 <strong>확대</strong>하기</div>
-              <div style={{ color: C.brand }}>→ 그러면 동 이름이 나타납니다.</div>
+              <div>① <strong>구·군 선택</strong></div>
+              <div>② 지도 확대 후 <strong>동 선택</strong></div>
             </div>
           )}
 
@@ -1184,166 +1183,647 @@ export default function HospitalPartnerPage() {
     );
   }
 
+  function renderApplicationProgress(activeStep = 1) {
+    const steps = [
+      { no: 1, label: "활동지역 선택" },
+      { no: 2, label: "신청자 정보" },
+      { no: 3, label: "신청 완료" },
+    ];
+
+    return (
+      <div style={{ marginTop: 17 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", alignItems: "center" }}>
+          {steps.map((step, index) => {
+            const active = step.no === activeStep;
+            const done = step.no < activeStep;
+            return (
+              <div
+                key={step.no}
+                style={{
+                  position: "relative",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: index === 0 ? "flex-start" : index === 2 ? "flex-end" : "center",
+                  minWidth: 0,
+                }}
+              >
+                {index > 0 && (
+                  <div
+                    style={{
+                      position: "absolute",
+                      right: "50%",
+                      top: 17,
+                      width: "50%",
+                      height: 1,
+                      background: done || active ? "#e9c1ca" : "#e5e7eb",
+                      zIndex: 0,
+                    }}
+                  />
+                )}
+                {index < steps.length - 1 && (
+                  <div
+                    style={{
+                      position: "absolute",
+                      left: "50%",
+                      top: 17,
+                      width: "50%",
+                      height: 1,
+                      background: done ? "#e9c1ca" : "#e5e7eb",
+                      zIndex: 0,
+                    }}
+                  />
+                )}
+
+                <div
+                  style={{
+                    position: "relative",
+                    zIndex: 1,
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 7,
+                    background: "#fff",
+                    padding: "0 5px",
+                    minWidth: 0,
+                  }}
+                >
+                  <div
+                    style={{
+                      width: 34,
+                      height: 34,
+                      borderRadius: "50%",
+                      display: "grid",
+                      placeItems: "center",
+                      flex: "0 0 auto",
+                      background: active ? C.brand : done ? C.brandSoft : "#fff",
+                      border: active ? `1px solid ${C.brand}` : done ? "1px solid #e7bdc7" : "1px solid #d7dbe1",
+                      color: active ? "#fff" : done ? C.brand : "#8b9098",
+                      fontSize: 14,
+                      fontWeight: 950,
+                    }}
+                  >
+                    {done ? "✓" : step.no}
+                  </div>
+
+                  <div
+                    style={{
+                      fontSize: 12,
+                      fontWeight: active ? 950 : 800,
+                      color: active ? C.brand : done ? C.ink : "#7e838b",
+                      whiteSpace: "nowrap",
+                      letterSpacing: "-.02em",
+                    }}
+                  >
+                    {step.label}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        <div
+          style={{
+            marginTop: 13,
+            height: 2,
+            borderRadius: 999,
+            background: "#f0f1f3",
+            overflow: "hidden",
+          }}
+        >
+          <div
+            style={{
+              width: activeStep === 1 ? "33.333%" : activeStep === 2 ? "66.666%" : "100%",
+              height: "100%",
+              background: C.brand,
+            }}
+          />
+        </div>
+      </div>
+    );
+  }
+
   function renderMain() {
     const neighborhoodMode = !priorityMode && zoom >= 12;
     const apartmentMode = priorityMode;
+    const remainingNeighborhoods = Math.max(
+      0,
+      MAX_NEIGHBORHOODS - selectedNeighborhoods.size
+    );
 
     return (
       <>
-        <header style={{ padding: "14px 18px 10px", background: "#fff" }}>
+        <header style={{ padding: "16px 18px 12px", background: "#fff" }}>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 9 }}>
-              <div style={{ width: 34, height: 34, borderRadius: 11, background: C.brandSoft, display: "grid", placeItems: "center" }}><IconHospital size={18}/></div>
-              <div>
-                <div style={{ fontSize: 13.5, fontWeight: 900, letterSpacing: "-.02em" }}>나눔이음</div>
-                <div style={{ fontSize: 11.5, color: C.muted, fontWeight: 700 }}>병원동행 파트너스</div>
-              </div>
+            <div
+              style={{
+                fontSize: 20,
+                fontWeight: 950,
+                letterSpacing: "-.045em",
+                color: C.ink,
+              }}
+            >
+              나눔이음
             </div>
-            <div style={{ padding: "7px 10px", borderRadius: 999, background: C.brandSoft, color: C.brand, fontSize: 11.5, fontWeight: 900 }}>활동지역 선택</div>
+
+            <div
+              style={{
+                padding: "7px 10px",
+                borderRadius: 999,
+                background: C.brandSoft,
+                color: C.brand,
+                fontSize: 11.5,
+                fontWeight: 900,
+              }}
+            >
+              활동지역 선택
+            </div>
           </div>
 
-          <h1 style={{ margin: "18px 0 6px", fontSize: 25, lineHeight: 1.28, letterSpacing: "-.04em" }}>
-            {priorityMode ? (
-              <>예약을 우선적으로 받을 <span style={{ color: C.brand }}>단지 1곳</span>을 선택하세요</>
-            ) : (
-              <>활동할 <span style={{ color: C.brand }}>동 3곳</span>을 선택하세요</>
-            )}
-          </h1>
-          <p style={{ margin: 0, fontSize: 13, color: C.muted, lineHeight: 1.55 }}>
-            {priorityMode
-              ? "선택한 3개 동에 속한 대단지만 지도에 표시됩니다."
-              : zoom <= 11
-                ? "원하는 구를 누르거나 지도를 확대하면 동을 볼 수 있습니다."
-                : "지도에서 동 이름을 눌러 활동할 동을 3곳 선택하세요."}
-          </p>
+          {renderApplicationProgress(1)}
 
-          <div style={{ marginTop: 13, display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
-            <div style={{ padding: "10px 12px", background: "#faf9f8", border: `1px solid ${C.line}`, borderRadius: 12 }}>
-              <div style={{ fontSize: 10.5, color: C.muted, fontWeight: 800 }}>활동지역</div>
-              <div style={{ marginTop: 3, fontSize: 15, fontWeight: 900 }}><span style={{ color: C.brand }}>{selectedNeighborhoods.size}</span> / {MAX_NEIGHBORHOODS}개 동</div>
-            </div>
-            <div style={{ padding: "10px 12px", background: priorityApartment ? C.brandSoft : "#faf9f8", border: `1px solid ${priorityApartment ? "#efcbd3" : C.line}`, borderRadius: 12 }}>
-              <div style={{ fontSize: 10.5, color: C.muted, fontWeight: 800 }}>우선권 단지</div>
-              <div style={{ marginTop: 3, display: "flex", alignItems: "center", gap: 6, minWidth: 0 }}>
-                <div style={{ minWidth: 0, flex: 1, fontSize: 13, fontWeight: 900, color: priorityApartment ? C.brand : C.muted, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                  {priorityApartment ? priorityApartment.name : "아직 선택하지 않음"}
+          <div style={{ marginTop: 26 }}>
+            <h1
+              style={{
+                margin: 0,
+                fontSize: 29,
+                lineHeight: 1.25,
+                letterSpacing: "-.045em",
+                color: C.ink,
+              }}
+            >
+              {priorityMode ? "우선권 단지를 선택해주세요" : "병원동행 파트너 신청"}
+            </h1>
+
+            {!priorityMode ? (
+              <div style={{ marginTop: 11 }}>
+                <div
+                  style={{
+                    fontSize: 16,
+                    lineHeight: 1.55,
+                    fontWeight: 800,
+                    color: C.ink,
+                  }}
+                >
+                  지원해주셔서 감사합니다.
+                </div>
+                <div
+                  style={{
+                    marginTop: 2,
+                    fontSize: 15,
+                    lineHeight: 1.6,
+                    color: C.muted,
+                    fontWeight: 700,
+                  }}
+                >
+                  먼저 활동할 지역을 선택해주세요.
+                </div>
+              </div>
+            ) : (
+              <p
+                style={{
+                  margin: "10px 0 0",
+                  fontSize: 13.5,
+                  color: C.muted,
+                  lineHeight: 1.6,
+                  fontWeight: 700,
+                }}
+              >
+                선택한 3개 동의 대단지 중에서 우선권 단지 1곳을 선택해주세요.
+              </p>
+            )}
+          </div>
+
+          {!priorityMode && (
+            <div
+              style={{
+                marginTop: 22,
+                padding: "18px 16px",
+                border: `1px solid ${C.line}`,
+                borderRadius: 17,
+                background: "#fff",
+              }}
+            >
+              <div
+                style={{
+                  fontSize: 16,
+                  fontWeight: 950,
+                  letterSpacing: "-.025em",
+                  color: C.ink,
+                }}
+              >
+                어느 구에서 활동하시겠어요?
+              </div>
+
+              <div style={{ marginTop: 12, display: "flex", gap: 8, alignItems: "center" }}>
+                <div
+                  style={{
+                    height: 48,
+                    padding: "0 13px",
+                    border: `1px solid ${C.line}`,
+                    borderRadius: 13,
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 7,
+                    fontSize: 14,
+                    fontWeight: 900,
+                    background: "#fff",
+                    flex: "0 0 auto",
+                  }}
+                >
+                  <IconPin size={15}/> 부산
                 </div>
 
-                {priorityApartment && (
-                  <button
-                    type="button"
-                    aria-label="우선권 단지 해제"
-                    title="우선권 단지 해제"
-                    onClick={() => setPriorityApartmentKey(null)}
-                    style={{
-                      flex: "0 0 auto",
-                      width: 24,
-                      height: 24,
-                      padding: 0,
-                      borderRadius: "50%",
-                      border: "1px solid #e4b6c1",
-                      background: "#fff",
-                      color: C.brand,
-                      display: "grid",
-                      placeItems: "center",
-                      cursor: "pointer",
-                    }}
-                  >
-                    <IconX size={13} color={C.brand}/>
-                  </button>
-                )}
-              </div>
-            </div>
-          </div>
-
-          {selectedNeighborhoods.size > 0 && (
-            <div style={{ marginTop: 10, display: "flex", gap: 6, flexWrap: "wrap" }}>
-              {[...selectedNeighborhoods.values()].map((n) => (
-                <button
-                  key={neighborhoodKey(n.district, n.neighborhood)}
-                  type="button"
-                  onClick={() => toggleNeighborhood(n)}
-                  style={{ height: 30, padding: "0 10px", borderRadius: 999, border: `1px solid #e7bcc6`, background: C.brandSoft, color: C.brand, fontSize: 11.5, fontWeight: 900, display: "flex", alignItems: "center", gap: 5 }}
+                <select
+                  value={selectedDistrict}
+                  onChange={(e) => navigateToDistrict(e.target.value)}
+                  style={{
+                    ...selectStyle,
+                    height: 48,
+                    borderRadius: 13,
+                    fontSize: 14,
+                    fontWeight: 850,
+                  }}
                 >
-                  {n.neighborhood} <IconX size={12} color={C.brand}/>
-                </button>
-              ))}
+                  <option value="">구·군 선택</option>
+                  {districts.map((d) => (
+                    <option key={d} value={d}>{d}</option>
+                  ))}
+                </select>
+              </div>
             </div>
           )}
 
-          <div style={{ marginTop: 12, display: "flex", gap: 7, alignItems: "center" }}>
-            <div style={{ height: 42, padding: "0 10px", border: `1px solid ${C.line}`, borderRadius: 11, display: "flex", alignItems: "center", gap: 6, fontSize: 12.5, fontWeight: 800, background: "#fff", flex: "0 0 auto" }}>
-              <IconPin size={14}/> 부산
-            </div>
-            <select value={selectedDistrict} onChange={(e) => navigateToDistrict(e.target.value)} style={selectStyle}>
-              <option value="">구·군 선택</option>
-              {districts.map((d) => <option key={d} value={d}>{d}</option>)}
-            </select>
-            <button type="button" title="부산 전체 보기" onClick={() => navigateToDistrict("")} style={{ width: 42, height: 42, border: `1px solid ${C.line}`, borderRadius: 11, background: "#fff", display: "grid", placeItems: "center", flex: "0 0 auto" }}><IconRefresh/></button>
-          </div>
+          {priorityMode && (
+            <>
+              <div
+                style={{
+                  marginTop: 18,
+                  padding: "14px 15px",
+                  borderRadius: 15,
+                  background: "#faf9f8",
+                  border: `1px solid ${C.line}`,
+                }}
+              >
+                <div style={{ fontSize: 11.5, color: C.muted, fontWeight: 800 }}>
+                  선택한 활동지역
+                </div>
+                <div
+                  style={{
+                    marginTop: 7,
+                    display: "flex",
+                    gap: 6,
+                    flexWrap: "wrap",
+                  }}
+                >
+                  {[...selectedNeighborhoods.values()].map((n) => (
+                    <span
+                      key={neighborhoodKey(n.district, n.neighborhood)}
+                      style={{
+                        padding: "7px 10px",
+                        borderRadius: 999,
+                        background: "#fff",
+                        border: `1px solid #e8c4cc`,
+                        color: C.brand,
+                        fontSize: 12,
+                        fontWeight: 900,
+                      }}
+                    >
+                      {n.neighborhood}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </>
+          )}
         </header>
 
         <div style={{ padding: "0 18px", background: "#fff" }}>
-          <div style={{ position: "relative", height: 350, borderRadius: 16, overflow: "hidden", background: "#edf0f2", border: `1px solid ${C.line}` }}>
+          <div
+            style={{
+              position: "relative",
+              height: priorityMode ? 360 : 405,
+              borderRadius: 17,
+              overflow: "hidden",
+              background: "#edf0f2",
+              border: `1px solid ${C.line}`,
+            }}
+          >
             <div ref={mapElRef} style={{ position: "absolute", inset: 0 }}/>
 
-            <div style={{ position: "absolute", left: 10, top: 10, zIndex: 5, background: "rgba(255,255,255,.94)", borderRadius: 10, padding: "8px 10px", boxShadow: "0 3px 10px rgba(0,0,0,.10)", fontSize: 10.5, color: C.muted, fontWeight: 800 }}>
-              {priorityMode ? "선택한 3개 동의 대단지만 표시 · ★ 우선권 단지" : zoom <= 11 ? "구·군별 대상 대단지 총 세대수" : "동을 눌러 활동지역으로 선택"}
+            {priorityMode && (
+              <div
+                style={{
+                  position: "absolute",
+                  left: 10,
+                  top: 10,
+                  zIndex: 5,
+                  background: "rgba(255,255,255,.94)",
+                  borderRadius: 10,
+                  padding: "8px 10px",
+                  boxShadow: "0 3px 10px rgba(0,0,0,.10)",
+                  fontSize: 10.5,
+                  color: C.muted,
+                  fontWeight: 800,
+                }}
+              >
+                선택한 3개 동의 대단지만 표시 · ★ 우선권 단지
+              </div>
+            )}
+
+            <div
+              style={{
+                position: "absolute",
+                right: 10,
+                top: 10,
+                zIndex: 5,
+                display: "flex",
+                flexDirection: "column",
+                gap: 6,
+              }}
+            >
+              <button
+                type="button"
+                aria-label="확대"
+                onClick={() =>
+                  mapRef.current?.setZoom(
+                    Math.min(18, (mapRef.current?.getZoom() || 11) + 1)
+                  )
+                }
+                style={{
+                  width: 36,
+                  height: 36,
+                  border: 0,
+                  borderRadius: 10,
+                  background: "rgba(255,255,255,.96)",
+                  boxShadow: "0 3px 10px rgba(0,0,0,.10)",
+                  display: "grid",
+                  placeItems: "center",
+                }}
+              >
+                <IconPlus size={17} color={C.ink}/>
+              </button>
+
+              <button
+                type="button"
+                aria-label="축소"
+                onClick={() =>
+                  mapRef.current?.setZoom(
+                    Math.max(10, (mapRef.current?.getZoom() || 11) - 1)
+                  )
+                }
+                style={{
+                  width: 36,
+                  height: 36,
+                  border: 0,
+                  borderRadius: 10,
+                  background: "rgba(255,255,255,.96)",
+                  boxShadow: "0 3px 10px rgba(0,0,0,.10)",
+                  display: "grid",
+                  placeItems: "center",
+                }}
+              >
+                <IconMinus/>
+              </button>
             </div>
 
-            <div style={{ position: "absolute", right: 10, top: 10, zIndex: 5, display: "flex", flexDirection: "column", gap: 6 }}>
-              <button type="button" aria-label="확대" onClick={() => mapRef.current?.setZoom(Math.min(18, (mapRef.current?.getZoom() || 11) + 1))} style={{ width: 36, height: 36, border: 0, borderRadius: 10, background: "rgba(255,255,255,.96)", boxShadow: "0 3px 10px rgba(0,0,0,.10)", display: "grid", placeItems: "center" }}><IconPlus size={17} color={C.ink}/></button>
-              <button type="button" aria-label="축소" onClick={() => mapRef.current?.setZoom(Math.max(10, (mapRef.current?.getZoom() || 11) - 1))} style={{ width: 36, height: 36, border: 0, borderRadius: 10, background: "rgba(255,255,255,.96)", boxShadow: "0 3px 10px rgba(0,0,0,.10)", display: "grid", placeItems: "center" }}><IconMinus/></button>
-            </div>
-
-            <div style={{ position: "absolute", left: 10, bottom: 10, zIndex: 5, background: "rgba(31,35,41,.82)", color: "#fff", borderRadius: 999, padding: "7px 10px", fontSize: 10.5, fontWeight: 800 }}>
-              {priorityMode ? "우선권 단지 선택" : zoom <= 11 ? "구·군" : "활동 동 선택"}
-            </div>
-
-            {error && <div style={{ position: "absolute", left: 10, right: 10, bottom: 10, zIndex: 10, background: "rgba(255,255,255,.96)", borderRadius: 10, padding: "8px 10px", color: "#b42318", fontSize: 12, fontWeight: 800 }}>{error}</div>}
+            {error && (
+              <div
+                style={{
+                  position: "absolute",
+                  left: 10,
+                  right: 10,
+                  bottom: 10,
+                  zIndex: 10,
+                  background: "rgba(255,255,255,.96)",
+                  borderRadius: 10,
+                  padding: "8px 10px",
+                  color: "#b42318",
+                  fontSize: 12,
+                  fontWeight: 800,
+                }}
+              >
+                {error}
+              </div>
+            )}
 
             {renderMapGuide()}
           </div>
         </div>
 
-        <section style={{ padding: "15px 18px 110px", background: "#fff" }}>
-          {neighborhoodMode ? (
-            <>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "end", gap: 10, marginBottom: 10 }}>
-                <div>
-                  <div style={{ fontSize: 16, fontWeight: 900 }}>현재 지도의 동</div>
-                  <div style={{ marginTop: 3, fontSize: 11.5, color: C.muted }}>활동할 동을 최대 3곳까지 선택하세요.</div>
+        <section style={{ padding: "18px 18px 115px", background: "#fff" }}>
+          {!priorityMode && (
+            <div
+              style={{
+                padding: "18px 16px",
+                borderRadius: 16,
+                border: `1px solid ${C.line}`,
+                background: "#fff",
+              }}
+            >
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <div
+                  style={{
+                    width: 28,
+                    height: 28,
+                    borderRadius: "50%",
+                    background: C.brandSoft,
+                    color: C.brand,
+                    display: "grid",
+                    placeItems: "center",
+                    fontWeight: 950,
+                    fontSize: 13,
+                  }}
+                >
+                  ✓
                 </div>
-                <div style={{ fontSize: 12, color: C.brand, fontWeight: 900 }}>{selectedNeighborhoods.size}/{MAX_NEIGHBORHOODS}</div>
+                <div
+                  style={{
+                    fontSize: 15,
+                    fontWeight: 950,
+                    letterSpacing: "-.02em",
+                  }}
+                >
+                  선택한 활동지역
+                </div>
+              </div>
+
+              <div
+                style={{
+                  marginTop: 9,
+                  fontSize: 27,
+                  lineHeight: 1.2,
+                  fontWeight: 950,
+                  letterSpacing: "-.045em",
+                }}
+              >
+                <span style={{ color: C.brand }}>{selectedNeighborhoods.size}</span>
+                {" / "}
+                {MAX_NEIGHBORHOODS}개 동
+              </div>
+
+              <div
+                style={{
+                  marginTop: 6,
+                  fontSize: 12.5,
+                  color: C.muted,
+                  lineHeight: 1.55,
+                  fontWeight: 700,
+                }}
+              >
+                최대 3개 동까지 선택할 수 있습니다.
+              </div>
+
+              {selectedNeighborhoods.size > 0 && (
+                <div
+                  style={{
+                    marginTop: 12,
+                    display: "flex",
+                    gap: 6,
+                    flexWrap: "wrap",
+                  }}
+                >
+                  {[...selectedNeighborhoods.values()].map((n) => (
+                    <button
+                      key={neighborhoodKey(n.district, n.neighborhood)}
+                      type="button"
+                      onClick={() => toggleNeighborhood(n)}
+                      style={{
+                        height: 31,
+                        padding: "0 10px",
+                        borderRadius: 999,
+                        border: `1px solid #e7bcc6`,
+                        background: C.brandSoft,
+                        color: C.brand,
+                        fontSize: 11.5,
+                        fontWeight: 900,
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 5,
+                      }}
+                    >
+                      {n.neighborhood} <IconX size={12} color={C.brand}/>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {neighborhoodMode ? (
+            <div style={{ marginTop: 17 }}>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "end",
+                  gap: 10,
+                  marginBottom: 10,
+                }}
+              >
+                <div>
+                  <div style={{ fontSize: 16, fontWeight: 900 }}>활동할 동 선택</div>
+                  <div style={{ marginTop: 3, fontSize: 11.5, color: C.muted }}>
+                    지도에 보이는 동을 눌러 최대 3곳까지 선택하세요.
+                  </div>
+                </div>
+                <div style={{ fontSize: 12, color: C.brand, fontWeight: 900 }}>
+                  {selectedNeighborhoods.size}/{MAX_NEIGHBORHOODS}
+                </div>
               </div>
 
               <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                 {visibleNeighborhoods.map((n) => {
                   const nKey = neighborhoodKey(n.district, n.neighborhood);
                   const chosen = selectedNeighborhoods.has(nKey);
-                  const disabled = !chosen && selectedNeighborhoods.size >= MAX_NEIGHBORHOODS;
+                  const disabled =
+                    !chosen &&
+                    selectedNeighborhoods.size >= MAX_NEIGHBORHOODS;
+
                   return (
-                    <div key={nKey} style={{ padding: "13px 14px", borderRadius: 14, border: chosen ? `1.5px solid ${C.brand}` : `1px solid ${C.line}`, background: chosen ? "#fffafb" : "#fff", display: "grid", gridTemplateColumns: "minmax(0,1fr) auto", gap: 10, alignItems: "center" }}>
+                    <div
+                      key={nKey}
+                      style={{
+                        padding: "13px 14px",
+                        borderRadius: 14,
+                        border: chosen
+                          ? `1.5px solid ${C.brand}`
+                          : `1px solid ${C.line}`,
+                        background: chosen ? "#fffafb" : "#fff",
+                        display: "grid",
+                        gridTemplateColumns: "minmax(0,1fr) auto",
+                        gap: 10,
+                        alignItems: "center",
+                      }}
+                    >
                       <button
                         type="button"
                         onClick={() => {
-                          // 동 선택 중에는 선택만 하고 지도를 확대하지 않는다.
                           selectNeighborhood(n);
                           setSelectedDistrict(n.district);
                         }}
-                        style={{ minWidth: 0, textAlign: "left", border: 0, padding: 0, background: "transparent" }}
+                        style={{
+                          minWidth: 0,
+                          textAlign: "left",
+                          border: 0,
+                          padding: 0,
+                          background: "transparent",
+                        }}
                       >
                         <div style={{ display: "flex", gap: 7, alignItems: "center" }}>
-                          <strong style={{ fontSize: 15, fontWeight: 900 }}>{n.neighborhood}</strong>
-                          {chosen && <span style={{ width: 20, height: 20, borderRadius: "50%", background: C.brand, display: "grid", placeItems: "center" }}><IconCheck size={12}/></span>}
+                          <strong style={{ fontSize: 15, fontWeight: 900 }}>
+                            {n.neighborhood}
+                          </strong>
+                          {chosen && (
+                            <span
+                              style={{
+                                width: 20,
+                                height: 20,
+                                borderRadius: "50%",
+                                background: C.brand,
+                                display: "grid",
+                                placeItems: "center",
+                              }}
+                            >
+                              <IconCheck size={12}/>
+                            </span>
+                          )}
                         </div>
-                        <div style={{ marginTop: 4, fontSize: 11.5, color: C.muted }}>{n.district} · 대단지 {n.count}곳 · {n.households.toLocaleString("ko-KR")}세대</div>
+                        <div
+                          style={{
+                            marginTop: 4,
+                            fontSize: 11.5,
+                            color: C.muted,
+                          }}
+                        >
+                          {n.district} · 대단지 {n.count}곳 ·{" "}
+                          {n.households.toLocaleString("ko-KR")}세대
+                        </div>
                       </button>
+
                       <button
                         type="button"
                         disabled={disabled}
                         onClick={() => toggleNeighborhood(n)}
-                        style={{ height: 34, padding: "0 12px", borderRadius: 10, border: chosen ? `1px solid ${C.line}` : `1px solid ${disabled ? C.line : C.brand}`, background: chosen ? "#fff" : disabled ? "#f3f4f6" : C.brand, color: chosen ? C.muted : disabled ? "#a2a7af" : "#fff", fontSize: 12, fontWeight: 900 }}
+                        style={{
+                          height: 34,
+                          padding: "0 12px",
+                          borderRadius: 10,
+                          border: chosen
+                            ? `1px solid ${C.line}`
+                            : `1px solid ${disabled ? C.line : C.brand}`,
+                          background: chosen
+                            ? "#fff"
+                            : disabled
+                              ? "#f3f4f6"
+                              : C.brand,
+                          color: chosen
+                            ? C.muted
+                            : disabled
+                              ? "#a2a7af"
+                              : "#fff",
+                          fontSize: 12,
+                          fontWeight: 900,
+                        }}
                       >
                         {chosen ? "해제" : "선택"}
                       </button>
@@ -1351,19 +1831,44 @@ export default function HospitalPartnerPage() {
                   );
                 })}
               </div>
-            </>
+            </div>
           ) : apartmentMode ? (
-            <>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "end", gap: 10, marginBottom: 10 }}>
+            <div>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "end",
+                  gap: 10,
+                  marginBottom: 10,
+                }}
+              >
                 <div>
-                  <div style={{ fontSize: 16, fontWeight: 900 }}>대단지에서 우선권 선택</div>
-                  <div style={{ marginTop: 3, fontSize: 11.5, color: C.muted }}>선택한 활동 동 안에서 우선권 단지 1곳을 선택하세요.</div>
+                  <div style={{ fontSize: 16, fontWeight: 900 }}>
+                    대단지에서 우선권 선택
+                  </div>
+                  <div style={{ marginTop: 3, fontSize: 11.5, color: C.muted }}>
+                    선택한 활동 동 안에서 우선권 단지 1곳을 선택하세요.
+                  </div>
                 </div>
-                {selectedDistrict && <div style={{ fontSize: 11.5, color: C.brand, fontWeight: 800 }}>{selectedDistrict}</div>}
+                {selectedDistrict && (
+                  <div style={{ fontSize: 11.5, color: C.brand, fontWeight: 800 }}>
+                    {selectedDistrict}
+                  </div>
+                )}
               </div>
 
               {selectedApartmentRows.length === 0 ? (
-                <div style={{ padding: "34px 0", textAlign: "center", color: C.muted, fontSize: 13 }}>선택한 활동 동에 표시할 대단지가 없습니다.</div>
+                <div
+                  style={{
+                    padding: "34px 0",
+                    textAlign: "center",
+                    color: C.muted,
+                    fontSize: 13,
+                  }}
+                >
+                  선택한 활동 동에 표시할 대단지가 없습니다.
+                </div>
               ) : (
                 <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                   {selectedApartmentRows.slice(0, listLimit).map((p) => {
@@ -1374,29 +1879,138 @@ export default function HospitalPartnerPage() {
                     const tier = householdTier(p.households);
 
                     return (
-                      <div key={key} style={{ display: "grid", gridTemplateColumns: "minmax(0,1fr) auto", gap: 10, padding: "13px 13px 13px 14px", border: priority ? `1.5px solid ${C.brand}` : `1px solid ${C.line}`, background: priority ? "#fffafb" : "#fff", borderRadius: 14 }}>
-                        <button type="button" onClick={() => openDetail(p)} style={{ border: 0, padding: 0, background: "transparent", textAlign: "left", minWidth: 0 }}>
+                      <div
+                        key={key}
+                        style={{
+                          display: "grid",
+                          gridTemplateColumns: "minmax(0,1fr) auto",
+                          gap: 10,
+                          padding: "13px 13px 13px 14px",
+                          border: priority
+                            ? `1.5px solid ${C.brand}`
+                            : `1px solid ${C.line}`,
+                          background: priority ? "#fffafb" : "#fff",
+                          borderRadius: 14,
+                        }}
+                      >
+                        <button
+                          type="button"
+                          onClick={() => openDetail(p)}
+                          style={{
+                            border: 0,
+                            padding: 0,
+                            background: "transparent",
+                            textAlign: "left",
+                            minWidth: 0,
+                          }}
+                        >
                           <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
-                            <span style={{ fontSize: 15, fontWeight: 900, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{p.name}</span>
-                            {priority && <span style={{ color: C.brand, fontSize: 16 }}>★</span>}
+                            <span
+                              style={{
+                                fontSize: 15,
+                                fontWeight: 900,
+                                overflow: "hidden",
+                                textOverflow: "ellipsis",
+                                whiteSpace: "nowrap",
+                              }}
+                            >
+                              {p.name}
+                            </span>
+                            {priority && (
+                              <span style={{ color: C.brand, fontSize: 16 }}>★</span>
+                            )}
                           </div>
-                          <div style={{ marginTop: 3, fontSize: 11.5, color: C.muted }}>{p.district} {p.neighborhood}</div>
-                          <div style={{ marginTop: 8, display: "flex", alignItems: "baseline", gap: 6 }}>
-                            <strong style={{ fontSize: p.households >= 2000 ? 20 : p.households >= 1000 ? 18 : 16 }}>{p.households.toLocaleString("ko-KR")}</strong>
-                            <span style={{ fontSize: 11.5, color: C.muted }}>세대 · {tier.label}</span>
+
+                          <div style={{ marginTop: 3, fontSize: 11.5, color: C.muted }}>
+                            {p.district} {p.neighborhood}
+                          </div>
+
+                          <div
+                            style={{
+                              marginTop: 8,
+                              display: "flex",
+                              alignItems: "baseline",
+                              gap: 6,
+                            }}
+                          >
+                            <strong
+                              style={{
+                                fontSize:
+                                  p.households >= 2000
+                                    ? 20
+                                    : p.households >= 1000
+                                      ? 18
+                                      : 16,
+                              }}
+                            >
+                              {p.households.toLocaleString("ko-KR")}
+                            </strong>
+                            <span style={{ fontSize: 11.5, color: C.muted }}>
+                              세대 · {tier.label}
+                            </span>
                           </div>
                         </button>
 
-                        <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", justifyContent: "center", gap: 7 }}>
+                        <div
+                          style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "flex-end",
+                            justifyContent: "center",
+                            gap: 7,
+                          }}
+                        >
                           <button
                             type="button"
                             disabled={!regionSelected}
                             onClick={() => setPriorityApartment(p)}
-                            style={{ height: 34, minWidth: 76, padding: "0 12px", borderRadius: 10, border: priority ? `1px solid ${C.brand}` : `1px solid ${regionSelected ? C.brand : C.line}`, background: priority ? C.brandSoft : regionSelected ? C.brand : "#f3f4f6", color: priority ? C.brand : regionSelected ? "#fff" : "#a2a7af", fontSize: 12, fontWeight: 900 }}
+                            style={{
+                              height: 34,
+                              minWidth: 76,
+                              padding: "0 12px",
+                              borderRadius: 10,
+                              border: priority
+                                ? `1px solid ${C.brand}`
+                                : `1px solid ${
+                                    regionSelected ? C.brand : C.line
+                                  }`,
+                              background: priority
+                                ? C.brandSoft
+                                : regionSelected
+                                  ? C.brand
+                                  : "#f3f4f6",
+                              color: priority
+                                ? C.brand
+                                : regionSelected
+                                  ? "#fff"
+                                  : "#a2a7af",
+                              fontSize: 12,
+                              fontWeight: 900,
+                            }}
                           >
-                            {priority ? "우선권 해제" : regionSelected ? "우선권 선택" : "동 미선택"}
+                            {priority
+                              ? "우선권 해제"
+                              : regionSelected
+                                ? "우선권 선택"
+                                : "동 미선택"}
                           </button>
-                          <button type="button" onClick={() => openDetail(p)} style={{ border: 0, background: "transparent", color: C.muted, fontSize: 10.5, fontWeight: 700, display: "flex", alignItems: "center", gap: 2 }}>상세 <IconChevronRight size={13}/></button>
+
+                          <button
+                            type="button"
+                            onClick={() => openDetail(p)}
+                            style={{
+                              border: 0,
+                              background: "transparent",
+                              color: C.muted,
+                              fontSize: 10.5,
+                              fontWeight: 700,
+                              display: "flex",
+                              alignItems: "center",
+                              gap: 2,
+                            }}
+                          >
+                            상세 <IconChevronRight size={13}/>
+                          </button>
                         </div>
                       </div>
                     );
@@ -1405,34 +2019,89 @@ export default function HospitalPartnerPage() {
               )}
 
               {selectedApartmentRows.length > listLimit && (
-                <button type="button" onClick={() => setListLimit((n) => n + 12)} style={{ width: "100%", height: 44, marginTop: 10, border: `1px solid ${C.line}`, borderRadius: 12, background: "#fff", color: C.ink, fontWeight: 800, fontSize: 13 }}>12개 더 보기</button>
+                <button
+                  type="button"
+                  onClick={() => setListLimit((n) => n + 12)}
+                  style={{
+                    width: "100%",
+                    height: 44,
+                    marginTop: 10,
+                    border: `1px solid ${C.line}`,
+                    borderRadius: 12,
+                    background: "#fff",
+                    color: C.ink,
+                    fontWeight: 800,
+                    fontSize: 13,
+                  }}
+                >
+                  12개 더 보기
+                </button>
               )}
-            </>
-          ) : (
-            <div style={{ padding: "18px 0 4px" }}>
-              <div style={{ fontSize: 16, fontWeight: 900 }}>먼저 구·군을 선택하세요</div>
-              <div style={{ marginTop: 5, fontSize: 12.5, lineHeight: 1.6, color: C.muted }}>지도를 확대하면 동별 총 세대수를 볼 수 있고, 원하는 동을 선택할 수 있습니다.</div>
             </div>
-          )}
+          ) : null}
         </section>
 
-        <div style={{ position: "fixed", left: "50%", bottom: 0, transform: "translateX(-50%)", width: "100%", maxWidth: 520, zIndex: 30, padding: "10px 14px calc(10px + env(safe-area-inset-bottom))", background: "rgba(255,255,255,.96)", borderTop: `1px solid ${C.line}`, backdropFilter: "blur(14px)" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <div style={{ minWidth: 115 }}>
-              <div style={{ fontSize: 11.5, color: C.muted, fontWeight: 700 }}>활동지역 / 우선권</div>
-              <div style={{ marginTop: 2, fontSize: 15, fontWeight: 900 }}>
-                <span style={{ color: C.brand }}>{selectedNeighborhoods.size}</span>/{MAX_NEIGHBORHOODS} · {priorityApartment ? "★ 선택" : "미선택"}
-              </div>
-            </div>
+        <div
+          style={{
+            position: "fixed",
+            left: "50%",
+            bottom: 0,
+            transform: "translateX(-50%)",
+            width: "100%",
+            maxWidth: 520,
+            zIndex: 30,
+            padding: "10px 14px calc(10px + env(safe-area-inset-bottom))",
+            background: "rgba(255,255,255,.97)",
+            borderTop: `1px solid ${C.line}`,
+            backdropFilter: "blur(14px)",
+          }}
+        >
+          {!priorityMode ? (
             <button
               type="button"
-              disabled={selectedNeighborhoods.size !== MAX_NEIGHBORHOODS || !priorityApartment}
-              onClick={() => setPage("summary")}
-              style={{ flex: 1, height: 48, border: 0, borderRadius: 13, background: selectedNeighborhoods.size === MAX_NEIGHBORHOODS && priorityApartment ? C.brand : "#d7d9de", color: "#fff", fontSize: 14, fontWeight: 900 }}
+              disabled={selectedNeighborhoods.size !== MAX_NEIGHBORHOODS}
+              onClick={() => {
+                if (selectedNeighborhoods.size !== MAX_NEIGHBORHOODS) return;
+                setPriorityStageStarted(true);
+                setGuide({ type: "priorityIntro" });
+              }}
+              style={{
+                width: "100%",
+                height: 54,
+                border: 0,
+                borderRadius: 15,
+                background:
+                  selectedNeighborhoods.size === MAX_NEIGHBORHOODS
+                    ? C.brand
+                    : "#d7d9de",
+                color: "#fff",
+                fontSize: 15,
+                fontWeight: 950,
+              }}
             >
-              선택 내용 확인
+              {selectedNeighborhoods.size === MAX_NEIGHBORHOODS
+                ? "우선권 단지 선택하기"
+                : `활동할 동 ${remainingNeighborhoods}곳을 선택해주세요`}
             </button>
-          </div>
+          ) : (
+            <button
+              type="button"
+              disabled={!priorityApartment}
+              onClick={() => setPage("summary")}
+              style={{
+                width: "100%",
+                height: 54,
+                border: 0,
+                borderRadius: 15,
+                background: priorityApartment ? C.brand : "#d7d9de",
+                color: "#fff",
+                fontSize: 15,
+                fontWeight: 950,
+              }}
+            >
+              {priorityApartment ? "선택 내용 확인" : "우선권 단지를 선택해주세요"}
+            </button>
+          )}
         </div>
       </>
     );
@@ -1897,6 +2566,9 @@ ${applicationNo}
     return (
       <>
         <PageHeader title="신청 내용 확인" onBack={() => setPage("main")}/>
+        <div style={{ padding: "0 18px 4px", background: "#fff" }}>
+          {renderApplicationProgress(2)}
+        </div>
         <main style={{ padding: "22px 18px 150px" }}>
           <div>
             <div style={{ fontSize: 13, color: C.muted, fontWeight: 700 }}>선택한 활동지역</div>
@@ -2131,6 +2803,9 @@ ${applicationNo}
     return (
       <>
         <PageHeader title="신청 완료"/>
+        <div style={{ padding: "0 18px 4px", background: "#fff" }}>
+          {renderApplicationProgress(3)}
+        </div>
         <main style={{ padding: "28px 18px 80px" }}>
           <div style={{ textAlign: "center" }}>
             <div
