@@ -9,12 +9,12 @@ const MAX_NEIGHBORHOODS = 3;
 const APARTMENTS_URL = "/busan-apartments-700plus-with-popularity.json";
 // NAVER Cloud SENS SMS
 // 네이버클라우드 콘솔에서 발급한 값을 입력하세요.
-const NCP_ACCESS_KEY = "NCP_ACCESS_KEY_입력";
-const NCP_SECRET_KEY = "NCP_SECRET_KEY_입력";
-const NCP_SENS_SERVICE_ID = "ncp:sms:kr:서비스ID입력:sens";
+const NCP_ACCESS_KEY = "ncp_iam_BPAMKR4I0zUhIwR0GjfG";
+const NCP_SECRET_KEY = "ncp_iam_BPKMKR1PmxDDAglqrILPH7G5O3rOfwTCaG";
+const NCP_SENS_SERVICE_ID = "ncp:sms:kr:377415597537:sms01";
 
 // SENS에 등록된 발신번호를 숫자만 입력하세요.
-const NCP_SENS_FROM = "발신번호입력";
+const NCP_SENS_FROM = "01054766848";
 
 const C = {
   ink: "#1f2329",
