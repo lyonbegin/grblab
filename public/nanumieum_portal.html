@@ -716,22 +716,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
   object-fit:cover;
   object-position:center;
 }
-.main-carousel-caption{
-  position:absolute;
-  z-index:3;
-  left:max(24px,calc((100% - 1180px)/2 + 24px));
-  bottom:28px;
-  padding:9px 16px;
-  border-radius:999px;
-  background:rgba(255,255,255,.91);
-  color:#20232a;
-  font-size:14px;
-  font-weight:800;
-  letter-spacing:-.03em;
-  box-shadow:0 8px 22px rgba(30,20,20,.10);
-  backdrop-filter:blur(8px);
-  -webkit-backdrop-filter:blur(8px);
-}
+
 .main-carousel-arrow{
   position:absolute;
   top:50%;
@@ -787,12 +772,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
   }
   .main-carousel-prev{left:10px}
   .main-carousel-next{right:10px}
-  .main-carousel-caption{
-    left:14px;
-    bottom:16px;
-    font-size:12px;
-    padding:7px 12px;
-  }
+
   .main-carousel-dots{bottom:17px}
 }
 @media(prefers-reduced-motion:reduce){
@@ -800,165 +780,6 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 }
 
 
-
-/* ===== HERO COPY OVERLAY v2 : 박스 제거 / 기존 타이포만 사용 ===== */
-.main-carousel-copy{
-  position:absolute;
-  z-index:4;
-  left:50%;
-  top:50%;
-  transform:translate(-50%,-50%);
-  width:min(720px,calc(100% - 120px));
-  padding:0;
-  text-align:center;
-  background:transparent;
-  border:0;
-  box-shadow:none;
-  backdrop-filter:none;
-  -webkit-backdrop-filter:none;
-  pointer-events:none;
-}
-.main-carousel-copy::before{
-  content:"";
-  position:absolute;
-  left:50%;
-  top:50%;
-  transform:translate(-50%,-50%);
-  width:115%;
-  height:150%;
-  background:radial-gradient(
-    ellipse at center,
-    rgba(251,247,247,.46) 0%,
-    rgba(251,247,247,.22) 46%,
-    rgba(251,247,247,0) 74%
-  );
-  z-index:-1;
-  pointer-events:none;
-}
-.main-carousel-copy-top{
-  margin:0 0 7px;
-  font-family:var(--sans);
-  font-size:15px;
-  font-weight:600;
-  line-height:1.45;
-  letter-spacing:-.025em;
-  color:var(--ink);
-  text-shadow:
-    0 1px 2px rgba(255,255,255,.9),
-    0 0 12px rgba(255,255,255,.8);
-}
-.main-carousel-copy h1{
-  margin:0;
-  font-family:var(--serif);
-  font-weight:700;
-  font-size:clamp(34px,4.3vw,56px);
-  line-height:1.18;
-  letter-spacing:-.045em;
-  color:var(--ink);
-  word-break:keep-all;
-  text-wrap:balance;
-  text-shadow:
-    0 2px 3px rgba(255,255,255,.95),
-    0 0 18px rgba(255,255,255,.92);
-}
-.main-carousel-copy h1 em{
-  color:var(--red);
-  font:inherit;
-  font-style:normal;
-}
-
-/* 캐러셀 조작부를 이미지보다 덜 튀게 */
-.main-carousel-arrow{
-  width:38px;
-  height:38px;
-  font-size:25px;
-  background:rgba(255,255,255,.72);
-  box-shadow:0 4px 14px rgba(20,15,15,.10);
-  opacity:.76;
-}
-.main-carousel-arrow:hover{
-  opacity:1;
-  background:rgba(255,255,255,.90);
-}
-.main-carousel-prev{left:14px}
-.main-carousel-next{right:14px}
-
-.main-carousel-caption{
-  left:18px;
-  bottom:16px;
-  padding:6px 11px;
-  font-size:11.5px;
-  background:rgba(255,255,255,.78);
-  box-shadow:none;
-}
-.main-carousel-dots{
-  bottom:14px;
-}
-.main-carousel-dots button{
-  width:7px;
-  height:7px;
-}
-.main-carousel-dots button.is-active{
-  width:20px;
-}
-
-@media(max-width:640px){
-  .main-carousel{
-    min-height:0;
-    aspect-ratio:16/10;
-  }
-  .main-carousel-slide img{
-    object-fit:cover;
-    object-position:center center;
-  }
-  .main-carousel-copy{
-    width:calc(100% - 82px);
-    top:48%;
-  }
-  .main-carousel-copy::before{
-    width:125%;
-    height:165%;
-    background:radial-gradient(
-      ellipse at center,
-      rgba(251,247,247,.40) 0%,
-      rgba(251,247,247,.14) 48%,
-      rgba(251,247,247,0) 76%
-    );
-  }
-  .main-carousel-copy-top{
-    font-size:11.5px;
-    margin-bottom:3px;
-  }
-  .main-carousel-copy h1{
-    font-size:clamp(25px,7.2vw,33px);
-    line-height:1.16;
-    letter-spacing:-.05em;
-  }
-  .main-carousel-arrow{
-    width:32px;
-    height:32px;
-    font-size:22px;
-    background:rgba(255,255,255,.66);
-  }
-  .main-carousel-prev{left:8px}
-  .main-carousel-next{right:8px}
-  .main-carousel-caption{
-    left:10px;
-    bottom:10px;
-    padding:5px 9px;
-    font-size:10px;
-  }
-  .main-carousel-dots{
-    bottom:10px;
-  }
-  .main-carousel-dots button{
-    width:6px;
-    height:6px;
-  }
-  .main-carousel-dots button.is-active{
-    width:17px;
-  }
-}
 
 
 </style>
@@ -1002,29 +823,20 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
     
     <div class="main-carousel-slide is-active" data-index="0">
       <img src="./hero-01-community-center.png" alt="지역아동센터 나눔 활동" width="1600" height="900" fetchpriority="high" decoding="async">
-      <span class="main-carousel-caption">지역아동센터</span>
     </div>
     <div class="main-carousel-slide" data-index="1">
       <img src="./hero-02-community-center.png" alt="보육원 나눔 활동" width="1600" height="900" loading="lazy" decoding="async">
-      <span class="main-carousel-caption">보육원</span>
     </div>
     <div class="main-carousel-slide" data-index="2">
       <img src="./hero-03-community-center.png" alt="경로당 나눔 활동" width="1600" height="900" loading="lazy" decoding="async">
-      <span class="main-carousel-caption">경로당</span>
     </div>
     <div class="main-carousel-slide" data-index="3">
       <img src="./hero-04-community-center.png" alt="장애인복지관 나눔 활동" width="1600" height="900" loading="lazy" decoding="async">
-      <span class="main-carousel-caption">장애인복지관</span>
     </div>
   </div>
 
   <button class="main-carousel-arrow main-carousel-prev" type="button" aria-label="이전 슬라이드">‹</button>
   <button class="main-carousel-arrow main-carousel-next" type="button" aria-label="다음 슬라이드">›</button>
-
-  <div class="main-carousel-copy" aria-label="나눔이음 메시지">
-    
-    <h1><em>나눔이음이</em><br>함께합니다</h1>
-  </div>
 
   <div class="main-carousel-dots" aria-label="슬라이드 선택">
     <button type="button" class="is-active" data-slide="0" aria-label="지역아동센터" aria-current="true"></button>
