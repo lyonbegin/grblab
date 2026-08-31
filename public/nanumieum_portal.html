@@ -782,6 +782,79 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 
 
 
+
+
+/* ===== CAROUSEL RESPONSIVE RATIO FIX =====
+   원본 1600×900(16:9) 이미지를 모든 화면에서 같은 비율로 축소.
+   모바일에서도 이미지 안의 글씨/인물/배경을 잘라내지 않는다.
+*/
+.main-carousel{
+  width:100% !important;
+  min-height:0 !important;
+  max-height:none !important;
+  aspect-ratio:16/9 !important;
+  overflow:hidden;
+}
+
+.main-carousel-track,
+.main-carousel-slide{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+}
+
+.main-carousel-slide img{
+  display:block;
+  width:100% !important;
+  height:100% !important;
+  max-width:none !important;
+  object-fit:contain !important;
+  object-position:center center !important;
+}
+
+/* 태블릿도 같은 비율 유지 */
+@media(max-width:980px){
+  .main-carousel{
+    min-height:0 !important;
+    max-height:none !important;
+    aspect-ratio:16/9 !important;
+  }
+  .main-carousel-slide img{
+    object-fit:contain !important;
+  }
+}
+
+/* 모바일도 4:3/16:10으로 바꾸지 않고 원본 16:9 그대로 */
+@media(max-width:640px){
+  .main-carousel{
+    min-height:0 !important;
+    max-height:none !important;
+    aspect-ratio:16/9 !important;
+    scroll-margin-top:66px;
+  }
+
+  .main-carousel-slide img{
+    width:100% !important;
+    height:100% !important;
+    object-fit:contain !important;
+    object-position:center center !important;
+  }
+
+  .main-carousel-arrow{
+    width:30px !important;
+    height:30px !important;
+    font-size:20px !important;
+  }
+
+  .main-carousel-prev{left:6px !important}
+  .main-carousel-next{right:6px !important}
+
+  .main-carousel-dots{
+    bottom:8px !important;
+  }
+}
+
 </style>
 </head>
 <body>
