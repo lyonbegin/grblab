@@ -1,3 +1,2 @@
 [deploy]
-startCommand = "sh -c 'node api-partner-apply.js & exec nginx -g \"daemon off;\"'"
 healthcheckPath = "/api/partner/health"
