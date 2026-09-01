@@ -687,10 +687,10 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
   position:relative;
   width:100%;
   min-height:420px;
-  aspect-ratio:16/7;
+  aspect-ratio:2/1;
   max-height:650px;
   overflow:hidden;
-  background:#ece8e5;
+  background:transparent;
   scroll-margin-top:78px;
 }
 .main-carousel-track,
@@ -791,7 +791,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
   .main-carousel{
     min-height:300px;
     max-height:none;
-    aspect-ratio:4/3;
+    aspect-ratio:2/1;
     scroll-margin-top:66px;
   }
   .main-carousel-arrow{
@@ -814,15 +814,16 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 
 
 /* ===== CAROUSEL RESPONSIVE RATIO FIX =====
-   원본 1600×900(16:9) 이미지를 모든 화면에서 같은 비율로 축소.
+   원본 1774×887(2:1) 이미지를 모든 화면에서 같은 비율로 축소.
    모바일에서도 이미지 안의 글씨/인물/배경을 잘라내지 않는다.
 */
 .main-carousel{
   width:100% !important;
   min-height:0 !important;
   max-height:none !important;
-  aspect-ratio:16/9 !important;
+  aspect-ratio:2/1 !important;
   overflow:hidden;
+  background:transparent !important;
 }
 
 .main-carousel-track,
@@ -847,19 +848,19 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
   .main-carousel{
     min-height:0 !important;
     max-height:none !important;
-    aspect-ratio:16/9 !important;
+    aspect-ratio:2/1 !important;
   }
   .main-carousel-slide img{
     object-fit:contain !important;
   }
 }
 
-/* 모바일도 4:3/16:10으로 바꾸지 않고 원본 16:9 그대로 */
+/* 모바일도 원본 2:1 비율 그대로 유지 */
 @media(max-width:640px){
   .main-carousel{
     min-height:0 !important;
     max-height:none !important;
-    aspect-ratio:16/9 !important;
+    aspect-ratio:2/1 !important;
     scroll-margin-top:66px;
   }
 
@@ -924,16 +925,16 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
   <div class="main-carousel-track">
     
     <div class="main-carousel-slide is-active" data-index="0">
-      <img src="./hero-01-community-center.png" alt="지역아동센터 나눔 활동" width="1600" height="900" fetchpriority="high" decoding="async">
+      <img src="./hero-01-community-center.png" alt="지역아동센터 나눔 활동" width="1774" height="887" fetchpriority="high" decoding="async">
     </div>
     <div class="main-carousel-slide" data-index="1">
-      <img src="./hero-02-community-center.png" alt="보육원 나눔 활동" width="1600" height="900" loading="lazy" decoding="async">
+      <img src="./hero-02-community-center.png" alt="보육원 나눔 활동" width="1774" height="887" loading="lazy" decoding="async">
     </div>
     <div class="main-carousel-slide" data-index="2">
-      <img src="./hero-03-community-center.png" alt="경로당 나눔 활동" width="1600" height="900" loading="lazy" decoding="async">
+      <img src="./hero-03-community-center.png" alt="경로당 나눔 활동" width="1774" height="887" loading="lazy" decoding="async">
     </div>
     <div class="main-carousel-slide" data-index="3">
-      <img src="./hero-04-community-center.png" alt="장애인복지관 나눔 활동" width="1600" height="900" loading="lazy" decoding="async">
+      <img src="./hero-04-community-center.png" alt="장애인복지관 나눔 활동" width="1774" height="887" loading="lazy" decoding="async">
     </div>
   </div>
 

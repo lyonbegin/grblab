@@ -4461,6 +4461,27 @@ ${priorityApartment?.name || "-"}
               {smsText}
             </pre>
           </details>
+
+          <button
+            type="button"
+            onClick={() => {
+              window.location.href = "https://grblab.co.kr/hpartners.html";
+            }}
+            style={{
+              width: "100%",
+              height: 56,
+              marginTop: 18,
+              border: 0,
+              borderRadius: 15,
+              background: C.brand,
+              color: "#fff",
+              fontSize: 16,
+              fontWeight: 950,
+              boxShadow: "0 8px 20px rgba(201,90,112,.20)",
+            }}
+          >
+            확인
+          </button>
         </main>
       </>
     );
