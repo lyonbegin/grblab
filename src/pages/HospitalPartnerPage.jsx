@@ -7,14 +7,7 @@ const FONT = "-apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Malgun 
 
 const MAX_NEIGHBORHOODS = 3;
 const APARTMENTS_URL = "/busan-apartments-700plus-with-popularity.json";
-// NAVER Cloud SENS SMS
-// 네이버클라우드 콘솔에서 발급한 값을 입력하세요.
-const NCP_ACCESS_KEY = "ncp_iam_BPAMKR4I0zUhIwR0GjfG";
-const NCP_SECRET_KEY = "ncp_iam_BPKMKR1PmxDDAglqrILPH7G5O3rOfwTCaG";
-const NCP_SENS_SERVICE_ID = "ncp:sms:kr:377415597537:sms01";
-
-// SENS에 등록된 발신번호를 숫자만 입력하세요.
-const NCP_SENS_FROM = "01054766848";
+// 신청과 문자 발송은 동일 출처 /api/partner/apply 서버에서 처리합니다.
 
 const C = {
   ink: "#1f2329",
@@ -495,17 +488,6 @@ export default function HospitalPartnerPage() {
   useEffect(() => {
     selectedNeighborhoodsRef.current = selectedNeighborhoods;
   }, [selectedNeighborhoods]);
-
-  useEffect(() => {
-    const id = "hp-shared-fonts-css";
-    if (document.getElementById(id)) return;
-
-    const link = document.createElement("link");
-    link.id = id;
-    link.rel = "stylesheet";
-    link.href = "/css/fonts.css";
-    document.head.appendChild(link);
-  }, []);
 
   useEffect(() => {
     const media = window.matchMedia("(min-width: 980px)");
@@ -3200,84 +3182,10 @@ export default function HospitalPartnerPage() {
     return /^01[016789]-\d{3,4}-\d{4}$/.test(String(value || ""));
   }
 
-  async function hmacSha256Base64(secret, message) {
-    const encoder = new TextEncoder();
-
-    const key = await crypto.subtle.importKey(
-      "raw",
-      encoder.encode(secret),
-      { name: "HMAC", hash: "SHA-256" },
-      false,
-      ["sign"]
-    );
-
-    const signature = await crypto.subtle.sign(
-      "HMAC",
-      key,
-      encoder.encode(message)
-    );
-
-    const bytes = new Uint8Array(signature);
-    let binary = "";
-
-    bytes.forEach((byte) => {
-      binary += String.fromCharCode(byte);
-    });
-
-    return btoa(binary);
-  }
-
-  async function makeNcpSensSignature(timestamp, uri) {
-    const message =
-      `POST ${uri}\n` +
-      `${timestamp}\n` +
-      `${NCP_ACCESS_KEY}`;
-
-    return hmacSha256Base64(
-      NCP_SECRET_KEY,
-      message
-    );
-  }
-
-  function makeClientApplicationNo() {
-    const tail = String(Date.now()).slice(-6);
-    const rand = String(Math.floor(Math.random() * 100)).padStart(2, "0");
-    return `NE-0929-${tail}${rand}`;
-  }
-
-  function buildNcpSensMessage({
-    name,
-    regions,
-    priorityName,
-    applicationNo,
-  }) {
-    return `[나눔이음의료복지사회적협동조합]
-${name}님의 병원동행 파트너 신청이 접수되었습니다.
-
-신청번호
-${applicationNo}
-
-활동지역
-${regions.map((n) => n.neighborhood).join(" / ")}
-
-우선권 전담단지
-${priorityName}
-
-병원동행 파트너 가입 안내
-9월 29일 오후 1시 30분
-부산시민회관
-
-병원동행 파트너 가입과 활동 안내를 진행합니다.
-
-준비물
-신분증 · 운전면허증 · 보유 우대 자격증(해당자)`;
-  }
-
   async function submitApplication() {
     const name = applicantName.trim();
     const phone = applicantPhone.trim();
     const phoneDigits = phone.replace(/\D/g, "");
-    const fromDigits = String(NCP_SENS_FROM || "").replace(/\D/g, "");
     const regions = [...selectedNeighborhoods.values()];
 
     if (
@@ -3290,117 +3198,49 @@ ${priorityName}
       return;
     }
 
-    if (
-      !NCP_ACCESS_KEY ||
-      NCP_ACCESS_KEY.includes("_입력") ||
-      !NCP_SECRET_KEY ||
-      NCP_SECRET_KEY.includes("_입력") ||
-      !NCP_SENS_SERVICE_ID ||
-      NCP_SENS_SERVICE_ID.includes("서비스ID입력")
-    ) {
-      setSubmitState({
-        loading: false,
-        error:
-          "네이버클라우드 SENS의 Access Key / Secret Key / SMS Service ID 설정을 확인해주세요.",
-      });
-      return;
-    }
-
-    if (!/^\d{8,12}$/.test(fromDigits)) {
-      setSubmitState({
-        loading: false,
-        error:
-          "HospitalPartnerPage.jsx 상단의 NCP_SENS_FROM에 SENS에 등록한 발신번호를 숫자만 입력해주세요.",
-      });
-      return;
-    }
-
     setSubmitState({ loading: true, error: "" });
 
-    const no = makeClientApplicationNo();
-    const submittedAt = new Date().toLocaleString("ko-KR");
-
     try {
-      const timestamp = String(Date.now());
-      const uri =
-        `/sms/v2/services/${NCP_SENS_SERVICE_ID}/messages`;
-      const signature = await makeNcpSensSignature(
-        timestamp,
-        uri
-      );
-
-      const messageText = buildNcpSensMessage({
-        name,
-        regions,
-        priorityName: priorityApartment.name,
-        applicationNo: no,
-      });
-
-      console.log("[NAVER SENS] request", {
-        to: phoneDigits.slice(0, 3) + "****" + phoneDigits.slice(-4),
-        from: fromDigits,
-        applicationNo: no,
-        textLength: messageText.length,
-      });
-
-      const response = await fetch(
-        `https://sens.apigw.ntruss.com${uri}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "x-ncp-apigw-timestamp": timestamp,
-            "x-ncp-iam-access-key": NCP_ACCESS_KEY,
-            "x-ncp-apigw-signature-v2": signature,
+      const response = await fetch("/api/partner/apply", {
+        method: "POST",
+        credentials: "same-origin",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+        },
+        body: JSON.stringify({
+          applicantName: name,
+          applicantPhone: phoneDigits,
+          regions: regions.map((n) => ({
+            district: n.district,
+            neighborhood: n.neighborhood,
+          })),
+          priorityApartment: {
+            id: apartmentKey(priorityApartment),
+            name: priorityApartment.name,
+            district: priorityApartment.district,
+            neighborhood: priorityApartment.neighborhood,
+            households: Number(priorityApartment.households) || 0,
           },
-          body: JSON.stringify({
-            type: "LMS",
-            contentType: "COMM",
-            countryCode: "82",
-            from: fromDigits,
-            subject: "병원동행 파트너 신청 확인",
-            content: messageText,
-            messages: [
-              {
-                to: phoneDigits,
-              },
-            ],
-          }),
-        }
-      );
+        }),
+      });
 
       const data = await response.json().catch(() => ({}));
 
-      console.log("[NAVER SENS] response", {
-        httpStatus: response.status,
-        ok: response.ok,
-        data,
-      });
-
-      if (!response.ok) {
+      if (!response.ok || data?.ok !== true) {
         const msg =
-          data?.error?.message ||
-          data?.errorMessage ||
+          data?.error ||
           data?.message ||
-          data?.error?.errorCode ||
-          data?.errorCode ||
-          `NAVER SENS HTTP ${response.status}`;
+          `신청 처리 실패 (HTTP ${response.status})`;
 
-        throw new Error(`네이버 SENS 오류: ${msg}`);
+        throw new Error(msg);
       }
 
-      const statusCode = String(data?.statusCode || "");
-      if (statusCode && !statusCode.startsWith("2")) {
-        throw new Error(
-          `문자 접수 실패: ${
-            data?.statusName ||
-            data?.statusMessage ||
-            statusCode
-          }`
-        );
-      }
-
-      const requestId = data?.requestId || "";
+      const no = String(data?.applicationNo || "");
+      const submittedAt = String(
+        data?.submittedAt || new Date().toLocaleString("ko-KR")
+      );
+      const requestId = String(data?.smsRequestId || "");
 
       setApplicationNo(no);
       setApplicationSubmittedAt(submittedAt);
@@ -3423,7 +3263,7 @@ ${priorityName}
               households: priorityApartment.households,
             },
             smsRequestId: requestId,
-            smsProvider: "NAVER_CLOUD_SENS_DIRECT_BROWSER",
+            smsProvider: "NAVER_CLOUD_SENS_SERVER",
           })
         );
       } catch (_) {}
@@ -3433,17 +3273,13 @@ ${priorityName}
       setPage("complete");
       window.scrollTo({ top: 0, behavior: "smooth" });
     } catch (e) {
-      console.error("[NAVER SENS] failed", e);
-
-      const raw = e?.message || String(e);
-      const corsHint =
-        /failed to fetch|networkerror|load failed/i.test(raw)
-          ? "\n브라우저 직접 호출이 차단된 경우 네이버 SENS API의 CORS 제한 여부를 확인해주세요."
-          : "";
+      console.error("[PARTNER APPLY] failed", e);
 
       setSubmitState({
         loading: false,
-        error: `${raw}${corsHint}`,
+        error:
+          e?.message ||
+          "신청을 처리하지 못했습니다. 잠시 후 다시 시도해주세요.",
       });
     }
   }
@@ -4701,7 +4537,7 @@ ${priorityApartment?.name || "-"}
         }
 
         .hp-global-brand {
-          font-family:var(--font-display,'Jalnan',sans-serif) !important;
+          font-family:var(--font-display,'Pretendard','Malgun Gothic',system-ui,sans-serif) !important;
           font-size:27px;
           font-weight:400;
           letter-spacing:-.08em;

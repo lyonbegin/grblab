@@ -3,9 +3,10 @@ const crypto = require("node:crypto");
 
 const PORT = Number(process.env.PARTNER_API_PORT || 3001);
 
-const SOLAPI_API_KEY = process.env.SOLAPI_API_KEY || "";
-const SOLAPI_API_SECRET = process.env.SOLAPI_API_SECRET || "";
-const SOLAPI_FROM = String(process.env.SOLAPI_FROM || "").replace(/\D/g, "");
+const NCP_ACCESS_KEY = process.env.NCP_ACCESS_KEY || "";
+const NCP_SECRET_KEY = process.env.NCP_SECRET_KEY || "";
+const NCP_SENS_SERVICE_ID = process.env.NCP_SENS_SERVICE_ID || "";
+const NCP_SENS_FROM = String(process.env.NCP_SENS_FROM || "").replace(/\D/g, "");
 
 const PARTNER_DEBUG = String(process.env.PARTNER_DEBUG || "") === "1";
 
@@ -21,10 +22,11 @@ function makeDebugId() {
 
 console.log("[PARTNER API START]", {
   port: PORT,
-  solapiApiKeyConfigured: Boolean(SOLAPI_API_KEY),
-  solapiApiSecretConfigured: Boolean(SOLAPI_API_SECRET),
-  solapiFromConfigured: Boolean(SOLAPI_FROM),
-  solapiFrom: SOLAPI_FROM ? maskPhone(SOLAPI_FROM) : "",
+  ncpAccessKeyConfigured: Boolean(NCP_ACCESS_KEY),
+  ncpSecretKeyConfigured: Boolean(NCP_SECRET_KEY),
+  ncpSensServiceIdConfigured: Boolean(NCP_SENS_SERVICE_ID),
+  ncpSensFromConfigured: Boolean(NCP_SENS_FROM),
+  ncpSensFrom: NCP_SENS_FROM ? maskPhone(NCP_SENS_FROM) : "",
   debugMode: PARTNER_DEBUG,
 });
 
@@ -55,20 +57,19 @@ function makeApplicationNo() {
   return `NE-0929-${time}${random}`;
 }
 
-function createSolapiAuthorization() {
-  if (!SOLAPI_API_KEY || !SOLAPI_API_SECRET) {
-    throw new Error("SOLAPI_API_KEY / SOLAPI_API_SECRET 환경변수가 없습니다.");
+function makeSensSignature(method, uri, timestamp) {
+  if (!NCP_ACCESS_KEY || !NCP_SECRET_KEY || !NCP_SENS_SERVICE_ID) {
+    throw new Error(
+      "NCP_ACCESS_KEY / NCP_SECRET_KEY / NCP_SENS_SERVICE_ID 환경변수를 확인해주세요."
+    );
   }
 
-  const date = new Date().toISOString();
-  const salt = crypto.randomBytes(16).toString("hex");
+  const message = `${method} ${uri}\n${timestamp}\n${NCP_ACCESS_KEY}`;
 
-  const signature = crypto
-    .createHmac("sha256", SOLAPI_API_SECRET)
-    .update(date + salt)
-    .digest("hex");
-
-  return `HMAC-SHA256 apiKey=${SOLAPI_API_KEY}, date=${date}, salt=${salt}, signature=${signature}`;
+  return crypto
+    .createHmac("sha256", NCP_SECRET_KEY)
+    .update(message)
+    .digest("base64");
 }
 
 function buildMessage({
@@ -87,33 +88,39 @@ ${applicantName}님의 병원동행 파트너 신청이 접수되었습니다.
 활동지역
 ${regionText}
 
-우선권 단지
+우선권 전담단지
 ${priorityApartment.name}
 
 신청번호
 ${applicationNo}
 
-9월 29일 병원동행 파트너 가입 안내
-오후 1시
-부산시민회관 대강당
+병원동행 파트너 가입 안내
+9월 29일 오후 1시 30분 · 부산시민회관
 
-당일 본인 확인 및 보유 우대 자격증 확인을 진행합니다.
-신분증, 운전면허증, 보유 우대 자격증(해당자)을 준비해주세요.`;
+병원동행 파트너 가입과 활동 안내를 진행합니다.
+
+준비물
+신분증 · 운전면허증 · 보유 우대 자격증(해당자)`;
 }
 
-async function sendSolapiLms({ to, text, debugId }) {
-  if (!SOLAPI_FROM) {
-    const error = new Error("SOLAPI_FROM 환경변수가 없습니다.");
+async function sendSensLms({ to, text, debugId }) {
+  if (!NCP_SENS_FROM) {
+    const error = new Error("NCP_SENS_FROM 환경변수가 없습니다.");
     error.code = "ENV_FROM_MISSING";
     throw error;
   }
 
+  const method = "POST";
+  const uri = `/sms/v2/services/${NCP_SENS_SERVICE_ID}/messages`;
+  const timestamp = String(Date.now());
+  const signature = makeSensSignature(method, uri, timestamp);
+
   const requestStartedAt = Date.now();
 
-  console.log("[SOLAPI SEND START]", {
+  console.log("[NAVER SENS SEND START]", {
     debugId,
     to: maskPhone(to),
-    from: maskPhone(SOLAPI_FROM),
+    from: maskPhone(NCP_SENS_FROM),
     textLength: text.length,
   });
 
@@ -121,47 +128,40 @@ async function sendSolapiLms({ to, text, debugId }) {
   let data = {};
 
   try {
-    response = await fetch(
-      "https://api.solapi.com/messages/v4/send-many/detail",
-      {
-        method: "POST",
-        headers: {
-          Authorization: createSolapiAuthorization(),
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          messages: [
-            {
-              to,
-              from: SOLAPI_FROM,
-              text,
-              type: "LMS",
-              subject: "병원동행 파트너 신청 확인",
-              country: "82",
-            },
-          ],
-          strict: true,
-          allowDuplicates: false,
-          showMessageList: true,
-        }),
-      }
-    );
+    response = await fetch(`https://sens.apigw.ntruss.com${uri}`, {
+      method,
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        "x-ncp-apigw-timestamp": timestamp,
+        "x-ncp-iam-access-key": NCP_ACCESS_KEY,
+        "x-ncp-apigw-signature-v2": signature,
+      },
+      body: JSON.stringify({
+        type: "LMS",
+        contentType: "COMM",
+        countryCode: "82",
+        from: NCP_SENS_FROM,
+        subject: "병원동행 파트너 신청 확인",
+        content: text,
+        messages: [{ to }],
+      }),
+    });
 
     data = await response.json().catch(() => ({}));
   } catch (networkError) {
-    console.error("[SOLAPI NETWORK ERROR]", {
+    console.error("[NAVER SENS NETWORK ERROR]", {
       debugId,
       message: networkError?.message || String(networkError),
       elapsedMs: Date.now() - requestStartedAt,
     });
 
-    const error = new Error("SOLAPI 서버 연결에 실패했습니다.");
-    error.code = "SOLAPI_NETWORK_ERROR";
+    const error = new Error("NAVER SENS 서버 연결에 실패했습니다.");
+    error.code = "SENS_NETWORK_ERROR";
     error.causeMessage = networkError?.message || String(networkError);
     throw error;
   }
 
-  console.log("[SOLAPI RESPONSE]", {
+  console.log("[NAVER SENS RESPONSE]", {
     debugId,
     httpStatus: response.status,
     ok: response.ok,
@@ -172,16 +172,21 @@ async function sendSolapiLms({ to, text, debugId }) {
   if (!response.ok) {
     const error = new Error(
       String(
+        data?.error?.message ||
         data?.errorMessage ||
         data?.message ||
-        data?.errorCode ||
-        `SOLAPI HTTP ${response.status}`
+        data?.statusName ||
+        `NAVER SENS HTTP ${response.status}`
       )
     );
 
-    error.code = String(data?.errorCode || `HTTP_${response.status}`);
+    error.code = String(
+      data?.error?.errorCode ||
+      data?.errorCode ||
+      `HTTP_${response.status}`
+    );
     error.httpStatus = response.status;
-    error.solapiResponse = data;
+    error.sensResponse = data;
     throw error;
   }
 
@@ -351,16 +356,13 @@ async function handlePartnerApply(req, res) {
   });
 
   try {
-    const result = await sendSolapiLms({
+    const result = await sendSensLms({
       to: applicantPhone,
       text,
       debugId,
     });
 
-    const groupId =
-      result?.groupInfo?.groupId ||
-      result?.groupId ||
-      "";
+    const requestId = String(result?.requestId || "");
 
     console.log("[PARTNER APPLY OK]", {
       applicationNo,
@@ -368,7 +370,7 @@ async function handlePartnerApply(req, res) {
       applicantPhone,
       regions,
       priorityApartment,
-      solapiGroupId: groupId,
+      sensRequestId: requestId,
       debugId,
       elapsedMs: Date.now() - startedAt,
     });
@@ -377,7 +379,7 @@ async function handlePartnerApply(req, res) {
       ok: true,
       applicationNo,
       submittedAt,
-      smsRequestId: groupId,
+      smsRequestId: requestId,
       debugId,
     });
   } catch (error) {
@@ -387,7 +389,7 @@ async function handlePartnerApply(req, res) {
       httpStatus: error?.httpStatus || "",
       message: error?.message || String(error),
       causeMessage: error?.causeMessage || "",
-      solapiResponse: error?.solapiResponse || null,
+      sensResponse: error?.sensResponse || null,
       elapsedMs: Date.now() - startedAt,
     });
 
@@ -413,12 +415,13 @@ const server = http.createServer(async (req, res) => {
   if (pathname === "/health") {
     return json(res, 200, {
       ok: true,
-      service: "partner-apply-solapi",
+      service: "partner-apply-naver-sens",
       environment: {
-        apiKey: Boolean(SOLAPI_API_KEY),
-        apiSecret: Boolean(SOLAPI_API_SECRET),
-        from: Boolean(SOLAPI_FROM),
-        fromMasked: SOLAPI_FROM ? maskPhone(SOLAPI_FROM) : "",
+        accessKey: Boolean(NCP_ACCESS_KEY),
+        secretKey: Boolean(NCP_SECRET_KEY),
+        serviceId: Boolean(NCP_SENS_SERVICE_ID),
+        from: Boolean(NCP_SENS_FROM),
+        fromMasked: NCP_SENS_FROM ? maskPhone(NCP_SENS_FROM) : "",
       },
       debugMode: PARTNER_DEBUG,
       serverTime: new Date().toISOString(),
@@ -444,6 +447,6 @@ const server = http.createServer(async (req, res) => {
 
 server.listen(PORT, "127.0.0.1", () => {
   console.log(
-    `[partner-api] SOLAPI ready: http://127.0.0.1:${PORT}/api/partner/apply`
+    `[partner-api] NAVER SENS ready: http://127.0.0.1:${PORT}/api/partner/apply`
   );
 });
