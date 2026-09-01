@@ -1,3 +1,9 @@
+/**
+ * 병원동행 파트너 신청 API
+ * - NAVER SENS LMS 발송
+ * - Google Sheet 저장
+ * - Railway에서 이 파일 하나만 실행
+ */
 const http = require("node:http");
 const crypto = require("node:crypto");
 
@@ -7,6 +13,10 @@ const NCP_ACCESS_KEY = process.env.NCP_ACCESS_KEY || "";
 const NCP_SECRET_KEY = process.env.NCP_SECRET_KEY || "";
 const NCP_SENS_SERVICE_ID = process.env.NCP_SENS_SERVICE_ID || "";
 const NCP_SENS_FROM = String(process.env.NCP_SENS_FROM || "").replace(/\D/g, "");
+
+const PARTNER_GSHEET_URL =
+  process.env.PARTNER_GSHEET_URL ||
+  "https://script.google.com/macros/s/AKfycbwypBqdKEw02OW06x4StD-BRNQJ7T9WcZSsWFHyT4KMD12hkPJBFbQz5JNVU5JIhkNd/exec";
 
 const PARTNER_DEBUG = String(process.env.PARTNER_DEBUG || "") === "1";
 
@@ -27,6 +37,7 @@ console.log("[PARTNER API START]", {
   ncpSensServiceIdConfigured: Boolean(NCP_SENS_SERVICE_ID),
   ncpSensFromConfigured: Boolean(NCP_SENS_FROM),
   ncpSensFrom: NCP_SENS_FROM ? maskPhone(NCP_SENS_FROM) : "",
+  googleSheetConfigured: Boolean(PARTNER_GSHEET_URL),
   debugMode: PARTNER_DEBUG,
 });
 
@@ -192,6 +203,127 @@ async function sendSensLms({ to, text, debugId }) {
 
   return data;
 }
+
+async function savePartnerToGoogleSheet({
+  applicationNo,
+  submittedAt,
+  applicantName,
+  applicantPhone,
+  regions,
+  priorityApartment,
+  smsRequestId,
+  debugId,
+}) {
+  if (!PARTNER_GSHEET_URL) {
+    const error = new Error("PARTNER_GSHEET_URL이 설정되지 않았습니다.");
+    error.code = "GSHEET_URL_MISSING";
+    throw error;
+  }
+
+  const region1 = regions[0] || {};
+  const region2 = regions[1] || {};
+  const region3 = regions[2] || {};
+
+  const params = new URLSearchParams();
+  params.set("sheet", "partner");
+  params.set("applicationNo", applicationNo);
+  params.set("submittedAt", submittedAt);
+  params.set("applicantName", applicantName);
+  params.set("applicantPhone", applicantPhone);
+
+  params.set("region1District", String(region1.district || ""));
+  params.set("region1Neighborhood", String(region1.neighborhood || ""));
+  params.set("region2District", String(region2.district || ""));
+  params.set("region2Neighborhood", String(region2.neighborhood || ""));
+  params.set("region3District", String(region3.district || ""));
+  params.set("region3Neighborhood", String(region3.neighborhood || ""));
+
+  params.set(
+    "regions",
+    [region1, region2, region3]
+      .map((r) =>
+        `${String(r.district || "").trim()} ${String(r.neighborhood || "").trim()}`.trim()
+      )
+      .filter(Boolean)
+      .join(" / ")
+  );
+
+  params.set("priorityApartmentName", String(priorityApartment?.name || ""));
+  params.set("priorityDistrict", String(priorityApartment?.district || ""));
+  params.set("priorityNeighborhood", String(priorityApartment?.neighborhood || ""));
+  params.set(
+    "priorityHouseholds",
+    String(Number(priorityApartment?.households) || 0)
+  );
+
+  params.set("smsRequestId", String(smsRequestId || ""));
+  params.set("smsStatus", "발송완료");
+
+  const startedAt = Date.now();
+
+  console.log("[GOOGLE SHEET SAVE START]", {
+    debugId,
+    applicationNo,
+    applicantPhone: maskPhone(applicantPhone),
+  });
+
+  let lastError = null;
+
+  // 일시적인 네트워크 오류를 대비해 최대 3번 시도
+  for (let attempt = 1; attempt <= 3; attempt += 1) {
+    try {
+      const response = await fetch(PARTNER_GSHEET_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
+        },
+        body: params.toString(),
+        redirect: "follow",
+      });
+
+      const responseText = await response.text().catch(() => "");
+
+      if (!response.ok) {
+        const error = new Error(`Google Sheet HTTP ${response.status}`);
+        error.code = `GSHEET_HTTP_${response.status}`;
+        error.responseText = responseText.slice(0, 500);
+        throw error;
+      }
+
+      console.log("[GOOGLE SHEET SAVE OK]", {
+        debugId,
+        applicationNo,
+        attempt,
+        elapsedMs: Date.now() - startedAt,
+      });
+
+      return {
+        ok: true,
+        responseText,
+      };
+    } catch (error) {
+      lastError = error;
+
+      console.error("[GOOGLE SHEET SAVE RETRY]", {
+        debugId,
+        applicationNo,
+        attempt,
+        message: error?.message || String(error),
+      });
+
+      if (attempt < 3) {
+        await new Promise((resolve) => setTimeout(resolve, 350 * attempt));
+      }
+    }
+  }
+
+  const error = new Error(
+    lastError?.message || "Google Sheet 저장에 실패했습니다."
+  );
+  error.code = lastError?.code || "GSHEET_SAVE_FAILED";
+  throw error;
+}
+
 
 function readJsonBody(req) {
   return new Promise((resolve, reject) => {
@@ -364,6 +496,39 @@ async function handlePartnerApply(req, res) {
 
     const requestId = String(result?.requestId || "");
 
+    let sheetSaved = false;
+    let sheetError = "";
+
+    try {
+      await savePartnerToGoogleSheet({
+        applicationNo,
+        submittedAt,
+        applicantName,
+        applicantPhone,
+        regions,
+        priorityApartment: {
+          name: String(priorityApartment.name || "").trim(),
+          district: String(priorityApartment.district || "").trim(),
+          neighborhood: String(priorityApartment.neighborhood || "").trim(),
+          households: Number(priorityApartment.households) || 0,
+        },
+        smsRequestId: requestId,
+        debugId,
+      });
+
+      sheetSaved = true;
+    } catch (error) {
+      sheetError = error?.message || String(error);
+
+      // 문자는 이미 정상 발송된 상태이므로 중복 문자 발송을 막기 위해
+      // 시트 저장 실패만 로그에 남기고 신청 자체는 성공으로 반환한다.
+      console.error("[GOOGLE SHEET SAVE FAILED]", {
+        debugId,
+        applicationNo,
+        message: sheetError,
+      });
+    }
+
     console.log("[PARTNER APPLY OK]", {
       applicationNo,
       applicantName,
@@ -371,6 +536,8 @@ async function handlePartnerApply(req, res) {
       regions,
       priorityApartment,
       sensRequestId: requestId,
+      sheetSaved,
+      sheetError,
       debugId,
       elapsedMs: Date.now() - startedAt,
     });
@@ -380,6 +547,7 @@ async function handlePartnerApply(req, res) {
       applicationNo,
       submittedAt,
       smsRequestId: requestId,
+      sheetSaved,
       debugId,
     });
   } catch (error) {
@@ -422,6 +590,7 @@ const server = http.createServer(async (req, res) => {
         serviceId: Boolean(NCP_SENS_SERVICE_ID),
         from: Boolean(NCP_SENS_FROM),
         fromMasked: NCP_SENS_FROM ? maskPhone(NCP_SENS_FROM) : "",
+        googleSheet: Boolean(PARTNER_GSHEET_URL),
       },
       debugMode: PARTNER_DEBUG,
       serverTime: new Date().toISOString(),
