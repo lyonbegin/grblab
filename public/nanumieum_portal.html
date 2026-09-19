@@ -483,34 +483,79 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
   html{scroll-behavior:auto}
 }
 
-/* ── 후원 음악회 팝업 (AntiageTab.jsx 기술 그대로 이식) ── */
-#ticc-benefit-modal-overlay{position:fixed;inset:0;z-index:999999;background:transparent;pointer-events:none;display:flex;align-items:flex-start;justify-content:flex-end;padding:24px;box-sizing:border-box;}
-#ticc-benefit-modal-wrapper{position:relative;width:fit-content;max-width:760px;max-height:80vh;pointer-events:auto;display:flex;flex-direction:column;border-radius:14px;overflow:hidden;background:#fff;box-shadow:0 12px 40px rgba(0,0,0,0.3);}
-#ticc-benefit-modal-box{width:100%;flex:1 1 auto;min-height:0;display:flex;align-items:center;justify-content:center;overflow:hidden;}
-.ticc-poster-wrap{position:relative;display:inline-block;line-height:0;}
-.ticc-poster-wrap img.ticc-poster-img{display:block;width:auto;height:auto;max-width:100%;max-height:calc(80vh - 40px);object-fit:contain;}
-.ticc-benefit-badge{position:absolute;right:4%;bottom:25%;width:44%;display:block;cursor:pointer;transition:transform .15s;}
-.ticc-benefit-badge:hover{transform:scale(1.03);}
-.ticc-benefit-badge img{display:block;width:100%;height:auto;}
-#ticc-benefit-modal-close{position:absolute;top:10px;right:10px;width:32px;height:32px;border-radius:50%;background:#1e3a8a;color:#fff;border:2px solid #fff;font-size:16px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:2147483647;box-shadow:0 2px 10px rgba(0,0,0,0.4);}
-#ticc-benefit-modal-close:hover{background:#16306e;}
-#ticc-benefit-modal-cta{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;flex:0 0 auto;padding:14px;background:#EE6F93;border:none;color:#fff;font-size:15px;font-weight:800;font-family:inherit;cursor:pointer;text-decoration:none;}
-#ticc-benefit-modal-cta:hover{background:#C94F71;}
-#ticc-confirm-overlay{position:fixed;inset:0;z-index:1000000;background:rgba(0,0,0,0.4);display:none;align-items:center;justify-content:center;padding:20px;box-sizing:border-box;}
-#ticc-confirm-box{background:#fff;border-radius:14px;padding:24px 22px;max-width:320px;width:100%;text-align:center;box-shadow:0 12px 40px rgba(0,0,0,0.3);}
-#ticc-confirm-box p{font-size:14px;color:#333;line-height:1.6;margin-bottom:18px;}
-#ticc-confirm-box .ticc-confirm-btns{display:flex;flex-direction:column;gap:8px;}
-#ticc-confirm-box button{border:none;border-radius:10px;padding:12px;font-size:14px;font-weight:700;font-family:inherit;cursor:pointer;}
-#ticc-confirm-close{background:#1e3a8a;color:#fff;}
-#ticc-confirm-close:hover{background:#16306e;}
-#ticc-confirm-hide{background:#f0f0f0;color:#555;}
-#ticc-confirm-hide:hover{background:#e2e2e2;}
-@media (max-width:768px){
-  #ticc-benefit-modal-overlay{background:rgba(0,0,0,0.5);pointer-events:auto;align-items:center;justify-content:center;padding:20px;}
-  #ticc-benefit-modal-wrapper{max-width:66.666vw;width:66.666vw;max-height:80vh;}
-  #ticc-benefit-modal-box img{max-height:calc(80vh - 40px);}
+/* ── 나눔이음의료복지사회적협동조합 창립총회 공고 팝업 ──
+   기존 팝업과 같은 fixed overlay 패턴을 사용하되,
+   최종 확정 공고문 이미지를 그대로 표시한다. */
+#founding-notice-overlay{
+  position:fixed;inset:0;z-index:999999;
+  background:transparent;pointer-events:none;
+  display:flex;align-items:flex-start;justify-content:flex-end;
+  padding:24px;box-sizing:border-box;
 }
-
+#founding-notice-wrapper{
+  position:relative;width:min(560px,calc(100vw - 48px));max-height:92vh;
+  pointer-events:auto;display:flex;flex-direction:column;
+  border-radius:14px;overflow:hidden;background:#fff;
+  box-shadow:0 16px 48px rgba(0,0,0,.30);
+  border:1px solid rgba(0,0,0,.08);
+}
+#founding-notice-box{
+  width:100%;flex:1 1 auto;min-height:0;
+  overflow:auto;background:#ececec;
+  -webkit-overflow-scrolling:touch;
+}
+#founding-notice-box img{
+  display:block;width:100%;height:auto;margin:0 auto;background:#fff;
+}
+#founding-notice-close{
+  position:absolute;top:10px;right:10px;z-index:3;
+  width:36px;height:36px;border-radius:50%;
+  background:rgba(17,17,17,.86);color:#fff;border:2px solid #fff;
+  font-size:18px;line-height:1;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 2px 10px rgba(0,0,0,.35);
+}
+#founding-notice-close:hover{background:#000;}
+#founding-notice-actions{
+  display:flex;align-items:center;gap:8px;width:100%;
+  flex:0 0 auto;padding:10px;background:#fff;border-top:1px solid #e9e9e9;
+}
+#founding-notice-pdf,
+#founding-notice-dismiss{
+  min-height:42px;display:flex;align-items:center;justify-content:center;
+  border-radius:8px;font-size:14px;font-weight:800;font-family:inherit;
+  text-decoration:none;cursor:pointer;
+}
+#founding-notice-pdf{
+  flex:1;background:#fff;color:#333;border:1px solid #d9d9d9;
+}
+#founding-notice-pdf:hover{background:#f7f7f7;}
+#founding-notice-dismiss{
+  flex:0 0 86px;border:none;background:#EE6F93;color:#fff;
+}
+#founding-notice-dismiss:hover{background:#C94F71;}
+#founding-notice-reopen{
+  position:fixed;right:20px;bottom:20px;z-index:999998;
+  display:none;align-items:center;gap:8px;
+  padding:12px 16px;border-radius:999px;border:none;
+  background:#17130F;color:#fff;font-size:13px;font-weight:800;
+  box-shadow:0 10px 30px rgba(0,0,0,.22);cursor:pointer;
+}
+#founding-notice-reopen:hover{transform:translateY(-1px);}
+@media (max-width:768px){
+  #founding-notice-overlay{
+    background:rgba(0,0,0,.58);pointer-events:auto;
+    align-items:center;justify-content:center;padding:8px;
+  }
+  #founding-notice-wrapper{
+    width:min(96vw,620px);max-height:96vh;border-radius:8px;
+  }
+  #founding-notice-box{overflow:auto;}
+  #founding-notice-box img{width:100%;max-width:none;}
+  #founding-notice-actions{padding:8px;}
+  #founding-notice-pdf,#founding-notice-dismiss{min-height:44px;font-size:13px;}
+  #founding-notice-reopen{right:12px;bottom:12px;padding:11px 14px;}
+}
 
 
 /* ===== HEADER: hpartners 실제 폰트/치수와 동일 ===== */
@@ -1515,80 +1560,56 @@ document.getElementById('more').addEventListener('click',()=>{ shown+=PAGE; rend
 render();
 </script>
 
-<div id="ticc-benefit-modal-overlay" style="display:none">
-  <div id="ticc-benefit-modal-wrapper">
-    <button id="ticc-benefit-modal-close" type="button" aria-label="닫기">&#10005;</button>
-    <div id="ticc-benefit-modal-box">
-      <div class="ticc-poster-wrap">
-        <img class="ticc-poster-img" src="poster.jpg" alt="도쿄국제합창콩쿠르 참가 공식후원 안내">
-        <a class="ticc-benefit-badge" href="apply-concert.html" aria-label="참석 신청하고 받기 - 5만원 상당 건강차 선물세트 증정">
-          <img src="benefit-badge.png" alt="참석자 특별혜택 5만원 상당 건강차 선물세트 증정, 참석 신청하고 받기">
-        </a>
-      </div>
+<!-- 창립총회 개최 공고 팝업: 최종 확정 문서를 이미지로 그대로 표시 -->
+<div id="founding-notice-overlay" role="dialog" aria-modal="true" aria-labelledby="founding-notice-title">
+  <div id="founding-notice-wrapper">
+    <h2 id="founding-notice-title" class="sr-only">나눔이음의료복지사회적협동조합 창립총회 개최 공고</h2>
+    <button id="founding-notice-close" type="button" aria-label="공고 닫기">&#10005;</button>
+    <div id="founding-notice-box">
+      <img
+        src="/founding_notice_20260919.png"
+        alt="나눔이음의료복지사회적협동조합 창립총회 개최 공고. 2026년 9월 29일 화요일 오후 2시, 부산시민회관 대극장."
+      >
     </div>
-    <a id="ticc-benefit-modal-cta" href="apply-concert.html">참석 신청하기 →</a>
-  </div>
-</div>
-
-<div id="ticc-confirm-overlay">
-  <div id="ticc-confirm-box">
-    <p>이 팝업을 오늘 하루 보지 않으시겠습니까?</p>
-    <div class="ticc-confirm-btns">
-      <button id="ticc-confirm-close" type="button">닫기</button>
-      <button id="ticc-confirm-hide" type="button">오늘 하루 보지 않기</button>
+    <div id="founding-notice-actions">
+      <a id="founding-notice-pdf" href="/founding_notice_20260919.pdf" target="_blank" rel="noopener">공고문 PDF 원본 보기</a>
+      <button id="founding-notice-dismiss" type="button">닫기</button>
     </div>
   </div>
 </div>
+<button id="founding-notice-reopen" type="button" aria-label="창립총회 개최 공고 다시 보기">창립총회 개최 공고</button>
 
 <script>
 (function(){
-  const TICC_HIDE_TODAY_KEY = 'ticc-benefit-modal-hide-until';
-  const overlay = document.getElementById('ticc-benefit-modal-overlay');
-  const closeBtn = document.getElementById('ticc-benefit-modal-close');
-  const confirmOverlay = document.getElementById('ticc-confirm-overlay');
-  const confirmHideBtn = document.getElementById('ticc-confirm-hide');
-  const confirmCloseBtn = document.getElementById('ticc-confirm-close');
+  const overlay = document.getElementById('founding-notice-overlay');
+  const closeBtn = document.getElementById('founding-notice-close');
+  const dismissBtn = document.getElementById('founding-notice-dismiss');
+  const reopenBtn = document.getElementById('founding-notice-reopen');
+  if(!overlay || !closeBtn || !dismissBtn || !reopenBtn) return;
 
-  function shouldShowInitially(){
-    try {
-      const hideUntil = window.localStorage.getItem(TICC_HIDE_TODAY_KEY);
-      if (hideUntil && Date.now() < Number(hideUntil)) return false;
-    } catch(e) {}
-    return true;
-  }
-
-  function openModal(){
+  function openNotice(){
     overlay.style.display = 'flex';
+    reopenBtn.style.display = 'none';
     document.body.style.overflow = 'hidden';
   }
-  function closeModal(){
+  function closeNotice(){
     overlay.style.display = 'none';
-    confirmOverlay.style.display = 'none';
+    reopenBtn.style.display = 'flex';
     document.body.style.overflow = '';
   }
 
-  // if (shouldShowInitially()) openModal();
+  // 법정 공고이므로 방문할 때마다 항상 표시한다.
+  openNotice();
 
-  // X 버튼 클릭 → 바로 닫지 않고 확인창 표시
-  closeBtn.addEventListener('click', function(){
-    confirmOverlay.style.display = 'flex';
+  closeBtn.addEventListener('click', closeNotice);
+  dismissBtn.addEventListener('click', closeNotice);
+  reopenBtn.addEventListener('click', openNotice);
+
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape' && overlay.style.display !== 'none') closeNotice();
   });
-
-  // "오늘 하루 보지 않기" → 저장 후 닫기
-  confirmHideBtn.addEventListener('click', function(){
-    try {
-      const midnight = new Date();
-      midnight.setHours(24, 0, 0, 0);
-      window.localStorage.setItem(TICC_HIDE_TODAY_KEY, String(midnight.getTime()));
-    } catch(e) {}
-    closeModal();
-  });
-
-  // "닫기" → 이번만 닫기 (다음 방문 시 다시 뜸)
-  confirmCloseBtn.addEventListener('click', closeModal);
 })();
 </script>
-
 
 <script>
 (() => {
