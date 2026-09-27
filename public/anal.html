@@ -279,7 +279,10 @@ function frameLoop(){
 async function startCamera(){
   try{
     if(stream)stream.getTracks().forEach(t=>t.stop());
-    stream=await navigator.mediaDevices.getUserMedia({video:true,audio:false});
+    stream=await navigator.mediaDevices.getUserMedia({
+      video:{facingMode:{ideal:'environment'}},
+      audio:false
+    });
     video.srcObject=stream;
     await video.play();
 
@@ -291,7 +294,7 @@ async function startCamera(){
     targetTxt.textContent=Math.round(TARGET_R*2)+'px';
 
     running=true;
-    statusEl.textContent='카메라 연결됨 · 도장을 오버레이 안에 비추십시오.';
+    statusEl.textContent='후면 카메라 연결됨 · 도장을 오버레이 안에 비추십시오.';
     requestAnimationFrame(frameLoop);
   }catch(e){
     console.error(e);
