@@ -22,9 +22,10 @@ import PpeDetailPage from './pages/PpeDetailPage'
 import SafetyEduDetailPage from './pages/SafetyEduDetailPage'
 import SafetyEduListPage   from './pages/SafetyEduListPage'
 import GrbLabPage from './pages/GrbLabPage'
-
+import AudienceJudgeDisplay from './judge/AudienceJudgeDisplay'
 import HospitalPartnerPage from './pages/HospitalPartnerPage'
-
+ import JudgeAdminPage from './judge/JudgeAdminPage'
+import AudienceJudgePage from './judge/AudienceJudgePage'
 
 // ✅ 기프트카드 교환 (담당자용)
 import AdminExchangePage from './pages/AdminExchangePage'
@@ -65,7 +66,7 @@ export default function App() {
  {/* ✅ TBM (추가: Safety와 동일 구조) */}
       <Route path="/tbm"                element={<TbmListPage />} />
       <Route path="/tbm/:tbmId"         element={<TbmDetailPage />} />
-
+<Route path="/judge/display" element={<AudienceJudgeDisplay />} />
 
 <Route path="/edu"         element={<SafetyEduListPage />} />
 <Route path="/edu/:eduId"  element={<SafetyEduDetailPage />} />
@@ -79,7 +80,9 @@ export default function App() {
 
 <Route path="/hp" element={<HospitalPartnerPage />} />
 
-
+<Route path="/judge" element={<AudienceJudgePage />} />
+<Route path="/judge/admin" element={<JudgeAdminPage />} />
+<Route path="/judge/display" element={<AudienceJudgeDisplay />} />
 
 {/* ✅ 기프트카드 교환 (담당자가 참여자 바코드를 스캔) */}
 <Route path="/admin/exchange" element={<AdminExchangePage />} />

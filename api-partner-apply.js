@@ -20,6 +20,30 @@ const PARTNER_GSHEET_URL =
 
 const PARTNER_DEBUG = String(process.env.PARTNER_DEBUG || "") === "1";
 
+const JUDGE_ADMIN_KEY = String(process.env.JUDGE_ADMIN_KEY || "");
+const JUDGE_DEFAULT_DURATION_SECONDS = Math.max(
+  30,
+  Math.min(600, Number(process.env.JUDGE_DEFAULT_DURATION_SECONDS || 180))
+);
+
+// 객석심사 실시간 상태.
+// 현재 단계에서는 메모리 기반입니다. 컨테이너가 재시작되면 초기화됩니다.
+const judgeClients = new Set();
+const judgeVotes = new Map();
+
+let judgeState = {
+  teamId: 1,
+  phase: "idle", // idle | voting | result
+  participants: 0,
+  remainingSeconds: JUDGE_DEFAULT_DURATION_SECONDS,
+  score: 0,
+  comments: [],
+  startedAt: null,
+  endsAt: null,
+};
+
+let judgeTimer = null;
+
 function maskPhone(phone) {
   const p = cleanPhone(phone);
   if (p.length < 7) return "***";
@@ -354,6 +378,501 @@ function readJsonBody(req) {
   });
 }
 
+
+function judgeSnapshot() {
+  let remainingSeconds = Number(judgeState.remainingSeconds) || 0;
+
+  if (judgeState.phase === "voting" && judgeState.endsAt) {
+    remainingSeconds = Math.max(
+      0,
+      Math.ceil((Number(judgeState.endsAt) - Date.now()) / 1000)
+    );
+  }
+
+  return {
+    teamId: Number(judgeState.teamId) || 1,
+    phase: judgeState.phase,
+    participants: Number(judgeState.participants) || 0,
+    remainingSeconds,
+    score: Number(judgeState.score) || 0,
+    comments: Array.isArray(judgeState.comments)
+      ? judgeState.comments.slice(-2)
+      : [],
+    startedAt: judgeState.startedAt,
+    endsAt: judgeState.endsAt,
+  };
+}
+
+function writeSse(res, payload) {
+  res.write(`data: ${JSON.stringify(payload)}\n\n`);
+}
+
+function broadcastJudge(payload) {
+  const dead = [];
+
+  for (const client of judgeClients) {
+    try {
+      writeSse(client, payload);
+    } catch {
+      dead.push(client);
+    }
+  }
+
+  dead.forEach((client) => judgeClients.delete(client));
+}
+
+function broadcastJudgeState() {
+  broadcastJudge({
+    type: "state",
+    ...judgeSnapshot(),
+  });
+}
+
+function recalculateJudgeScore() {
+  const prefix = `${Number(judgeState.teamId)}:`;
+  const scores = [];
+
+  for (const [key, vote] of judgeVotes.entries()) {
+    if (!key.startsWith(prefix)) continue;
+    const score = Number(vote?.score);
+    if (Number.isFinite(score)) scores.push(score);
+  }
+
+  judgeState.participants = scores.length;
+
+  if (!scores.length) {
+    judgeState.score = 0;
+    return;
+  }
+
+  const average = scores.reduce((sum, value) => sum + value, 0) / scores.length;
+  judgeState.score = Math.round(average * 10) / 10;
+}
+
+function stopJudgeTimer() {
+  if (judgeTimer) {
+    clearInterval(judgeTimer);
+    judgeTimer = null;
+  }
+}
+
+function startJudgeTimer() {
+  stopJudgeTimer();
+
+  judgeTimer = setInterval(() => {
+    if (judgeState.phase !== "voting") return;
+
+    const remainingSeconds = Math.max(
+      0,
+      Math.ceil((Number(judgeState.endsAt) - Date.now()) / 1000)
+    );
+
+    judgeState.remainingSeconds = remainingSeconds;
+
+    if (remainingSeconds <= 0) {
+      judgeState.phase = "result";
+      judgeState.remainingSeconds = 0;
+      recalculateJudgeScore();
+      stopJudgeTimer();
+
+      broadcastJudge({
+        type: "result",
+        teamId: judgeState.teamId,
+        score: judgeState.score,
+        participants: judgeState.participants,
+      });
+      broadcastJudgeState();
+      return;
+    }
+
+    // 대형 화면의 카운트다운과 참여 숫자를 1초마다 동기화
+    broadcastJudgeState();
+  }, 1000);
+}
+
+function isJudgeAdmin(req) {
+  // JUDGE_ADMIN_KEY를 설정하지 않은 경우에는 현장 테스트 편의를 위해 허용합니다.
+  // 운영 전에는 반드시 환경변수에 키를 넣는 것을 권장합니다.
+  if (!JUDGE_ADMIN_KEY) return true;
+
+  const headerKey = String(req.headers["x-judge-admin-key"] || "");
+  const auth = String(req.headers.authorization || "");
+  const bearer = auth.startsWith("Bearer ") ? auth.slice(7).trim() : "";
+
+  return headerKey === JUDGE_ADMIN_KEY || bearer === JUDGE_ADMIN_KEY;
+}
+
+function judgeAdminDenied(res) {
+  return json(res, 401, {
+    ok: false,
+    error: "객석심사 관리자 인증이 필요합니다.",
+  });
+}
+
+function normalizeJudgeComment(value) {
+  const text = String(value || "")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  if (!text) return "";
+
+  // 대형 스크린용: 너무 긴 문장, URL, 전화번호 형태는 송출하지 않습니다.
+  if (text.length > 80) {
+    throw new Error("댓글은 80자 이내로 입력해주세요.");
+  }
+
+  if (/https?:\/\/|www\./i.test(text)) {
+    throw new Error("댓글에는 인터넷 주소를 넣을 수 없습니다.");
+  }
+
+  if (/(?:01[016789])[- ]?\d{3,4}[- ]?\d{4}/.test(text)) {
+    throw new Error("댓글에는 전화번호를 넣을 수 없습니다.");
+  }
+
+  return text;
+}
+
+function appendJudgeComment(text) {
+  if (!text) return;
+
+  judgeState.comments = [...judgeState.comments, text].slice(-2);
+
+  broadcastJudge({
+    type: "comment",
+    teamId: judgeState.teamId,
+    text,
+  });
+}
+
+function makeJudgeVoteKey(teamId, judgeId) {
+  const cleanJudgeId = String(judgeId || "").trim();
+
+  // judgeId가 있으면 같은 심사위원의 수정 제출은 1명으로 유지합니다.
+  if (cleanJudgeId) return `${teamId}:${cleanJudgeId.slice(0, 120)}`;
+
+  // judgeId가 아직 없는 초기 테스트에서는 요청마다 별도 참여자로 계산합니다.
+  return `${teamId}:anon-${Date.now()}-${crypto.randomBytes(4).toString("hex")}`;
+}
+
+function normalizeJudgeScore(body) {
+  if (Number.isFinite(Number(body?.score))) {
+    const score = Number(body.score);
+    if (score < 0 || score > 100) {
+      throw new Error("점수는 0~100 범위여야 합니다.");
+    }
+    return Math.round(score * 10) / 10;
+  }
+
+  // 모바일 화면에서 1~5점 항목 배열을 보낼 경우 자동으로 100점 환산
+  if (Array.isArray(body?.scores) && body.scores.length > 0) {
+    const values = body.scores.map(Number);
+
+    if (
+      values.some(
+        (value) => !Number.isFinite(value) || value < 1 || value > 5
+      )
+    ) {
+      throw new Error("항목 점수는 각각 1~5 범위여야 합니다.");
+    }
+
+    const average5 =
+      values.reduce((sum, value) => sum + value, 0) / values.length;
+
+    return Math.round(average5 * 20 * 10) / 10;
+  }
+
+  throw new Error("score 또는 scores를 보내주세요.");
+}
+
+function clearJudgeVotesForTeam(teamId) {
+  const prefix = `${Number(teamId)}:`;
+
+  for (const key of [...judgeVotes.keys()]) {
+    if (key.startsWith(prefix)) judgeVotes.delete(key);
+  }
+}
+
+function beginJudgeTeam(teamId, durationSeconds) {
+  const safeTeamId = Math.max(1, Math.min(11, Number(teamId) || 1));
+  const safeDuration = Math.max(
+    30,
+    Math.min(600, Number(durationSeconds) || JUDGE_DEFAULT_DURATION_SECONDS)
+  );
+
+  clearJudgeVotesForTeam(safeTeamId);
+
+  const startedAtMs = Date.now();
+
+  judgeState = {
+    teamId: safeTeamId,
+    phase: "voting",
+    participants: 0,
+    remainingSeconds: safeDuration,
+    score: 0,
+    comments: [],
+    startedAt: new Date(startedAtMs).toISOString(),
+    endsAt: startedAtMs + safeDuration * 1000,
+  };
+
+  startJudgeTimer();
+
+  broadcastJudge({
+    type: "team",
+    teamId: safeTeamId,
+  });
+  broadcastJudgeState();
+
+  return judgeSnapshot();
+}
+
+async function handleJudgeVote(req, res) {
+  let body;
+
+  try {
+    body = await readJsonBody(req);
+  } catch (error) {
+    return json(res, 400, {
+      ok: false,
+      error: error.message || "요청 내용을 확인해주세요.",
+    });
+  }
+
+  if (judgeState.phase !== "voting") {
+    return json(res, 409, {
+      ok: false,
+      error: "현재 객석심사가 진행 중이 아닙니다.",
+      state: judgeSnapshot(),
+    });
+  }
+
+  const requestTeamId = Number(body.teamId || judgeState.teamId);
+
+  if (requestTeamId !== Number(judgeState.teamId)) {
+    return json(res, 409, {
+      ok: false,
+      error: "현재 진행 중인 합창단과 제출 대상이 다릅니다.",
+      currentTeamId: judgeState.teamId,
+    });
+  }
+
+  let score;
+  let comment = "";
+
+  try {
+    score = normalizeJudgeScore(body);
+    comment = normalizeJudgeComment(body.comment || body.text || "");
+  } catch (error) {
+    return json(res, 400, {
+      ok: false,
+      error: error.message,
+    });
+  }
+
+  const voteKey = makeJudgeVoteKey(judgeState.teamId, body.judgeId);
+  const existing = judgeVotes.get(voteKey);
+
+  judgeVotes.set(voteKey, {
+    score,
+    submittedAt: new Date().toISOString(),
+  });
+
+  recalculateJudgeScore();
+
+  if (comment) appendJudgeComment(comment);
+
+  broadcastJudgeState();
+
+  return json(res, 200, {
+    ok: true,
+    updated: Boolean(existing),
+    teamId: judgeState.teamId,
+    participants: judgeState.participants,
+    score: judgeState.score,
+    remainingSeconds: judgeSnapshot().remainingSeconds,
+  });
+}
+
+async function handleJudgeComment(req, res) {
+  let body;
+
+  try {
+    body = await readJsonBody(req);
+  } catch (error) {
+    return json(res, 400, {
+      ok: false,
+      error: error.message || "요청 내용을 확인해주세요.",
+    });
+  }
+
+  if (judgeState.phase !== "voting") {
+    return json(res, 409, {
+      ok: false,
+      error: "현재 객석심사가 진행 중이 아닙니다.",
+    });
+  }
+
+  let comment;
+
+  try {
+    comment = normalizeJudgeComment(body.text || body.comment || "");
+  } catch (error) {
+    return json(res, 400, {
+      ok: false,
+      error: error.message,
+    });
+  }
+
+  if (!comment) {
+    return json(res, 400, {
+      ok: false,
+      error: "댓글 내용을 입력해주세요.",
+    });
+  }
+
+  appendJudgeComment(comment);
+
+  return json(res, 200, {
+    ok: true,
+    comments: judgeState.comments,
+  });
+}
+
+function handleJudgeLive(req, res) {
+  res.writeHead(200, {
+    "Content-Type": "text/event-stream; charset=utf-8",
+    "Cache-Control": "no-cache, no-transform",
+    Connection: "keep-alive",
+    "X-Accel-Buffering": "no",
+  });
+
+  res.write(": connected\n\n");
+  writeSse(res, {
+    type: "state",
+    ...judgeSnapshot(),
+  });
+
+  judgeClients.add(res);
+
+  const heartbeat = setInterval(() => {
+    try {
+      res.write(": heartbeat\n\n");
+    } catch {
+      clearInterval(heartbeat);
+      judgeClients.delete(res);
+    }
+  }, 15000);
+
+  req.on("close", () => {
+    clearInterval(heartbeat);
+    judgeClients.delete(res);
+  });
+}
+
+async function handleJudgeAdminStart(req, res) {
+  if (!isJudgeAdmin(req)) return judgeAdminDenied(res);
+
+  let body = {};
+
+  try {
+    body = await readJsonBody(req);
+  } catch (error) {
+    return json(res, 400, {
+      ok: false,
+      error: error.message,
+    });
+  }
+
+  const state = beginJudgeTeam(
+    body.teamId || judgeState.teamId || 1,
+    body.durationSeconds || JUDGE_DEFAULT_DURATION_SECONDS
+  );
+
+  return json(res, 200, {
+    ok: true,
+    state,
+  });
+}
+
+async function handleJudgeAdminClose(req, res) {
+  if (!isJudgeAdmin(req)) return judgeAdminDenied(res);
+
+  stopJudgeTimer();
+  judgeState.phase = "result";
+  judgeState.remainingSeconds = 0;
+  judgeState.endsAt = Date.now();
+  recalculateJudgeScore();
+
+  broadcastJudge({
+    type: "result",
+    teamId: judgeState.teamId,
+    score: judgeState.score,
+    participants: judgeState.participants,
+  });
+  broadcastJudgeState();
+
+  return json(res, 200, {
+    ok: true,
+    state: judgeSnapshot(),
+  });
+}
+
+async function handleJudgeAdminTeam(req, res) {
+  if (!isJudgeAdmin(req)) return judgeAdminDenied(res);
+
+  let body = {};
+
+  try {
+    body = await readJsonBody(req);
+  } catch (error) {
+    return json(res, 400, {
+      ok: false,
+      error: error.message,
+    });
+  }
+
+  const safeTeamId = Math.max(1, Math.min(11, Number(body.teamId) || 1));
+  judgeState.teamId = safeTeamId;
+
+  broadcastJudge({
+    type: "team",
+    teamId: safeTeamId,
+  });
+  broadcastJudgeState();
+
+  return json(res, 200, {
+    ok: true,
+    state: judgeSnapshot(),
+  });
+}
+
+async function handleJudgeAdminReset(req, res) {
+  if (!isJudgeAdmin(req)) return judgeAdminDenied(res);
+
+  stopJudgeTimer();
+
+  const teamId = Number(judgeState.teamId) || 1;
+  clearJudgeVotesForTeam(teamId);
+
+  judgeState = {
+    teamId,
+    phase: "idle",
+    participants: 0,
+    remainingSeconds: JUDGE_DEFAULT_DURATION_SECONDS,
+    score: 0,
+    comments: [],
+    startedAt: null,
+    endsAt: null,
+  };
+
+  broadcastJudgeState();
+
+  return json(res, 200, {
+    ok: true,
+    state: judgeSnapshot(),
+  });
+}
+
+
 // 테스트 단계의 간단한 중복 발송 방지.
 // Railway가 재시작되면 초기화됩니다.
 const phoneHistory = new Map();
@@ -593,8 +1112,107 @@ const server = http.createServer(async (req, res) => {
         googleSheet: Boolean(PARTNER_GSHEET_URL),
       },
       debugMode: PARTNER_DEBUG,
+      judge: {
+        adminKeyConfigured: Boolean(JUDGE_ADMIN_KEY),
+        defaultDurationSeconds: JUDGE_DEFAULT_DURATION_SECONDS,
+        connectedDisplays: judgeClients.size,
+        state: judgeSnapshot(),
+      },
       serverTime: new Date().toISOString(),
     });
+  }
+
+
+  if (pathname === "/api/judge/live") {
+    if (req.method !== "GET") {
+      return json(res, 405, {
+        ok: false,
+        error: "GET 요청만 사용할 수 있습니다.",
+      });
+    }
+
+    return handleJudgeLive(req, res);
+  }
+
+  if (pathname === "/api/judge/state") {
+    if (req.method !== "GET") {
+      return json(res, 405, {
+        ok: false,
+        error: "GET 요청만 사용할 수 있습니다.",
+      });
+    }
+
+    return json(res, 200, {
+      ok: true,
+      state: judgeSnapshot(),
+      connectedDisplays: judgeClients.size,
+    });
+  }
+
+  if (pathname === "/api/judge/vote") {
+    if (req.method !== "POST") {
+      return json(res, 405, {
+        ok: false,
+        error: "POST 요청만 사용할 수 있습니다.",
+      });
+    }
+
+    return handleJudgeVote(req, res);
+  }
+
+  if (pathname === "/api/judge/comment") {
+    if (req.method !== "POST") {
+      return json(res, 405, {
+        ok: false,
+        error: "POST 요청만 사용할 수 있습니다.",
+      });
+    }
+
+    return handleJudgeComment(req, res);
+  }
+
+  if (pathname === "/api/judge/admin/start") {
+    if (req.method !== "POST") {
+      return json(res, 405, {
+        ok: false,
+        error: "POST 요청만 사용할 수 있습니다.",
+      });
+    }
+
+    return handleJudgeAdminStart(req, res);
+  }
+
+  if (pathname === "/api/judge/admin/close") {
+    if (req.method !== "POST") {
+      return json(res, 405, {
+        ok: false,
+        error: "POST 요청만 사용할 수 있습니다.",
+      });
+    }
+
+    return handleJudgeAdminClose(req, res);
+  }
+
+  if (pathname === "/api/judge/admin/team") {
+    if (req.method !== "POST") {
+      return json(res, 405, {
+        ok: false,
+        error: "POST 요청만 사용할 수 있습니다.",
+      });
+    }
+
+    return handleJudgeAdminTeam(req, res);
+  }
+
+  if (pathname === "/api/judge/admin/reset") {
+    if (req.method !== "POST") {
+      return json(res, 405, {
+        ok: false,
+        error: "POST 요청만 사용할 수 있습니다.",
+      });
+    }
+
+    return handleJudgeAdminReset(req, res);
   }
 
   if (pathname === "/api/partner/apply") {
@@ -617,5 +1235,8 @@ const server = http.createServer(async (req, res) => {
 server.listen(PORT, "127.0.0.1", () => {
   console.log(
     `[partner-api] NAVER SENS ready: http://127.0.0.1:${PORT}/api/partner/apply`
+  );
+  console.log(
+    `[judge-api] SSE ready: http://127.0.0.1:${PORT}/api/judge/live`
   );
 });
