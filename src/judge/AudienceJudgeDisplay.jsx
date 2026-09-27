@@ -41,16 +41,47 @@ export default function AudienceJudgeDisplay() {
   const [fullscreen, setFullscreen] = useState(Boolean(document.fullscreenElement))
 
   useEffect(() => {
+    let stopped = false
+
+    const applyState = (next) => {
+      if (!next || stopped) return
+      setState((prev) => ({ ...prev, ...next }))
+    }
+
+    const loadState = async () => {
+      try {
+        const response = await fetch('/api/judge/state', { cache: 'no-store' })
+        const data = await response.json()
+        if (response.ok && data?.state) {
+          applyState(data.state)
+          setConnected(true)
+        }
+      } catch {
+        // SSE가 살아 있으면 그대로 사용합니다.
+      }
+    }
+
+    // 화면을 새로 열었을 때 SSE 첫 이벤트를 기다리지 않고 즉시 현재 송출상태를 읽습니다.
+    loadState()
+
+    // 현장 네트워크에서 SSE가 끊겨도 화면종류가 바뀌도록 2초 폴링을 백업으로 둡니다.
+    const pollTimer = window.setInterval(loadState, 2000)
+
     const source = new EventSource('/api/judge/live')
     source.onopen = () => setConnected(true)
     source.onerror = () => setConnected(false)
     source.onmessage = (event) => {
       try {
         const data = JSON.parse(event.data)
-        if (data.type === 'state') setState((prev) => ({ ...prev, ...data }))
+        if (data.type === 'state') applyState(data)
       } catch {}
     }
-    return () => source.close()
+
+    return () => {
+      stopped = true
+      window.clearInterval(pollTimer)
+      source.close()
+    }
   }, [])
 
   useEffect(() => {
@@ -76,9 +107,20 @@ export default function AudienceJudgeDisplay() {
     } catch {}
   }
 
-  const mode = state.displayMode === 'event_intro'
+  const rawMode = String(state.displayMode || '')
+  const knownModes = new Set([
+    'event_intro',
+    DISPLAY_MODES.EVENT_INTRO_1,
+    DISPLAY_MODES.EVENT_INTRO_2,
+    DISPLAY_MODES.EVENT_INTRO_3,
+    DISPLAY_MODES.TEAM_INTRO,
+    DISPLAY_MODES.QR_REGISTER,
+    DISPLAY_MODES.SCORE,
+  ])
+
+  const mode = rawMode === 'event_intro'
     ? DISPLAY_MODES.EVENT_INTRO_1
-    : (state.displayMode || DISPLAY_MODES.EVENT_INTRO_1)
+    : (knownModes.has(rawMode) ? rawMode : DISPLAY_MODES.EVENT_INTRO_1)
 
   const eventIntroIndex = mode === DISPLAY_MODES.EVENT_INTRO_2 ? 1 : mode === DISPLAY_MODES.EVENT_INTRO_3 ? 2 : 0
   const activeEventIntro = state.eventIntros?.[eventIntroIndex] || DEFAULT_EVENT_INTROS[eventIntroIndex] || DEFAULT_EVENT_INTROS[0]

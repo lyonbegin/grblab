@@ -1001,6 +1001,7 @@ function publicJudgeState() {
   const activeEventIntro = eventIntros[introModeIndex] || eventIntros[0];
 
   return {
+    judgeUiVersion: '2026-09-27-intro3-qr-v2',
     displayMode: event.displayMode,
     eventIntros: clone(eventIntros),
     eventTitle1: activeEventIntro.title1,

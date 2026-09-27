@@ -217,6 +217,7 @@ export default function JudgeAdminPage() {
         }
       }
       await post('/api/judge/admin/display', { displayMode })
+      await loadState()
       setNotice('무대 송출 화면을 변경했습니다.')
     } catch {}
   }
