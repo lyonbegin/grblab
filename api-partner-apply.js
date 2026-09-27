@@ -1316,6 +1316,48 @@ function stopExpertTimersForTeam(teamId, markStatus = 'stopped') {
   markJudgeDirty();
 }
 
+function reschedulePendingExpertsForRemainingTime(teamId, newEndMs) {
+  const numericTeamId = Number(teamId);
+
+  // 기존 예약 타이머만 지웁니다. 이미 제출된 전문가 점수는 건드리지 않습니다.
+  for (const [key, timer] of expertTimers.entries()) {
+    if (key.startsWith(`${numericTeamId}:`)) {
+      clearTimeout(timer);
+      expertTimers.delete(key);
+    }
+  }
+
+  for (const batch of judgeDb.expertBatches) {
+    if (Number(batch.teamId) !== numericTeamId || batch.status !== 'running') continue;
+
+    const pending = (batch.entries || []).filter((entry) => entry.status === 'pending');
+    if (!pending.length) continue;
+
+    const now = Date.now();
+    const remainingMs = Math.max(250, newEndMs - now);
+    const spacing = remainingMs / (pending.length + 1);
+    let lastScheduledMs = now;
+
+    pending.forEach((entry, index) => {
+      const jitter = (Math.random() - 0.5) * Math.min(spacing * 0.35, 1200);
+      let scheduledMs = now + spacing * (index + 1) + jitter;
+
+      scheduledMs = Math.max(lastScheduledMs + 40, scheduledMs);
+      scheduledMs = Math.min(newEndMs - 80, scheduledMs);
+
+      // 남은 시간이 매우 짧은 경우에도 예약 시간이 과거가 되지 않게 합니다.
+      scheduledMs = Math.max(now + 40, scheduledMs);
+
+      lastScheduledMs = scheduledMs;
+      entry.scheduledAt = new Date(scheduledMs).toISOString();
+    });
+
+    scheduleExpertBatch(batch);
+  }
+
+  markJudgeDirty();
+}
+
 function closeJudgeVoting(reason = 'timer') {
   stopJudgeCountdown();
   stopExpertTimersForTeam(judgeDb.event.currentTeamId, 'completed');
@@ -1361,6 +1403,73 @@ async function handleJudgeAdminClose(req, res) {
   if (!requireJudgeAdmin(req, res)) return;
   closeJudgeVoting('manual');
   return json(res, 200, { ok: true, state: adminJudgeState() });
+}
+
+async function handleJudgeAdminTime(req, res) {
+  if (!requireJudgeAdmin(req, res)) return;
+
+  if (judgeDb.event.phase !== 'voting') {
+    return json(res, 409, {
+      ok: false,
+      error: '심사가 진행 중일 때만 남은 시간을 변경할 수 있습니다.',
+    });
+  }
+
+  let body = {};
+  try {
+    body = await readJsonBody(req);
+  } catch (error) {
+    return json(res, 400, { ok: false, error: error.message });
+  }
+
+  const raw = Number(body.remainingSeconds);
+
+  if (!Number.isFinite(raw)) {
+    return json(res, 400, {
+      ok: false,
+      error: '남은 시간을 초 단위 숫자로 입력해주세요.',
+    });
+  }
+
+  // 현장 운영 중 필요에 따라 최대 60분까지 즉시 조정 가능
+  const remainingSeconds = Math.max(0, Math.min(3600, Math.round(raw)));
+
+  if (remainingSeconds <= 0) {
+    closeJudgeVoting('admin-time-zero');
+    return json(res, 200, {
+      ok: true,
+      state: adminJudgeState(),
+    });
+  }
+
+  const previousRemainingSeconds = judgeRemainingSeconds();
+  const newEndMs = Date.now() + remainingSeconds * 1000;
+
+  judgeDb.event.endsAt = new Date(newEndMs).toISOString();
+
+  // 진행 중인 현장 전문가의 아직 미투입 점수도
+  // 새 남은 시간 전체에 다시 균등 분배합니다.
+  reschedulePendingExpertsForRemainingTime(
+    judgeDb.event.currentTeamId,
+    newEndMs
+  );
+
+  judgeAudit('judge.time.adjust', {
+    teamId: judgeDb.event.currentTeamId,
+    previousRemainingSeconds,
+    remainingSeconds,
+  });
+
+  markJudgeDirty();
+  void flushJudgeDb();
+
+  // display의 SSE state가 즉시 새 시간으로 바뀝니다.
+  broadcastJudgeState();
+
+  return json(res, 200, {
+    ok: true,
+    state: adminJudgeState(),
+  });
 }
 
 async function handleJudgeAdminReset(req, res) {
@@ -1767,6 +1876,11 @@ const server = http.createServer(async (req, res) => {
   if (pathname === "/api/judge/admin/close") {
     if (req.method !== "POST") return json(res, 405, { ok: false, error: "POST 요청만 사용할 수 있습니다." });
     return handleJudgeAdminClose(req, res);
+  }
+
+  if (pathname === "/api/judge/admin/time") {
+    if (req.method !== "POST") return json(res, 405, { ok: false, error: "POST 요청만 사용할 수 있습니다." });
+    return handleJudgeAdminTime(req, res);
   }
 
   if (pathname === "/api/judge/admin/reset") {

@@ -113,7 +113,6 @@ export default function AudienceJudgeDisplay() {
               <div key={song}>{song}</div>
             ))}
           </div>
-          <div className="team-intro__time">{introTeam.start} ~ {introTeam.end}</div>
         </section>
       )}
 

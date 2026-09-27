@@ -53,6 +53,7 @@ export default function JudgeAdminPage() {
   const [state, setState] = useState(INITIAL)
   const [adminKey, setAdminKey] = useState(() => localStorage.getItem('judgeAdminKey') || '')
   const [duration, setDuration] = useState(180)
+  const [remainingEdit, setRemainingEdit] = useState(180)
   const [introTeamId, setIntroTeamId] = useState(1)
   const [title1, setTitle1] = useState(INITIAL.eventTitle1)
   const [title2, setTitle2] = useState(INITIAL.eventTitle2)
@@ -68,6 +69,7 @@ export default function JudgeAdminPage() {
   const [draggedId, setDraggedId] = useState(null)
   const pollRef = useRef(null)
   const localInitializedRef = useRef(false)
+  const remainingEditingRef = useRef(false)
 
   const teams = state.teams?.length ? state.teams : DEFAULT_TEAMS
   const currentTeam = useMemo(() => teamById(teams, state.currentTeamId), [teams, state.currentTeamId])
@@ -85,14 +87,15 @@ export default function JudgeAdminPage() {
       const initialTeams = Array.isArray(next.teams) && next.teams.length ? next.teams : DEFAULT_TEAMS
       const initialIntroTeam = teamById(initialTeams, initialIntroId)
       setDuration(Number(next.durationSeconds || 180))
+      setRemainingEdit(Number(next.remainingSeconds ?? next.durationSeconds ?? 180))
       setIntroTeamId(initialIntroId)
       setTitle1(next.eventTitle1 || '')
       setTitle2(next.eventTitle2 || '')
       setSong1(initialIntroTeam?.songs?.[0] || '')
       setSong2(initialIntroTeam?.songs?.[1] || '')
       localInitializedRef.current = true
-    } else if (next.phase === 'voting') {
-      setDuration(Number(next.durationSeconds || 180))
+    } else if (next.phase === 'voting' && !remainingEditingRef.current) {
+      setRemainingEdit(Number(next.remainingSeconds ?? 0))
     }
   }
 
@@ -187,6 +190,29 @@ export default function JudgeAdminPage() {
   async function closeVote() {
     if (!window.confirm('현재 심사를 마감하고 점수 결과 화면으로 전환하시겠습니까?')) return
     try { await post('/api/judge/admin/close'); setNotice('심사를 마감했습니다.') } catch {}
+  }
+
+  async function applyRemainingTime(value = remainingEdit) {
+    if (state.phase !== 'voting') return
+
+    const seconds = Math.max(0, Math.min(3600, Math.round(Number(value) || 0)))
+    setRemainingEdit(seconds)
+
+    try {
+      await post('/api/judge/admin/time', { remainingSeconds: seconds })
+      setNotice(`남은 시간을 ${formatSeconds(seconds)}로 변경했습니다.`)
+    } catch {
+      // 서버 state가 다음 poll에서 다시 동기화됩니다.
+    } finally {
+      remainingEditingRef.current = false
+    }
+  }
+
+  async function changeRemainingBy(delta) {
+    const base = Number(remainingEdit ?? state.remainingSeconds ?? 0)
+    const next = Math.max(0, Math.min(3600, base + delta))
+    setRemainingEdit(next)
+    await applyRemainingTime(next)
   }
 
   async function resetTeam() {
@@ -336,7 +362,50 @@ export default function JudgeAdminPage() {
                   <div><span>남은 시간</span><b>{formatSeconds(state.remainingSeconds)}</b><small>{state.phase === 'voting' ? '심사 진행 중' : state.phase === 'result' ? '마감' : '대기'}</small></div>
                   <div><span>현재 총점</span><b>{Number(state.score || 0).toFixed(1)}</b><small>현장 합산 평균</small></div>
                 </div>
-                <div className="duration-line"><span>심사 시간</span><input type="number" min="30" max="600" step="10" value={duration} disabled={state.phase === 'voting'} onChange={(e) => setDuration(e.target.value)} /><span>초</span><button onClick={() => setDuration(120)}>2분</button><button onClick={() => setDuration(180)}>3분</button><button onClick={() => setDuration(240)}>4분</button></div>
+                {state.phase === 'voting' ? (
+                  <div className="duration-line">
+                    <span>현재 남은 시간</span>
+                    <input
+                      type="number"
+                      min="0"
+                      max="3600"
+                      step="1"
+                      value={remainingEdit}
+                      onFocus={() => { remainingEditingRef.current = true }}
+                      onChange={(e) => {
+                        remainingEditingRef.current = true
+                        setRemainingEdit(e.target.value)
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          e.currentTarget.blur()
+                        }
+                      }}
+                      onBlur={() => applyRemainingTime(remainingEdit)}
+                    />
+                    <span>초</span>
+                    <button type="button" onClick={() => changeRemainingBy(-30)}>-30초</button>
+                    <button type="button" onClick={() => applyRemainingTime(remainingEdit)}>적용</button>
+                    <button type="button" onClick={() => changeRemainingBy(30)}>+30초</button>
+                    <small>변경 즉시 무대 디스플레이에도 반영됩니다.</small>
+                  </div>
+                ) : (
+                  <div className="duration-line">
+                    <span>심사 시간</span>
+                    <input
+                      type="number"
+                      min="30"
+                      max="600"
+                      step="10"
+                      value={duration}
+                      onChange={(e) => setDuration(e.target.value)}
+                    />
+                    <span>초</span>
+                    <button type="button" onClick={() => setDuration(120)}>2분</button>
+                    <button type="button" onClick={() => setDuration(180)}>3분</button>
+                    <button type="button" onClick={() => setDuration(240)}>4분</button>
+                  </div>
+                )}
                 <div className="score-actions"><button className="primary" onClick={startVote} disabled={busy}>심사 시작</button><button className="danger" onClick={closeVote} disabled={state.phase !== 'voting' || busy}>즉시 마감</button><button onClick={resetTeam} disabled={busy}>현재 팀 초기화</button></div>
               </section>
               <section className="panel">
