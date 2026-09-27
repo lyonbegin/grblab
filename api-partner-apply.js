@@ -594,17 +594,17 @@ const JUDGE_ONLINE_WINDOW_MS = 30_000;
 const JUDGE_MAX_COMMENT_LENGTH = 40;
 
 const JUDGE_DEFAULT_TEAMS = [
-  { id: 1, name: '은가비합창단', start: '14:15', end: '14:25', songs: ['', ''], background: '/judge-backgrounds/team-01.png' },
-  { id: 2, name: '완주장애인합창단 ‘꽃’', start: '14:31', end: '14:36', songs: ['좋아좋아'], background: '/judge-backgrounds/team-02.png' },
-  { id: 3, name: '대구라온휠합창단', start: '14:42', end: '14:46', songs: ['푸르른 날'], background: '/judge-backgrounds/team-03.png' },
-  { id: 4, name: 'KYCU 에바다합창단', start: '14:52', end: '14:58', songs: ['친구'], background: '/judge-backgrounds/team-04.png' },
-  { id: 5, name: '옥구슬합창단', start: '15:04', end: '15:09', songs: [''], background: '/judge-backgrounds/team-05.png' },
-  { id: 6, name: '부산베데스다합창단', start: '15:15', end: '15:20', songs: ['FLY ME TO THE MOON'], background: '/judge-backgrounds/team-06.png' },
-  { id: 7, name: '이지글리합창단', start: '15:26', end: '15:33', songs: ['흰수염고래', '오나라'], background: '/judge-backgrounds/team-07.png' },
-  { id: 8, name: '부산 단디소리합창단', start: '15:39', end: '15:44', songs: ['그대 있는 곳까지'], background: '/judge-backgrounds/team-08.png' },
-  { id: 9, name: '코웨이물빛합창단', start: '15:50', end: '15:55', songs: ['노던 라이츠'], background: '/judge-backgrounds/team-09.png' },
-  { id: 10, name: '골프존파스텔합창단', start: '16:01', end: '16:05', songs: ['Dawn and Dusk (Fajar dan Senja)'], background: '/judge-backgrounds/team-10.png' },
-  { id: 11, name: '어울림시각장애인합창단', start: '16:12', end: '16:18', songs: ['푸니쿨리 푸니쿨라', '잊혀진 계절 메들리'], background: '/judge-backgrounds/team-11.png' },
+  { id: 1, name: '은가비합창단', start: '14:15', end: '14:25', songs: ['', ''], expertScore: null, background: '/judge-backgrounds/team-01.png' },
+  { id: 2, name: '완주장애인합창단 ‘꽃’', start: '14:31', end: '14:36', songs: ['좋아좋아'], expertScore: null, background: '/judge-backgrounds/team-02.png' },
+  { id: 3, name: '대구라온휠합창단', start: '14:42', end: '14:46', songs: ['푸르른 날'], expertScore: null, background: '/judge-backgrounds/team-03.png' },
+  { id: 4, name: 'KYCU 에바다합창단', start: '14:52', end: '14:58', songs: ['친구'], expertScore: null, background: '/judge-backgrounds/team-04.png' },
+  { id: 5, name: '옥구슬합창단', start: '15:04', end: '15:09', songs: [''], expertScore: null, background: '/judge-backgrounds/team-05.png' },
+  { id: 6, name: '부산베데스다합창단', start: '15:15', end: '15:20', songs: ['FLY ME TO THE MOON'], expertScore: null, background: '/judge-backgrounds/team-06.png' },
+  { id: 7, name: '이지글리합창단', start: '15:26', end: '15:33', songs: ['흰수염고래', '오나라'], expertScore: null, background: '/judge-backgrounds/team-07.png' },
+  { id: 8, name: '부산 단디소리합창단', start: '15:39', end: '15:44', songs: ['그대 있는 곳까지'], expertScore: null, background: '/judge-backgrounds/team-08.png' },
+  { id: 9, name: '코웨이물빛합창단', start: '15:50', end: '15:55', songs: ['노던 라이츠'], expertScore: null, background: '/judge-backgrounds/team-09.png' },
+  { id: 10, name: '골프존파스텔합창단', start: '16:01', end: '16:05', songs: ['Dawn and Dusk (Fajar dan Senja)'], expertScore: null, background: '/judge-backgrounds/team-10.png' },
+  { id: 11, name: '어울림시각장애인합창단', start: '16:12', end: '16:18', songs: ['푸니쿨리 푸니쿨라', '잊혀진 계절 메들리'], expertScore: null, background: '/judge-backgrounds/team-11.png' },
 ];
 
 function newJudgeDb() {
@@ -614,7 +614,13 @@ function newJudgeDb() {
     createdAt: now,
     updatedAt: now,
     event: {
-      displayMode: 'event_intro',
+      displayMode: 'event_intro_1',
+      eventIntros: [
+        { title1: '2026 장애인 합창단 초청 음악회', title2: '오늘의 무대가 도쿄로 이어집니다' },
+        { title1: '2026 장애인 합창단 초청 음악회', title2: '오늘의 무대가 도쿄로 이어집니다' },
+        { title1: '2026 장애인 합창단 초청 음악회', title2: '오늘의 무대가 도쿄로 이어집니다' },
+      ],
+      // 구버전 호환 필드
       eventTitle1: '2026 장애인 합창단 초청 음악회',
       eventTitle2: '오늘의 무대가 도쿄로 이어집니다',
       currentTeamId: 1,
@@ -629,6 +635,10 @@ function newJudgeDb() {
       commentInputEnabled: true,
       commentDisplayEnabled: true,
       allowVoteEdit: true,
+      expertDefaultCount: 0,
+      expertDefaultBaseScore: 88,
+      expertDefaultSpread: 10,
+      closingCountdown: false,
     },
     teams: JUDGE_DEFAULT_TEAMS,
     judges: [],
@@ -637,6 +647,86 @@ function newJudgeDb() {
     comments: [],
     expertBatches: [],
     audit: [],
+  };
+}
+
+function normalizeJudgeDb(input) {
+  const defaults = newJudgeDb();
+  const raw = input && typeof input === 'object' ? input : {};
+
+  const savedTeams = Array.isArray(raw.teams) ? raw.teams : [];
+  const teams = JUDGE_DEFAULT_TEAMS.map((defaultTeam) => {
+    const saved = savedTeams.find((team) => Number(team?.id) === Number(defaultTeam.id));
+    return {
+      ...defaultTeam,
+      ...(saved && typeof saved === 'object' ? saved : {}),
+      id: Number(defaultTeam.id),
+      songs: Array.isArray(saved?.songs)
+        ? saved.songs.slice(0, 2)
+        : defaultTeam.songs.slice(0, 2),
+      expertScore:
+        saved?.expertScore === null || saved?.expertScore === undefined || saved?.expertScore === ''
+          ? null
+          : Math.max(0, Math.min(100, Number(saved.expertScore))),
+    };
+  });
+
+  const validIds = new Set(teams.map((team) => Number(team.id)));
+  const savedOrder = Array.isArray(raw?.event?.teamOrder)
+    ? raw.event.teamOrder.map(Number)
+    : [];
+
+  const teamOrder =
+    savedOrder.length === teams.length &&
+    new Set(savedOrder).size === teams.length &&
+    savedOrder.every((id) => validIds.has(id))
+      ? savedOrder
+      : teams.map((team) => team.id);
+
+  const rawEvent = raw.event && typeof raw.event === 'object' ? raw.event : {};
+  const savedIntros = Array.isArray(rawEvent.eventIntros) ? rawEvent.eventIntros : [];
+  const legacyTitle1 = String(rawEvent.eventTitle1 || defaults.event.eventIntros[0].title1);
+  const legacyTitle2 = String(rawEvent.eventTitle2 || defaults.event.eventIntros[0].title2);
+  const eventIntros = defaults.event.eventIntros.map((fallback, index) => ({
+    title1: String(savedIntros[index]?.title1 ?? (index === 0 ? legacyTitle1 : fallback.title1)).slice(0, 80),
+    title2: String(savedIntros[index]?.title2 ?? (index === 0 ? legacyTitle2 : fallback.title2)).slice(0, 80),
+  }));
+  const rawDisplayMode = rawEvent.displayMode === 'event_intro'
+    ? 'event_intro_1'
+    : String(rawEvent.displayMode || defaults.event.displayMode);
+
+  return {
+    ...defaults,
+    ...raw,
+    event: {
+      ...defaults.event,
+      ...rawEvent,
+      displayMode: rawDisplayMode,
+      eventIntros,
+      eventTitle1: eventIntros[0].title1,
+      eventTitle2: eventIntros[0].title2,
+      teamOrder,
+      expertDefaultCount: Math.max(
+        0,
+        Math.min(500, Math.floor(Number(raw?.event?.expertDefaultCount ?? defaults.event.expertDefaultCount) || 0))
+      ),
+      expertDefaultBaseScore: Math.max(
+        0,
+        Math.min(100, Number(raw?.event?.expertDefaultBaseScore ?? defaults.event.expertDefaultBaseScore) || 0)
+      ),
+      expertDefaultSpread: Math.max(
+        0,
+        Math.min(30, Number(raw?.event?.expertDefaultSpread ?? defaults.event.expertDefaultSpread) || 0)
+      ),
+      closingCountdown: Boolean(raw?.event?.closingCountdown),
+    },
+    teams,
+    judges: Array.isArray(raw.judges) ? raw.judges : [],
+    sessions: Array.isArray(raw.sessions) ? raw.sessions : [],
+    votes: Array.isArray(raw.votes) ? raw.votes : [],
+    comments: Array.isArray(raw.comments) ? raw.comments : [],
+    expertBatches: Array.isArray(raw.expertBatches) ? raw.expertBatches : [],
+    audit: Array.isArray(raw.audit) ? raw.audit : [],
   };
 }
 
@@ -900,10 +990,22 @@ function publicJudgeState() {
   const aggregate = teamAggregate(event.currentTeamId);
   const remainingSeconds = judgeRemainingSeconds();
 
+  const introModeIndex = {
+    event_intro_1: 0,
+    event_intro_2: 1,
+    event_intro_3: 2,
+  }[event.displayMode] ?? 0;
+  const eventIntros = Array.isArray(event.eventIntros) && event.eventIntros.length === 3
+    ? event.eventIntros
+    : newJudgeDb().event.eventIntros;
+  const activeEventIntro = eventIntros[introModeIndex] || eventIntros[0];
+
   return {
     displayMode: event.displayMode,
-    eventTitle1: event.eventTitle1,
-    eventTitle2: event.eventTitle2,
+    eventIntros: clone(eventIntros),
+    eventTitle1: activeEventIntro.title1,
+    eventTitle2: activeEventIntro.title2,
+    judgeRegistrationUrl: 'https://grblab.co.kr/judge',
     currentTeamId: Number(event.currentTeamId),
     introTeamId: Number(event.introTeamId),
     currentTeam: clone(current),
@@ -922,6 +1024,7 @@ function publicJudgeState() {
     mobileEnabled: Boolean(event.mobileEnabled),
     commentInputEnabled: Boolean(event.commentInputEnabled),
     commentDisplayEnabled: Boolean(event.commentDisplayEnabled),
+    closingCountdown: Boolean(event.closingCountdown),
     startedAt: event.startedAt,
     endsAt: event.endsAt,
   };
@@ -1000,6 +1103,9 @@ function adminJudgeState() {
       commentInputEnabled: Boolean(judgeDb.event.commentInputEnabled),
       commentDisplayEnabled: Boolean(judgeDb.event.commentDisplayEnabled),
       allowVoteEdit: Boolean(judgeDb.event.allowVoteEdit),
+      expertDefaultCount: Number(judgeDb.event.expertDefaultCount || 0),
+      expertDefaultBaseScore: Number(judgeDb.event.expertDefaultBaseScore ?? 88),
+      expertDefaultSpread: Number(judgeDb.event.expertDefaultSpread ?? 10),
     },
     teams: clone(judgeDb.teams),
     database: { backend: 'postgresql', connected: judgeDatabaseConnected, eventKey: JUDGE_EVENT_KEY, lastError: judgeDatabaseLastError },
@@ -1361,6 +1467,7 @@ function reschedulePendingExpertsForRemainingTime(teamId, newEndMs) {
 function closeJudgeVoting(reason = 'timer') {
   stopJudgeCountdown();
   stopExpertTimersForTeam(judgeDb.event.currentTeamId, 'completed');
+  judgeDb.event.closingCountdown = false;
   judgeDb.event.phase = 'result';
   judgeDb.event.endsAt = judgeNowIso();
   judgeAudit('judge.close', { teamId: judgeDb.event.currentTeamId, reason });
@@ -1390,6 +1497,7 @@ async function handleJudgeAdminStart(req, res) {
   judgeDb.event.currentTeamId = teamId;
   judgeDb.event.durationSeconds = durationSeconds;
   judgeDb.event.phase = 'voting';
+  judgeDb.event.closingCountdown = false;
   judgeDb.event.startedAt = judgeNowIso();
   judgeDb.event.endsAt = new Date(Date.now() + durationSeconds * 1000).toISOString();
   judgeAudit('judge.start', { teamId, durationSeconds });
@@ -1401,8 +1509,88 @@ async function handleJudgeAdminStart(req, res) {
 
 async function handleJudgeAdminClose(req, res) {
   if (!requireJudgeAdmin(req, res)) return;
-  closeJudgeVoting('manual');
-  return json(res, 200, { ok: true, state: adminJudgeState() });
+
+  if (judgeDb.event.phase !== 'voting') {
+    return json(res, 409, {
+      ok: false,
+      error: '현재 심사가 진행 중이 아닙니다.',
+    });
+  }
+
+  let body = {};
+  try {
+    body = await readJsonBody(req);
+  } catch (error) {
+    return json(res, 400, { ok: false, error: error.message });
+  }
+
+  const teamId = Number(judgeDb.event.currentTeamId);
+  const team = judgeTeam(teamId);
+
+  const expertCount = Math.max(
+    0,
+    Math.min(
+      500,
+      Math.floor(Number(body.expertCount ?? judgeDb.event.expertDefaultCount) || 0)
+    )
+  );
+
+  const bodyScore = Number(body.expertBaseScore);
+  const teamScore = Number(team?.expertScore);
+  const defaultScore = Number(judgeDb.event.expertDefaultBaseScore ?? 88);
+
+  const expertBaseScore = Math.max(
+    0,
+    Math.min(
+      100,
+      Number.isFinite(bodyScore)
+        ? bodyScore
+        : Number.isFinite(teamScore)
+          ? teamScore
+          : defaultScore
+    )
+  );
+
+  const expertSpread = Math.max(
+    0,
+    Math.min(30, Number(body.expertSpread ?? judgeDb.event.expertDefaultSpread ?? 10) || 0)
+  );
+
+  // '즉시 마감'을 눌러도 바로 닫지 않고 5초의 마감 카운트다운을 시작합니다.
+  const closeSeconds = 5;
+  const closeEndMs = Date.now() + closeSeconds * 1000;
+
+  judgeDb.event.closingCountdown = true;
+  judgeDb.event.endsAt = new Date(closeEndMs).toISOString();
+
+  prepareExpertsForFiveSecondClose({
+    teamId,
+    count: expertCount,
+    baseScore: expertBaseScore,
+    spread: expertSpread,
+    endMs: closeEndMs,
+  });
+
+  judgeAudit('judge.close.countdown.start', {
+    teamId,
+    closeSeconds,
+    expertCount,
+    expertBaseScore,
+    expertSpread,
+  });
+
+  markJudgeDirty();
+  void flushJudgeDb();
+
+  // 기존 카운트다운 타이머가 없더라도 5초 후 자동 마감되게 보장합니다.
+  startJudgeCountdown();
+  broadcastJudgeState();
+
+  return json(res, 200, {
+    ok: true,
+    closingInSeconds: closeSeconds,
+    state: adminJudgeState(),
+  });
 }
 
 async function handleJudgeAdminTime(req, res) {
@@ -1522,15 +1710,62 @@ async function handleJudgeAdminOrder(req, res) {
   return json(res, 200, { ok: true, state: adminJudgeState() });
 }
 
+async function handleJudgeAdminOrderReset(req, res) {
+  if (!requireJudgeAdmin(req, res)) return;
+
+  judgeDb.event.teamOrder = JUDGE_DEFAULT_TEAMS.map((team) => Number(team.id));
+
+  judgeAudit('team.order.reset', {
+    teamOrder: judgeDb.event.teamOrder,
+  });
+
+  markJudgeDirty();
+  void flushJudgeDb();
+  broadcastJudgeState();
+
+  return json(res, 200, {
+    ok: true,
+    state: adminJudgeState(),
+  });
+}
+
 async function handleJudgeAdminDisplay(req, res) {
   if (!requireJudgeAdmin(req, res)) return;
   let body;
   try { body = await readJsonBody(req); } catch (error) { return json(res, 400, { ok: false, error: error.message }); }
-  const allowedModes = new Set(['event_intro', 'team_intro', 'score']);
-  if (body.displayMode && !allowedModes.has(String(body.displayMode))) return json(res, 400, { ok: false, error: '지원하지 않는 화면 종류입니다.' });
-  if (body.displayMode) judgeDb.event.displayMode = String(body.displayMode);
-  if (typeof body.eventTitle1 === 'string') judgeDb.event.eventTitle1 = body.eventTitle1.trim().slice(0, 80);
-  if (typeof body.eventTitle2 === 'string') judgeDb.event.eventTitle2 = body.eventTitle2.trim().slice(0, 80);
+  const allowedModes = new Set([
+    'event_intro_1', 'event_intro_2', 'event_intro_3',
+    'team_intro', 'qr_register', 'score',
+  ]);
+  let requestedMode = body.displayMode ? String(body.displayMode) : '';
+  if (requestedMode === 'event_intro') requestedMode = 'event_intro_1';
+  if (requestedMode && !allowedModes.has(requestedMode)) {
+    return json(res, 400, { ok: false, error: '지원하지 않는 화면 종류입니다.' });
+  }
+  if (requestedMode) judgeDb.event.displayMode = requestedMode;
+
+  const modeIntroIndex = { event_intro_1: 0, event_intro_2: 1, event_intro_3: 2 }[
+    requestedMode || judgeDb.event.displayMode
+  ];
+  const requestedIntroIndex = Number.isInteger(Number(body.eventIntroIndex))
+    ? Math.max(0, Math.min(2, Number(body.eventIntroIndex)))
+    : modeIntroIndex;
+
+  if (requestedIntroIndex !== undefined && requestedIntroIndex !== null &&
+      (typeof body.eventTitle1 === 'string' || typeof body.eventTitle2 === 'string')) {
+    if (!Array.isArray(judgeDb.event.eventIntros) || judgeDb.event.eventIntros.length !== 3) {
+      judgeDb.event.eventIntros = newJudgeDb().event.eventIntros;
+    }
+    const current = judgeDb.event.eventIntros[requestedIntroIndex] || { title1: '', title2: '' };
+    judgeDb.event.eventIntros[requestedIntroIndex] = {
+      title1: typeof body.eventTitle1 === 'string' ? body.eventTitle1.trim().slice(0, 80) : current.title1,
+      title2: typeof body.eventTitle2 === 'string' ? body.eventTitle2.trim().slice(0, 80) : current.title2,
+    };
+    if (requestedIntroIndex === 0) {
+      judgeDb.event.eventTitle1 = judgeDb.event.eventIntros[0].title1;
+      judgeDb.event.eventTitle2 = judgeDb.event.eventIntros[0].title2;
+    }
+  }
   if (Number.isFinite(Number(body.introTeamId))) judgeDb.event.introTeamId = Math.max(1, Math.min(11, Number(body.introTeamId)));
   judgeAudit('display.update', {
     displayMode: judgeDb.event.displayMode,
@@ -1550,7 +1785,18 @@ async function handleJudgeAdminTeamMeta(req, res) {
   if (!team) return json(res, 404, { ok: false, error: '합창단을 찾지 못했습니다.' });
   if (Array.isArray(body.songs)) team.songs = body.songs.slice(0, 2).map((song) => String(song || '').trim().slice(0, 100));
   if (typeof body.name === 'string' && body.name.trim()) team.name = body.name.trim().slice(0, 80);
-  judgeAudit('team.meta', { teamId: team.id, songs: team.songs });
+
+  if (body.expertScore === null || body.expertScore === '') {
+    team.expertScore = null;
+  } else if (body.expertScore !== undefined) {
+    const expertScore = Number(body.expertScore);
+    if (!Number.isFinite(expertScore) || expertScore < 0 || expertScore > 100) {
+      return json(res, 400, { ok: false, error: '현장 전문가 기준점수는 0~100 범위여야 합니다.' });
+    }
+    team.expertScore = Math.round(expertScore * 10) / 10;
+  }
+
+  judgeAudit('team.meta', { teamId: team.id, songs: team.songs, expertScore: team.expertScore });
   markJudgeDirty();
   flushJudgeDb();
   broadcastJudgeState();
@@ -1590,7 +1836,23 @@ async function handleJudgeAdminSettings(req, res) {
   try { body = await readJsonBody(req); } catch (error) { return json(res, 400, { ok: false, error: error.message }); }
   const keys = ['mobileEnabled', 'registrationEnabled', 'commentInputEnabled', 'commentDisplayEnabled', 'allowVoteEdit'];
   for (const key of keys) if (typeof body[key] === 'boolean') judgeDb.event[key] = body[key];
-  judgeAudit('settings.update', Object.fromEntries(keys.map((key) => [key, judgeDb.event[key]])));
+
+  if (body.expertDefaultCount !== undefined) {
+    judgeDb.event.expertDefaultCount = Math.max(0, Math.min(500, Math.floor(Number(body.expertDefaultCount) || 0)));
+  }
+  if (body.expertDefaultBaseScore !== undefined) {
+    judgeDb.event.expertDefaultBaseScore = Math.max(0, Math.min(100, Number(body.expertDefaultBaseScore) || 0));
+  }
+  if (body.expertDefaultSpread !== undefined) {
+    judgeDb.event.expertDefaultSpread = Math.max(0, Math.min(30, Number(body.expertDefaultSpread) || 0));
+  }
+
+  judgeAudit('settings.update', {
+    ...Object.fromEntries(keys.map((key) => [key, judgeDb.event[key]])),
+    expertDefaultCount: judgeDb.event.expertDefaultCount,
+    expertDefaultBaseScore: judgeDb.event.expertDefaultBaseScore,
+    expertDefaultSpread: judgeDb.event.expertDefaultSpread,
+  });
   markJudgeDirty();
   broadcastJudgeState();
   return json(res, 200, { ok: true, state: adminJudgeState() });
@@ -1654,18 +1916,205 @@ function scheduleExpertBatch(batch) {
   }
 }
 
+function expertIndexFromJudgeId(judgeId) {
+  const match = /^onsite-expert-(\d+)$/.exec(String(judgeId || ''));
+  return match ? Number(match[1]) : null;
+}
+
+function cancelPendingExpertEntriesForTeam(teamId, status = 'superseded') {
+  const numericTeamId = Number(teamId);
+
+  for (const [key, timer] of expertTimers.entries()) {
+    if (key.startsWith(`${numericTeamId}:`)) {
+      clearTimeout(timer);
+      expertTimers.delete(key);
+    }
+  }
+
+  for (const batch of judgeDb.expertBatches) {
+    if (Number(batch.teamId) !== numericTeamId || batch.status !== 'running') continue;
+
+    for (const entry of batch.entries || []) {
+      if (entry.status === 'pending') entry.status = 'cancelled';
+    }
+
+    batch.status = status;
+    batch.stoppedAt = judgeNowIso();
+  }
+
+  markJudgeDirty();
+}
+
+function createExpertBatchForWindow({ teamId, count, baseScore, spread, endMs, reason = 'manual' }) {
+  const numericTeamId = Number(teamId);
+  const desiredCount = Math.max(0, Math.min(500, Math.floor(Number(count) || 0)));
+  const targetScore = Math.max(0, Math.min(100, Number(baseScore) || 0));
+  const safeSpread = Math.max(0, Math.min(30, Number(spread ?? 10) || 0));
+
+  if (desiredCount <= 0) return null;
+
+  const existingVotes = judgeDb.votes
+    .filter((vote) =>
+      Number(vote.teamId) === numericTeamId &&
+      vote.judgeType === 'onsite_expert' &&
+      !vote.deleted &&
+      Number.isFinite(Number(vote.score))
+    )
+    .sort((a, b) => {
+      const ai = expertIndexFromJudgeId(a.judgeId) ?? 999999;
+      const bi = expertIndexFromJudgeId(b.judgeId) ?? 999999;
+      return ai - bi;
+    });
+
+  // 이미 들어간 전문가 점수는 유지합니다.
+  const existingById = new Map(existingVotes.map((vote) => [vote.judgeId, vote]));
+  const missingIds = [];
+
+  for (let i = 1; i <= desiredCount; i += 1) {
+    const judgeId = `onsite-expert-${String(i).padStart(3, '0')}`;
+    if (!existingById.has(judgeId)) missingIds.push(judgeId);
+  }
+
+  if (!missingIds.length) return null;
+
+  const existingWithinRoster = [];
+  for (let i = 1; i <= desiredCount; i += 1) {
+    const judgeId = `onsite-expert-${String(i).padStart(3, '0')}`;
+    const vote = existingById.get(judgeId);
+    if (vote) existingWithinRoster.push(Number(vote.score));
+  }
+
+  const desiredTotal = targetScore * desiredCount;
+  const existingTotal = existingWithinRoster.reduce((sum, score) => sum + score, 0);
+  const neededMean = missingIds.length
+    ? Math.max(0, Math.min(100, (desiredTotal - existingTotal) / missingIds.length))
+    : targetScore;
+
+  const scores = makeExpertScores(missingIds.length, neededMean, safeSpread);
+  const batchId = crypto.randomUUID();
+  const now = Date.now();
+  const safeEndMs = Math.max(now + 250, Number(endMs) || now + 5000);
+  const usableWindow = Math.max(150, safeEndMs - now - 180);
+  const spacing = usableWindow / (missingIds.length + 1);
+
+  const entries = missingIds.map((judgeId, index) => {
+    const expertNumber = expertIndexFromJudgeId(judgeId) || index + 1;
+    const scheduledMs = Math.min(
+      safeEndMs - 120,
+      now + Math.max(40, Math.floor(spacing * (index + 1)))
+    );
+
+    return {
+      id: crypto.randomUUID(),
+      judgeId,
+      label: `가상 ${expertNumber}`,
+      score: scores[index],
+      scheduledAt: new Date(Math.max(now + 30, scheduledMs)).toISOString(),
+      status: 'pending',
+      submittedAt: null,
+    };
+  });
+
+  for (const entry of entries) {
+    if (!judgeDb.judges.find((judge) => judge.id === entry.judgeId)) {
+      judgeDb.judges.push({
+        id: entry.judgeId,
+        phone: '',
+        type: 'onsite_expert',
+        label: entry.label,
+        allowed: true,
+        registeredAt: judgeNowIso(),
+        lastSeenAt: null,
+      });
+    }
+  }
+
+  const batch = {
+    id: batchId,
+    teamId: numericTeamId,
+    count: desiredCount,
+    generatedCount: entries.length,
+    baseScore: targetScore,
+    targetScore,
+    spread: safeSpread,
+    status: 'running',
+    reason,
+    createdAt: judgeNowIso(),
+    entries,
+  };
+
+  judgeDb.expertBatches.push(batch);
+  judgeAudit('expert.batch.start', {
+    teamId: numericTeamId,
+    count: desiredCount,
+    generatedCount: entries.length,
+    baseScore: targetScore,
+    spread: safeSpread,
+    batchId,
+    reason,
+  });
+
+  markJudgeDirty();
+  scheduleExpertBatch(batch);
+  return batch;
+}
+
+function prepareExpertsForFiveSecondClose({ teamId, count, baseScore, spread, endMs }) {
+  const numericTeamId = Number(teamId);
+
+  // 아직 들어오지 않은 기존 예약은 취소하고,
+  // 이미 제출된 점수는 그대로 둔 채 부족한 전문가만 5초 안에 다시 예약합니다.
+  cancelPendingExpertEntriesForTeam(numericTeamId, 'close-rescheduled');
+
+  return createExpertBatchForWindow({
+    teamId: numericTeamId,
+    count,
+    baseScore,
+    spread,
+    endMs,
+    reason: 'five-second-close',
+  });
+}
+
 async function handleJudgeAdminExpertStart(req, res) {
   if (!requireJudgeAdmin(req, res)) return;
   if (judgeDb.event.phase !== 'voting') return json(res, 409, { ok: false, error: '심사가 진행 중일 때만 현장 전문가 점수를 투입할 수 있습니다.' });
   let body;
   try { body = await readJsonBody(req); } catch (error) { return json(res, 400, { ok: false, error: error.message }); }
 
-  const count = Math.max(0, Math.min(500, Math.floor(Number(body.count) || 0)));
-  const baseScore = Math.max(0, Math.min(100, Number(body.baseScore) || 0));
-  const spread = Math.max(0, Math.min(30, Number(body.spread ?? 10) || 0));
+  const teamId = Number(judgeDb.event.currentTeamId);
+  const team = judgeTeam(teamId);
+
+  const count = Math.max(
+    0,
+    Math.min(
+      500,
+      Math.floor(Number(body.count ?? judgeDb.event.expertDefaultCount) || 0)
+    )
+  );
+
+  const teamScore = Number(team?.expertScore);
+  const requestedBase = Number(body.baseScore);
+  const fallbackBase = Number(judgeDb.event.expertDefaultBaseScore ?? 88);
+  const baseScore = Math.max(
+    0,
+    Math.min(
+      100,
+      Number.isFinite(requestedBase)
+        ? requestedBase
+        : Number.isFinite(teamScore)
+          ? teamScore
+          : fallbackBase
+    )
+  );
+
+  const spread = Math.max(
+    0,
+    Math.min(30, Number(body.spread ?? judgeDb.event.expertDefaultSpread ?? 10) || 0)
+  );
+
   if (count === 0) return json(res, 200, { ok: true, state: adminJudgeState(), message: '현장 전문가 수가 0이므로 추가하지 않았습니다.' });
 
-  const teamId = Number(judgeDb.event.currentTeamId);
   const remainingMs = Math.max(1500, new Date(judgeDb.event.endsAt).getTime() - Date.now());
   const scores = makeExpertScores(count, baseScore, spread);
   const batchId = crypto.randomUUID();
@@ -1708,6 +2157,7 @@ async function handleJudgeAdminExpertStart(req, res) {
     teamId,
     count,
     baseScore,
+    targetScore: baseScore,
     spread,
     status: 'running',
     createdAt: judgeNowIso(),
@@ -1783,6 +2233,41 @@ function handleJudgeAdminExport(req, res) {
     'Content-Disposition': 'attachment; filename="judge-votes.csv"',
     'Cache-Control': 'no-store',
   });
+  res.end(csv);
+}
+
+function handleJudgeAdminAuditExport(req, res) {
+  if (!requireJudgeAdmin(req, res)) return;
+
+  const rows = [[
+    'at',
+    'action',
+    'team_id',
+    'team_name',
+    'detail_json',
+  ]];
+
+  for (const item of judgeDb.audit) {
+    const teamId = Number(item?.detail?.teamId || 0) || '';
+    const team = teamId ? judgeTeam(teamId) : null;
+
+    rows.push([
+      item.at || '',
+      item.action || '',
+      teamId,
+      team?.name || '',
+      JSON.stringify(item.detail || {}),
+    ]);
+  }
+
+  const csv = '\uFEFF' + rows.map((row) => row.map(csvEscape).join(',')).join('\r\n');
+
+  res.writeHead(200, {
+    'Content-Type': 'text/csv; charset=utf-8',
+    'Content-Disposition': 'attachment; filename="judge-audit.csv"',
+    'Cache-Control': 'no-store',
+  });
+
   res.end(csv);
 }
 
@@ -1898,6 +2383,11 @@ const server = http.createServer(async (req, res) => {
     return handleJudgeAdminOrder(req, res);
   }
 
+  if (pathname === "/api/judge/admin/order/reset") {
+    if (req.method !== "POST") return json(res, 405, { ok: false, error: "POST 요청만 사용할 수 있습니다." });
+    return handleJudgeAdminOrderReset(req, res);
+  }
+
   if (pathname === "/api/judge/admin/display") {
     if (req.method !== "POST") return json(res, 405, { ok: false, error: "POST 요청만 사용할 수 있습니다." });
     return handleJudgeAdminDisplay(req, res);
@@ -1941,6 +2431,11 @@ const server = http.createServer(async (req, res) => {
   if (pathname === "/api/judge/admin/export.csv") {
     if (req.method !== "GET") return json(res, 405, { ok: false, error: "GET 요청만 사용할 수 있습니다." });
     return handleJudgeAdminExport(req, res);
+  }
+
+  if (pathname === "/api/judge/admin/audit.csv") {
+    if (req.method !== "GET") return json(res, 405, { ok: false, error: "GET 요청만 사용할 수 있습니다." });
+    return handleJudgeAdminAuditExport(req, res);
   }
 
   if (pathname === "/api/partner/apply") {

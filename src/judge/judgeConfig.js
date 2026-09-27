@@ -4,10 +4,24 @@ export const DEFAULT_EVENT_TITLE_1 = '2026 장애인 합창단 초청 음악회'
 export const DEFAULT_EVENT_TITLE_2 = '오늘의 무대가 도쿄로 이어집니다'
 
 export const DISPLAY_MODES = {
-  EVENT_INTRO: 'event_intro',
+  EVENT_INTRO_1: 'event_intro_1',
+  EVENT_INTRO_2: 'event_intro_2',
+  EVENT_INTRO_3: 'event_intro_3',
   TEAM_INTRO: 'team_intro',
+  QR_REGISTER: 'qr_register',
   SCORE: 'score',
 }
+
+// 구버전 코드 호환용
+DISPLAY_MODES.EVENT_INTRO = DISPLAY_MODES.EVENT_INTRO_1
+
+export const DEFAULT_EVENT_INTROS = [
+  { title1: DEFAULT_EVENT_TITLE_1, title2: DEFAULT_EVENT_TITLE_2 },
+  { title1: DEFAULT_EVENT_TITLE_1, title2: DEFAULT_EVENT_TITLE_2 },
+  { title1: DEFAULT_EVENT_TITLE_1, title2: DEFAULT_EVENT_TITLE_2 },
+]
+
+export const JUDGE_REGISTRATION_URL = 'https://grblab.co.kr/judge'
 
 // 공연곡 기본값은 사용자가 제공한
 // 2026-09-29_합창단_공연곡_총회안건_매칭표.xlsx 기준입니다.

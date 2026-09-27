@@ -12,7 +12,12 @@ const TABS = [
 ]
 
 const INITIAL = {
-  displayMode: DISPLAY_MODES.EVENT_INTRO,
+  displayMode: DISPLAY_MODES.EVENT_INTRO_1,
+  eventIntros: [
+    { title1: '2026 장애인 합창단 초청 음악회', title2: '오늘의 무대가 도쿄로 이어집니다' },
+    { title1: '2026 장애인 합창단 초청 음악회', title2: '오늘의 무대가 도쿄로 이어집니다' },
+    { title1: '2026 장애인 합창단 초청 음악회', title2: '오늘의 무대가 도쿄로 이어집니다' },
+  ],
   eventTitle1: '2026 장애인 합창단 초청 음악회',
   eventTitle2: '오늘의 무대가 도쿄로 이어집니다',
   currentTeamId: 1,
@@ -38,7 +43,20 @@ const INITIAL = {
     commentInputEnabled: true,
     commentDisplayEnabled: true,
     allowVoteEdit: true,
+    expertDefaultCount: 0,
+    expertDefaultBaseScore: 88,
+    expertDefaultSpread: 10,
   },
+}
+
+function eventIntroIndexFromMode(mode) {
+  if (mode === DISPLAY_MODES.EVENT_INTRO_2) return 1
+  if (mode === DISPLAY_MODES.EVENT_INTRO_3) return 2
+  return 0
+}
+
+function isEventIntroMode(mode) {
+  return [DISPLAY_MODES.EVENT_INTRO_1, DISPLAY_MODES.EVENT_INTRO_2, DISPLAY_MODES.EVENT_INTRO_3].includes(mode)
 }
 
 function adminHeaders(adminKey) {
@@ -62,6 +80,7 @@ export default function JudgeAdminPage() {
   const [expertCount, setExpertCount] = useState(0)
   const [expertBase, setExpertBase] = useState(88)
   const [expertSpread, setExpertSpread] = useState(10)
+  const [teamExpertScore, setTeamExpertScore] = useState(88)
   const [mobileSearch, setMobileSearch] = useState('')
   const [busy, setBusy] = useState(false)
   const [notice, setNotice] = useState('')
@@ -89,10 +108,24 @@ export default function JudgeAdminPage() {
       setDuration(Number(next.durationSeconds || 180))
       setRemainingEdit(Number(next.remainingSeconds ?? next.durationSeconds ?? 180))
       setIntroTeamId(initialIntroId)
-      setTitle1(next.eventTitle1 || '')
-      setTitle2(next.eventTitle2 || '')
+      const introIndex = eventIntroIndexFromMode(next.displayMode)
+      const introPreset = next.eventIntros?.[introIndex] || {
+        title1: next.eventTitle1 || '',
+        title2: next.eventTitle2 || '',
+      }
+      setTitle1(introPreset.title1 || '')
+      setTitle2(introPreset.title2 || '')
       setSong1(initialIntroTeam?.songs?.[0] || '')
       setSong2(initialIntroTeam?.songs?.[1] || '')
+      setExpertCount(Number(next.settings?.expertDefaultCount ?? 0))
+      setExpertBase(Number(next.settings?.expertDefaultBaseScore ?? 88))
+      setExpertSpread(Number(next.settings?.expertDefaultSpread ?? 10))
+      const initialCurrentTeam = teamById(initialTeams, Number(next.currentTeamId || 1))
+      setTeamExpertScore(
+        initialCurrentTeam?.expertScore === null || initialCurrentTeam?.expertScore === undefined
+          ? Number(next.settings?.expertDefaultBaseScore ?? 88)
+          : Number(initialCurrentTeam.expertScore)
+      )
       localInitializedRef.current = true
     } else if (next.phase === 'voting' && !remainingEditingRef.current) {
       setRemainingEdit(Number(next.remainingSeconds ?? 0))
@@ -121,6 +154,16 @@ export default function JudgeAdminPage() {
   }, [adminKey])
 
   useEffect(() => {
+    if (!isEventIntroMode(state.displayMode)) return
+    const index = eventIntroIndexFromMode(state.displayMode)
+    const preset = state.eventIntros?.[index]
+    if (preset) {
+      setTitle1(preset.title1 || '')
+      setTitle2(preset.title2 || '')
+    }
+  }, [state.displayMode])
+
+  useEffect(() => {
     const team = teamById(teams, introTeamId)
     setSong1(team?.songs?.[0] || '')
     setSong2(team?.songs?.[1] || '')
@@ -128,6 +171,17 @@ export default function JudgeAdminPage() {
     // 팀 선택이 바뀔 때만 기본값을 다시 불러옵니다.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [introTeamId])
+
+  useEffect(() => {
+    const saved = currentTeam?.expertScore
+    setTeamExpertScore(
+      saved === null || saved === undefined || saved === ''
+        ? Number(expertBase || 88)
+        : Number(saved)
+    )
+    // 현재 팀이 바뀔 때 해당 팀에 저장된 현장 전문가 점수를 불러옵니다.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state.currentTeamId])
 
   async function post(path, body = {}) {
     setBusy(true)
@@ -154,6 +208,14 @@ export default function JudgeAdminPage() {
 
   async function setDisplayMode(displayMode) {
     try {
+      if (isEventIntroMode(displayMode)) {
+        const index = eventIntroIndexFromMode(displayMode)
+        const preset = state.eventIntros?.[index]
+        if (preset) {
+          setTitle1(preset.title1 || '')
+          setTitle2(preset.title2 || '')
+        }
+      }
       await post('/api/judge/admin/display', { displayMode })
       setNotice('무대 송출 화면을 변경했습니다.')
     } catch {}
@@ -161,8 +223,15 @@ export default function JudgeAdminPage() {
 
   async function saveEventIntro() {
     try {
-      await post('/api/judge/admin/display', { displayMode: DISPLAY_MODES.EVENT_INTRO, eventTitle1: title1, eventTitle2: title2 })
-      setNotice('전체 인트로를 저장하고 송출했습니다.')
+      const displayMode = isEventIntroMode(state.displayMode) ? state.displayMode : DISPLAY_MODES.EVENT_INTRO_1
+      const eventIntroIndex = eventIntroIndexFromMode(displayMode)
+      await post('/api/judge/admin/display', {
+        displayMode,
+        eventIntroIndex,
+        eventTitle1: title1,
+        eventTitle2: title2,
+      })
+      setNotice(`전체 인트로 ${eventIntroIndex + 1}을 저장하고 송출했습니다.`)
     } catch {}
   }
 
@@ -181,6 +250,10 @@ export default function JudgeAdminPage() {
 
   async function startVote() {
     try {
+      await post('/api/judge/admin/team-meta', {
+        teamId: state.currentTeamId,
+        expertScore: Number(teamExpertScore),
+      })
       await post('/api/judge/admin/display', { displayMode: DISPLAY_MODES.SCORE })
       await post('/api/judge/admin/start', { teamId: state.currentTeamId, durationSeconds: Number(duration) || 180 })
       setNotice(`${currentTeam.name} 심사를 시작했습니다.`)
@@ -188,8 +261,22 @@ export default function JudgeAdminPage() {
   }
 
   async function closeVote() {
-    if (!window.confirm('현재 심사를 마감하고 점수 결과 화면으로 전환하시겠습니까?')) return
-    try { await post('/api/judge/admin/close'); setNotice('심사를 마감했습니다.') } catch {}
+    if (!window.confirm('마감 버튼을 누르면 5초 카운트다운이 시작되고, 남은 현장 전문가 점수가 5초 안에 분배된 뒤 결과 화면으로 전환됩니다. 계속하시겠습니까?')) return
+
+    try {
+      await post('/api/judge/admin/team-meta', {
+        teamId: state.currentTeamId,
+        expertScore: Number(teamExpertScore),
+      })
+
+      await post('/api/judge/admin/close', {
+        expertCount: Number(expertCount) || 0,
+        expertBaseScore: Number(teamExpertScore),
+        expertSpread: Number(expertSpread),
+      })
+
+      setNotice('마감 카운트다운 5초를 시작했습니다. 현장 전문가 점수가 남은 5초 동안 반영됩니다.')
+    } catch {}
   }
 
   async function applyRemainingTime(value = remainingEdit) {
@@ -232,11 +319,36 @@ export default function JudgeAdminPage() {
     try { await post('/api/judge/admin/settings', { [key]: value }) } catch {}
   }
 
+  async function saveTeamExpertScore() {
+    try {
+      await post('/api/judge/admin/team-meta', {
+        teamId: state.currentTeamId,
+        expertScore: Number(teamExpertScore),
+      })
+      setNotice(`${currentTeam.name}의 현장 전문가 기준점수를 저장했습니다.`)
+    } catch {}
+  }
+
+  async function saveExpertDefaults() {
+    try {
+      await post('/api/judge/admin/settings', {
+        expertDefaultCount: Number(expertCount) || 0,
+        expertDefaultBaseScore: Number(expertBase),
+        expertDefaultSpread: Number(expertSpread),
+      })
+      setNotice('현장 전문가 전체 기본 설정을 저장했습니다.')
+    } catch {}
+  }
+
   async function startExperts() {
     try {
+      await post('/api/judge/admin/team-meta', {
+        teamId: state.currentTeamId,
+        expertScore: Number(teamExpertScore),
+      })
       await post('/api/judge/admin/expert/start', {
         count: Number(expertCount) || 0,
-        baseScore: Number(expertBase),
+        baseScore: Number(teamExpertScore),
         spread: Number(expertSpread),
       })
       setNotice('현장 전문가 점수 투입을 시작했습니다.')
@@ -279,6 +391,15 @@ export default function JudgeAdminPage() {
     try { await post('/api/judge/admin/order', { teamOrder: next }); setNotice('합창단 순서를 저장했습니다.') } catch { loadState() }
   }
 
+  async function resetTeamOrder() {
+    if (!window.confirm('합창단 순서를 최초 기본 순서로 되돌리시겠습니까?')) return
+
+    try {
+      await post('/api/judge/admin/order/reset')
+      setNotice('합창단 순서를 기본 순서로 초기화했습니다.')
+    } catch {}
+  }
+
   async function exportCsv() {
     try {
       const response = await fetch('/api/judge/admin/export.csv', { headers: adminKey ? { 'x-judge-admin-key': adminKey } : {} })
@@ -291,6 +412,26 @@ export default function JudgeAdminPage() {
       a.click()
       URL.revokeObjectURL(url)
     } catch (err) { setError(err.message) }
+  }
+
+  async function exportAuditCsv() {
+    try {
+      const response = await fetch('/api/judge/admin/audit.csv', {
+        headers: adminKey ? { 'x-judge-admin-key': adminKey } : {},
+      })
+
+      if (!response.ok) throw new Error('운영 로그 CSV 다운로드에 실패했습니다.')
+
+      const blob = await response.blob()
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = 'judge-audit.csv'
+      a.click()
+      URL.revokeObjectURL(url)
+    } catch (err) {
+      setError(err.message)
+    }
   }
 
   const filteredJudges = (state.judges || []).filter((judge) => {
@@ -324,18 +465,21 @@ export default function JudgeAdminPage() {
           <section className="panel wide">
             <div className="panel-title">무대 화면 선택</div>
             <div className="display-mode-grid">
-              <button className={state.displayMode === DISPLAY_MODES.EVENT_INTRO ? 'selected' : ''} onClick={() => setDisplayMode(DISPLAY_MODES.EVENT_INTRO)}><b>전체 인트로</b><span>공연 전체 시작 화면</span></button>
+              <button className={state.displayMode === DISPLAY_MODES.EVENT_INTRO_1 ? 'selected' : ''} onClick={() => setDisplayMode(DISPLAY_MODES.EVENT_INTRO_1)}><b>전체 인트로 1</b><span>전체 공연 화면 1</span></button>
+              <button className={state.displayMode === DISPLAY_MODES.EVENT_INTRO_2 ? 'selected' : ''} onClick={() => setDisplayMode(DISPLAY_MODES.EVENT_INTRO_2)}><b>전체 인트로 2</b><span>전체 공연 화면 2</span></button>
+              <button className={state.displayMode === DISPLAY_MODES.EVENT_INTRO_3 ? 'selected' : ''} onClick={() => setDisplayMode(DISPLAY_MODES.EVENT_INTRO_3)}><b>전체 인트로 3</b><span>전체 공연 화면 3</span></button>
               <button className={state.displayMode === DISPLAY_MODES.TEAM_INTRO ? 'selected' : ''} onClick={() => setDisplayMode(DISPLAY_MODES.TEAM_INTRO)}><b>다음 팀 인트로</b><span>팀명 + 공연곡 최대 2곡</span></button>
+              <button className={state.displayMode === DISPLAY_MODES.QR_REGISTER ? 'selected' : ''} onClick={() => setDisplayMode(DISPLAY_MODES.QR_REGISTER)}><b>심사위원 등록 QR</b><span>객석에서 QR 등록</span></button>
               <button className={state.displayMode === DISPLAY_MODES.SCORE ? 'selected' : ''} onClick={() => setDisplayMode(DISPLAY_MODES.SCORE)}><b>스코어</b><span>댓글 · 참여 · 시간 · 결과</span></button>
             </div>
           </section>
 
-          {state.displayMode === DISPLAY_MODES.EVENT_INTRO && (
+          {isEventIntroMode(state.displayMode) && (
             <section className="panel wide">
-              <div className="panel-title">전체 공연 인트로</div>
+              <div className="panel-title">전체 공연 인트로 {eventIntroIndexFromMode(state.displayMode) + 1}</div>
               <label>제목 1<input value={title1} onChange={(e) => setTitle1(e.target.value)} /></label>
               <label>제목 2<input value={title2} onChange={(e) => setTitle2(e.target.value)} /></label>
-              <button className="primary" onClick={saveEventIntro} disabled={busy}>저장하고 전체 인트로 송출</button>
+              <button className="primary" onClick={saveEventIntro} disabled={busy}>저장하고 이 인트로 송출</button>
             </section>
           )}
 
@@ -352,11 +496,44 @@ export default function JudgeAdminPage() {
             </section>
           )}
 
+          {state.displayMode === DISPLAY_MODES.QR_REGISTER && (
+            <section className="panel wide">
+              <div className="panel-title">심사위원 등록 QR</div>
+              <div className="qr-admin-preview">
+                <img src="/judge-registration-qr.svg" alt="심사위원 등록 QR 미리보기" />
+                <div>
+                  <b>심사위원 등록</b>
+                  <span>https://grblab.co.kr/judge</span>
+                  <p>무대 화면에는 객석 뒤에서도 인식되도록 QR을 매우 크게 표시합니다.</p>
+                </div>
+              </div>
+              <button className="primary" onClick={() => setDisplayMode(DISPLAY_MODES.QR_REGISTER)} disabled={busy}>QR 등록 화면 송출</button>
+            </section>
+          )}
+
           {state.displayMode === DISPLAY_MODES.SCORE && (
             <>
               <section className="panel wide">
                 <div className="panel-title split"><span>현재 스코어 운영</span><span>{currentTeam.start}~{currentTeam.end}</span></div>
                 <div className="current-team-name">{currentTeam.name}</div>
+
+                <div className="duration-line">
+                  <span>이 팀 현장 전문가 기준점수</span>
+                  <input
+                    type="number"
+                    min="0"
+                    max="100"
+                    step="0.1"
+                    value={teamExpertScore}
+                    onChange={(e) => setTeamExpertScore(e.target.value)}
+                  />
+                  <span>점</span>
+                  <button type="button" onClick={saveTeamExpertScore} disabled={busy}>팀 점수 저장</button>
+                  <small>
+                    {currentTeam.name}에만 적용됩니다. 전문가 인원·편차는 ‘현장 전문가’ 탭의 전체 설정을 사용합니다.
+                  </small>
+                </div>
+
                 <div className="metric-grid">
                   <div><span>총 참여</span><b>{state.participants || 0}</b><small>실제 {state.audienceCount || 0} + 현장 전문가 {state.expertCount || 0}</small></div>
                   <div><span>남은 시간</span><b>{formatSeconds(state.remainingSeconds)}</b><small>{state.phase === 'voting' ? '심사 진행 중' : state.phase === 'result' ? '마감' : '대기'}</small></div>
@@ -406,7 +583,7 @@ export default function JudgeAdminPage() {
                     <button type="button" onClick={() => setDuration(240)}>4분</button>
                   </div>
                 )}
-                <div className="score-actions"><button className="primary" onClick={startVote} disabled={busy}>심사 시작</button><button className="danger" onClick={closeVote} disabled={state.phase !== 'voting' || busy}>즉시 마감</button><button onClick={resetTeam} disabled={busy}>현재 팀 초기화</button></div>
+                <div className="score-actions"><button className="primary" onClick={startVote} disabled={busy}>심사 시작</button><button className="danger" onClick={closeVote} disabled={state.phase !== 'voting' || busy || state.closingCountdown}>{state.closingCountdown ? '마감 카운트다운 중' : '즉시 마감'}</button><button onClick={resetTeam} disabled={busy}>현재 팀 초기화</button></div>
               </section>
               <section className="panel">
                 <div className="panel-title">현재 송출 댓글</div>
@@ -455,12 +632,19 @@ export default function JudgeAdminPage() {
             <div className="panel-title">현장 전문가 자동 투입</div>
             <div className="expert-inputs">
               <label>인원<input type="number" min="0" max="500" value={expertCount} onChange={(e) => setExpertCount(e.target.value)} /></label>
-              <label>기준 점수<input type="number" min="0" max="100" step="0.1" value={expertBase} onChange={(e) => setExpertBase(e.target.value)} /></label>
+              <label>기본 기준 점수<input type="number" min="0" max="100" step="0.1" value={expertBase} onChange={(e) => setExpertBase(e.target.value)} /></label>
               <label>편차 ±<input type="number" min="0" max="30" step="0.5" value={expertSpread} onChange={(e) => setExpertSpread(e.target.value)} /></label>
             </div>
             <p className="help">가상 1, 가상 2…로 DB에 <b>onsite_expert</b> 유형으로 별도 저장되며, 현장 화면 집계에는 실제 모바일과 합산됩니다. 인원이 0이면 추가되지 않습니다.</p>
-            <div className="score-actions"><button className="primary" onClick={startExperts} disabled={state.phase !== 'voting' || busy}>남은 시간에 균등 투입 시작</button><button onClick={stopExperts}>남은 자동 투입 중지</button></div>
-            {activeBatch && <div className="batch-status">진행 {expertSubmitted} / {activeBatch.count} · 대기 {expertPending} · 기준 {activeBatch.baseScore} ±{activeBatch.spread}</div>}
+            <div className="score-actions">
+              <button onClick={saveExpertDefaults} disabled={busy}>전체 설정 저장</button>
+              <button className="primary" onClick={startExperts} disabled={state.phase !== 'voting' || busy}>현재 팀 남은 시간에 균등 투입 시작</button>
+              <button onClick={stopExperts}>남은 자동 투입 중지</button>
+            </div>
+            <p className="help">
+              이 탭의 인원·기본 기준점수·편차는 전체 기본 설정입니다. 실제 투입 시에는 스코어 화면에서 저장한 현재 팀의 기준점수가 우선 적용됩니다.
+            </p>
+            {activeBatch && <div className="batch-status">진행 {expertSubmitted} / {activeBatch.count} · 대기 {expertPending} · 현재 팀 기준 {activeBatch.targetScore ?? activeBatch.baseScore} ±{activeBatch.spread}</div>}
           </section>
           <section className="panel wide">
             <div className="panel-title">현재 팀 현장 전문가 기록</div>
@@ -474,7 +658,13 @@ export default function JudgeAdminPage() {
 
       {tab === 'order' && (
         <section className="panel">
-          <div className="panel-title split"><span>합창단 순서</span><span>☰ 카드를 드래그</span></div>
+          <div className="panel-title split">
+            <span>합창단 순서</span>
+            <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+              <span>☰ 카드를 드래그</span>
+              <button type="button" onClick={resetTeamOrder}>순서 초기화</button>
+            </div>
+          </div>
           <div className="order-list">
             {orderedTeams.map((team, index) => <div key={team.id} draggable onDragStart={(e) => dragStart(e, team.id)} onDragOver={(e) => e.preventDefault()} onDrop={(e) => dropTeam(e, team.id)} className={`order-row ${draggedId === team.id ? 'dragging' : ''}`}><span className="handle">☰</span><b>{String(index + 1).padStart(2, '0')}</b><span>{team.name}</span><small>{team.start}~{team.end}</small></div>)}
           </div>
@@ -501,7 +691,10 @@ export default function JudgeAdminPage() {
           <section className="panel">
             <div className="panel-title">원자료</div>
             <button className="primary" onClick={exportCsv}>전체 투표 CSV 다운로드</button>
-            <p className="help">audience / onsite_expert 유형이 분리된 원자료입니다.</p>
+            <button style={{ marginTop: 8 }} onClick={exportAuditCsv}>운영 로그 CSV 다운로드</button>
+            <p className="help">
+              투표 CSV에는 실제 제출 점수만 들어갑니다. 심사 시작·마감·순서 변경 등은 운영 로그 CSV에 저장됩니다.
+            </p>
           </section>
         </div>
       )}

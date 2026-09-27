@@ -3,14 +3,17 @@ import './audience-judge-display.css'
 import {
   DEFAULT_EVENT_TITLE_1,
   DEFAULT_EVENT_TITLE_2,
+  DEFAULT_EVENT_INTROS,
   DEFAULT_TEAMS,
   DISPLAY_MODES,
+  JUDGE_REGISTRATION_URL,
   formatSeconds,
   teamById,
 } from './judgeConfig'
 
 const INITIAL = {
-  displayMode: DISPLAY_MODES.EVENT_INTRO,
+  displayMode: DISPLAY_MODES.EVENT_INTRO_1,
+  eventIntros: DEFAULT_EVENT_INTROS,
   eventTitle1: DEFAULT_EVENT_TITLE_1,
   eventTitle2: DEFAULT_EVENT_TITLE_2,
   currentTeamId: 1,
@@ -73,9 +76,15 @@ export default function AudienceJudgeDisplay() {
     } catch {}
   }
 
-  const mode = state.displayMode || DISPLAY_MODES.EVENT_INTRO
+  const mode = state.displayMode === 'event_intro'
+    ? DISPLAY_MODES.EVENT_INTRO_1
+    : (state.displayMode || DISPLAY_MODES.EVENT_INTRO_1)
+
+  const eventIntroIndex = mode === DISPLAY_MODES.EVENT_INTRO_2 ? 1 : mode === DISPLAY_MODES.EVENT_INTRO_3 ? 2 : 0
+  const activeEventIntro = state.eventIntros?.[eventIntroIndex] || DEFAULT_EVENT_INTROS[eventIntroIndex] || DEFAULT_EVENT_INTROS[0]
+  const isEventIntro = [DISPLAY_MODES.EVENT_INTRO_1, DISPLAY_MODES.EVENT_INTRO_2, DISPLAY_MODES.EVENT_INTRO_3].includes(mode)
   const background =
-    mode === DISPLAY_MODES.EVENT_INTRO
+    isEventIntro || mode === DISPLAY_MODES.QR_REGISTER
       ? '/judge-backgrounds/event-intro.png'
       : (mode === DISPLAY_MODES.TEAM_INTRO ? introTeam.background : currentTeam.background)
 
@@ -96,11 +105,27 @@ export default function AudienceJudgeDisplay() {
 
       {!connected && <div className="judge-display__offline">연결 확인 중</div>}
 
-      {mode === DISPLAY_MODES.EVENT_INTRO && (
+      {isEventIntro && (
         <section className="event-intro">
           <div className="event-intro__eyebrow">NAEUMIEUM · BUSAN 2026</div>
-          <h1>{state.eventTitle1 || DEFAULT_EVENT_TITLE_1}</h1>
-          <p>{state.eventTitle2 || DEFAULT_EVENT_TITLE_2}</p>
+          <h1>{activeEventIntro.title1 || DEFAULT_EVENT_TITLE_1}</h1>
+          <p>{activeEventIntro.title2 || DEFAULT_EVENT_TITLE_2}</p>
+        </section>
+      )}
+
+      {mode === DISPLAY_MODES.QR_REGISTER && (
+        <section className="qr-register">
+          <div className="qr-register__title">심사위원 등록</div>
+          <div className="qr-register__body">
+            <div className="qr-register__copy">
+              <h1>휴대폰으로<br />QR을 찍어주세요</h1>
+              <p>등록 후 바로 객석심사에 참여하실 수 있습니다.</p>
+              <div className="qr-register__url">{state.judgeRegistrationUrl || JUDGE_REGISTRATION_URL}</div>
+            </div>
+            <div className="qr-register__qr-wrap">
+              <img src="/judge-registration-qr.svg" alt="https://grblab.co.kr/judge 심사위원 등록 QR" />
+            </div>
+          </div>
         </section>
       )}
 
