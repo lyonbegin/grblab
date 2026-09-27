@@ -1,244 +1,174 @@
 import { useEffect, useMemo, useState } from 'react'
 import './judge-mobile.css'
+import { DEFAULT_TEAMS, formatSeconds, teamById } from './judgeConfig'
 
-const TEAMS = [
-  { id: 1,  name: '은가비합창단',              time: '14:15~14:25' },
-  { id: 2,  name: '완주장애인합창단 ‘꽃’',     time: '14:31~14:36' },
-  { id: 3,  name: '대구라온휠합창단',          time: '14:42~14:46' },
-  { id: 4,  name: 'KYCU 에바다합창단',         time: '14:52~14:58' },
-  { id: 5,  name: '옥구슬합창단',              time: '15:04~15:09' },
-  { id: 6,  name: '부산베데스다합창단',        time: '15:15~15:20' },
-  { id: 7,  name: '이지글리합창단',            time: '15:26~15:33' },
-  { id: 8,  name: '부산 단디소리합창단',       time: '15:39~15:44' },
-  { id: 9,  name: '코웨이물빛합창단',          time: '15:50~15:55' },
-  { id: 10, name: '골프존파스텔합창단',        time: '16:01~16:05' },
-  { id: 11, name: '어울림시각장애인합창단',    time: '16:12~16:18' },
-]
-
-const INITIAL = {
-  teamId: 1,
-  phase: 'idle',
-  participants: 0,
-  remainingSeconds: 180,
-  score: 0,
-  comments: [],
-}
-
-function formatTime(seconds = 0) {
-  const safe = Math.max(0, Number(seconds) || 0)
-  const min = String(Math.floor(safe / 60)).padStart(2, '0')
-  const sec = String(safe % 60).padStart(2, '0')
-  return `${min}:${sec}`
-}
-
-function getJudgeId() {
-  const saved = localStorage.getItem('audienceJudgeId')
-  if (saved) return saved
-
-  const id =
-    globalThis.crypto?.randomUUID?.() ||
-    `judge-${Date.now()}-${Math.random().toString(16).slice(2)}`
-
-  localStorage.setItem('audienceJudgeId', id)
-  return id
-}
+const TOKEN_KEY = 'judgeSessionToken'
 
 export default function AudienceJudgePage() {
-  const [state, setState] = useState(INITIAL)
+  const [token, setToken] = useState(() => localStorage.getItem(TOKEN_KEY) || '')
+  const [phone, setPhone] = useState('010')
+  const [state, setState] = useState(null)
   const [score, setScore] = useState(90)
   const [comment, setComment] = useState('')
-  const [judgeId] = useState(getJudgeId)
   const [busy, setBusy] = useState(false)
-  const [submittedTeamId, setSubmittedTeamId] = useState(null)
   const [message, setMessage] = useState('')
   const [error, setError] = useState('')
 
   const team = useMemo(
-    () => TEAMS.find((item) => item.id === Number(state.teamId)) || TEAMS[0],
-    [state.teamId]
+    () => state?.currentTeam || teamById(DEFAULT_TEAMS, state?.currentTeamId || 1),
+    [state],
   )
 
-  useEffect(() => {
-    let source
-
-    async function loadState() {
-      try {
-        const response = await fetch('/api/judge/state', { cache: 'no-store' })
-        const data = await response.json()
-        if (data?.state) setState(data.state)
-      } catch {}
-    }
-
-    loadState()
-
-    source = new EventSource('/api/judge/live')
-
-    source.onmessage = (event) => {
-      try {
-        const data = JSON.parse(event.data)
-
-        if (data.type === 'state') {
-          setState((prev) => ({ ...prev, ...data }))
-        }
-
-        if (data.type === 'team') {
-          setState((prev) => ({ ...prev, teamId: Number(data.teamId) || prev.teamId }))
-          setSubmittedTeamId(null)
-          setMessage('')
-          setError('')
-          setComment('')
-          setScore(90)
-        }
-
-        if (data.type === 'result') {
-          setState((prev) => ({
-            ...prev,
-            phase: 'result',
-            remainingSeconds: 0,
-            score: data.score,
-            participants: data.participants,
-          }))
-        }
-      } catch {}
-    }
-
-    return () => source?.close()
-  }, [])
-
-  useEffect(() => {
-    if (state.phase === 'voting' && Number(submittedTeamId) !== Number(state.teamId)) {
-      setMessage('')
-      setError('')
-    }
-  }, [state.phase, state.teamId, submittedTeamId])
-
-  async function submitVote(event) {
-    event.preventDefault()
-
-    if (state.phase !== 'voting') return
-
-    setBusy(true)
-    setMessage('')
-    setError('')
-
+  async function fetchState(activeToken = token) {
+    if (!activeToken) return
     try {
-      const response = await fetch('/api/judge/vote', {
+      const response = await fetch('/api/judge/mobile/state', {
+        cache: 'no-store',
+        headers: { Authorization: `Bearer ${activeToken}` },
+      })
+      const data = await response.json()
+      if (response.status === 401) {
+        localStorage.removeItem(TOKEN_KEY)
+        setToken('')
+        setState(null)
+        setError('다시 전화번호를 입력해주세요.')
+        return
+      }
+      if (!response.ok) throw new Error(data.error || '상태를 불러오지 못했습니다.')
+      setState(data.state)
+      if (data.state?.myVote?.score != null) setScore(Number(data.state.myVote.score))
+      setError('')
+    } catch (err) {
+      setError(err.message || '서버 연결을 확인해주세요.')
+    }
+  }
+
+  useEffect(() => {
+    if (!token) return undefined
+    fetchState(token)
+    const poll = setInterval(() => fetchState(token), 5000)
+    return () => clearInterval(poll)
+  }, [token])
+
+  useEffect(() => {
+    if (state?.phase !== 'voting' || !state?.endsAt) return undefined
+    const tick = setInterval(() => {
+      const remaining = Math.max(0, Math.ceil((new Date(state.endsAt).getTime() - Date.now()) / 1000))
+      setState((prev) => prev ? ({ ...prev, remainingSeconds: remaining }) : prev)
+    }, 1000)
+    return () => clearInterval(tick)
+  }, [state?.phase, state?.endsAt])
+
+  async function register(event) {
+    event.preventDefault()
+    setBusy(true)
+    setError('')
+    try {
+      const response = await fetch('/api/judge/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          teamId: Number(state.teamId),
-          judgeId,
-          score: Number(score),
-          comment: comment.trim(),
-        }),
+        body: JSON.stringify({ phone }),
       })
-
       const data = await response.json()
-
-      if (!response.ok) {
-        throw new Error(data?.error || '제출하지 못했습니다.')
-      }
-
-      setSubmittedTeamId(Number(state.teamId))
-      setMessage(data.updated ? '평가를 수정했습니다.' : '평가가 제출되었습니다.')
+      if (!response.ok) throw new Error(data.error || '등록하지 못했습니다.')
+      localStorage.setItem(TOKEN_KEY, data.sessionToken)
+      setToken(data.sessionToken)
+      setState(data.state)
+      setMessage('심사위원 등록이 완료되었습니다.')
     } catch (err) {
-      setError(err?.message || '제출하지 못했습니다.')
+      setError(err.message || '등록하지 못했습니다.')
     } finally {
       setBusy(false)
     }
   }
 
-  const alreadySubmitted = Number(submittedTeamId) === Number(state.teamId)
+  async function submitVote(event) {
+    event.preventDefault()
+    if (!token || !state) return
+    setBusy(true)
+    setError('')
+    setMessage('')
+    try {
+      const response = await fetch('/api/judge/vote', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ teamId: state.currentTeamId, score: Number(score), comment: comment.trim() }),
+      })
+      const data = await response.json()
+      if (!response.ok) throw new Error(data.error || '평가를 제출하지 못했습니다.')
+      setMessage(data.updated ? '평가를 수정했습니다.' : '평가를 제출했습니다.')
+      setComment('')
+      await fetchState(token)
+    } catch (err) {
+      setError(err.message || '평가를 제출하지 못했습니다.')
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  if (!token) {
+    return (
+      <main className="judge-mobile-page">
+        <section className="mobile-shell register-shell">
+          <div className="mobile-brand">나눔이음</div>
+          <div className="register-mark">♪</div>
+          <h1>객석심사 참여</h1>
+          <p>처음 한 번만 휴대폰 번호를 입력해주세요. 이 번호가 심사위원 ID가 됩니다.</p>
+          <form onSubmit={register}>
+            <input className="phone-input" inputMode="numeric" autoComplete="tel" value={phone} onChange={(e) => setPhone(e.target.value.replace(/[^0-9-]/g, ''))} placeholder="01012345678" />
+            <button className="mobile-primary" disabled={busy}>{busy ? '등록 중…' : '확인'}</button>
+          </form>
+          {error && <div className="mobile-alert error">{error}</div>}
+        </section>
+      </main>
+    )
+  }
+
+  if (!state) return <main className="judge-mobile-page"><section className="mobile-shell state-card"><h1>연결 중입니다</h1></section></main>
+
+  if (!state.allowed) {
+    return <main className="judge-mobile-page"><section className="mobile-shell state-card"><div className="state-icon">!</div><h1>현재 심사 참여가 제한되었습니다</h1><p>진행요원에게 문의해주세요.</p></section></main>
+  }
+
+  if (!state.mobileEnabled) {
+    return <main className="judge-mobile-page"><section className="mobile-shell state-card"><div className="state-icon">Ⅱ</div><h1>모바일 심사가 잠시 중지되었습니다</h1><p>잠시 후 자동으로 다시 확인됩니다.</p></section></main>
+  }
+
+  if (state.phase !== 'voting') {
+    return (
+      <main className="judge-mobile-page">
+        <section className="mobile-shell state-card">
+          <div className="mobile-brand">나눔이음</div>
+          <div className="state-icon">{state.phase === 'result' ? '✓' : '♪'}</div>
+          <h1>{state.phase === 'result' ? '객석심사가 마감되었습니다' : '다음 객석심사를 기다리고 있습니다'}</h1>
+          <p>{state.phoneMasked} · 참여해 주셔서 감사합니다.</p>
+        </section>
+      </main>
+    )
+  }
+
+  const hasVote = Boolean(state.myVote)
+  const canEdit = state.allowVoteEdit !== false
 
   return (
-    <main className="audience-judge-mobile">
-      <section className="judge-shell">
-        <div className="brand">나눔이음</div>
-
-        {state.phase === 'idle' && (
-          <div className="state-panel waiting">
-            <div className="state-icon">♪</div>
-            <h1>다음 객석심사를 기다리고 있습니다</h1>
-            <p>공연이 끝나면 이 화면에서 평가하실 수 있습니다.</p>
-          </div>
-        )}
-
-        {state.phase === 'voting' && (
-          <>
-            <div className="mobile-head">
-              <span className="live-pill">객석심사 진행 중</span>
-              <span className="timer">{formatTime(state.remainingSeconds)}</span>
-            </div>
-
-            <div className="team-card">
-              <span className="team-order">{String(team.id).padStart(2, '0')}</span>
-              <h1>{team.name}</h1>
-              <p>{team.time}</p>
-            </div>
-
-            <form onSubmit={submitVote}>
-              <section className="score-card">
-                <div className="card-title">
-                  <span>이 무대에 몇 점을 주시겠습니까?</span>
-                  <strong>{score}</strong>
-                </div>
-
-                <input
-                  className="score-range"
-                  type="range"
-                  min="0"
-                  max="100"
-                  step="1"
-                  value={score}
-                  onChange={(event) => setScore(Number(event.target.value))}
-                  aria-label="객석 평가 점수"
-                />
-
-                <div className="range-labels">
-                  <span>0</span>
-                  <span>50</span>
-                  <span>100</span>
-                </div>
-              </section>
-
-              <section className="comment-card">
-                <div className="card-title">
-                  <span>한마디 남겨주세요</span>
-                  <small>선택</small>
-                </div>
-
-                <textarea
-                  value={comment}
-                  maxLength={80}
-                  onChange={(event) => setComment(event.target.value)}
-                  placeholder="공연을 보고 느낀 마음을 자유롭게 적어주세요."
-                />
-
-                <div className="char-count">{comment.length}/80</div>
-              </section>
-
-              <button className="submit-button" type="submit" disabled={busy}>
-                {busy ? '제출 중…' : alreadySubmitted ? '평가 수정하기' : '평가 보내기'}
-              </button>
-
-              {message && <div className="mobile-notice success">{message}</div>}
-              {error && <div className="mobile-notice error">{error}</div>}
-            </form>
-
-            <div className="participant-line">
-              현재 <strong>{state.participants ?? 0}명</strong>이 참여하고 있습니다
-            </div>
-          </>
-        )}
-
-        {state.phase === 'result' && (
-          <div className="state-panel closed">
-            <div className="state-icon">✓</div>
-            <h1>객석심사가 마감되었습니다</h1>
-            <p>참여해 주셔서 감사합니다.</p>
-            <div className="closed-count">{state.participants ?? 0}명 참여</div>
-          </div>
-        )}
+    <main className="judge-mobile-page">
+      <section className="mobile-shell">
+        <header className="judge-mobile-head"><span className="live-badge">객석심사 진행 중</span><b>{formatSeconds(state.remainingSeconds)}</b></header>
+        <section className="team-mobile-card"><small>{state.phoneMasked}</small><h1>{team.name}</h1><p>{team.start} ~ {team.end}</p></section>
+        <form onSubmit={submitVote}>
+          <section className="score-mobile-card">
+            <div className="score-title"><span>이 무대에 몇 점을 주시겠습니까?</span><b>{score}</b></div>
+            <input type="range" min="0" max="100" step="1" value={score} onChange={(e) => setScore(Number(e.target.value))} disabled={hasVote && !canEdit} />
+            <div className="range-numbers"><span>0</span><span>50</span><span>100</span></div>
+          </section>
+          {state.commentInputEnabled && (
+            <section className="comment-mobile-card"><div className="score-title"><span>한마디 남겨주세요</span><small>선택 · 40자</small></div><textarea maxLength={40} value={comment} onChange={(e) => setComment(e.target.value)} placeholder="공연을 보고 느낀 마음을 남겨주세요." /><div className="char-count">{comment.length}/40</div></section>
+          )}
+          <button className="mobile-primary" disabled={busy || (hasVote && !canEdit)}>{busy ? '제출 중…' : hasVote ? (canEdit ? '평가 수정하기' : '제출 완료') : '평가 보내기'}</button>
+          {message && <div className="mobile-alert ok">{message}</div>}
+          {error && <div className="mobile-alert error">{error}</div>}
+        </form>
+        <footer>현재 총 <b>{state.participants || 0}명</b> 참여</footer>
       </section>
     </main>
   )

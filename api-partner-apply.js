@@ -6,6 +6,9 @@
  */
 const http = require("node:http");
 const crypto = require("node:crypto");
+const fs = require("node:fs");
+const path = require("node:path");
+const { Pool } = require("pg");
 
 const PORT = Number(process.env.PARTNER_API_PORT || 3001);
 
@@ -19,30 +22,6 @@ const PARTNER_GSHEET_URL =
   "https://script.google.com/macros/s/AKfycbwypBqdKEw02OW06x4StD-BRNQJ7T9WcZSsWFHyT4KMD12hkPJBFbQz5JNVU5JIhkNd/exec";
 
 const PARTNER_DEBUG = String(process.env.PARTNER_DEBUG || "") === "1";
-
-const JUDGE_ADMIN_KEY = String(process.env.JUDGE_ADMIN_KEY || "");
-const JUDGE_DEFAULT_DURATION_SECONDS = Math.max(
-  30,
-  Math.min(600, Number(process.env.JUDGE_DEFAULT_DURATION_SECONDS || 180))
-);
-
-// 객석심사 실시간 상태.
-// 현재 단계에서는 메모리 기반입니다. 컨테이너가 재시작되면 초기화됩니다.
-const judgeClients = new Set();
-const judgeVotes = new Map();
-
-let judgeState = {
-  teamId: 1,
-  phase: "idle", // idle | voting | result
-  participants: 0,
-  remainingSeconds: JUDGE_DEFAULT_DURATION_SECONDS,
-  score: 0,
-  comments: [],
-  startedAt: null,
-  endsAt: null,
-};
-
-let judgeTimer = null;
 
 function maskPhone(phone) {
   const p = cleanPhone(phone);
@@ -378,501 +357,6 @@ function readJsonBody(req) {
   });
 }
 
-
-function judgeSnapshot() {
-  let remainingSeconds = Number(judgeState.remainingSeconds) || 0;
-
-  if (judgeState.phase === "voting" && judgeState.endsAt) {
-    remainingSeconds = Math.max(
-      0,
-      Math.ceil((Number(judgeState.endsAt) - Date.now()) / 1000)
-    );
-  }
-
-  return {
-    teamId: Number(judgeState.teamId) || 1,
-    phase: judgeState.phase,
-    participants: Number(judgeState.participants) || 0,
-    remainingSeconds,
-    score: Number(judgeState.score) || 0,
-    comments: Array.isArray(judgeState.comments)
-      ? judgeState.comments.slice(-2)
-      : [],
-    startedAt: judgeState.startedAt,
-    endsAt: judgeState.endsAt,
-  };
-}
-
-function writeSse(res, payload) {
-  res.write(`data: ${JSON.stringify(payload)}\n\n`);
-}
-
-function broadcastJudge(payload) {
-  const dead = [];
-
-  for (const client of judgeClients) {
-    try {
-      writeSse(client, payload);
-    } catch {
-      dead.push(client);
-    }
-  }
-
-  dead.forEach((client) => judgeClients.delete(client));
-}
-
-function broadcastJudgeState() {
-  broadcastJudge({
-    type: "state",
-    ...judgeSnapshot(),
-  });
-}
-
-function recalculateJudgeScore() {
-  const prefix = `${Number(judgeState.teamId)}:`;
-  const scores = [];
-
-  for (const [key, vote] of judgeVotes.entries()) {
-    if (!key.startsWith(prefix)) continue;
-    const score = Number(vote?.score);
-    if (Number.isFinite(score)) scores.push(score);
-  }
-
-  judgeState.participants = scores.length;
-
-  if (!scores.length) {
-    judgeState.score = 0;
-    return;
-  }
-
-  const average = scores.reduce((sum, value) => sum + value, 0) / scores.length;
-  judgeState.score = Math.round(average * 10) / 10;
-}
-
-function stopJudgeTimer() {
-  if (judgeTimer) {
-    clearInterval(judgeTimer);
-    judgeTimer = null;
-  }
-}
-
-function startJudgeTimer() {
-  stopJudgeTimer();
-
-  judgeTimer = setInterval(() => {
-    if (judgeState.phase !== "voting") return;
-
-    const remainingSeconds = Math.max(
-      0,
-      Math.ceil((Number(judgeState.endsAt) - Date.now()) / 1000)
-    );
-
-    judgeState.remainingSeconds = remainingSeconds;
-
-    if (remainingSeconds <= 0) {
-      judgeState.phase = "result";
-      judgeState.remainingSeconds = 0;
-      recalculateJudgeScore();
-      stopJudgeTimer();
-
-      broadcastJudge({
-        type: "result",
-        teamId: judgeState.teamId,
-        score: judgeState.score,
-        participants: judgeState.participants,
-      });
-      broadcastJudgeState();
-      return;
-    }
-
-    // 대형 화면의 카운트다운과 참여 숫자를 1초마다 동기화
-    broadcastJudgeState();
-  }, 1000);
-}
-
-function isJudgeAdmin(req) {
-  // JUDGE_ADMIN_KEY를 설정하지 않은 경우에는 현장 테스트 편의를 위해 허용합니다.
-  // 운영 전에는 반드시 환경변수에 키를 넣는 것을 권장합니다.
-  if (!JUDGE_ADMIN_KEY) return true;
-
-  const headerKey = String(req.headers["x-judge-admin-key"] || "");
-  const auth = String(req.headers.authorization || "");
-  const bearer = auth.startsWith("Bearer ") ? auth.slice(7).trim() : "";
-
-  return headerKey === JUDGE_ADMIN_KEY || bearer === JUDGE_ADMIN_KEY;
-}
-
-function judgeAdminDenied(res) {
-  return json(res, 401, {
-    ok: false,
-    error: "객석심사 관리자 인증이 필요합니다.",
-  });
-}
-
-function normalizeJudgeComment(value) {
-  const text = String(value || "")
-    .replace(/\s+/g, " ")
-    .trim();
-
-  if (!text) return "";
-
-  // 대형 스크린용: 너무 긴 문장, URL, 전화번호 형태는 송출하지 않습니다.
-  if (text.length > 80) {
-    throw new Error("댓글은 80자 이내로 입력해주세요.");
-  }
-
-  if (/https?:\/\/|www\./i.test(text)) {
-    throw new Error("댓글에는 인터넷 주소를 넣을 수 없습니다.");
-  }
-
-  if (/(?:01[016789])[- ]?\d{3,4}[- ]?\d{4}/.test(text)) {
-    throw new Error("댓글에는 전화번호를 넣을 수 없습니다.");
-  }
-
-  return text;
-}
-
-function appendJudgeComment(text) {
-  if (!text) return;
-
-  judgeState.comments = [...judgeState.comments, text].slice(-2);
-
-  broadcastJudge({
-    type: "comment",
-    teamId: judgeState.teamId,
-    text,
-  });
-}
-
-function makeJudgeVoteKey(teamId, judgeId) {
-  const cleanJudgeId = String(judgeId || "").trim();
-
-  // judgeId가 있으면 같은 심사위원의 수정 제출은 1명으로 유지합니다.
-  if (cleanJudgeId) return `${teamId}:${cleanJudgeId.slice(0, 120)}`;
-
-  // judgeId가 아직 없는 초기 테스트에서는 요청마다 별도 참여자로 계산합니다.
-  return `${teamId}:anon-${Date.now()}-${crypto.randomBytes(4).toString("hex")}`;
-}
-
-function normalizeJudgeScore(body) {
-  if (Number.isFinite(Number(body?.score))) {
-    const score = Number(body.score);
-    if (score < 0 || score > 100) {
-      throw new Error("점수는 0~100 범위여야 합니다.");
-    }
-    return Math.round(score * 10) / 10;
-  }
-
-  // 모바일 화면에서 1~5점 항목 배열을 보낼 경우 자동으로 100점 환산
-  if (Array.isArray(body?.scores) && body.scores.length > 0) {
-    const values = body.scores.map(Number);
-
-    if (
-      values.some(
-        (value) => !Number.isFinite(value) || value < 1 || value > 5
-      )
-    ) {
-      throw new Error("항목 점수는 각각 1~5 범위여야 합니다.");
-    }
-
-    const average5 =
-      values.reduce((sum, value) => sum + value, 0) / values.length;
-
-    return Math.round(average5 * 20 * 10) / 10;
-  }
-
-  throw new Error("score 또는 scores를 보내주세요.");
-}
-
-function clearJudgeVotesForTeam(teamId) {
-  const prefix = `${Number(teamId)}:`;
-
-  for (const key of [...judgeVotes.keys()]) {
-    if (key.startsWith(prefix)) judgeVotes.delete(key);
-  }
-}
-
-function beginJudgeTeam(teamId, durationSeconds) {
-  const safeTeamId = Math.max(1, Math.min(11, Number(teamId) || 1));
-  const safeDuration = Math.max(
-    30,
-    Math.min(600, Number(durationSeconds) || JUDGE_DEFAULT_DURATION_SECONDS)
-  );
-
-  clearJudgeVotesForTeam(safeTeamId);
-
-  const startedAtMs = Date.now();
-
-  judgeState = {
-    teamId: safeTeamId,
-    phase: "voting",
-    participants: 0,
-    remainingSeconds: safeDuration,
-    score: 0,
-    comments: [],
-    startedAt: new Date(startedAtMs).toISOString(),
-    endsAt: startedAtMs + safeDuration * 1000,
-  };
-
-  startJudgeTimer();
-
-  broadcastJudge({
-    type: "team",
-    teamId: safeTeamId,
-  });
-  broadcastJudgeState();
-
-  return judgeSnapshot();
-}
-
-async function handleJudgeVote(req, res) {
-  let body;
-
-  try {
-    body = await readJsonBody(req);
-  } catch (error) {
-    return json(res, 400, {
-      ok: false,
-      error: error.message || "요청 내용을 확인해주세요.",
-    });
-  }
-
-  if (judgeState.phase !== "voting") {
-    return json(res, 409, {
-      ok: false,
-      error: "현재 객석심사가 진행 중이 아닙니다.",
-      state: judgeSnapshot(),
-    });
-  }
-
-  const requestTeamId = Number(body.teamId || judgeState.teamId);
-
-  if (requestTeamId !== Number(judgeState.teamId)) {
-    return json(res, 409, {
-      ok: false,
-      error: "현재 진행 중인 합창단과 제출 대상이 다릅니다.",
-      currentTeamId: judgeState.teamId,
-    });
-  }
-
-  let score;
-  let comment = "";
-
-  try {
-    score = normalizeJudgeScore(body);
-    comment = normalizeJudgeComment(body.comment || body.text || "");
-  } catch (error) {
-    return json(res, 400, {
-      ok: false,
-      error: error.message,
-    });
-  }
-
-  const voteKey = makeJudgeVoteKey(judgeState.teamId, body.judgeId);
-  const existing = judgeVotes.get(voteKey);
-
-  judgeVotes.set(voteKey, {
-    score,
-    submittedAt: new Date().toISOString(),
-  });
-
-  recalculateJudgeScore();
-
-  if (comment) appendJudgeComment(comment);
-
-  broadcastJudgeState();
-
-  return json(res, 200, {
-    ok: true,
-    updated: Boolean(existing),
-    teamId: judgeState.teamId,
-    participants: judgeState.participants,
-    score: judgeState.score,
-    remainingSeconds: judgeSnapshot().remainingSeconds,
-  });
-}
-
-async function handleJudgeComment(req, res) {
-  let body;
-
-  try {
-    body = await readJsonBody(req);
-  } catch (error) {
-    return json(res, 400, {
-      ok: false,
-      error: error.message || "요청 내용을 확인해주세요.",
-    });
-  }
-
-  if (judgeState.phase !== "voting") {
-    return json(res, 409, {
-      ok: false,
-      error: "현재 객석심사가 진행 중이 아닙니다.",
-    });
-  }
-
-  let comment;
-
-  try {
-    comment = normalizeJudgeComment(body.text || body.comment || "");
-  } catch (error) {
-    return json(res, 400, {
-      ok: false,
-      error: error.message,
-    });
-  }
-
-  if (!comment) {
-    return json(res, 400, {
-      ok: false,
-      error: "댓글 내용을 입력해주세요.",
-    });
-  }
-
-  appendJudgeComment(comment);
-
-  return json(res, 200, {
-    ok: true,
-    comments: judgeState.comments,
-  });
-}
-
-function handleJudgeLive(req, res) {
-  res.writeHead(200, {
-    "Content-Type": "text/event-stream; charset=utf-8",
-    "Cache-Control": "no-cache, no-transform",
-    Connection: "keep-alive",
-    "X-Accel-Buffering": "no",
-  });
-
-  res.write(": connected\n\n");
-  writeSse(res, {
-    type: "state",
-    ...judgeSnapshot(),
-  });
-
-  judgeClients.add(res);
-
-  const heartbeat = setInterval(() => {
-    try {
-      res.write(": heartbeat\n\n");
-    } catch {
-      clearInterval(heartbeat);
-      judgeClients.delete(res);
-    }
-  }, 15000);
-
-  req.on("close", () => {
-    clearInterval(heartbeat);
-    judgeClients.delete(res);
-  });
-}
-
-async function handleJudgeAdminStart(req, res) {
-  if (!isJudgeAdmin(req)) return judgeAdminDenied(res);
-
-  let body = {};
-
-  try {
-    body = await readJsonBody(req);
-  } catch (error) {
-    return json(res, 400, {
-      ok: false,
-      error: error.message,
-    });
-  }
-
-  const state = beginJudgeTeam(
-    body.teamId || judgeState.teamId || 1,
-    body.durationSeconds || JUDGE_DEFAULT_DURATION_SECONDS
-  );
-
-  return json(res, 200, {
-    ok: true,
-    state,
-  });
-}
-
-async function handleJudgeAdminClose(req, res) {
-  if (!isJudgeAdmin(req)) return judgeAdminDenied(res);
-
-  stopJudgeTimer();
-  judgeState.phase = "result";
-  judgeState.remainingSeconds = 0;
-  judgeState.endsAt = Date.now();
-  recalculateJudgeScore();
-
-  broadcastJudge({
-    type: "result",
-    teamId: judgeState.teamId,
-    score: judgeState.score,
-    participants: judgeState.participants,
-  });
-  broadcastJudgeState();
-
-  return json(res, 200, {
-    ok: true,
-    state: judgeSnapshot(),
-  });
-}
-
-async function handleJudgeAdminTeam(req, res) {
-  if (!isJudgeAdmin(req)) return judgeAdminDenied(res);
-
-  let body = {};
-
-  try {
-    body = await readJsonBody(req);
-  } catch (error) {
-    return json(res, 400, {
-      ok: false,
-      error: error.message,
-    });
-  }
-
-  const safeTeamId = Math.max(1, Math.min(11, Number(body.teamId) || 1));
-  judgeState.teamId = safeTeamId;
-
-  broadcastJudge({
-    type: "team",
-    teamId: safeTeamId,
-  });
-  broadcastJudgeState();
-
-  return json(res, 200, {
-    ok: true,
-    state: judgeSnapshot(),
-  });
-}
-
-async function handleJudgeAdminReset(req, res) {
-  if (!isJudgeAdmin(req)) return judgeAdminDenied(res);
-
-  stopJudgeTimer();
-
-  const teamId = Number(judgeState.teamId) || 1;
-  clearJudgeVotesForTeam(teamId);
-
-  judgeState = {
-    teamId,
-    phase: "idle",
-    participants: 0,
-    remainingSeconds: JUDGE_DEFAULT_DURATION_SECONDS,
-    score: 0,
-    comments: [],
-    startedAt: null,
-    endsAt: null,
-  };
-
-  broadcastJudgeState();
-
-  return json(res, 200, {
-    ok: true,
-    state: judgeSnapshot(),
-  });
-}
-
-
 // 테스트 단계의 간단한 중복 발송 방지.
 // Railway가 재시작되면 초기화됩니다.
 const phoneHistory = new Map();
@@ -1096,6 +580,1123 @@ async function handlePartnerApply(req, res) {
   }
 }
 
+// ============================
+// 객석심사 / 공연 디스플레이
+// ============================
+const JUDGE_ADMIN_KEY = String(process.env.JUDGE_ADMIN_KEY || '');
+const DATABASE_URL = String(process.env.DATABASE_URL || '');
+const JUDGE_EVENT_KEY = String(process.env.JUDGE_EVENT_KEY || '2026-09-29');
+const JUDGE_DEFAULT_DURATION_SECONDS = Math.max(
+  30,
+  Math.min(600, Number(process.env.JUDGE_DEFAULT_DURATION_SECONDS || 180))
+);
+const JUDGE_ONLINE_WINDOW_MS = 30_000;
+const JUDGE_MAX_COMMENT_LENGTH = 40;
+
+const JUDGE_DEFAULT_TEAMS = [
+  { id: 1, name: '은가비합창단', start: '14:15', end: '14:25', songs: ['', ''], background: '/judge-backgrounds/team-01.png' },
+  { id: 2, name: '완주장애인합창단 ‘꽃’', start: '14:31', end: '14:36', songs: ['좋아좋아'], background: '/judge-backgrounds/team-02.png' },
+  { id: 3, name: '대구라온휠합창단', start: '14:42', end: '14:46', songs: ['푸르른 날'], background: '/judge-backgrounds/team-03.png' },
+  { id: 4, name: 'KYCU 에바다합창단', start: '14:52', end: '14:58', songs: ['친구'], background: '/judge-backgrounds/team-04.png' },
+  { id: 5, name: '옥구슬합창단', start: '15:04', end: '15:09', songs: [''], background: '/judge-backgrounds/team-05.png' },
+  { id: 6, name: '부산베데스다합창단', start: '15:15', end: '15:20', songs: ['FLY ME TO THE MOON'], background: '/judge-backgrounds/team-06.png' },
+  { id: 7, name: '이지글리합창단', start: '15:26', end: '15:33', songs: ['흰수염고래', '오나라'], background: '/judge-backgrounds/team-07.png' },
+  { id: 8, name: '부산 단디소리합창단', start: '15:39', end: '15:44', songs: ['그대 있는 곳까지'], background: '/judge-backgrounds/team-08.png' },
+  { id: 9, name: '코웨이물빛합창단', start: '15:50', end: '15:55', songs: ['노던 라이츠'], background: '/judge-backgrounds/team-09.png' },
+  { id: 10, name: '골프존파스텔합창단', start: '16:01', end: '16:05', songs: ['Dawn and Dusk (Fajar dan Senja)'], background: '/judge-backgrounds/team-10.png' },
+  { id: 11, name: '어울림시각장애인합창단', start: '16:12', end: '16:18', songs: ['푸니쿨리 푸니쿨라', '잊혀진 계절 메들리'], background: '/judge-backgrounds/team-11.png' },
+];
+
+function newJudgeDb() {
+  const now = new Date().toISOString();
+  return {
+    version: 3,
+    createdAt: now,
+    updatedAt: now,
+    event: {
+      displayMode: 'event_intro',
+      eventTitle1: '2026 장애인 합창단 초청 음악회',
+      eventTitle2: '오늘의 무대가 도쿄로 이어집니다',
+      currentTeamId: 1,
+      introTeamId: 1,
+      teamOrder: JUDGE_DEFAULT_TEAMS.map((team) => team.id),
+      phase: 'idle',
+      durationSeconds: JUDGE_DEFAULT_DURATION_SECONDS,
+      startedAt: null,
+      endsAt: null,
+      mobileEnabled: true,
+      registrationEnabled: true,
+      commentInputEnabled: true,
+      commentDisplayEnabled: true,
+      allowVoteEdit: true,
+    },
+    teams: JUDGE_DEFAULT_TEAMS,
+    judges: [],
+    sessions: [],
+    votes: [],
+    comments: [],
+    expertBatches: [],
+    audit: [],
+  };
+}
+
+function clone(value) {
+  return JSON.parse(JSON.stringify(value));
+}
+
+function judgeNowIso() {
+  return new Date().toISOString();
+}
+
+const judgePool = DATABASE_URL
+  ? new Pool({
+      connectionString: DATABASE_URL,
+      max: 5,
+      idleTimeoutMillis: 30_000,
+      connectionTimeoutMillis: 10_000,
+    })
+  : null;
+
+let judgeDb = newJudgeDb();
+let judgeDbDirty = false;
+let judgeDbFlushPromise = Promise.resolve();
+let judgeDatabaseConnected = false;
+let judgeDatabaseLastError = '';
+let judgeTimer = null;
+const judgeDisplayClients = new Set();
+const expertTimers = new Map();
+
+async function initJudgeDatabase() {
+  if (!judgePool) {
+    judgeDatabaseConnected = false;
+    judgeDatabaseLastError = 'DATABASE_URL is not configured';
+    console.error('[judge-db] DATABASE_URL is not configured; using memory only');
+    return;
+  }
+
+  try {
+    await judgePool.query(`
+      CREATE TABLE IF NOT EXISTS grb_judge_store (
+        event_key TEXT PRIMARY KEY,
+        data JSONB NOT NULL,
+        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+        updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+      )
+    `);
+
+    // 원자료를 나중에 SQL로 바로 조회할 수 있도록 JSONB 배열을 행으로 펼친 VIEW를 만듭니다.
+    await judgePool.query(`
+      CREATE OR REPLACE VIEW grb_judge_votes AS
+      SELECT
+        s.event_key,
+        v.value->>'id' AS id,
+        NULLIF(v.value->>'teamId','')::INT AS team_id,
+        v.value->>'judgeId' AS judge_id,
+        v.value->>'judgeType' AS judge_type,
+        v.value->>'judgeLabel' AS judge_label,
+        NULLIF(v.value->>'score','')::NUMERIC AS score,
+        COALESCE(NULLIF(v.value->>'deleted','')::BOOLEAN, FALSE) AS deleted,
+        v.value->>'batchId' AS batch_id,
+        NULLIF(v.value->>'createdAt','')::TIMESTAMPTZ AS created_at,
+        NULLIF(v.value->>'updatedAt','')::TIMESTAMPTZ AS updated_at,
+        v.value AS raw
+      FROM grb_judge_store s
+      CROSS JOIN LATERAL jsonb_array_elements(COALESCE(s.data->'votes', '[]'::jsonb)) AS v(value)
+    `);
+
+    await judgePool.query(`
+      CREATE OR REPLACE VIEW grb_judge_judges AS
+      SELECT
+        s.event_key,
+        j.value->>'id' AS id,
+        j.value->>'phone' AS phone,
+        j.value->>'type' AS judge_type,
+        COALESCE(NULLIF(j.value->>'allowed','')::BOOLEAN, TRUE) AS allowed,
+        NULLIF(j.value->>'registeredAt','')::TIMESTAMPTZ AS registered_at,
+        NULLIF(j.value->>'lastSeenAt','')::TIMESTAMPTZ AS last_seen_at,
+        j.value AS raw
+      FROM grb_judge_store s
+      CROSS JOIN LATERAL jsonb_array_elements(COALESCE(s.data->'judges', '[]'::jsonb)) AS j(value)
+    `);
+
+    await judgePool.query(`
+      CREATE OR REPLACE VIEW grb_judge_comments AS
+      SELECT
+        s.event_key,
+        c.value->>'id' AS id,
+        NULLIF(c.value->>'teamId','')::INT AS team_id,
+        c.value->>'judgeId' AS judge_id,
+        c.value->>'judgeType' AS judge_type,
+        c.value->>'text' AS text,
+        COALESCE(NULLIF(c.value->>'visible','')::BOOLEAN, TRUE) AS visible,
+        COALESCE(NULLIF(c.value->>'deleted','')::BOOLEAN, FALSE) AS deleted,
+        NULLIF(c.value->>'createdAt','')::TIMESTAMPTZ AS created_at,
+        c.value AS raw
+      FROM grb_judge_store s
+      CROSS JOIN LATERAL jsonb_array_elements(COALESCE(s.data->'comments', '[]'::jsonb)) AS c(value)
+    `);
+
+    await judgePool.query(`
+      CREATE OR REPLACE VIEW grb_judge_expert_batches AS
+      SELECT
+        s.event_key,
+        b.value->>'id' AS id,
+        NULLIF(b.value->>'teamId','')::INT AS team_id,
+        NULLIF(b.value->>'count','')::INT AS count,
+        NULLIF(b.value->>'targetScore','')::NUMERIC AS target_score,
+        NULLIF(b.value->>'spread','')::NUMERIC AS spread,
+        b.value->>'status' AS status,
+        NULLIF(b.value->>'createdAt','')::TIMESTAMPTZ AS created_at,
+        b.value AS raw
+      FROM grb_judge_store s
+      CROSS JOIN LATERAL jsonb_array_elements(COALESCE(s.data->'expertBatches', '[]'::jsonb)) AS b(value)
+    `);
+
+    await judgePool.query(`
+      CREATE OR REPLACE VIEW grb_judge_audit AS
+      SELECT
+        s.event_key,
+        a.value->>'id' AS id,
+        NULLIF(a.value->>'at','')::TIMESTAMPTZ AS at,
+        a.value->>'action' AS action,
+        a.value->'detail' AS detail,
+        a.value AS raw
+      FROM grb_judge_store s
+      CROSS JOIN LATERAL jsonb_array_elements(COALESCE(s.data->'audit', '[]'::jsonb)) AS a(value)
+    `);
+
+    const result = await judgePool.query(
+      'SELECT data FROM grb_judge_store WHERE event_key = $1',
+      [JUDGE_EVENT_KEY]
+    );
+
+    if (result.rows.length) {
+      judgeDb = normalizeJudgeDb(result.rows[0].data);
+      console.log(`[judge-db] loaded PostgreSQL event ${JUDGE_EVENT_KEY}`);
+    } else {
+      judgeDb = newJudgeDb();
+      await judgePool.query(
+        `INSERT INTO grb_judge_store(event_key, data, updated_at)
+         VALUES ($1, $2::jsonb, NOW())`,
+        [JUDGE_EVENT_KEY, JSON.stringify(judgeDb)]
+      );
+      console.log(`[judge-db] created PostgreSQL event ${JUDGE_EVENT_KEY}`);
+    }
+
+    judgeDatabaseConnected = true;
+    judgeDatabaseLastError = '';
+  } catch (error) {
+    judgeDatabaseConnected = false;
+    judgeDatabaseLastError = error?.message || String(error);
+    console.error('[judge-db] PostgreSQL init failed; using memory only', judgeDatabaseLastError);
+  }
+}
+
+function markJudgeDirty() {
+  judgeDb.updatedAt = judgeNowIso();
+  judgeDbDirty = true;
+}
+
+function flushJudgeDb() {
+  if (!judgeDbDirty || !judgePool) return judgeDbFlushPromise;
+
+  const snapshot = clone(judgeDb);
+  judgeDbDirty = false;
+
+  judgeDbFlushPromise = judgeDbFlushPromise.then(async () => {
+    try {
+      await judgePool.query(
+        `INSERT INTO grb_judge_store(event_key, data, updated_at)
+         VALUES ($1, $2::jsonb, NOW())
+         ON CONFLICT (event_key)
+         DO UPDATE SET data = EXCLUDED.data, updated_at = NOW()`,
+        [JUDGE_EVENT_KEY, JSON.stringify(snapshot)]
+      );
+      judgeDatabaseConnected = true;
+      judgeDatabaseLastError = '';
+    } catch (error) {
+      judgeDbDirty = true;
+      judgeDatabaseConnected = false;
+      judgeDatabaseLastError = error?.message || String(error);
+      console.error('[judge-db] PostgreSQL flush failed', judgeDatabaseLastError);
+    }
+  });
+
+  return judgeDbFlushPromise;
+}
+
+const judgeFlushTimer = setInterval(() => {
+  void flushJudgeDb();
+}, 3000);
+judgeFlushTimer.unref?.();
+
+async function shutdownJudgeDatabase() {
+  try {
+    await flushJudgeDb();
+    await judgeDbFlushPromise;
+    await judgePool?.end();
+  } catch (error) {
+    console.error('[judge-db] shutdown failed', error?.message || error);
+  }
+}
+
+process.on('SIGTERM', () => { void shutdownJudgeDatabase(); });
+process.on('SIGINT', () => { void shutdownJudgeDatabase(); });
+
+function judgeAudit(action, detail = {}) {
+  judgeDb.audit.push({
+    id: crypto.randomUUID(),
+    at: judgeNowIso(),
+    action,
+    detail,
+  });
+  if (judgeDb.audit.length > 5000) judgeDb.audit = judgeDb.audit.slice(-5000);
+  markJudgeDirty();
+}
+
+function judgeTeam(teamId) {
+  return judgeDb.teams.find((team) => Number(team.id) === Number(teamId)) || judgeDb.teams[0];
+}
+
+function judgeRemainingSeconds() {
+  if (judgeDb.event.phase === 'result') return 0;
+  if (judgeDb.event.phase !== 'voting' || !judgeDb.event.endsAt) {
+    return Math.max(0, Number(judgeDb.event.durationSeconds) || JUDGE_DEFAULT_DURATION_SECONDS);
+  }
+  return Math.max(0, Math.ceil((new Date(judgeDb.event.endsAt).getTime() - Date.now()) / 1000));
+}
+
+function validJudgeVote(vote) {
+  return vote && vote.deleted !== true && Number.isFinite(Number(vote.score));
+}
+
+function teamVotes(teamId) {
+  return judgeDb.votes.filter((vote) => Number(vote.teamId) === Number(teamId) && validJudgeVote(vote));
+}
+
+function teamAggregate(teamId) {
+  const votes = teamVotes(teamId);
+  const participants = votes.length;
+  const score = participants
+    ? Math.round((votes.reduce((sum, vote) => sum + Number(vote.score), 0) / participants) * 10) / 10
+    : 0;
+  const audienceCount = votes.filter((vote) => vote.judgeType === 'audience').length;
+  const expertCount = votes.filter((vote) => vote.judgeType === 'onsite_expert').length;
+  return { participants, score, audienceCount, expertCount };
+}
+
+function visibleComments(teamId) {
+  if (!judgeDb.event.commentDisplayEnabled) return [];
+  return judgeDb.comments
+    .filter((comment) => Number(comment.teamId) === Number(teamId) && !comment.deleted && comment.visible !== false)
+    .slice(-2)
+    .map((comment) => ({ id: comment.id, text: comment.text }));
+}
+
+function publicJudgeState() {
+  const event = judgeDb.event;
+  const current = judgeTeam(event.currentTeamId);
+  const introTeam = judgeTeam(event.introTeamId);
+  const aggregate = teamAggregate(event.currentTeamId);
+  const remainingSeconds = judgeRemainingSeconds();
+
+  return {
+    displayMode: event.displayMode,
+    eventTitle1: event.eventTitle1,
+    eventTitle2: event.eventTitle2,
+    currentTeamId: Number(event.currentTeamId),
+    introTeamId: Number(event.introTeamId),
+    currentTeam: clone(current),
+    introTeam: clone(introTeam),
+    teamOrder: clone(event.teamOrder),
+    phase: event.phase,
+    durationSeconds: Number(event.durationSeconds),
+    remainingSeconds,
+    participants: aggregate.participants,
+    audienceCount: aggregate.audienceCount,
+    expertCount: aggregate.expertCount,
+    // 진행 중에는 외부 상태 API로 중간 평균점수를 내보내지 않습니다.
+    score: event.phase === 'result' ? aggregate.score : null,
+    comments: visibleComments(event.currentTeamId).map((item) => item.text),
+    commentItems: visibleComments(event.currentTeamId),
+    mobileEnabled: Boolean(event.mobileEnabled),
+    commentInputEnabled: Boolean(event.commentInputEnabled),
+    commentDisplayEnabled: Boolean(event.commentDisplayEnabled),
+    startedAt: event.startedAt,
+    endsAt: event.endsAt,
+  };
+}
+
+function adminJudgeState() {
+  const state = publicJudgeState();
+  const aggregate = teamAggregate(judgeDb.event.currentTeamId);
+  const now = Date.now();
+  const currentTeamId = Number(judgeDb.event.currentTeamId);
+
+  const judges = judgeDb.judges
+    .filter((judge) => judge.type === 'audience')
+    .map((judge) => {
+      const lastSeenMs = judge.lastSeenAt ? new Date(judge.lastSeenAt).getTime() : 0;
+      const vote = judgeDb.votes.find(
+        (item) => Number(item.teamId) === currentTeamId && item.judgeId === judge.id && !item.deleted
+      );
+      return {
+        id: judge.id,
+        phone: judge.phone,
+        phoneMasked: maskPhone(judge.phone),
+        type: judge.type,
+        allowed: judge.allowed !== false,
+        online: Boolean(lastSeenMs && now - lastSeenMs <= JUDGE_ONLINE_WINDOW_MS),
+        registeredAt: judge.registeredAt,
+        lastSeenAt: judge.lastSeenAt,
+        lastIp: judge.lastIp || '',
+        device: judge.device || '',
+        submittedCurrentTeam: Boolean(vote),
+        currentScore: vote ? Number(vote.score) : null,
+      };
+    })
+    .sort((a, b) => Number(b.online) - Number(a.online) || String(b.lastSeenAt || '').localeCompare(String(a.lastSeenAt || '')));
+
+  const comments = judgeDb.comments
+    .filter((comment) => Number(comment.teamId) === currentTeamId && !comment.deleted)
+    .slice()
+    .reverse()
+    .map((comment) => ({
+      ...clone(comment),
+      judgeLabel: comment.judgeType === 'audience' ? maskPhone(comment.judgeId) : comment.judgeLabel || comment.judgeId,
+    }));
+
+  const expertVotes = judgeDb.votes
+    .filter((vote) => Number(vote.teamId) === currentTeamId && vote.judgeType === 'onsite_expert' && !vote.deleted)
+    .map((vote) => ({
+      id: vote.id,
+      judgeId: vote.judgeId,
+      label: vote.judgeLabel || vote.judgeId,
+      score: Number(vote.score),
+      createdAt: vote.createdAt,
+      updatedAt: vote.updatedAt,
+      batchId: vote.batchId || null,
+    }))
+    .sort((a, b) => a.label.localeCompare(b.label, 'ko'));
+
+  const expertBatches = judgeDb.expertBatches
+    .filter((batch) => Number(batch.teamId) === currentTeamId)
+    .slice()
+    .reverse()
+    .map((batch) => clone(batch));
+
+  return {
+    ...state,
+    score: aggregate.score,
+    judges,
+    registeredAudienceCount: judges.length,
+    onlineAudienceCount: judges.filter((judge) => judge.online).length,
+    comments,
+    expertVotes,
+    expertBatches,
+    settings: {
+      mobileEnabled: Boolean(judgeDb.event.mobileEnabled),
+      registrationEnabled: Boolean(judgeDb.event.registrationEnabled),
+      commentInputEnabled: Boolean(judgeDb.event.commentInputEnabled),
+      commentDisplayEnabled: Boolean(judgeDb.event.commentDisplayEnabled),
+      allowVoteEdit: Boolean(judgeDb.event.allowVoteEdit),
+    },
+    teams: clone(judgeDb.teams),
+    database: { backend: 'postgresql', connected: judgeDatabaseConnected, eventKey: JUDGE_EVENT_KEY, lastError: judgeDatabaseLastError },
+  };
+}
+
+function writeJudgeSse(res, payload) {
+  res.write(`data: ${JSON.stringify(payload)}\n\n`);
+}
+
+function broadcastJudgeState() {
+  const payload = { type: 'state', ...publicJudgeState() };
+  const dead = [];
+  for (const client of judgeDisplayClients) {
+    try {
+      writeJudgeSse(client, payload);
+    } catch {
+      dead.push(client);
+    }
+  }
+  dead.forEach((client) => judgeDisplayClients.delete(client));
+}
+
+function handleJudgeLive(req, res) {
+  res.writeHead(200, {
+    'Content-Type': 'text/event-stream; charset=utf-8',
+    'Cache-Control': 'no-cache, no-transform',
+    Connection: 'keep-alive',
+    'X-Accel-Buffering': 'no',
+  });
+  res.write(': connected\n\n');
+  writeJudgeSse(res, { type: 'state', ...publicJudgeState() });
+  judgeDisplayClients.add(res);
+
+  const heartbeat = setInterval(() => {
+    try { res.write(': heartbeat\n\n'); } catch {}
+  }, 15_000);
+  heartbeat.unref?.();
+
+  req.on('close', () => {
+    clearInterval(heartbeat);
+    judgeDisplayClients.delete(res);
+  });
+}
+
+function isJudgeAdmin(req) {
+  if (!JUDGE_ADMIN_KEY) return true;
+  const headerKey = String(req.headers['x-judge-admin-key'] || '');
+  const auth = String(req.headers.authorization || '');
+  const bearer = auth.startsWith('Bearer ') ? auth.slice(7).trim() : '';
+  return headerKey === JUDGE_ADMIN_KEY || bearer === JUDGE_ADMIN_KEY;
+}
+
+function requireJudgeAdmin(req, res) {
+  if (isJudgeAdmin(req)) return true;
+  json(res, 401, { ok: false, error: '관리자 인증이 필요합니다.' });
+  return false;
+}
+
+function normalizeAudiencePhone(value) {
+  const phone = cleanPhone(value);
+  if (!/^010\d{8}$/.test(phone)) return '';
+  return phone;
+}
+
+function hashJudgeToken(token) {
+  return crypto.createHash('sha256').update(String(token || '')).digest('hex');
+}
+
+function bearerToken(req) {
+  const auth = String(req.headers.authorization || '');
+  if (auth.startsWith('Bearer ')) return auth.slice(7).trim();
+  return String(req.headers['x-judge-session'] || '').trim();
+}
+
+function sessionJudge(req) {
+  const token = bearerToken(req);
+  if (!token) return null;
+  const tokenHash = hashJudgeToken(token);
+  const session = judgeDb.sessions.find((item) => item.tokenHash === tokenHash && item.active !== false);
+  if (!session) return null;
+  const judge = judgeDb.judges.find((item) => item.id === session.judgeId);
+  if (!judge) return null;
+  return { token, session, judge };
+}
+
+function touchJudgeSession(req, auth) {
+  if (!auth) return;
+  const now = judgeNowIso();
+  auth.session.lastSeenAt = now;
+  auth.judge.lastSeenAt = now;
+  auth.judge.lastIp = String(req.headers['x-forwarded-for'] || req.socket.remoteAddress || '').split(',')[0].trim();
+  auth.judge.device = String(req.headers['user-agent'] || '').slice(0, 180);
+  markJudgeDirty();
+}
+
+async function handleJudgeRegister(req, res) {
+  let body;
+  try { body = await readJsonBody(req); } catch (error) {
+    return json(res, 400, { ok: false, error: error.message || '요청 내용을 확인해주세요.' });
+  }
+
+  const phone = normalizeAudiencePhone(body.phone);
+  if (!phone) return json(res, 400, { ok: false, error: '010 휴대폰 번호를 정확히 입력해주세요.' });
+
+  let judge = judgeDb.judges.find((item) => item.id === phone && item.type === 'audience');
+  if (!judge && !judgeDb.event.registrationEnabled) {
+    return json(res, 403, { ok: false, code: 'REGISTRATION_CLOSED', error: '현재 신규 심사위원 등록이 중지되어 있습니다.' });
+  }
+
+  const now = judgeNowIso();
+  if (!judge) {
+    judge = {
+      id: phone,
+      phone,
+      type: 'audience',
+      allowed: true,
+      registeredAt: now,
+      lastSeenAt: now,
+      lastIp: '',
+      device: '',
+    };
+    judgeDb.judges.push(judge);
+    judgeAudit('judge.register', { judgeId: phone, phoneMasked: maskPhone(phone) });
+  }
+
+  // 같은 전화번호로 새 기기에서 들어오면 이전 세션을 종료합니다.
+  for (const session of judgeDb.sessions) {
+    if (session.judgeId === phone && session.active !== false) session.active = false;
+  }
+
+  const token = crypto.randomBytes(32).toString('hex');
+  judgeDb.sessions.push({
+    id: crypto.randomUUID(),
+    judgeId: phone,
+    tokenHash: hashJudgeToken(token),
+    active: true,
+    createdAt: now,
+    lastSeenAt: now,
+  });
+  if (judgeDb.sessions.length > 5000) judgeDb.sessions = judgeDb.sessions.slice(-5000);
+  markJudgeDirty();
+  flushJudgeDb();
+
+  touchJudgeSession(req, sessionJudge({ headers: { authorization: `Bearer ${token}` }, socket: req.socket }));
+
+  return json(res, 200, {
+    ok: true,
+    sessionToken: token,
+    judge: { id: phone, phoneMasked: maskPhone(phone), allowed: judge.allowed !== false },
+    state: mobileJudgeState(judge),
+  });
+}
+
+function mobileJudgeState(judge) {
+  const publicState = publicJudgeState();
+  const existingVote = judgeDb.votes.find(
+    (vote) => Number(vote.teamId) === Number(judgeDb.event.currentTeamId) && vote.judgeId === judge.id && !vote.deleted
+  );
+  return {
+    ...publicState,
+    allowed: judge.allowed !== false,
+    registrationEnabled: Boolean(judgeDb.event.registrationEnabled),
+    allowVoteEdit: Boolean(judgeDb.event.allowVoteEdit),
+    myVote: existingVote ? { score: Number(existingVote.score), updatedAt: existingVote.updatedAt } : null,
+    phoneMasked: maskPhone(judge.phone),
+  };
+}
+
+function requireMobileJudge(req, res) {
+  const auth = sessionJudge(req);
+  if (!auth) {
+    json(res, 401, { ok: false, code: 'SESSION_INVALID', error: '심사위원 등록이 필요합니다.' });
+    return null;
+  }
+  touchJudgeSession(req, auth);
+  return auth;
+}
+
+function normalizeComment(value) {
+  const text = String(value || '').replace(/\s+/g, ' ').trim();
+  if (!text) return '';
+  if ([...text].length > JUDGE_MAX_COMMENT_LENGTH) throw new Error(`댓글은 ${JUDGE_MAX_COMMENT_LENGTH}자 이내로 입력해주세요.`);
+  if (/https?:\/\/|www\./i.test(text)) throw new Error('댓글에는 인터넷 주소를 넣을 수 없습니다.');
+  if (/(?:01[016789])[- ]?\d{3,4}[- ]?\d{4}/.test(text)) throw new Error('댓글에는 전화번호를 넣을 수 없습니다.');
+  return text;
+}
+
+async function handleJudgeMobileState(req, res) {
+  const auth = requireMobileJudge(req, res);
+  if (!auth) return;
+  return json(res, 200, { ok: true, state: mobileJudgeState(auth.judge) });
+}
+
+async function handleJudgeHeartbeat(req, res) {
+  const auth = requireMobileJudge(req, res);
+  if (!auth) return;
+  return json(res, 200, { ok: true, allowed: auth.judge.allowed !== false, serverTime: judgeNowIso() });
+}
+
+function upsertVote({ teamId, judgeId, judgeType, judgeLabel, score, batchId = null }) {
+  const now = judgeNowIso();
+  let vote = judgeDb.votes.find((item) => Number(item.teamId) === Number(teamId) && item.judgeId === judgeId && !item.deleted);
+  if (vote) {
+    vote.score = score;
+    vote.updatedAt = now;
+    vote.judgeType = judgeType;
+    vote.judgeLabel = judgeLabel || vote.judgeLabel;
+    if (batchId) vote.batchId = batchId;
+  } else {
+    vote = {
+      id: crypto.randomUUID(),
+      teamId: Number(teamId),
+      judgeId,
+      judgeType,
+      judgeLabel: judgeLabel || judgeId,
+      score,
+      batchId,
+      createdAt: now,
+      updatedAt: now,
+      deleted: false,
+    };
+    judgeDb.votes.push(vote);
+  }
+  markJudgeDirty();
+  return vote;
+}
+
+async function handleJudgeVote(req, res) {
+  const auth = requireMobileJudge(req, res);
+  if (!auth) return;
+  const judge = auth.judge;
+
+  if (judge.allowed === false) return json(res, 403, { ok: false, code: 'JUDGE_BLOCKED', error: '현재 심사 참여가 제한되어 있습니다.' });
+  if (!judgeDb.event.mobileEnabled) return json(res, 403, { ok: false, code: 'MOBILE_DISABLED', error: '현재 모바일 심사가 일시 중지되어 있습니다.' });
+  if (judgeDb.event.phase !== 'voting') return json(res, 409, { ok: false, code: 'NOT_VOTING', error: '현재 심사가 진행 중이 아닙니다.' });
+
+  let body;
+  try { body = await readJsonBody(req); } catch (error) {
+    return json(res, 400, { ok: false, error: error.message || '요청 내용을 확인해주세요.' });
+  }
+
+  const teamId = Number(body.teamId || judgeDb.event.currentTeamId);
+  if (teamId !== Number(judgeDb.event.currentTeamId)) return json(res, 409, { ok: false, error: '현재 심사 중인 팀이 아닙니다.' });
+
+  const score = Number(body.score);
+  if (!Number.isFinite(score) || score < 0 || score > 100) return json(res, 400, { ok: false, error: '점수는 0~100 범위로 입력해주세요.' });
+
+  const existing = judgeDb.votes.find((vote) => Number(vote.teamId) === teamId && vote.judgeId === judge.id && !vote.deleted);
+  if (existing && !judgeDb.event.allowVoteEdit) return json(res, 409, { ok: false, code: 'EDIT_DISABLED', error: '이미 제출한 평가는 수정할 수 없습니다.' });
+
+  const vote = upsertVote({
+    teamId,
+    judgeId: judge.id,
+    judgeType: 'audience',
+    judgeLabel: maskPhone(judge.phone),
+    score: Math.round(score * 10) / 10,
+  });
+
+  let comment = '';
+  if (judgeDb.event.commentInputEnabled) {
+    try { comment = normalizeComment(body.comment); } catch (error) {
+      return json(res, 400, { ok: false, error: error.message });
+    }
+  }
+
+  if (comment) {
+    judgeDb.comments.push({
+      id: crypto.randomUUID(),
+      teamId,
+      judgeId: judge.id,
+      judgeType: 'audience',
+      judgeLabel: maskPhone(judge.phone),
+      text: comment,
+      visible: true,
+      deleted: false,
+      createdAt: judgeNowIso(),
+    });
+    markJudgeDirty();
+  }
+
+  judgeAudit(existing ? 'vote.update' : 'vote.create', { teamId, judgeId: judge.id, judgeType: 'audience' });
+  broadcastJudgeState();
+
+  return json(res, 200, {
+    ok: true,
+    updated: Boolean(existing),
+    vote: { score: Number(vote.score), teamId },
+    participants: teamAggregate(teamId).participants,
+  });
+}
+
+function stopJudgeCountdown() {
+  if (judgeTimer) clearInterval(judgeTimer);
+  judgeTimer = null;
+}
+
+function stopExpertTimersForTeam(teamId, markStatus = 'stopped') {
+  for (const [key, timer] of expertTimers.entries()) {
+    if (key.startsWith(`${Number(teamId)}:`)) {
+      clearTimeout(timer);
+      expertTimers.delete(key);
+    }
+  }
+  for (const batch of judgeDb.expertBatches) {
+    if (Number(batch.teamId) === Number(teamId) && batch.status === 'running') {
+      batch.status = markStatus;
+      batch.stoppedAt = judgeNowIso();
+      for (const entry of batch.entries || []) {
+        if (entry.status === 'pending') entry.status = 'cancelled';
+      }
+    }
+  }
+  markJudgeDirty();
+}
+
+function closeJudgeVoting(reason = 'timer') {
+  stopJudgeCountdown();
+  stopExpertTimersForTeam(judgeDb.event.currentTeamId, 'completed');
+  judgeDb.event.phase = 'result';
+  judgeDb.event.endsAt = judgeNowIso();
+  judgeAudit('judge.close', { teamId: judgeDb.event.currentTeamId, reason });
+  markJudgeDirty();
+  flushJudgeDb();
+  broadcastJudgeState();
+}
+
+function startJudgeCountdown() {
+  stopJudgeCountdown();
+  judgeTimer = setInterval(() => {
+    if (judgeDb.event.phase !== 'voting') return;
+    const remaining = judgeRemainingSeconds();
+    if (remaining <= 0) closeJudgeVoting('timer');
+    else broadcastJudgeState();
+  }, 1000);
+  judgeTimer.unref?.();
+}
+
+async function handleJudgeAdminStart(req, res) {
+  if (!requireJudgeAdmin(req, res)) return;
+  let body = {};
+  try { body = await readJsonBody(req); } catch (error) { return json(res, 400, { ok: false, error: error.message }); }
+
+  const teamId = Math.max(1, Math.min(11, Number(body.teamId || judgeDb.event.currentTeamId) || 1));
+  const durationSeconds = Math.max(30, Math.min(600, Number(body.durationSeconds || JUDGE_DEFAULT_DURATION_SECONDS) || JUDGE_DEFAULT_DURATION_SECONDS));
+  judgeDb.event.currentTeamId = teamId;
+  judgeDb.event.durationSeconds = durationSeconds;
+  judgeDb.event.phase = 'voting';
+  judgeDb.event.startedAt = judgeNowIso();
+  judgeDb.event.endsAt = new Date(Date.now() + durationSeconds * 1000).toISOString();
+  judgeAudit('judge.start', { teamId, durationSeconds });
+  markJudgeDirty();
+  startJudgeCountdown();
+  broadcastJudgeState();
+  return json(res, 200, { ok: true, state: adminJudgeState() });
+}
+
+async function handleJudgeAdminClose(req, res) {
+  if (!requireJudgeAdmin(req, res)) return;
+  closeJudgeVoting('manual');
+  return json(res, 200, { ok: true, state: adminJudgeState() });
+}
+
+async function handleJudgeAdminReset(req, res) {
+  if (!requireJudgeAdmin(req, res)) return;
+  let body = {};
+  try { body = await readJsonBody(req); } catch {}
+  const teamId = Number(body.teamId || judgeDb.event.currentTeamId);
+  stopExpertTimersForTeam(teamId, 'reset');
+  judgeDb.votes = judgeDb.votes.filter((vote) => Number(vote.teamId) !== teamId);
+  judgeDb.comments = judgeDb.comments.filter((comment) => Number(comment.teamId) !== teamId);
+  judgeDb.expertBatches = judgeDb.expertBatches.filter((batch) => Number(batch.teamId) !== teamId);
+  if (Number(judgeDb.event.currentTeamId) === teamId) {
+    stopJudgeCountdown();
+    judgeDb.event.phase = 'idle';
+    judgeDb.event.startedAt = null;
+    judgeDb.event.endsAt = null;
+  }
+  judgeAudit('team.reset', { teamId });
+  markJudgeDirty();
+  flushJudgeDb();
+  broadcastJudgeState();
+  return json(res, 200, { ok: true, state: adminJudgeState() });
+}
+
+async function handleJudgeAdminTeam(req, res) {
+  if (!requireJudgeAdmin(req, res)) return;
+  let body;
+  try { body = await readJsonBody(req); } catch (error) { return json(res, 400, { ok: false, error: error.message }); }
+  const teamId = Math.max(1, Math.min(11, Number(body.teamId) || 1));
+  judgeDb.event.currentTeamId = teamId;
+  judgeAudit('team.select', { teamId });
+  markJudgeDirty();
+  broadcastJudgeState();
+  return json(res, 200, { ok: true, state: adminJudgeState() });
+}
+
+async function handleJudgeAdminOrder(req, res) {
+  if (!requireJudgeAdmin(req, res)) return;
+  let body;
+  try { body = await readJsonBody(req); } catch (error) { return json(res, 400, { ok: false, error: error.message }); }
+  const order = Array.isArray(body.teamOrder) ? body.teamOrder.map(Number) : [];
+  const valid = new Set(judgeDb.teams.map((team) => Number(team.id)));
+  if (order.length !== valid.size || new Set(order).size !== valid.size || order.some((id) => !valid.has(id))) {
+    return json(res, 400, { ok: false, error: '합창단 전체 순서를 중복 없이 보내주세요.' });
+  }
+  judgeDb.event.teamOrder = order;
+  judgeAudit('team.order', { teamOrder: order });
+  markJudgeDirty();
+  broadcastJudgeState();
+  return json(res, 200, { ok: true, state: adminJudgeState() });
+}
+
+async function handleJudgeAdminDisplay(req, res) {
+  if (!requireJudgeAdmin(req, res)) return;
+  let body;
+  try { body = await readJsonBody(req); } catch (error) { return json(res, 400, { ok: false, error: error.message }); }
+  const allowedModes = new Set(['event_intro', 'team_intro', 'score']);
+  if (body.displayMode && !allowedModes.has(String(body.displayMode))) return json(res, 400, { ok: false, error: '지원하지 않는 화면 종류입니다.' });
+  if (body.displayMode) judgeDb.event.displayMode = String(body.displayMode);
+  if (typeof body.eventTitle1 === 'string') judgeDb.event.eventTitle1 = body.eventTitle1.trim().slice(0, 80);
+  if (typeof body.eventTitle2 === 'string') judgeDb.event.eventTitle2 = body.eventTitle2.trim().slice(0, 80);
+  if (Number.isFinite(Number(body.introTeamId))) judgeDb.event.introTeamId = Math.max(1, Math.min(11, Number(body.introTeamId)));
+  judgeAudit('display.update', {
+    displayMode: judgeDb.event.displayMode,
+    introTeamId: judgeDb.event.introTeamId,
+  });
+  markJudgeDirty();
+  flushJudgeDb();
+  broadcastJudgeState();
+  return json(res, 200, { ok: true, state: adminJudgeState() });
+}
+
+async function handleJudgeAdminTeamMeta(req, res) {
+  if (!requireJudgeAdmin(req, res)) return;
+  let body;
+  try { body = await readJsonBody(req); } catch (error) { return json(res, 400, { ok: false, error: error.message }); }
+  const team = judgeTeam(body.teamId);
+  if (!team) return json(res, 404, { ok: false, error: '합창단을 찾지 못했습니다.' });
+  if (Array.isArray(body.songs)) team.songs = body.songs.slice(0, 2).map((song) => String(song || '').trim().slice(0, 100));
+  if (typeof body.name === 'string' && body.name.trim()) team.name = body.name.trim().slice(0, 80);
+  judgeAudit('team.meta', { teamId: team.id, songs: team.songs });
+  markJudgeDirty();
+  flushJudgeDb();
+  broadcastJudgeState();
+  return json(res, 200, { ok: true, state: adminJudgeState() });
+}
+
+async function handleJudgeAdminCommentDelete(req, res) {
+  if (!requireJudgeAdmin(req, res)) return;
+  let body;
+  try { body = await readJsonBody(req); } catch (error) { return json(res, 400, { ok: false, error: error.message }); }
+  const comment = judgeDb.comments.find((item) => item.id === String(body.commentId || ''));
+  if (!comment) return json(res, 404, { ok: false, error: '댓글을 찾지 못했습니다.' });
+  comment.deleted = true;
+  comment.visible = false;
+  comment.deletedAt = judgeNowIso();
+  judgeAudit('comment.delete', { commentId: comment.id, teamId: comment.teamId });
+  markJudgeDirty();
+  broadcastJudgeState();
+  return json(res, 200, { ok: true, state: adminJudgeState() });
+}
+
+async function handleJudgeAdminJudgeAllow(req, res) {
+  if (!requireJudgeAdmin(req, res)) return;
+  let body;
+  try { body = await readJsonBody(req); } catch (error) { return json(res, 400, { ok: false, error: error.message }); }
+  const judge = judgeDb.judges.find((item) => item.id === String(body.judgeId || '') && item.type === 'audience');
+  if (!judge) return json(res, 404, { ok: false, error: '심사위원을 찾지 못했습니다.' });
+  judge.allowed = body.allowed !== false;
+  judgeAudit('judge.allow', { judgeId: judge.id, allowed: judge.allowed });
+  markJudgeDirty();
+  return json(res, 200, { ok: true, state: adminJudgeState() });
+}
+
+async function handleJudgeAdminSettings(req, res) {
+  if (!requireJudgeAdmin(req, res)) return;
+  let body;
+  try { body = await readJsonBody(req); } catch (error) { return json(res, 400, { ok: false, error: error.message }); }
+  const keys = ['mobileEnabled', 'registrationEnabled', 'commentInputEnabled', 'commentDisplayEnabled', 'allowVoteEdit'];
+  for (const key of keys) if (typeof body[key] === 'boolean') judgeDb.event[key] = body[key];
+  judgeAudit('settings.update', Object.fromEntries(keys.map((key) => [key, judgeDb.event[key]])));
+  markJudgeDirty();
+  broadcastJudgeState();
+  return json(res, 200, { ok: true, state: adminJudgeState() });
+}
+
+function makeExpertScores(count, baseScore, spread) {
+  const scores = [];
+  const base = Math.max(0, Math.min(100, Number(baseScore)));
+  const maxSpread = Math.max(0, Math.min(30, Number(spread)));
+  const pairCount = Math.floor(count / 2);
+  for (let i = 0; i < pairCount; i += 1) {
+    const d = Math.random() * maxSpread;
+    scores.push(Math.max(0, Math.min(100, base + d)));
+    scores.push(Math.max(0, Math.min(100, base - d)));
+  }
+  if (count % 2 === 1) scores.push(base);
+  for (let i = scores.length - 1; i > 0; i -= 1) {
+    const j = crypto.randomInt(0, i + 1);
+    [scores[i], scores[j]] = [scores[j], scores[i]];
+  }
+  return scores.map((score) => Math.round(score * 10) / 10);
+}
+
+function fireExpertEntry(batchId, entryId) {
+  const batch = judgeDb.expertBatches.find((item) => item.id === batchId);
+  if (!batch || batch.status !== 'running') return;
+  if (judgeDb.event.phase !== 'voting' || Number(judgeDb.event.currentTeamId) !== Number(batch.teamId)) return;
+  const entry = (batch.entries || []).find((item) => item.id === entryId);
+  if (!entry || entry.status !== 'pending') return;
+
+  upsertVote({
+    teamId: batch.teamId,
+    judgeId: entry.judgeId,
+    judgeType: 'onsite_expert',
+    judgeLabel: entry.label,
+    score: entry.score,
+    batchId: batch.id,
+  });
+  entry.status = 'submitted';
+  entry.submittedAt = judgeNowIso();
+  const allDone = batch.entries.every((item) => item.status !== 'pending');
+  if (allDone) {
+    batch.status = 'completed';
+    batch.completedAt = judgeNowIso();
+  }
+  markJudgeDirty();
+  broadcastJudgeState();
+}
+
+function scheduleExpertBatch(batch) {
+  for (const entry of batch.entries || []) {
+    if (entry.status !== 'pending') continue;
+    const delay = Math.max(40, new Date(entry.scheduledAt).getTime() - Date.now());
+    const key = `${Number(batch.teamId)}:${batch.id}:${entry.id}`;
+    const timer = setTimeout(() => {
+      expertTimers.delete(key);
+      fireExpertEntry(batch.id, entry.id);
+    }, delay);
+    timer.unref?.();
+    expertTimers.set(key, timer);
+  }
+}
+
+async function handleJudgeAdminExpertStart(req, res) {
+  if (!requireJudgeAdmin(req, res)) return;
+  if (judgeDb.event.phase !== 'voting') return json(res, 409, { ok: false, error: '심사가 진행 중일 때만 현장 전문가 점수를 투입할 수 있습니다.' });
+  let body;
+  try { body = await readJsonBody(req); } catch (error) { return json(res, 400, { ok: false, error: error.message }); }
+
+  const count = Math.max(0, Math.min(500, Math.floor(Number(body.count) || 0)));
+  const baseScore = Math.max(0, Math.min(100, Number(body.baseScore) || 0));
+  const spread = Math.max(0, Math.min(30, Number(body.spread ?? 10) || 0));
+  if (count === 0) return json(res, 200, { ok: true, state: adminJudgeState(), message: '현장 전문가 수가 0이므로 추가하지 않았습니다.' });
+
+  const teamId = Number(judgeDb.event.currentTeamId);
+  const remainingMs = Math.max(1500, new Date(judgeDb.event.endsAt).getTime() - Date.now());
+  const scores = makeExpertScores(count, baseScore, spread);
+  const batchId = crypto.randomUUID();
+  const spacing = remainingMs / (count + 1);
+  let lastAt = Date.now();
+  const entries = scores.map((score, index) => {
+    const jitter = (Math.random() - 0.5) * Math.min(spacing * 0.45, 1800);
+    let scheduledMs = Date.now() + spacing * (index + 1) + jitter;
+    scheduledMs = Math.max(lastAt + 40, scheduledMs);
+    scheduledMs = Math.min(new Date(judgeDb.event.endsAt).getTime() - 120, scheduledMs);
+    lastAt = scheduledMs;
+    return {
+      id: crypto.randomUUID(),
+      judgeId: `onsite-expert-${String(index + 1).padStart(3, '0')}`,
+      label: `가상 ${index + 1}`,
+      score,
+      scheduledAt: new Date(scheduledMs).toISOString(),
+      status: 'pending',
+      submittedAt: null,
+    };
+  });
+
+  // 전문가 레코드 자체도 DB에서 유형을 구분해 둡니다.
+  for (const entry of entries) {
+    if (!judgeDb.judges.find((judge) => judge.id === entry.judgeId)) {
+      judgeDb.judges.push({
+        id: entry.judgeId,
+        phone: '',
+        type: 'onsite_expert',
+        label: entry.label,
+        allowed: true,
+        registeredAt: judgeNowIso(),
+        lastSeenAt: null,
+      });
+    }
+  }
+
+  const batch = {
+    id: batchId,
+    teamId,
+    count,
+    baseScore,
+    spread,
+    status: 'running',
+    createdAt: judgeNowIso(),
+    entries,
+  };
+  judgeDb.expertBatches.push(batch);
+  judgeAudit('expert.batch.start', { teamId, count, baseScore, spread, batchId });
+  markJudgeDirty();
+  scheduleExpertBatch(batch);
+  return json(res, 200, { ok: true, state: adminJudgeState() });
+}
+
+async function handleJudgeAdminExpertStop(req, res) {
+  if (!requireJudgeAdmin(req, res)) return;
+  stopExpertTimersForTeam(judgeDb.event.currentTeamId, 'stopped');
+  judgeAudit('expert.batch.stop', { teamId: judgeDb.event.currentTeamId });
+  markJudgeDirty();
+  return json(res, 200, { ok: true, state: adminJudgeState() });
+}
+
+async function handleJudgeAdminExpertVote(req, res) {
+  if (!requireJudgeAdmin(req, res)) return;
+  let body;
+  try { body = await readJsonBody(req); } catch (error) { return json(res, 400, { ok: false, error: error.message }); }
+  const teamId = Number(body.teamId || judgeDb.event.currentTeamId);
+  const judgeId = String(body.judgeId || '').trim();
+  if (!judgeId.startsWith('onsite-expert-')) return json(res, 400, { ok: false, error: '현장 전문가 ID를 확인해주세요.' });
+  const vote = judgeDb.votes.find((item) => Number(item.teamId) === teamId && item.judgeId === judgeId && !item.deleted);
+  if (!vote) return json(res, 404, { ok: false, error: '현장 전문가 점수를 찾지 못했습니다.' });
+  if (body.delete === true) {
+    vote.deleted = true;
+    vote.deletedAt = judgeNowIso();
+    judgeAudit('expert.vote.delete', { teamId, judgeId });
+  } else {
+    const score = Number(body.score);
+    if (!Number.isFinite(score) || score < 0 || score > 100) return json(res, 400, { ok: false, error: '점수는 0~100 범위여야 합니다.' });
+    vote.score = Math.round(score * 10) / 10;
+    vote.updatedAt = judgeNowIso();
+    judgeAudit('expert.vote.update', { teamId, judgeId, score: vote.score });
+  }
+  markJudgeDirty();
+  broadcastJudgeState();
+  return json(res, 200, { ok: true, state: adminJudgeState() });
+}
+
+function csvEscape(value) {
+  const text = String(value ?? '');
+  return `"${text.replace(/"/g, '""')}"`;
+}
+
+function handleJudgeAdminExport(req, res) {
+  if (!requireJudgeAdmin(req, res)) return;
+  const rows = [[
+    'team_id','team_name','judge_id','judge_type','judge_label','score','created_at','updated_at','deleted'
+  ]];
+  for (const vote of judgeDb.votes) {
+    const team = judgeTeam(vote.teamId);
+    rows.push([
+      vote.teamId,
+      team?.name || '',
+      vote.judgeId,
+      vote.judgeType,
+      vote.judgeLabel || '',
+      vote.score,
+      vote.createdAt,
+      vote.updatedAt,
+      vote.deleted ? '1' : '0',
+    ]);
+  }
+  const csv = '\uFEFF' + rows.map((row) => row.map(csvEscape).join(',')).join('\r\n');
+  res.writeHead(200, {
+    'Content-Type': 'text/csv; charset=utf-8',
+    'Content-Disposition': 'attachment; filename="judge-votes.csv"',
+    'Cache-Control': 'no-store',
+  });
+  res.end(csv);
+}
+
+function restoreJudgeRuntime() {
+  if (judgeDb.event.phase === 'voting') {
+    if (judgeRemainingSeconds() <= 0) {
+      judgeDb.event.phase = 'result';
+      judgeDb.event.endsAt = judgeNowIso();
+      markJudgeDirty();
+    } else {
+      startJudgeCountdown();
+      for (const batch of judgeDb.expertBatches) {
+        if (batch.status === 'running' && Number(batch.teamId) === Number(judgeDb.event.currentTeamId)) {
+          scheduleExpertBatch(batch);
+        }
+      }
+    }
+  }
+}
+
+restoreJudgeRuntime();
+
+
 const server = http.createServer(async (req, res) => {
   const pathname = new URL(req.url, "http://localhost").pathname;
 
@@ -1114,105 +1715,118 @@ const server = http.createServer(async (req, res) => {
       debugMode: PARTNER_DEBUG,
       judge: {
         adminKeyConfigured: Boolean(JUDGE_ADMIN_KEY),
-        defaultDurationSeconds: JUDGE_DEFAULT_DURATION_SECONDS,
-        connectedDisplays: judgeClients.size,
-        state: judgeSnapshot(),
+        database: { backend: 'postgresql', connected: judgeDatabaseConnected, eventKey: JUDGE_EVENT_KEY, lastError: judgeDatabaseLastError },
+        displayClients: judgeDisplayClients.size,
+        state: publicJudgeState(),
       },
       serverTime: new Date().toISOString(),
     });
   }
 
-
   if (pathname === "/api/judge/live") {
-    if (req.method !== "GET") {
-      return json(res, 405, {
-        ok: false,
-        error: "GET 요청만 사용할 수 있습니다.",
-      });
-    }
-
+    if (req.method !== "GET") return json(res, 405, { ok: false, error: "GET 요청만 사용할 수 있습니다." });
     return handleJudgeLive(req, res);
   }
 
   if (pathname === "/api/judge/state") {
-    if (req.method !== "GET") {
-      return json(res, 405, {
-        ok: false,
-        error: "GET 요청만 사용할 수 있습니다.",
-      });
-    }
+    if (req.method !== "GET") return json(res, 405, { ok: false, error: "GET 요청만 사용할 수 있습니다." });
+    return json(res, 200, { ok: true, state: publicJudgeState() });
+  }
 
-    return json(res, 200, {
-      ok: true,
-      state: judgeSnapshot(),
-      connectedDisplays: judgeClients.size,
-    });
+  if (pathname === "/api/judge/register") {
+    if (req.method !== "POST") return json(res, 405, { ok: false, error: "POST 요청만 사용할 수 있습니다." });
+    return handleJudgeRegister(req, res);
+  }
+
+  if (pathname === "/api/judge/mobile/state") {
+    if (req.method !== "GET") return json(res, 405, { ok: false, error: "GET 요청만 사용할 수 있습니다." });
+    return handleJudgeMobileState(req, res);
+  }
+
+  if (pathname === "/api/judge/heartbeat") {
+    if (req.method !== "POST") return json(res, 405, { ok: false, error: "POST 요청만 사용할 수 있습니다." });
+    return handleJudgeHeartbeat(req, res);
   }
 
   if (pathname === "/api/judge/vote") {
-    if (req.method !== "POST") {
-      return json(res, 405, {
-        ok: false,
-        error: "POST 요청만 사용할 수 있습니다.",
-      });
-    }
-
+    if (req.method !== "POST") return json(res, 405, { ok: false, error: "POST 요청만 사용할 수 있습니다." });
     return handleJudgeVote(req, res);
   }
 
-  if (pathname === "/api/judge/comment") {
-    if (req.method !== "POST") {
-      return json(res, 405, {
-        ok: false,
-        error: "POST 요청만 사용할 수 있습니다.",
-      });
-    }
-
-    return handleJudgeComment(req, res);
+  if (pathname === "/api/judge/admin/state") {
+    if (req.method !== "GET") return json(res, 405, { ok: false, error: "GET 요청만 사용할 수 있습니다." });
+    if (!requireJudgeAdmin(req, res)) return;
+    return json(res, 200, { ok: true, state: adminJudgeState() });
   }
 
   if (pathname === "/api/judge/admin/start") {
-    if (req.method !== "POST") {
-      return json(res, 405, {
-        ok: false,
-        error: "POST 요청만 사용할 수 있습니다.",
-      });
-    }
-
+    if (req.method !== "POST") return json(res, 405, { ok: false, error: "POST 요청만 사용할 수 있습니다." });
     return handleJudgeAdminStart(req, res);
   }
 
   if (pathname === "/api/judge/admin/close") {
-    if (req.method !== "POST") {
-      return json(res, 405, {
-        ok: false,
-        error: "POST 요청만 사용할 수 있습니다.",
-      });
-    }
-
+    if (req.method !== "POST") return json(res, 405, { ok: false, error: "POST 요청만 사용할 수 있습니다." });
     return handleJudgeAdminClose(req, res);
   }
 
-  if (pathname === "/api/judge/admin/team") {
-    if (req.method !== "POST") {
-      return json(res, 405, {
-        ok: false,
-        error: "POST 요청만 사용할 수 있습니다.",
-      });
-    }
+  if (pathname === "/api/judge/admin/reset") {
+    if (req.method !== "POST") return json(res, 405, { ok: false, error: "POST 요청만 사용할 수 있습니다." });
+    return handleJudgeAdminReset(req, res);
+  }
 
+  if (pathname === "/api/judge/admin/team") {
+    if (req.method !== "POST") return json(res, 405, { ok: false, error: "POST 요청만 사용할 수 있습니다." });
     return handleJudgeAdminTeam(req, res);
   }
 
-  if (pathname === "/api/judge/admin/reset") {
-    if (req.method !== "POST") {
-      return json(res, 405, {
-        ok: false,
-        error: "POST 요청만 사용할 수 있습니다.",
-      });
-    }
+  if (pathname === "/api/judge/admin/order") {
+    if (req.method !== "POST") return json(res, 405, { ok: false, error: "POST 요청만 사용할 수 있습니다." });
+    return handleJudgeAdminOrder(req, res);
+  }
 
-    return handleJudgeAdminReset(req, res);
+  if (pathname === "/api/judge/admin/display") {
+    if (req.method !== "POST") return json(res, 405, { ok: false, error: "POST 요청만 사용할 수 있습니다." });
+    return handleJudgeAdminDisplay(req, res);
+  }
+
+  if (pathname === "/api/judge/admin/team-meta") {
+    if (req.method !== "POST") return json(res, 405, { ok: false, error: "POST 요청만 사용할 수 있습니다." });
+    return handleJudgeAdminTeamMeta(req, res);
+  }
+
+  if (pathname === "/api/judge/admin/comment/delete") {
+    if (req.method !== "POST") return json(res, 405, { ok: false, error: "POST 요청만 사용할 수 있습니다." });
+    return handleJudgeAdminCommentDelete(req, res);
+  }
+
+  if (pathname === "/api/judge/admin/judge/allow") {
+    if (req.method !== "POST") return json(res, 405, { ok: false, error: "POST 요청만 사용할 수 있습니다." });
+    return handleJudgeAdminJudgeAllow(req, res);
+  }
+
+  if (pathname === "/api/judge/admin/settings") {
+    if (req.method !== "POST") return json(res, 405, { ok: false, error: "POST 요청만 사용할 수 있습니다." });
+    return handleJudgeAdminSettings(req, res);
+  }
+
+  if (pathname === "/api/judge/admin/expert/start") {
+    if (req.method !== "POST") return json(res, 405, { ok: false, error: "POST 요청만 사용할 수 있습니다." });
+    return handleJudgeAdminExpertStart(req, res);
+  }
+
+  if (pathname === "/api/judge/admin/expert/stop") {
+    if (req.method !== "POST") return json(res, 405, { ok: false, error: "POST 요청만 사용할 수 있습니다." });
+    return handleJudgeAdminExpertStop(req, res);
+  }
+
+  if (pathname === "/api/judge/admin/expert/vote") {
+    if (req.method !== "POST") return json(res, 405, { ok: false, error: "POST 요청만 사용할 수 있습니다." });
+    return handleJudgeAdminExpertVote(req, res);
+  }
+
+  if (pathname === "/api/judge/admin/export.csv") {
+    if (req.method !== "GET") return json(res, 405, { ok: false, error: "GET 요청만 사용할 수 있습니다." });
+    return handleJudgeAdminExport(req, res);
   }
 
   if (pathname === "/api/partner/apply") {
@@ -1232,11 +1846,14 @@ const server = http.createServer(async (req, res) => {
   });
 });
 
-server.listen(PORT, "127.0.0.1", () => {
-  console.log(
-    `[partner-api] NAVER SENS ready: http://127.0.0.1:${PORT}/api/partner/apply`
-  );
-  console.log(
-    `[judge-api] SSE ready: http://127.0.0.1:${PORT}/api/judge/live`
-  );
-});
+(async () => {
+  await initJudgeDatabase();
+
+  server.listen(PORT, "127.0.0.1", () => {
+    console.log(
+      `[partner-api] NAVER SENS ready: http://127.0.0.1:${PORT}/api/partner/apply`
+    );
+    console.log(`[judge-api] ready: http://127.0.0.1:${PORT}/api/judge/state`);
+    console.log(`[judge-api] db: PostgreSQL / ${JUDGE_EVENT_KEY} / connected=${judgeDatabaseConnected}`);
+  });
+})();

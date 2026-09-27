@@ -1,268 +1,33 @@
-:root {
-  font-family: Pretendard, "Noto Sans KR", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-}
-
-* {
-  box-sizing: border-box;
-}
-
-html,
-body,
-#root {
-  margin: 0;
-  min-height: 100%;
-}
-
-body {
-  background: #f3f2f0;
-}
-
-button,
-textarea,
-input {
-  font: inherit;
-}
-
-.audience-judge-mobile {
-  min-height: 100dvh;
-  color: #18191c;
-  padding: 18px 14px 32px;
-}
-
-.judge-shell {
-  width: min(100%, 560px);
-  margin: 0 auto;
-}
-
-.brand {
-  padding: 5px 4px 18px;
-  font-size: 15px;
-  font-weight: 900;
-  letter-spacing: -0.03em;
-}
-
-.mobile-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 12px;
-}
-
-.live-pill {
-  display: inline-flex;
-  align-items: center;
-  border-radius: 999px;
-  background: #1b1c20;
-  color: #fff;
-  padding: 9px 13px;
-  font-size: 12px;
-  font-weight: 900;
-}
-
-.timer {
-  font-size: 23px;
-  font-weight: 900;
-  font-variant-numeric: tabular-nums;
-}
-
-.team-card,
-.score-card,
-.comment-card,
-.state-panel {
-  background: #fff;
-  border-radius: 22px;
-  border: 1px solid #e7e5e2;
-  box-shadow: 0 10px 28px rgba(36, 31, 27, .055);
-}
-
-.team-card {
-  position: relative;
-  overflow: hidden;
-  padding: 24px;
-  margin-bottom: 12px;
-}
-
-.team-order {
-  color: #99938d;
-  font-size: 12px;
-  font-weight: 900;
-  letter-spacing: .08em;
-}
-
-.team-card h1 {
-  margin: 16px 0 5px;
-  font-size: clamp(29px, 8vw, 42px);
-  line-height: 1.12;
-  letter-spacing: -0.055em;
-  word-break: keep-all;
-}
-
-.team-card p {
-  margin: 0;
-  color: #88827c;
-  font-size: 13px;
-  font-weight: 800;
-}
-
-.score-card,
-.comment-card {
-  padding: 22px;
-  margin-top: 12px;
-}
-
-.card-title {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 14px;
-  font-size: 15px;
-  font-weight: 850;
-}
-
-.card-title strong {
-  font-size: 42px;
-  line-height: 1;
-  font-variant-numeric: tabular-nums;
-}
-
-.card-title small {
-  color: #99938d;
-  font-size: 11px;
-}
-
-.score-range {
-  width: 100%;
-  margin: 30px 0 12px;
-  accent-color: #24252a;
-}
-
-.range-labels {
-  display: flex;
-  justify-content: space-between;
-  color: #aaa49f;
-  font-size: 11px;
-  font-variant-numeric: tabular-nums;
-}
-
-.comment-card textarea {
-  width: 100%;
-  min-height: 116px;
-  margin-top: 18px;
-  resize: none;
-  border: 0;
-  outline: 0;
-  border-radius: 15px;
-  background: #f6f5f3;
-  padding: 16px;
-  color: #1c1d20;
-  line-height: 1.55;
-}
-
-.comment-card textarea::placeholder {
-  color: #aaa6a1;
-}
-
-.char-count {
-  margin-top: 8px;
-  text-align: right;
-  color: #a29d97;
-  font-size: 11px;
-}
-
-.submit-button {
-  width: 100%;
-  min-height: 62px;
-  margin-top: 14px;
-  border: 0;
-  border-radius: 18px;
-  background: #191a1e;
-  color: #fff;
-  font-size: 17px;
-  font-weight: 900;
-  cursor: pointer;
-}
-
-.submit-button:disabled {
-  opacity: .55;
-  cursor: wait;
-}
-
-.participant-line {
-  padding: 18px 6px 2px;
-  color: #8b8680;
-  text-align: center;
-  font-size: 13px;
-}
-
-.participant-line strong {
-  color: #34363b;
-}
-
-.mobile-notice {
-  margin-top: 12px;
-  padding: 13px 15px;
-  border-radius: 14px;
-  text-align: center;
-  font-size: 13px;
-  font-weight: 800;
-}
-
-.mobile-notice.success {
-  color: #236e49;
-  background: #eaf8f0;
-}
-
-.mobile-notice.error {
-  color: #9f4038;
-  background: #fff0ed;
-}
-
-.state-panel {
-  min-height: 480px;
-  padding: 42px 24px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-}
-
-.state-icon {
-  width: 66px;
-  height: 66px;
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
-  margin-bottom: 24px;
-  background: #f1f0ed;
-  font-size: 28px;
-  font-weight: 900;
-}
-
-.state-panel h1 {
-  max-width: 360px;
-  margin: 0;
-  font-size: 30px;
-  line-height: 1.24;
-  letter-spacing: -0.05em;
-  word-break: keep-all;
-}
-
-.state-panel p {
-  max-width: 340px;
-  margin: 14px 0 0;
-  color: #87817b;
-  font-size: 14px;
-  line-height: 1.6;
-  word-break: keep-all;
-}
-
-.closed-count {
-  margin-top: 28px;
-  border-radius: 999px;
-  padding: 11px 16px;
-  background: #f4f2ef;
-  font-size: 14px;
-  font-weight: 900;
-}
+:root { font-family: Pretendard, "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
+* { box-sizing: border-box; }
+html, body, #root { margin: 0; min-height: 100%; }
+body { background: #f4f2ef; color: #1b1c20; }
+button, input, textarea { font: inherit; }
+.judge-mobile-page { min-height: 100dvh; padding: 16px 13px 28px; }
+.mobile-shell { width: min(100%,560px); margin: 0 auto; }
+.mobile-brand { font-weight: 900; font-size: 15px; margin-bottom: 18px; }
+.register-shell, .state-card { min-height: 75dvh; display: flex; flex-direction: column; justify-content: center; }
+.register-mark, .state-icon { width: 64px; height: 64px; display: grid; place-items: center; border-radius: 50%; background: #ece9f6; color: #6757a5; font-size: 28px; font-weight: 900; margin-bottom: 20px; }
+.register-shell h1, .state-card h1 { margin: 0; font-size: 34px; letter-spacing: -.05em; }
+.register-shell p, .state-card p { color: #807a74; line-height: 1.65; }
+.register-shell form { margin-top: 24px; }
+.phone-input { width: 100%; border: 1px solid #dcd8d2; border-radius: 15px; background: #fff; padding: 17px; font-size: 22px; letter-spacing: .04em; }
+.mobile-primary { width: 100%; min-height: 60px; margin-top: 12px; border: 0; border-radius: 16px; background: #1d1e22; color: #fff; font-weight: 900; font-size: 17px; }
+.judge-mobile-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+.live-badge { background: #1d1e22; color: #fff; border-radius: 999px; padding: 9px 12px; font-size: 12px; font-weight: 900; }
+.judge-mobile-head b { font-size: 24px; font-variant-numeric: tabular-nums; }
+.team-mobile-card, .score-mobile-card, .comment-mobile-card { background: #fff; border: 1px solid #e4e1dd; border-radius: 21px; padding: 22px; margin-bottom: 11px; box-shadow: 0 8px 24px rgba(35,30,25,.045); }
+.team-mobile-card small { color: #99938d; font-weight: 800; }
+.team-mobile-card h1 { margin: 14px 0 5px; font-size: clamp(29px,8vw,42px); letter-spacing: -.055em; line-height: 1.1; word-break: keep-all; }
+.team-mobile-card p { margin: 0; color: #8a847e; font-size: 13px; font-weight: 800; }
+.score-title { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; font-weight: 850; }
+.score-title b { font-size: 43px; }
+.score-title small { color: #99938d; }
+.score-mobile-card input[type=range] { width: 100%; margin: 30px 0 10px; accent-color: #26272b; }
+.range-numbers { display: flex; justify-content: space-between; color: #aaa49f; font-size: 11px; }
+.comment-mobile-card textarea { width: 100%; min-height: 105px; border: 0; border-radius: 14px; background: #f6f4f1; padding: 14px; margin-top: 16px; resize: none; outline: none; line-height: 1.5; }
+.char-count { text-align: right; color: #aaa49f; font-size: 11px; margin-top: 6px; }
+.mobile-alert { margin-top: 11px; border-radius: 13px; padding: 12px; text-align: center; font-size: 13px; font-weight: 800; }
+.mobile-alert.ok { background: #e9f8ef; color: #247448; }
+.mobile-alert.error { background: #fff0ef; color: #9e4138; }
+.mobile-shell footer { text-align: center; color: #8b857f; font-size: 13px; padding: 17px 0 0; }

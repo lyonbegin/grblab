@@ -8,10 +8,12 @@ RUN npm ci
 COPY . .
 RUN npm run build
 
-
 FROM nginx:alpine
 
-RUN apk add --no-cache nodejs
+RUN apk add --no-cache nodejs npm
+
+WORKDIR /app
+RUN npm init -y >/dev/null 2>&1 && npm install --omit=dev pg@8
 
 COPY --from=builder /app/dist /usr/share/nginx/html
 
