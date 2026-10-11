@@ -2,7 +2,7 @@
 import { useState, useCallback, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
-
+import QRCodeLib from 'qrcode'
 const FONT = "'Noto Sans KR','Malgun Gothic',sans-serif"
 const SERIF = "'Nanum Myeongjo','Noto Sans KR',serif"
 
@@ -72,66 +72,100 @@ function useCountUp(target, duration = 700, run = true, from = 0) {
   return display
 }
 
-// ─── CODE128 바코드 (외부 라이브러리 없이 SVG로 직접 렌더) ───────────────────
-// 숫자 문자열을 Code C로 인코딩합니다. 휴대폰 카메라/바코드 스캐너로 읽힙니다.
-const C128_PATTERNS = [
-  "11011001100","11001101100","11001100110","10010011000","10010001100","10001001100","10011001000","10011000100","10001100100","11001001000",
-  "11001000100","11000100100","10110011100","10011011100","10011001110","10111001100","10011101100","10011100110","11001110010","11001011100",
-  "11001001110","11011100100","11001110100","11101101110","11101001100","11100101100","11100100110","11101100100","11100110100","11100110010",
-  "11011011000","11011000110","11000110110","10100011000","10001011000","10001000110","10110001000","10001101000","10001100010","11010001000",
-  "11000101000","11000100010","10110111000","10110001110","10001101110","10111011000","10111000110","10001110110","11101110110","11010001110",
-  "11000101110","11011101000","11011100010","11011101110","11101011000","11101000110","11100010110","11101101000","11101100010","11100011010",
-  "11101111010","11001000010","11110001010","10100110000","10100001100","10010110000","10010000110","10000101100","10000100110","10110010000",
-  "10110000100","10011010000","10011000010","10000110100","10000110010","11000010010","11001010000","11110111010","11000010100","10001111010",
-  "10100111100","10010111100","10010011110","10111100100","10011110100","10011110010","11110100100","11110010100","11110010010","11011011110",
-  "11011110110","11110110110","10101111000","10100011110","10001011110","10111101000","10111100010","11110101000","11110100010","10111011110",
-  "10111101110","11101011110","11110101110","11010000100","11010010000","11010011100","11000111010"
-]
-const C128_STOP = "1100011101011"
 
-function code128CBits(numStr) {
-  let s = String(numStr == null ? '' : numStr).replace(/\D/g, '')
-  if (s.length === 0) s = '0'
-  if (s.length % 2 !== 0) s = '0' + s // 짝수 자리 보정
-  const START_C = 105
-  const codes = [START_C]
-  for (let i = 0; i < s.length; i += 2) codes.push(parseInt(s.substr(i, 2), 10))
-  let sum = START_C
-  for (let i = 1; i < codes.length; i++) sum += codes[i] * i
-  codes.push(sum % 103) // checksum
-  return codes.map(c => C128_PATTERNS[c]).join('') + C128_STOP
+// ─── QR 코드 (qrcode.js via CDN) ────────────────────────────────────────────
+// import { useEffect, useRef } from 'react'
+
+function QRCode({ value, size = 180 }) {
+  const canvasRef = useRef(null)
+
+  useEffect(() => {
+    if (!canvasRef.current || !value) return
+    QRCodeLib.toCanvas(canvasRef.current, String(value), {
+      width: size,
+      margin: 2,
+      color: { dark: '#111111', light: '#ffffff' },
+    })
+  }, [value, size])
+
+  return <canvas ref={canvasRef} style={{ display: 'block', borderRadius: 8 }} />
 }
 
-function Barcode({ value, height = 90, barWidth = 2.4 }) {
-  const bits = code128CBits(value)
-  const width = bits.length * barWidth
-  // 연속된 1을 한 개의 막대(rect)로 묶어 그림
-  const bars = []
-  let x = 0
-  let i = 0
-  while (i < bits.length) {
-    let run = 1
-    while (i + run < bits.length && bits[i + run] === bits[i]) run++
-    if (bits[i] === '1') {
-      bars.push(<rect key={i} x={x} y={0} width={run * barWidth} height={height} fill="#111" />)
-    }
-    x += run * barWidth
-    i += run
-  }
-  return (
-    <svg width="100%" viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="xMidYMid meet"
-      style={{ display: 'block' }} shapeRendering="crispEdges">
-      <rect x={0} y={0} width={width} height={height} fill="#fff" />
-      {bars}
-    </svg>
-  )
-}
+// // ─── CODE128 바코드 (외부 라이브러리 없이 SVG로 직접 렌더) ───────────────────
+// // 숫자 문자열을 Code C로 인코딩합니다. 휴대폰 카메라/바코드 스캐너로 읽힙니다.
+// const C128_PATTERNS = [
+//   "11011001100","11001101100","11001100110","10010011000","10010001100","10001001100","10011001000","10011000100","10001100100","11001001000",
+//   "11001000100","11000100100","10110011100","10011011100","10011001110","10111001100","10011101100","10011100110","11001110010","11001011100",
+//   "11001001110","11011100100","11001110100","11101101110","11101001100","11100101100","11100100110","11101100100","11100110100","11100110010",
+//   "11011011000","11011000110","11000110110","10100011000","10001011000","10001000110","10110001000","10001101000","10001100010","11010001000",
+//   "11000101000","11000100010","10110111000","10110001110","10001101110","10111011000","10111000110","10001110110","11101110110","11010001110",
+//   "11000101110","11011101000","11011100010","11011101110","11101011000","11101000110","11100010110","11101101000","11101100010","11100011010",
+//   "11101111010","11001000010","11110001010","10100110000","10100001100","10010110000","10010000110","10000101100","10000100110","10110010000",
+//   "10110000100","10011010000","10011000010","10000110100","10000110010","11000010010","11001010000","11110111010","11000010100","10001111010",
+//   "10100111100","10010111100","10010011110","10111100100","10011110100","10011110010","11110100100","11110010100","11110010010","11011011110",
+//   "11011110110","11110110110","10101111000","10100011110","10001011110","10111101000","10111100010","11110101000","11110100010","10111011110",
+//   "10111101110","11101011110","11110101110","11010000100","11010010000","11010011100","11000111010"
+// ]
+// const C128_STOP = "1100011101011"
+
+// function code128CBits(numStr) {
+//   let s = String(numStr == null ? '' : numStr).replace(/\D/g, '')
+//   if (s.length === 0) s = '0'
+//   if (s.length % 2 !== 0) s = '0' + s // 짝수 자리 보정
+//   const START_C = 105
+//   const codes = [START_C]
+//   for (let i = 0; i < s.length; i += 2) codes.push(parseInt(s.substr(i, 2), 10))
+//   let sum = START_C
+//   for (let i = 1; i < codes.length; i++) sum += codes[i] * i
+//   codes.push(sum % 103) // checksum
+//   return codes.map(c => C128_PATTERNS[c]).join('') + C128_STOP
+// }
+
+// function Barcode({ value, height = 90, barWidth = 2.4 }) {
+//   const bits = code128CBits(value)
+//   const width = bits.length * barWidth
+//   // 연속된 1을 한 개의 막대(rect)로 묶어 그림
+//   const bars = []
+//   let x = 0
+//   let i = 0
+//   while (i < bits.length) {
+//     let run = 1
+//     while (i + run < bits.length && bits[i + run] === bits[i]) run++
+//     if (bits[i] === '1') {
+//       bars.push(<rect key={i} x={x} y={0} width={run * barWidth} height={height} fill="#111" />)
+//     }
+//     x += run * barWidth
+//     i += run
+//   }
+//   return (
+//     <svg width="100%" viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="xMidYMid meet"
+//       style={{ display: 'block' }} shapeRendering="crispEdges">
+//       <rect x={0} y={0} width={width} height={height} fill="#fff" />
+//       {bars}
+//     </svg>
+//   )
+// }
 
 
 // ─── 완료 오버레이 ───────────────────────────────────────────────────────────
 function DoneOverlay({ total, onClose, couponReady, signatureId, isNew, exchanged }) {
   // 이미 교환완료된 사람이면 카드 대신 안내만, 그 외(신규/미교환)는 바코드 노출
   const showCard = couponReady && !exchanged
+
+  // Web OTP: 담당자가 보낸 인증문자(@grblab.co.kr #코드)를 자동 수신해 표시
+  const [otpCode, setOtpCode] = useState(null)
+  useEffect(() => {
+    if (!showCard) return
+    if (!('OTPCredential' in window)) return // 미지원 브라우저(iOS 등)는 그냥 패스
+    const ac = new AbortController()
+    navigator.credentials.get({
+      otp: { transport: ['sms'] },
+      signal: ac.signal,
+    }).then(otp => {
+      if (otp && otp.code) setOtpCode(otp.code)
+    }).catch(() => { /* 취소/실패 무시 */ })
+    return () => ac.abort()
+  }, [showCard])
 
   return (
     <motion.div
@@ -240,18 +274,36 @@ function DoneOverlay({ total, onClose, couponReady, signatureId, isNew, exchange
                 서명 감사 선물 · CU 모바일 상품권
               </div>
               {/* 바코드 (세로 낮게, 가로 길게) */}
-              <div style={{ background: '#fff', borderRadius: 12, padding: '12px 12px 8px' }}>
-                <Barcode value={signatureId} height={38} />
-                <div style={{ fontSize: 12.5, fontWeight: 700, color: C.ink, letterSpacing: '0.18em', marginTop: 4, fontVariantNumeric: 'tabular-nums' }}>
-                  {String(signatureId)}
-                </div>
-              </div>
-              <div style={{ marginTop: 12, fontSize: 11.5, color: 'rgba(255,255,255,0.72)', lineHeight: 1.6 }}>
-                이 화면을 <b style={{ color: C.yellow }}>현장 담당자</b>에게 보여주세요.
-              </div>
+              <div style={{ background: '#fff', borderRadius: 12, padding: '16px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10 }}>
+  <QRCode value={signatureId} size={180} />
+  <div style={{ fontSize: 12.5, fontWeight: 700, color: C.ink, letterSpacing: '0.18em', fontVariantNumeric: 'tabular-nums' }}>
+    {String(signatureId)}
+  </div>
+</div>
+<div style={{ marginTop: 12, fontSize: 16, color: '#fff', lineHeight: 1.6, fontWeight: 700, background: 'rgba(255,255,255,0.12)', borderRadius: 10, padding: '10px 14px', textAlign: 'center' }}>
+  이 화면을 <b style={{ color: C.yellow, fontSize: 18 }}>서명 도우미</b>에게 보여주세요.
+</div>
+
+              {/* Web OTP로 받은 인증번호 자동 표시 */}
+              {otpCode && (
+                <motion.div
+                  initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
+                  style={{
+                    marginTop: 12, background: 'rgba(255,212,0,0.15)',
+                    border: `1px solid ${C.yellow}66`, borderRadius: 10, padding: '12px 14px',
+                  }}>
+                  <div style={{ fontSize: 11, color: C.yellow, fontWeight: 700, marginBottom: 3 }}>받은 인증번호</div>
+                  <div style={{ fontSize: 24, fontWeight: 900, color: '#fff', letterSpacing: '0.2em', fontVariantNumeric: 'tabular-nums' }}>
+                    {otpCode}
+                  </div>
+                  <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.7)', marginTop: 3 }}>
+                    담당자에게 이 번호를 확인시켜 주세요.
+                  </div>
+                </motion.div>
+              )}
             </motion.div>
           )}
-
+{/* 
           <button
             onClick={onClose}
             style={{
@@ -261,7 +313,7 @@ function DoneOverlay({ total, onClose, couponReady, signatureId, isNew, exchange
             }}
           >
             확인
-          </button>
+          </button> */}
         </div>
       </motion.div>
     </motion.div>
@@ -324,6 +376,93 @@ function SegmentBtn({ label, active, onClick }) {
   )
 }
 
+// ─── 청원 전문 모달 ──────────────────────────────────────────────────────────
+function PetitionTextModal({ onClose }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+      onClick={onClose}
+      style={{
+        position: 'fixed', inset: 0, zIndex: 11000,
+        background: 'rgba(10,12,24,0.7)',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        fontFamily: FONT, padding: 18,
+      }}>
+      <motion.div
+        initial={{ scale: 0.94, opacity: 0, y: 20 }} animate={{ scale: 1, opacity: 1, y: 0 }} exit={{ scale: 0.95, opacity: 0 }}
+        transition={{ type: 'spring', damping: 26, stiffness: 300 }}
+        onClick={e => e.stopPropagation()}
+        style={{
+          background: '#fff', borderRadius: 18, width: '100%', maxWidth: 460,
+          maxHeight: '85vh', display: 'flex', flexDirection: 'column', overflow: 'hidden',
+          boxShadow: '0 32px 80px rgba(0,0,0,0.45)',
+        }}>
+        {/* 헤더 */}
+        <div style={{ background: C.navy, padding: '20px 22px', flexShrink: 0 }}>
+          <div style={{ fontSize: 12, fontWeight: 700, color: C.yellow, letterSpacing: '0.06em', marginBottom: 5 }}>
+            장애인의료지원법 제정 청원
+          </div>
+          <div style={{ fontSize: 16.5, fontWeight: 900, color: '#fff', lineHeight: 1.4, letterSpacing: '-0.3px' }}>
+            장애인 의료비 부담 경감 및<br />재활치료 접근권 보장을 위한 청원
+          </div>
+          <div style={{ fontSize: 11.5, color: 'rgba(255,255,255,0.7)', marginTop: 8, lineHeight: 1.6 }}>
+            청원인 부산의료복지사회적협동조합 및 조합원 일동<br />
+            청원 대상 국회 / 보건복지부 / 부산광역시
+          </div>
+        </div>
+
+        {/* 본문 (스크롤) */}
+        <div style={{ padding: '22px 22px 8px', overflowY: 'auto', flex: 1 }}>
+          <PetitionSection title="청원 취지">
+            장애인은 진료·재활·검진 등 의료 수요가 비장애인보다 크지만, 의료비 본인부담은 거의 같거나 오히려 더 무겁습니다. 특히 재활치료와 치과 진료 영역에서 제도가 장애인에게 불리하게 작동하고 있습니다. 이에 장애인 당사자들이 조합 단체로서, 의료비 부담 경감과 의료 접근권 보장을 위한 법·제도 개선을 청원합니다.
+          </PetitionSection>
+
+          <PetitionSection title="청원 이유">
+            <p style={pStyle}><b>첫째, 장애인 의료비 부담이 비장애인과 다르지 않습니다.</b> 장애인이라는 이유로 본인부담이 줄어드는 경우는 제한적입니다. 정작 장애로 인해 더 자주, 더 오래 치료받아야 하는 현실은 반영되지 못하고 있습니다.</p>
+            <p style={pStyle}><b>둘째, 재활치료가 비용과 횟수에 가로막혀 있습니다.</b> 대표적 재활인 도수치료는 그동안 비급여로 1회 약 10만 원을 전액 본인이 부담해 왔습니다. 2026년 7월 ‘관리급여’로 편입되었으나, 본인부담률이 95%에 이르고 연 15회(의학적 사유 시 24회)로 횟수가 제한됩니다. 수술 후 회복에 재활이 절실한 장애인이, 비용과 횟수 제한 때문에 치료를 중단해야 하는 상황이 발생합니다.</p>
+            <p style={pStyle}><b>셋째, 치과 진료에서 장애인의 부담이 특히 큽니다.</b> 장애인은 구강 관리와 치과 치료의 필요가 비장애인보다 큰 경우가 많지만, 급여 진료의 본인부담은 물론, 임플란트 등 고액 비급여 진료까지 더해져 부담이 가중됩니다. 정작 더 많은 치과 진료가 필요한 장애인이 비용 때문에 치료를 미루거나 포기하게 됩니다.</p>
+            <p style={pStyle}><b>넷째, 이름만 급여인 제도가 장애인에게 불리하게 작동합니다.</b> 관리급여처럼 명칭은 급여이나 사실상 부담을 환자에게 그대로 떠안기는 제도는, 의료 의존도가 높은 장애인에게 더 큰 부담으로 돌아옵니다. 제도의 취지가 장애인의 실제 치료권을 보장하는 방향으로 재정비되어야 합니다.</p>
+          </PetitionSection>
+
+          <PetitionSection title="청원 사항">
+            <p style={pStyle}><b>1. 장애인 의료 본인부담 경감</b> — 진료·재활·검진 등 장애인의 의료 본인부담을 장애 특성에 맞게 경감하는 법적 근거를 마련해 주십시오.</p>
+            <p style={pStyle}><b>2. 재활치료 횟수·부담 제한 완화</b> — 도수치료 등 재활치료의 본인부담률과 연간 횟수 제한을, 재활이 필요한 장애인에게 실질적 치료가 가능한 수준으로 완화해 주십시오.</p>
+            <p style={pStyle}><b>3. 장애인 치과 진료비 지원 법제화</b> — 더 많은 치과 진료가 필요한 장애인을 위해, 급여 진료는 물론 임플란트 등 비급여 진료까지 포함하여 치과 의료비를 지원하는 법적 근거를 마련해 주십시오.</p>
+            <p style={pStyle}><b>4. 장애인에게 불리한 제도의 재개정</b> — 관리급여 등 환자 부담을 과도하게 전가하는 제도를 장애인 의료 접근권 관점에서 재검토·개정해 주십시오.</p>
+          </PetitionSection>
+
+          <p style={{ ...pStyle, color: C.navy, fontWeight: 700, marginTop: 18, marginBottom: 18 }}>
+            장애인이 치료받을 권리가 비용과 횟수에 막혀서는 안 됩니다. 위 청원이 입법과 정책에 반영될 수 있도록 시민 여러분의 동참을 청원합니다.
+          </p>
+        </div>
+
+        {/* 닫기 */}
+        <div style={{ padding: '12px 22px 18px', flexShrink: 0, borderTop: `1px solid ${C.hair}` }}>
+          <button type="button" onClick={onClose}
+            style={{ width: '100%', padding: 14, border: 'none', borderRadius: 12, background: C.navy, color: '#fff', fontSize: 15.5, fontWeight: 800, fontFamily: FONT, cursor: 'pointer' }}>
+            닫기
+          </button>
+        </div>
+      </motion.div>
+    </motion.div>
+  )
+}
+
+const pStyle = { fontSize: 13, lineHeight: 1.8, color: C.inkSoft, margin: '0 0 12px' }
+
+function PetitionSection({ title, children }) {
+  return (
+    <div style={{ marginBottom: 18 }}>
+      <div style={{ fontSize: 14, fontWeight: 900, color: C.navy, marginBottom: 10, paddingBottom: 6, borderBottom: `2px solid ${C.hair}` }}>
+        {title}
+      </div>
+      {typeof children === 'string'
+        ? <p style={pStyle}>{children}</p>
+        : children}
+    </div>
+  )
+}
+
 function CheckRow({ checked, onToggle, children }) {
   return (
     <button type="button" onClick={onToggle}
@@ -364,6 +503,7 @@ function SignOverlay({ onDone, onClose }) {
   const [agreeCampaign, setAgreeCampaign] = useState(true)   // 조합설립·청원 동의 (디폴트 ON)
   const [agreePrivacy, setAgreePrivacy] = useState(false)    // 개인정보 수집·이용 (디폴트 OFF)
   const [privacyOpen, setPrivacyOpen] = useState(false)      // 개인정보 상세 펼침
+  const [petitionOpen, setPetitionOpen] = useState(false)    // 청원 전문 모달
 
   // STEP1: 이름 + 전화번호 + 청원 동의 체크
   const step1ok = name.trim().length > 0 && isPhone(phone) && agreeCampaign
@@ -391,6 +531,10 @@ function SignOverlay({ onDone, onClose }) {
   }
 
   return (
+    <>
+    <AnimatePresence>
+      {petitionOpen && <PetitionTextModal onClose={() => setPetitionOpen(false)} />}
+    </AnimatePresence>
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
       style={sheetSt.root} onClick={onClose}>
       <motion.div initial={{ y: '100%' }} animate={{ y: 0 }} exit={{ y: '100%' }}
@@ -421,10 +565,19 @@ function SignOverlay({ onDone, onClose }) {
             <CheckRow checked={agreeCampaign} onToggle={() => setAgreeCampaign(v => !v)}>
               이 청원은 <b style={{ color: C.navy }}>(가칭) 부산의료복지사회적협동조합</b> 이름으로 진행하며, 조합 설립과 청원에 동의합니다.
             </CheckRow>
+            <button type="button"
+              onClick={() => setPetitionOpen(true)}
+              style={{
+                background: 'transparent', border: 'none', cursor: 'pointer',
+                color: C.navy, fontSize: 12.5, fontWeight: 700, fontFamily: FONT,
+                marginTop: 10, marginLeft: 32, padding: 0, textDecoration: 'underline',
+              }}>
+              청원 내용 보기
+            </button>
           </div>
 
           <label style={sheetSt.label}>이름</label>
-          <input value={name} autoComplete="name"
+          <input value={name} type="text" lang="ko" autoComplete="off"
             onChange={e => setName(e.target.value)} placeholder="이름"
             style={{ ...sheetSt.input }} />
 
@@ -528,6 +681,7 @@ function SignOverlay({ onDone, onClose }) {
         </div>
       </motion.div>
     </motion.div>
+    </>
   )
 }
 

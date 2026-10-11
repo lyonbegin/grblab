@@ -226,10 +226,10 @@ function DoneOverlay({ total, onClose, couponReady, signatureId, isNew, exchange
           </div>
 
           <div style={{ fontSize: 19, fontWeight: 900, color: '#fff', letterSpacing: '-0.5px', marginBottom: 4 }}>
-            서명이 완료되었습니다
+            설립동의가 접수되었습니다
           </div>
           <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.72)', lineHeight: 1.6, marginBottom: 14 }}>
-            청원에 동참해 주셔서 감사합니다.
+            의료복지사회적협동조합 설립에 동의해 주셔서 감사합니다.
           </div>
 
           {/* CU 카드 이미지 */}
@@ -271,7 +271,7 @@ function DoneOverlay({ total, onClose, couponReady, signatureId, isNew, exchange
               style={{ marginBottom: 16 }}
             >
               <div style={{ fontSize: 11, fontWeight: 700, color: C.yellow, letterSpacing: '0.08em', marginBottom: 10 }}>
-                서명 감사 선물 · CU 모바일 상품권
+                설립동의 참여 감사 선물 · CU 모바일 상품권
               </div>
               {/* 바코드 (세로 낮게, 가로 길게) */}
               <div style={{ background: '#fff', borderRadius: 12, padding: '16px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10 }}>
@@ -281,7 +281,7 @@ function DoneOverlay({ total, onClose, couponReady, signatureId, isNew, exchange
   </div>
 </div>
 <div style={{ marginTop: 12, fontSize: 16, color: '#fff', lineHeight: 1.6, fontWeight: 700, background: 'rgba(255,255,255,0.12)', borderRadius: 10, padding: '10px 14px', textAlign: 'center' }}>
-  이 화면을 <b style={{ color: C.yellow, fontSize: 18 }}>서명 도우미</b>에게 보여주세요.
+  이 화면을 <b style={{ color: C.yellow, fontSize: 18 }}>담당자</b>에게 보여주세요.
 </div>
 
               {/* Web OTP로 받은 인증번호 자동 표시 */}
@@ -400,39 +400,39 @@ function PetitionTextModal({ onClose }) {
         {/* 헤더 */}
         <div style={{ background: C.navy, padding: '20px 22px', flexShrink: 0 }}>
           <div style={{ fontSize: 12, fontWeight: 700, color: C.yellow, letterSpacing: '0.06em', marginBottom: 5 }}>
-            장애인의료지원법 제정 청원
+            (가칭) 나눔이음의료복지사회적협동조합 설립동의
           </div>
           <div style={{ fontSize: 16.5, fontWeight: 900, color: '#fff', lineHeight: 1.4, letterSpacing: '-0.3px' }}>
-            장애인 의료비 부담 경감 및<br />재활치료 접근권 보장을 위한 청원
+            의료복지사회적협동조합<br />설립 취지 및 설립동의 안내
           </div>
           <div style={{ fontSize: 11.5, color: 'rgba(255,255,255,0.7)', marginTop: 8, lineHeight: 1.6 }}>
-            청원인 부산의료복지사회적협동조합 및 조합원 일동<br />
-            청원 대상 국회 / 보건복지부 / 부산광역시
+            설립 추진: (가칭) 나눔이음의료복지사회적협동조합 발기인회<br />
+            대표 추진사업: 장애인 전용 병원 설립
           </div>
         </div>
 
         {/* 본문 (스크롤) */}
         <div style={{ padding: '22px 22px 8px', overflowY: 'auto', flex: 1 }}>
-          <PetitionSection title="청원 취지">
-            장애인은 진료·재활·검진 등 의료 수요가 비장애인보다 크지만, 의료비 본인부담은 거의 같거나 오히려 더 무겁습니다. 특히 재활치료와 치과 진료 영역에서 제도가 장애인에게 불리하게 작동하고 있습니다. 이에 장애인 당사자들이 조합 단체로서, 의료비 부담 경감과 의료 접근권 보장을 위한 법·제도 개선을 청원합니다.
+          <PetitionSection title="설립 취지">
+            장애인 당사자의 참여를 바탕으로 의료와 복지서비스를 연계하고, 필요한 서비스를 함께 만들어 갈 새로운 의료복지사회적협동조합을 설립하고자 합니다. 장애인 전용 병원 설립은 조합의 대표적인 추진사업입니다.
           </PetitionSection>
 
-          <PetitionSection title="청원 이유">
-            <p style={pStyle}><b>첫째, 장애인 의료비 부담이 비장애인과 다르지 않습니다.</b> 장애인이라는 이유로 본인부담이 줄어드는 경우는 제한적입니다. 정작 장애로 인해 더 자주, 더 오래 치료받아야 하는 현실은 반영되지 못하고 있습니다.</p>
-            <p style={pStyle}><b>둘째, 재활치료가 비용과 횟수에 가로막혀 있습니다.</b> 대표적 재활인 도수치료는 그동안 비급여로 1회 약 10만 원을 전액 본인이 부담해 왔습니다. 2026년 7월 ‘관리급여’로 편입되었으나, 본인부담률이 95%에 이르고 연 15회(의학적 사유 시 24회)로 횟수가 제한됩니다. 수술 후 회복에 재활이 절실한 장애인이, 비용과 횟수 제한 때문에 치료를 중단해야 하는 상황이 발생합니다.</p>
-            <p style={pStyle}><b>셋째, 치과 진료에서 장애인의 부담이 특히 큽니다.</b> 장애인은 구강 관리와 치과 치료의 필요가 비장애인보다 큰 경우가 많지만, 급여 진료의 본인부담은 물론, 임플란트 등 고액 비급여 진료까지 더해져 부담이 가중됩니다. 정작 더 많은 치과 진료가 필요한 장애인이 비용 때문에 치료를 미루거나 포기하게 됩니다.</p>
-            <p style={pStyle}><b>넷째, 이름만 급여인 제도가 장애인에게 불리하게 작동합니다.</b> 관리급여처럼 명칭은 급여이나 사실상 부담을 환자에게 그대로 떠안기는 제도는, 의료 의존도가 높은 장애인에게 더 큰 부담으로 돌아옵니다. 제도의 취지가 장애인의 실제 치료권을 보장하는 방향으로 재정비되어야 합니다.</p>
+          <PetitionSection title="조합 설립의 필요성">
+            <p style={pStyle}><b>첫째, 의료와 복지를 함께 제공할 협동조합이 필요합니다.</b> 의료서비스와 복지서비스를 연계하여 장애인 당사자의 건강과 복지 증진에 기여하고자 합니다.</p>
+            <p style={pStyle}><b>둘째, 장애인 당사자의 참여가 중요합니다.</b> 장애인이 단순한 의료서비스 이용자를 넘어 조합 설립과 향후 운영에 참여하는 구조를 만들고자 합니다.</p>
+            <p style={pStyle}><b>셋째, 지속적인 의료복지사업을 추진하고자 합니다.</b> 진료·재활·건강검진 등 장애인에게 필요한 의료복지사업을 함께 추진할 기반을 마련하고자 합니다.</p>
+            <p style={pStyle}><b>넷째, 장애인이 편리하게 이용할 수 있는 병원이 필요합니다.</b> 조합의 대표적인 추진사업으로 장애인의 진료 편의와 접근성을 고려한 장애인 전용 병원 설립을 계획하고 있습니다.</p>
           </PetitionSection>
 
-          <PetitionSection title="청원 사항">
-            <p style={pStyle}><b>1. 장애인 의료 본인부담 경감</b> — 진료·재활·검진 등 장애인의 의료 본인부담을 장애 특성에 맞게 경감하는 법적 근거를 마련해 주십시오.</p>
-            <p style={pStyle}><b>2. 재활치료 횟수·부담 제한 완화</b> — 도수치료 등 재활치료의 본인부담률과 연간 횟수 제한을, 재활이 필요한 장애인에게 실질적 치료가 가능한 수준으로 완화해 주십시오.</p>
-            <p style={pStyle}><b>3. 장애인 치과 진료비 지원 법제화</b> — 더 많은 치과 진료가 필요한 장애인을 위해, 급여 진료는 물론 임플란트 등 비급여 진료까지 포함하여 치과 의료비를 지원하는 법적 근거를 마련해 주십시오.</p>
-            <p style={pStyle}><b>4. 장애인에게 불리한 제도의 재개정</b> — 관리급여 등 환자 부담을 과도하게 전가하는 제도를 장애인 의료 접근권 관점에서 재검토·개정해 주십시오.</p>
+          <PetitionSection title="설립 후 주요 추진사업">
+            <p style={pStyle}><b>1. 의료복지사회적협동조합 설립</b> — 의료와 복지의 공익적 목적을 수행할 (가칭) 나눔이음의료복지사회적협동조합을 새롭게 설립하고자 합니다.</p>
+            <p style={pStyle}><b>2. 장애인 당사자의 조합 참여</b> — 장애인이 조합원으로 참여하고 의견을 제시할 수 있는 협동조합 운영체계를 마련하고자 합니다.</p>
+            <p style={pStyle}><b>3. 의료·복지서비스 연계</b> — 진료·건강관리·재활 등 필요한 의료서비스와 복지서비스를 연계하는 사업을 추진하고자 합니다.</p>
+            <p style={pStyle}><b>4. 장애인 전용 병원 설립 추진</b> — 조합의 대표적인 추진사업으로 장애인의 진료 편의와 의료 접근성을 고려한 병원 설립을 추진하고자 합니다.</p>
           </PetitionSection>
 
           <p style={{ ...pStyle, color: C.navy, fontWeight: 700, marginTop: 18, marginBottom: 18 }}>
-            장애인이 치료받을 권리가 비용과 횟수에 막혀서는 안 됩니다. 위 청원이 입법과 정책에 반영될 수 있도록 시민 여러분의 동참을 청원합니다.
+            본인은 위 설립 취지와 목적을 확인하였으며, (가칭) 나눔이음의료복지사회적협동조합의 설립에 동의합니다.
           </p>
         </div>
 
@@ -558,12 +558,12 @@ function SignOverlay({ onDone, onClose }) {
         {/* STEP 1 — 이름 + 전화번호 한 화면 */}
         <div style={{ display: step === 1 ? 'block' : 'none' }}>
           <div style={sheetSt.stepLabel}>STEP 1 / 2</div>
-          <div style={sheetSt.title}>청원 서명 참여</div>
+          <div style={sheetSt.title}>의료복지사회적협동조합 설립동의</div>
 
           {/* 조합설립·청원 동의 체크 */}
           <div style={{ background: C.cream, borderRadius: 12, padding: '14px 16px', marginBottom: 22 }}>
             <CheckRow checked={agreeCampaign} onToggle={() => setAgreeCampaign(v => !v)}>
-              이 청원은 <b style={{ color: C.navy }}>(가칭) 부산의료복지사회적협동조합</b> 이름으로 진행하며, 조합 설립과 청원에 동의합니다.
+              본인은 <b style={{ color: C.navy }}>(가칭) 나눔이음의료복지사회적협동조합</b>의 설립 취지와 목적을 확인하였으며, 해당 의료복지사회적협동조합의 설립에 동의합니다.
             </CheckRow>
             <button type="button"
               onClick={() => setPetitionOpen(true)}
@@ -572,7 +572,7 @@ function SignOverlay({ onDone, onClose }) {
                 color: C.navy, fontSize: 12.5, fontWeight: 700, fontFamily: FONT,
                 marginTop: 10, marginLeft: 32, padding: 0, textDecoration: 'underline',
               }}>
-              청원 내용 보기
+              설립 취지 및 동의 내용 보기
             </button>
           </div>
 
@@ -600,9 +600,9 @@ function SignOverlay({ onDone, onClose }) {
         {/* STEP 2 — 장애 여부 + 완료 */}
         <div style={{ display: step === 2 ? 'block' : 'none' }}>
           <div style={sheetSt.stepLabel}>STEP 2 / 2</div>
-          <div style={sheetSt.title}>장애 여부 선택</div>
+          <div style={sheetSt.title}>설립동의자 정보 확인</div>
           <div style={{ ...sheetSt.desc, marginBottom: 18 }}>
-            이 청원은 장애인의 의료 접근권 보장을 요구하는 캠페인입니다. 청원의 취지에 따라 장애인 당사자에 한해 참여가 가능하며, 본인확인을 위해 문서확인번호 또는 주민등록번호를 입력해 주세요.
+            의료복지사회적협동조합 신규 설립을 위한 설립동의자 확인 절차입니다. 현재 장애인 당사자의 설립동의를 모집하고 있으며, 본인확인을 위해 문서확인번호 또는 주민등록번호를 입력해 주세요.
           </div>
           <div style={{ display: 'flex', gap: 10, marginBottom: 20 }}>
             <SegmentBtn label="장애인" active={!disabled} onClick={() => setDisabled(false)} />
@@ -616,11 +616,11 @@ function SignOverlay({ onDone, onClose }) {
               padding: '18px 16px', marginBottom: 20, textAlign: 'center',
             }}>
               <div style={{ fontSize: 14, fontWeight: 800, color: C.navy, marginBottom: 6 }}>
-                본 청원은 장애인 당사자만 참여하실 수 있습니다
+                현재 장애인 당사자의 설립동의를 모집하고 있습니다
               </div>
               <div style={{ fontSize: 12.5, color: C.inkSoft, lineHeight: 1.7 }}>
-                본 청원은 장애인 당사자의 목소리를 모으는 캠페인입니다.<br />
-                그 취지를 살리기 위해 장애인에 한해 서명에 참여하실 수 있습니다.
+                이번 모집은 장애인 당사자를 대상으로 하는<br />
+                의료복지사회적협동조합 신규 설립동의 절차입니다.
               </div>
             </div>
           </div>
@@ -644,7 +644,7 @@ function SignOverlay({ onDone, onClose }) {
             )}
             <p style={{ fontSize: 12, color: C.navySoft, lineHeight: 1.65, margin: '0 0 18px' }}>
               문서확인번호를 모르실 경우 주민등록번호를 입력하시면 됩니다.<br />
-              장애인 혜택 적용을 위해 필요합니다.
+              설립동의자 본인확인을 위해 사용됩니다.
             </p>
 
             {/* 개인정보 수집·이용 동의 */}
@@ -664,8 +664,8 @@ function SignOverlay({ onDone, onClose }) {
               {privacyOpen && (
                 <div style={{ marginTop: 10, marginLeft: 32, fontSize: 11.5, color: C.inkSoft, lineHeight: 1.75 }}>
                   · 수집 항목: 이름, 휴대폰 번호, 장애 여부, 장애인증명서 문서확인번호 또는 주민등록번호<br />
-                  · 수집 목적: 청원 서명 본인확인, 장애인 여부 확인, 조합 설립 동의 및 기프트카드 지급<br />
-                  · 보유 기간: 청원 종료 및 기프트카드 지급 완료 후 6개월 이내 파기
+                  · 수집 목적: 의료복지사회적협동조합 설립동의 접수 및 본인확인, 장애인 여부 확인, 기프트카드 지급<br />
+                  · 보유 기간: 설립 관련 업무 종료 및 기프트카드 지급 완료 후 6개월 이내 파기
                 </div>
               )}
             </div>
@@ -699,30 +699,30 @@ function LiveCounter({ baseCount = 0, variant = 'float' }) {
             <span style={{ position: 'absolute', inset: 0, borderRadius: '50%', background: C.yellow }} />
             <span style={{ position: 'absolute', inset: 0, borderRadius: '50%', background: C.yellow, animation: 'petPulse 1.8s ease-out infinite' }} />
           </span>
-          <span style={{ fontSize: 11.5, fontWeight: 700, letterSpacing: '0.12em', color: 'rgba(255,255,255,0.82)' }}>LIVE · 실시간 청원 현황</span>
+          <span style={{ fontSize: 11.5, fontWeight: 700, letterSpacing: '0.12em', color: 'rgba(255,255,255,0.82)' }}>LIVE · 설립동의 참여 현황</span>
         </div>
         <div style={{ color: 'rgba(255,255,255,0.72)', fontSize: 13, marginBottom: 2 }}>현재</div>
         <div style={{ display: 'flex', alignItems: 'baseline', gap: 4 }}>
           <span style={{ fontSize: isInline ? 40 : 50, fontWeight: 900, color: C.yellow, lineHeight: 1, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.5px' }}>{baseCount.toLocaleString()}</span>
           <span style={{ fontSize: 20, fontWeight: 800, color: '#fff' }}>명</span>
         </div>
-        <div style={{ color: 'rgba(255,255,255,0.82)', fontSize: 13.5, marginTop: 6 }}>이 서명에 동참하고 있습니다</div>
+        <div style={{ color: 'rgba(255,255,255,0.82)', fontSize: 13.5, marginTop: 6 }}>의료복지사회적협동조합 설립에 동참하고 있습니다</div>
       </div>
     </div>
   )
 }
 
 const REASONS = [
-  ['첫째, 장애인 의료비 부담이 비장애인과 다르지 않습니다.', '장애인이라는 이유로 본인부담이 줄어드는 경우는 제한적입니다. 정작 장애로 인해 더 자주, 더 오래 치료받아야 하는 현실은 반영되지 못하고 있습니다.'],
-  ['둘째, 재활치료가 비용과 횟수에 가로막혀 있습니다.', '대표적 재활인 도수치료는 그동안 비급여로 1회 약 10만 원을 전액 본인이 부담해 왔습니다. 2026년 7월 관리급여로 편입되었으나, 본인부담률이 95%에 이르고 연 15회(의학적 사유 시 24회)로 횟수가 제한됩니다.'],
-  ['셋째, 치과 진료에서 장애인의 부담이 특히 큽니다.', '구강 관리와 치과 치료의 필요가 큰 경우가 많지만, 급여 진료의 본인부담은 물론 임플란트 등 고액 비급여 진료까지 더해져 부담이 가중됩니다. 정작 치료가 더 필요한 장애인이 비용 때문에 치료를 미루게 됩니다.'],
-  ['넷째, 이름만 급여인 제도가 장애인에게 불리하게 작동합니다.', '관리급여처럼 명칭은 급여이나 사실상 부담을 환자에게 그대로 떠안기는 제도는, 의료 의존도가 높은 장애인에게 더 큰 부담으로 돌아옵니다.'],
+  ['첫째, 의료와 복지를 함께 제공할 협동조합이 필요합니다.', '의료서비스와 복지서비스를 연계하여 장애인 당사자의 건강과 복지 증진에 기여하고자 합니다.'],
+  ['둘째, 장애인 당사자의 참여가 중요합니다.', '장애인이 단순한 의료서비스 이용자를 넘어 조합 설립과 향후 운영에 참여하는 구조를 만들고자 합니다.'],
+  ['셋째, 지속적인 의료복지사업을 추진하고자 합니다.', '진료·재활·건강검진 등 장애인에게 필요한 의료복지사업을 함께 추진할 기반을 마련하고자 합니다.'],
+  ['넷째, 장애인이 편리하게 이용할 수 있는 병원이 필요합니다.', '조합의 대표적인 추진사업으로 장애인의 진료 편의와 접근성을 고려한 장애인 전용 병원 설립을 계획하고 있습니다.'],
 ]
 const ASKS = [
-  ['장애인 의료 본인부담 경감', '진료·재활·검진 등 장애인의 의료 본인부담을 장애 특성에 맞게 경감하는 법적 근거를 마련해 주십시오.'],
-  ['재활치료 횟수·부담 제한 완화', '도수치료 등 재활치료의 본인부담률과 연간 횟수 제한을, 재활이 필요한 장애인에게 실질적 치료가 가능한 수준으로 완화해 주십시오.'],
-  ['장애인 치과 진료비 지원 법제화', '급여 진료는 물론 임플란트 등 비급여 진료까지 포함하여 치과 의료비를 지원하는 법적 근거를 마련해 주십시오.'],
-  ['장애인에게 불리한 제도의 재개정', '관리급여 등 환자 부담을 과도하게 전가하는 제도를 장애인 의료 접근권 관점에서 재검토·개정해 주십시오.'],
+  ['의료복지사회적협동조합 신규 설립', '의료와 복지의 공익적 목적을 수행할 (가칭) 나눔이음의료복지사회적협동조합을 새롭게 설립하고자 합니다.'],
+  ['장애인 당사자의 조합 참여', '장애인이 조합원으로 참여하고 의견을 제시할 수 있는 협동조합 운영체계를 마련하고자 합니다.'],
+  ['의료·복지서비스 연계', '진료·건강관리·재활 등 필요한 의료서비스와 복지서비스를 연계하는 사업을 추진하고자 합니다.'],
+  ['장애인 전용 병원 설립 추진', '조합의 대표적인 추진사업으로 장애인의 진료 편의와 의료 접근성을 고려한 병원 설립을 추진하고자 합니다.'],
 ]
 
 function getDeviceId() {
@@ -816,7 +816,7 @@ export default function PetitionTab({ isMobile, loading, LoadingUI, onGoSign }) 
       })
       .catch(() => {
         setLiveCount(c => Math.max(0, c - 1))
-        setSubmitError('서명 저장에 실패했습니다. 다시 시도해 주세요.')
+        setSubmitError('설립동의 저장에 실패했습니다. 다시 시도해 주세요.')
       })
   }, [liveCount])
 
@@ -867,7 +867,7 @@ export default function PetitionTab({ isMobile, loading, LoadingUI, onGoSign }) 
               onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 8px 28px rgba(255,212,0,0.55)' }}
               onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 4px 20px rgba(255,212,0,0.45)' }}>
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={C.navyDark} strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9" /><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z" /></svg>
-              청원 서명 참여하기
+              설립동의서 작성하기
             </button>
           )}
         </div>
@@ -892,22 +892,22 @@ export default function PetitionTab({ isMobile, loading, LoadingUI, onGoSign }) 
               }}>
                 <span style={{ width: 6, height: 6, borderRadius: '50%', background: C.yellow }} />
                 <span style={{ color: C.yellow, fontSize: 12.5, fontWeight: 700, letterSpacing: '0.04em' }}>
-                  장애인 의료비 부담 경감 · 재활치료 접근권 보장 청원
+                  (가칭) 나눔이음의료복지사회적협동조합 · 설립동의자 모집
                 </span>
               </div>
               <h1 style={{ color: '#fff', fontWeight: 800, fontSize: isMobile ? 28 : 42, lineHeight: 1.32, letterSpacing: '-0.01em', margin: 0 }}>
-                치료받을 권리가<br />
-                <span style={{ color: C.yellow }}>비용과 횟수</span>에<br />
-                막혀서는 안 됩니다
+                의료와 복지를 함께할<br />
+                <span style={{ color: C.yellow }}>협동조합 설립</span>에<br />
+                동의해 주세요
               </h1>
               <p style={{ marginTop: 22, color: 'rgba(255,255,255,0.78)', fontSize: 14.5, lineHeight: 1.85, fontWeight: 300, maxWidth: 440 }}>
                 <span style={{ display: 'block', color: C.yellow, fontSize: 13, fontWeight: 700, marginBottom: 8 }}>
-                  청원인 (가칭) 부산의료복지사회적협동조합 및 조합원 일동
+                  (가칭) 나눔이음의료복지사회적협동조합 설립 발기인회
                 </span>
-                장애인은 더 자주, 더 오래 치료받아야 하지만,<br />본인부담은 비장애인과 다르지 않습니다.
+                장애인 당사자가 참여하는 의료복지사회적협동조합을 새롭게 설립하고자 합니다.<br />장애인 전용 병원 설립은 대표적인 추진사업입니다.
               </p>
               <button onClick={goSign} style={{ marginTop: 28, display: 'inline-flex', alignItems: 'center', gap: 10, background: C.yellow, border: 'none', borderRadius: 8, padding: '14px 26px', fontSize: 15, fontWeight: 900, color: C.navyDark, cursor: 'pointer', fontFamily: FONT, letterSpacing: '-0.2px' }}>
-                서명하기 <span style={{ fontSize: 17 }}>→</span>
+                설립동의하기 <span style={{ fontSize: 17 }}>→</span>
               </button>
             </div>
           </div>
@@ -915,16 +915,16 @@ export default function PetitionTab({ isMobile, loading, LoadingUI, onGoSign }) 
           {/* ── 청원 취지 ── */}
           <div style={{ background: '#fff', padding: isMobile ? '48px 24px 40px' : '60px 40px 52px' }}>
             <div style={{ maxWidth: 660, margin: '0 auto', textAlign: 'center' }}>
-              <span style={{ display: 'inline-block', fontSize: 12, fontWeight: 800, letterSpacing: '0.18em', color: C.navy, background: C.cream, border: `1px solid ${C.hair}`, borderRadius: 999, padding: '5px 16px', marginBottom: 20 }}>청원 취지</span>
-              <p style={{ fontSize: 15, color: C.inkSoft, lineHeight: 1.95, margin: 0 }}>장애인은 진료·재활·검진 등 의료 수요가 비장애인보다 크지만, 의료비 본인부담은 거의 같거나 오히려 더 무겁습니다. 특히 재활치료와 치과 진료 영역에서 제도가 장애인에게 불리하게 작동하고 있습니다. 이에 장애인 당사자들이 조합 단체로서, 의료비 부담 경감과 의료 접근권 보장을 위한 법·제도 개선을 청원합니다.</p>
-              <div style={{ marginTop: 18, fontSize: 12.5, color: '#9a9aab', fontWeight: 600 }}>청원 대상 · 국회 / 보건복지부 / 부산광역시</div>
+              <span style={{ display: 'inline-block', fontSize: 12, fontWeight: 800, letterSpacing: '0.18em', color: C.navy, background: C.cream, border: `1px solid ${C.hair}`, borderRadius: 999, padding: '5px 16px', marginBottom: 20 }}>의료복지사회적협동조합 설립 취지</span>
+              <p style={{ fontSize: 15, color: C.inkSoft, lineHeight: 1.95, margin: 0 }}>의료와 복지서비스의 접근성을 높이고, 장애인 당사자가 설립과 운영에 참여하는 새로운 의료복지사회적협동조합을 설립하고자 합니다. 조합 설립을 통해 의료·복지서비스 연계 등의 공익적 사업을 추진하며, 장애인 전용 병원 설립을 대표적인 추진사업으로 계획하고 있습니다.</p>
+              <div style={{ marginTop: 18, fontSize: 12.5, color: '#9a9aab', fontWeight: 600 }}>설립 추진 · (가칭) 나눔이음의료복지사회적협동조합 발기인회</div>
             </div>
           </div>
 
           {/* ── 문제 제기: 네이비 카드 + 옐로 넘버 칩 ── */}
           <div style={{ background: C.cream, padding: isMobile ? '40px 24px' : '60px 48px' }}>
             <h2 style={{ fontFamily: SERIF, color: C.navyDark, fontWeight: 800, fontSize: isMobile ? 23 : 27, lineHeight: 1.42, margin: '0 0 28px', textAlign: isMobile ? 'left' : 'left' }}>
-              장애라는 이유로<br />줄어들지 않는 의료비 부담
+              왜 의료복지사회적협동조합을<br />설립하려고 할까요?
             </h2>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
               {REASONS.map(([h, b], i) => (
@@ -948,7 +948,7 @@ export default function PetitionTab({ isMobile, loading, LoadingUI, onGoSign }) 
                 </div>
               ))}
             </div>
-            <p style={{ marginTop: 18, fontSize: 11.5, lineHeight: 1.7, color: '#9a9aab' }}>* 도수치료 관리급여 본인부담률·횟수 제한은 2026년 7월 시행 기준이며, 의학적 사유에 따라 연 24회까지 적용됩니다.</p>
+            <p style={{ marginTop: 18, fontSize: 11.5, lineHeight: 1.7, color: '#9a9aab' }}>의료복지사회적협동조합 설립을 통해 장애인 당사자가 참여하는 의료·복지사업을 추진하고자 합니다.</p>
           </div>
 
           {/* ── 경고 강조 배너: 레드 ── */}
@@ -960,17 +960,17 @@ export default function PetitionTab({ isMobile, loading, LoadingUI, onGoSign }) 
             }}>!</div>
             <div>
               <div style={{ color: C.red, fontWeight: 800, fontSize: isMobile ? 15.5 : 17, marginBottom: 4 }}>
-                치료가 더 필요한 사람이 더 큰 비용을 떠안고 있습니다
+                장애인의 참여로 시작하는 의료복지사회적협동조합
               </div>
               <div style={{ color: '#8a3a40', fontSize: 13, lineHeight: 1.7 }}>
-                제도가 바뀌지 않으면, 같은 부담은 계속 반복됩니다.
+                의료복지사회적협동조합 설립을 통해 필요한 의료·복지서비스를 함께 추진하고자 합니다.
               </div>
             </div>
           </div>
 
           {/* ── 청원 요구사항 ── */}
           <div style={{ background: '#fff', padding: isMobile ? '40px 24px' : '64px 48px' }}>
-            <h2 style={{ color: C.navyDark, fontWeight: 800, fontSize: isMobile ? 22 : 25, lineHeight: 1.42, margin: '0 0 28px' }}>치료받을 권리를<br />비용이 막지 않도록</h2>
+            <h2 style={{ color: C.navyDark, fontWeight: 800, fontSize: isMobile ? 22 : 25, lineHeight: 1.42, margin: '0 0 28px' }}>설립 후 추진하고자 하는<br />주요 사업</h2>
             {ASKS.map(([h, b], i) => (
               <div key={i} style={{ display: 'flex', gap: 14, marginBottom: 18 }}>
                 <div style={{ flex: '0 0 26px', height: 26, borderRadius: '50%', background: C.navy, color: C.yellow, fontSize: 13, fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: 2 }}>{i + 1}</div>
@@ -982,15 +982,15 @@ export default function PetitionTab({ isMobile, loading, LoadingUI, onGoSign }) 
           {/* ── 클로징 CTA: 네이비 + 옐로 ── */}
           <div style={{ background: `linear-gradient(135deg, ${C.navyDark} 0%, ${C.navy} 100%)`, padding: isMobile ? '44px 24px 52px' : '60px 40px 68px', textAlign: 'center' }}>
             <p style={{ fontFamily: SERIF, color: '#fff', fontSize: isMobile ? 20 : 24, fontWeight: 800, lineHeight: 1.45, margin: '0 0 24px' }}>
-              치료받을 권리가 <span style={{ color: C.yellow }}>비용과 횟수</span>에<br />막혀서는 안 됩니다
+              의료복지사회적협동조합 설립,<br /><span style={{ color: C.yellow }}>여러분의 동의</span>로 시작합니다
             </p>
             <button onClick={goSign}
               style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 12, width: '100%', maxWidth: 440, padding: isMobile ? '18px 28px' : '20px 40px', background: C.yellow, color: C.navyDark, border: 'none', borderRadius: 14, fontSize: isMobile ? 17 : 20, fontWeight: 900, fontFamily: FONT, letterSpacing: '-0.4px', cursor: 'pointer', boxShadow: '0 8px 28px rgba(255,212,0,0.35)', transition: 'transform 0.15s, box-shadow 0.15s' }}
               onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 12px 36px rgba(255,212,0,0.45)' }}
               onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 8px 28px rgba(255,212,0,0.35)' }}>
-              서명 페이지로 이동 <span style={{ fontSize: 20 }}>→</span>
+              설립동의서 작성하기 <span style={{ fontSize: 20 }}>→</span>
             </button>
-            <p style={{ marginTop: 16, fontSize: 13, color: 'rgba(255,255,255,0.65)', lineHeight: 1.7 }}>위 청원이 입법과 정책에 반영될 수 있도록 시민 여러분의 동참을 청원합니다.</p>
+            <p style={{ marginTop: 16, fontSize: 13, color: 'rgba(255,255,255,0.65)', lineHeight: 1.7 }}>본 참여는 (가칭) 나눔이음의료복지사회적협동조합의 신규 설립에 대한 동의입니다.</p>
           </div>
 
         </div>
