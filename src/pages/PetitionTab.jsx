@@ -882,9 +882,7 @@ export default function PetitionTab({ isMobile, loading, LoadingUI, onGoSign }) 
             {/* 장식: 우상단 옐로 글로우 */}
             <div style={{ position: 'absolute', right: -60, top: -60, width: 280, height: 280, borderRadius: '50%', background: 'radial-gradient(circle, rgba(255,212,0,0.16) 0%, rgba(255,212,0,0) 70%)' }} />
 
-            {!isMobile && <LiveCounter baseCount={liveCount} variant="float" />}
             <div style={{ position: 'relative', zIndex: 3, padding: isMobile ? '32px 24px' : '0 48px', width: isMobile ? '100%' : 'auto' }}>
-              {isMobile && <LiveCounter baseCount={liveCount} variant="inline" />}
               <div style={{
                 display: 'inline-flex', alignItems: 'center', gap: 8,
                 background: 'rgba(255,212,0,0.14)', border: '1px solid rgba(255,212,0,0.4)',
