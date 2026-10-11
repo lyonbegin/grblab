@@ -335,11 +335,14 @@ const sheetSt = {
     padding: '20px 24px max(env(safe-area-inset-bottom),28px)',
     boxShadow: '0 -12px 48px rgba(0,0,0,0.28)',
     boxSizing: 'border-box',
-    // PC 화면이 짧거나 입력/개인정보 안내가 길어져도 시트 안에서 세로 스크롤 가능
-    maxHeight: '100dvh',
+    // PC 및 모바일에서 입력 내용이 화면보다 길면 시트 자체를 스크롤
+    maxHeight: 'calc(100dvh - 8px)',
+    minHeight: 0,
     overflowY: 'auto',
+    overflowX: 'hidden',
     overscrollBehaviorY: 'contain',
     WebkitOverflowScrolling: 'touch',
+    touchAction: 'pan-y',
   },
   grip: { width: 40, height: 4, borderRadius: 99, background: '#dcdcec', margin: '0 auto 18px' },
   stepLabel: { fontSize: 12, fontWeight: 700, letterSpacing: '0.14em', color: C.navy, marginBottom: 6 },
@@ -399,7 +402,7 @@ function PetitionTextModal({ onClose }) {
         onClick={e => e.stopPropagation()}
         style={{
           background: '#fff', borderRadius: 18, width: '100%', maxWidth: 460,
-          maxHeight: '85dvh', display: 'flex', flexDirection: 'column', overflow: 'hidden',
+          maxHeight: '85dvh', minHeight: 0, display: 'flex', flexDirection: 'column', overflow: 'hidden',
           boxShadow: '0 32px 80px rgba(0,0,0,0.45)',
         }}>
         {/* 헤더 */}
@@ -417,7 +420,7 @@ function PetitionTextModal({ onClose }) {
         </div>
 
         {/* 본문 (스크롤) */}
-        <div style={{ padding: '22px 22px 8px', overflowY: 'auto', overscrollBehaviorY: 'contain', minHeight: 0, flex: 1 }}>
+        <div style={{ padding: '22px 22px 8px', overflowY: 'auto', overscrollBehaviorY: 'contain', WebkitOverflowScrolling: 'touch', touchAction: 'pan-y', minHeight: 0, flex: 1 }}>
           <PetitionSection title="설립 취지">
             장애인 당사자의 참여를 바탕으로 의료와 복지서비스를 연계하고, 필요한 서비스를 함께 만들어 갈 새로운 의료복지사회적협동조합을 설립하고자 합니다. 장애인 전용 병원 설립은 조합의 대표적인 추진사업입니다.
           </PetitionSection>
@@ -863,8 +866,8 @@ export default function PetitionTab({ isMobile, loading, LoadingUI, onGoSign }) 
         )}
       </AnimatePresence>
 
-      {/* PC에서는 상위 레이아웃이 스크롤을 막더라도 이 탭 내부에서 휠 스크롤 가능 */}
-      <div style={{ width: '100%', maxHeight: isMobile ? undefined : '100dvh', overflowY: isMobile ? 'visible' : 'auto', overflowX: 'hidden' }}>
+      {/* PC·모바일 동일: 상위 레이아웃의 스크롤 잠금과 무관하게 이 탭 안에서 스크롤 */}
+      <div style={{ width: '100%', height: '100%', maxHeight: '100dvh', minHeight: 0, boxSizing: 'border-box', overflowY: 'auto', overflowX: 'hidden', overscrollBehaviorY: 'contain', WebkitOverflowScrolling: 'touch', touchAction: 'pan-y' }}>
       {/* 상단 고정형 서명 CTA 바 */}
       <div style={{ width: '100%', display: 'flex', justifyContent: 'center', padding: isMobile ? '20px 20px 16px' : '32px 40px 24px', fontFamily: FONT, boxSizing: 'border-box' }}>
         <div style={{ width: '100%', maxWidth: isMobile ? '100%' : 640 }}>
