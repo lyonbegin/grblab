@@ -3,20 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<link rel="stylesheet" href="./css/fonts.css">
+<link rel="stylesheet" href="/css/portal-fonts.css">
 <title>나눔이음 사회복지시설 협의체</title>
 <link rel="stylesheet" href="/award-announcement.css">
 <script src="/award-announcement.js" defer></script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&display=swap" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/gh/sun-typeface/SUIT@2/fonts/variable/woff2/SUIT-Variable.css" rel="stylesheet">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <style>
-@font-face{
-  font-family:'Jalnan';
-  src:url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.2/JalnanOTF00.woff') format('woff');
-  font-weight:normal;font-style:normal;font-display:swap;
-}
 :root{
   --paper:#FBF7F7;
   --paper-2:#F6EFEE;
@@ -41,7 +33,7 @@
   --r-md:14px;
   --r-sm:8px;
   --sans:'SUIT Variable','SUIT',-apple-system,BlinkMacSystemFont,'Malgun Gothic',sans-serif;
-  --serif:'Jalnan','Gowun Batang','Nanum Myeongjo',serif;
+  --serif:'Jalnan','Malgun Gothic',sans-serif;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
@@ -895,16 +887,16 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
   <div class="main-carousel-track">
     
     <div class="main-carousel-slide is-active" data-index="0">
-      <img src="./hero-01-community-center.png" alt="지역아동센터 나눔 활동" width="1774" height="887" fetchpriority="high" decoding="async">
+      <img src="./optimized/hero-01-community-center-1774-da7f7f80bf67.webp" srcset="./optimized/hero-01-community-center-640-138f5fad2e3e.webp 640w, ./optimized/hero-01-community-center-960-b09b345cf9c6.webp 960w, ./optimized/hero-01-community-center-1280-0fe5cc649c2a.webp 1280w, ./optimized/hero-01-community-center-1774-da7f7f80bf67.webp 1774w" sizes="100vw" alt="지역아동센터 나눔 활동" width="1774" height="887" fetchpriority="high" decoding="async">
     </div>
     <div class="main-carousel-slide" data-index="1">
-      <img src="./hero-02-community-center.png" alt="보육원 나눔 활동" width="1774" height="887" loading="lazy" decoding="async">
+      <img data-src="./optimized/hero-02-community-center-1774-2daf56eb8ef2.webp" data-srcset="./optimized/hero-02-community-center-640-ea5d362832af.webp 640w, ./optimized/hero-02-community-center-960-6074a798d3c7.webp 960w, ./optimized/hero-02-community-center-1280-bd10fc6026f7.webp 1280w, ./optimized/hero-02-community-center-1774-2daf56eb8ef2.webp 1774w" sizes="100vw" alt="보육원 나눔 활동" width="1774" height="887" loading="lazy" decoding="async">
     </div>
     <div class="main-carousel-slide" data-index="2">
-      <img src="./hero-03-community-center.png" alt="경로당 나눔 활동" width="1774" height="887" loading="lazy" decoding="async">
+      <img data-src="./optimized/hero-03-community-center-1774-bbd1ca98049a.webp" data-srcset="./optimized/hero-03-community-center-640-540baddad5d7.webp 640w, ./optimized/hero-03-community-center-960-1e597c581800.webp 960w, ./optimized/hero-03-community-center-1280-35c0c45a1743.webp 1280w, ./optimized/hero-03-community-center-1774-bbd1ca98049a.webp 1774w" sizes="100vw" alt="경로당 나눔 활동" width="1774" height="887" loading="lazy" decoding="async">
     </div>
     <div class="main-carousel-slide" data-index="3">
-      <img src="./hero-04-community-center.png" alt="장애인복지관 나눔 활동" width="1774" height="887" loading="lazy" decoding="async">
+      <img data-src="./optimized/hero-04-community-center-1774-01f3f3e2a8ba.webp" data-srcset="./optimized/hero-04-community-center-640-8950d892e050.webp 640w, ./optimized/hero-04-community-center-960-8b74a4b0bfe9.webp 960w, ./optimized/hero-04-community-center-1280-155a0b047771.webp 1280w, ./optimized/hero-04-community-center-1774-01f3f3e2a8ba.webp 1774w" sizes="100vw" alt="장애인복지관 나눔 활동" width="1774" height="887" loading="lazy" decoding="async">
     </div>
   </div>
 
@@ -1511,55 +1503,7 @@ render();
 </script>
 
 
-<script>
-(() => {
-  const root = document.querySelector('.main-carousel');
-  if (!root) return;
-
-  const slides = [...root.querySelectorAll('.main-carousel-slide')];
-  const dots = [...root.querySelectorAll('.main-carousel-dots button')];
-  const prev = root.querySelector('.main-carousel-prev');
-  const next = root.querySelector('.main-carousel-next');
-  const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  let index = 0;
-  let timer = null;
-
-  function show(nextIndex){
-    index = (nextIndex + slides.length) % slides.length;
-    slides.forEach((slide, i) => slide.classList.toggle('is-active', i === index));
-    dots.forEach((dot, i) => {
-      const active = i === index;
-      dot.classList.toggle('is-active', active);
-      dot.setAttribute('aria-current', active ? 'true' : 'false');
-    });
-  }
-
-  function stop(){
-    if (timer) clearInterval(timer);
-    timer = null;
-  }
-
-  function start(){
-    stop();
-    if (!reduceMotion && !document.hidden) {
-      timer = setInterval(() => show(index + 1), 5000);
-    }
-  }
-
-  prev.addEventListener('click', () => { show(index - 1); start(); });
-  next.addEventListener('click', () => { show(index + 1); start(); });
-  dots.forEach((dot, i) => dot.addEventListener('click', () => { show(i); start(); }));
-
-  root.addEventListener('mouseenter', stop);
-  root.addEventListener('mouseleave', start);
-  root.addEventListener('focusin', stop);
-  root.addEventListener('focusout', start);
-  document.addEventListener('visibilitychange', () => document.hidden ? stop() : start());
-
-  show(0);
-  start();
-})();
-</script>
+<script src="/portal-carousel.js" defer></script>
 
 </body>
 </html>

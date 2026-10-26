@@ -1,0 +1,19 @@
+/* Shared pages keep fonts.css; the portal loads only its two existing typefaces. */
+@font-face {
+  font-family: 'SUIT Variable';
+  src: url('https://cdn.jsdelivr.net/gh/sun-typeface/SUIT@2/fonts/variable/woff2/SUIT-Variable.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Jalnan';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.2/JalnanOTF00.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+:root {
+  --font-display: 'Jalnan', 'SUIT Variable', sans-serif;
+  --font-ui: 'SUIT Variable', -apple-system, BlinkMacSystemFont, 'Malgun Gothic', sans-serif;
+}
